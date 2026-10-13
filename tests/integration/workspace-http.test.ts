@@ -90,8 +90,10 @@ beforeAll(() => {
   const build = spawnSync('npm', ['run', 'build'], {
     cwd: root,
     stdio: 'inherit',
+    timeout: 60_000,
     env: { ...process.env, NEXT_TELEMETRY_DISABLED: '1' },
   });
+  expect(build.error, 'production build subprocess error').toBeUndefined();
   expect(build.status, 'current workspace production build').toBe(0);
 }, 90_000);
 
