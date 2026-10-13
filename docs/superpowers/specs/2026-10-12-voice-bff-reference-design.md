@@ -161,6 +161,10 @@ An OpenAI adapter is a follow-up that preserves this contract and uses the Respo
 
 ### POST /api/turn
 
+Both `POST /api/turn` and `POST /api/speech` enforce local request admission before reading the body, allocating a provider request or doing paid work. Configure explicit permitted BFF origins, initially `http://localhost:3000` and `http://127.0.0.1:3000`, with their corresponding Host values. Bind only to loopback; a different port or additional loopback hostname requires explicit configuration. Compare the parsed Origin against that configured list, require its host and port to match the request Host, and validate Host against the configured host list. Reject malformed, mismatched, `null` and missing Origin values. Never infer a trusted origin from an unchecked Host or forwarded header. Browser requests must originate from the configured BFF page; documented local CLI and HTTP test clients must send a permitted Origin and matching Host explicitly. Offline module tests may invoke server modules directly. This is browser-origin admission, not authentication of local processes; CORS response headers alone do not establish it.
+
+Rejected admission returns HTTP 403 with stable code `ORIGIN_NOT_ALLOWED`, `retryable: false` and `turnId: null` in the common JSON error format because no body has been read. It makes no model, transcription, retrieval or speech call. Apply this check consistently to both paid endpoints, including well-formed multipart requests that a browser can send without a CORS preflight. [CORS simple requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS#simple_requests).
+
 Accept multipart form data containing:
 
 - `turnId`: a client-generated UUID for correlation and stale-output protection.
@@ -197,17 +201,19 @@ The browser queues stable sentences from `answer.delta`, strips speech-inappropr
 
 For the baseline, use Deepgram's REST audio output streaming with explicit `linear16`, `sample_rate=24000` and `container=none`. The model/voice is server-configured. Confirm the selected SDK yields incremental bytes; never interpret a JSON provider error as PCM. [Deepgram synthesis](https://developers.deepgram.com/docs/text-to-speech), [media settings](https://developers.deepgram.com/docs/tts-media-output-settings), [encoding](https://developers.deepgram.com/docs/tts-encoding).
 
-The client handles arbitrary chunk boundaries, including a split 16-bit sample. Convert PCM to Web Audio buffers with the correct sample rate, schedule contiguous playback, and retain handles to every scheduled source so interruption can stop them. Bound unscheduled playback buffers to ten seconds of audio. If output falls behind that limit, stop that response's speech with an explicit status while retaining its text; do not silently discard words or build minutes of lag.
+The client handles arbitrary chunk boundaries, including a split 16-bit sample. Convert PCM to Web Audio buffers with the correct sample rate, schedule contiguous playback, and retain handles to every scheduled source so interruption can stop them. Bound **all generated but unplayed audio** to ten seconds: count the remaining currently playing portion, future scheduled sources and unscheduled PCM exactly once, using the playback clock and duration at the declared sample rate. Check the total before accepting or scheduling more audio; placing buffers on a future Web Audio schedule does not remove their duration from the backlog. A suspended playback clock must not allow the outstanding total to grow. [Scheduled audio start](https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode/start).
+
+If accepting additional audio would exceed the limit, stop every scheduled source for that answer, clear buffered PCM and pending speech text, abort the active speech request and disable further speech for that answer. Show an explicit speech-overflow status while retaining its text and allowing model text generation to continue. Do not silently discard words or build minutes of lag.
 
 ### GET /api/capabilities
 
 Return enabled provider/model labels, live/mock mode, speech availability, web-search availability and limits. Expose no credentials. Missing configuration should disable the affected capability with a clear reason. Do not silently claim a live provider when an adapter is mocked.
 
-Before a stream starts, errors use `{ error: { code, message, turnId, retryable } }`. Use HTTP 400 for malformed requests, 413 for the body cap, 429 for concurrency admission, 502 for upstream failure and 504 for deadline expiry. After SSE starts, send `turn.failed` using those same error fields; after PCM starts, terminate the failed stream and let the client retain the answer with a speech-error status. Empty/no-speech audio has its own nonfatal status and never triggers a model request.
+Before a stream starts, errors use `{ error: { code, message, turnId, retryable } }`; `turnId` is null when rejection occurs before the body can be read. Use HTTP 400 for malformed requests, 403 for origin/host admission, 413 for the body cap, 429 for concurrency admission, 502 for upstream failure and 504 for deadline expiry. After SSE starts, send `turn.failed` using those same error fields; after PCM starts, terminate the failed stream and let the client retain the answer with a speech-error status. Empty/no-speech audio has its own nonfatal status and never triggers a model request.
 
 ## Turn ownership and interruption
 
-The React turn controller owns a monotonically increasing generation, correlated with the UUID sent to the BFF. Exactly one answer generation is current. Starting speech while an answer is playing immediately stops scheduled audio, clears its queued text, aborts its active speech request and aborts its turn request. The next utterance becomes a new turn after VAD detects its end.
+The React turn controller owns a monotonically increasing generation, correlated with the UUID sent to the BFF. Exactly one answer generation is current. New user speech immediately invalidates the previous generation while Working as well as while Speaking, including a slow lookup or an output-muted answer. It stops scheduled audio, clears its queued text, aborts its active speech request and aborts its turn request. The next utterance becomes a new turn after VAD detects its end.
 
 Gate every fetch callback, model delta, speech byte and playback completion against the current generation. Cancellation is not enough by itself: late callbacks can still occur. The BFF propagates request cancellation to model, transcription, lookup and speech operations where the provider/transport supports it. Cancellation may not reverse work or usage already incurred.
 
@@ -221,7 +227,7 @@ One npm workspace provides root development, build, typecheck and test commands.
 
 Required live settings: `ANTHROPIC_API_KEY`, `CLAUDE_MODEL`, `DEEPGRAM_API_KEY`, `DEEPGRAM_STT_MODEL`, `DEEPGRAM_TTS_MODEL`, and `RETRIEVAL_BASE_URL`. Supply a sanitized environment example and setup instructions. A real live run requires configured accounts/keys; consumer-app subscriptions are not presented as API configuration.
 
-Use loopback hosting for the reference app. Public deployment/authentication is outside this build. Apply a 60-second turn deadline, a 5-second retrieval deadline and a 20-second speech-request deadline; all are configurable. Limit model output to 1,024 tokens per model round, three model rounds per turn, and hosted search to two uses when supported. These bounds are engineering defaults and may truncate a complex answer; report that condition.
+Use loopback hosting for the reference app with the explicitly configured permitted BFF origins and hosts described above. Public deployment/authentication is outside this build. Apply a 60-second turn deadline, a 5-second retrieval deadline and a 20-second speech-request deadline; all are configurable. Limit model output to 1,024 tokens per model round, three model rounds per turn, and hosted search to two uses when supported. The hosted-search allowance is one BFF-turn budget carried across every Messages request, custom-tool continuation and provider pause. Count actual search uses from validated provider events/usage, reduce the remaining budget before the next model request, and set that request's search cap to the remainder; when it reaches zero, disable further hosted search while preserving existing provider content blocks. If consumption cannot be determined safely, allow no additional search in that turn and show the capability limitation. Do not reset the two-use allowance on each model round: Anthropic's `max_uses` is per request. [Claude web search](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool). These bounds are engineering defaults and may truncate a complex answer; report that condition.
 
 Limit the application to two concurrently active turn requests and two active speech requests per local process, rejecting excess work clearly. Do not automatically retry paid model/speech calls in a way that can duplicate a spoken answer. Capture actual provider usage when available; do not display invented dollar estimates.
 
@@ -239,6 +245,10 @@ Use meaningful tests at the boundaries:
 6. First stable answer text starts speech generation before the model completes.
 7. Transcription failure, provider rate limit, unavailable retrieval and failed synthesis produce distinct visible states; text remains usable when speech fails.
 8. Strict Mode/unmount/Stop conversation do not leak microphone tracks or duplicate provider calls.
+9. Both paid endpoints reject well-formed requests from another local origin, `null` or missing Origin, and a disallowed or mismatched Host with HTTP 403 `ORIGIN_NOT_ALLOWED` before body processing; provider-call spies prove zero model/transcription/retrieval/speech calls. Configured browser origins and an explicitly headed local HTTP test request remain admitted.
+10. A fast PCM producer with slow or suspended playback cannot exceed ten seconds of total generated-but-unplayed audio, even when every chunk is immediately scheduled. Overflow stops scheduled sources, clears audio/text queues, aborts active synthesis and disables further speech for that answer while text continues.
+11. Multi-round custom-tool and provider-pause continuations share the two-use hosted-search budget; exhausted or unverifiable consumption never allows another search.
+12. New speech during a slow lookup or output-muted Working turn invalidates that generation; its late result cannot replace the new turn or enter completed history.
 
 Manual live acceptance in desktop Chrome or Edge:
 
