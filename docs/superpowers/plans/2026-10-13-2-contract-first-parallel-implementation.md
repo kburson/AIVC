@@ -12,7 +12,7 @@
 
 ## Preserved global requirements
 
-Keep exactly two local processes; same-origin browser→BFF only; server-owned credentials/model/tools/retrieval origin; no Edge/extra gateway/general framework. Typed input 2,000 characters, measured turn body 2 MiB, WAV mono PCM16 / 16 kHz / 30 seconds. Completed history four whole pairs/eight messages/16,000 JS-string characters, never partial-turn history. Turn/retrieval/speech deadlines 60 / 5 / 20 seconds, two upstream-held slots per request kind, no paid replay or automatic 429 retry. Model 3 rounds / 4 custom attempts / 1,024 output tokens; hosted search 2 uses shared across continuations, exact web_search_20250305. Speech mono PCM16 little-endian at 24 kHz, segment min(120,floor(6*CPS)), CPS 14 gives 84 characters, backlog 2,400 characters, audio high/low 10 / 2 seconds and stalled playback 3 seconds. Preserve safe Markdown/HTTP(S), exact VAD timing/cleanup patch, all 15 spec cases and actual final live evidence. No API credentials or live model selection is needed for these offline contract/component deliveries.
+Keep exactly two local processes; same-origin browser→BFF only; server-owned credentials/model/tools/retrieval origin; no Edge/extra gateway/general framework. Typed input 2,000 UTF-16 code units (JavaScript string length), measured turn body 2 MiB, WAV mono PCM16 / 16 kHz / 30 seconds. Completed history four whole pairs/eight messages/16,000 JS-string characters, never partial-turn history. Turn/retrieval/speech deadlines 60 / 5 / 20 seconds, two upstream-held slots per request kind, no paid replay or automatic 429 retry. Model 3 rounds / 4 custom attempts / 1,024 output tokens; hosted search 2 uses shared across continuations, exact web_search_20250305. Speech mono PCM16 little-endian at 24 kHz, segment min(120,floor(6*CPS)), CPS 14 gives 84 characters, backlog 2,400 characters, audio high/low 10 / 2 seconds and stalled playback 3 seconds. Preserve safe Markdown/HTTP(S), exact VAD timing/cleanup patch, all 15 spec cases and actual final live evidence. No API credentials or live model selection is needed for these offline contract/component deliveries.
 
 ## Review Focus
 
@@ -32,7 +32,7 @@ Clean reproduction explicitly selects Node26.8.1, installs npm@12.0.2 if absent,
 
 Fastify/workspace #3 is implemented. Current issue read shows OPEN, last-known Test, rank 2; remaining review/approval/integration/Close gates are not complete. It is neither an ongoing implementation track nor strict Done. Do not invent retrieval work to claim three concurrent tracks.
 
-Current live field ranks: #4=3; #5=4; #6=5; #7=4; #8=7; #9=7; #10=9; #11=10. This checkout is clean c5c94f4 and has no application interface source; exact APIs below come from accepted plan, not invented existing code. Implementers must use the actual reviewed #3 integrated source base.
+Current live field ranks: #4=3; #5=4; #6=5; #7=4; #8=7; #9=7; #10=9; #11=10. The clean authoring-time checkout was c5c94f4 and had no application interface source; exact APIs below come from accepted plan, not invented existing code. Implementers must use the actual reviewed #3 integrated source base.
 
 The amendment author is genuinely bound as issue #2 orchestrator in native session 01a135ad-c1bc-7492-9e5f-be69bf8257f4, branch codex/2-draft. This is planning collateral only. The actual canonical child state can change during review; root revalidates it before scheduling. No new source implementation is claimed here.
 
@@ -76,7 +76,7 @@ New stories/scopes/ranks/digests are not yet authoritative and the root has not 
 
 ## Executable API agreement
 
-CONTRACT owns apps/web/shared/contracts.ts, validation.ts, history.ts and sse.ts. It also owns apps/web/client/contract-probe.tsx plus the temporary starter app/page.tsx import for actual browser bundle compilation; #6 replaces that starter page after foundation delivery. New proposed artifacts: docs/contracts/voice-bff-v1.md, tests/helpers/wire-contract-fixtures.ts, tests/contracts/wire-contracts.test.ts, public-validation.test.ts, public-history.test.ts; tests/contracts/sse.test.ts moves from #5. Agreement records schemaVersion 1, exact limits/errors/headers/framing/sequence/terminal semantics and trace fixtures. Production modules/types and executable conformance—not prose alone—are consumer authority.
+CONTRACT owns apps/web/shared/contracts.ts, validation.ts, history.ts and sse.ts, scripts/contract-digest.mjs, scripts/contract-digest.d.mts and tests/contracts/contract-digest.test.ts. It also owns apps/web/client/contract-probe.tsx plus the temporary starter app/page.tsx import for actual browser bundle compilation; #6 replaces that starter page after foundation delivery. New proposed artifacts: docs/contracts/voice-bff-v1.md, tests/helpers/wire-contract-fixtures.ts, tests/contracts/wire-contracts.test.ts, public-validation.test.ts, public-history.test.ts; tests/contracts/sse.test.ts moves from #5. Agreement records schemaVersion 1, exact limits/errors/headers/framing/sequence/terminal semantics and trace fixtures. Production modules/types and executable conformance—not prose alone—are consumer authority.
 
 Exact accepted types:
 ```ts
@@ -117,7 +117,7 @@ Accepted exports: parseTurn(bytes:Uint8Array,contentType:string):Promise<TurnInp
 
 Public interface allocations and explicit additions:
 - Export AppError from shared/contracts.ts with constructor(httpStatus:number,code:string,message:string,turnId:string|null,retryable:boolean), matching the accepted common class so shared validation avoids server imports. #4 http/errors.ts normalizes/re-exports it; no competing class.
-- Export retainPairs(input:ReadonlyArray<readonly [HistoryMessage,HistoryMessage]>):{pairs:Array<[HistoryMessage,HistoryMessage]>;omitted:boolean}, copied from accepted Task 4 algorithm: clone, omit oversized newest pair, otherwise drop whole oldest pairs until four pairs / 16,000 characters. #6 keeps current-generation atomic completion in HistoryStore.
+- Export retainPairs(input:ReadonlyArray<readonly [HistoryMessage,HistoryMessage]>):{pairs:Array<[HistoryMessage,HistoryMessage]>;omitted:boolean}, preserves accepted Task 4 behavior for valid store input and strengthens arbitrary public input: clone, omit oversized newest pair, then always drop whole oldest pairs until four pairs / 16,000 characters. #6 keeps current-generation atomic completion in HistoryStore.
 - Initial seq convention was unpinned in historical text. This amendment explicitly defines seq 0 for turn.accepted and strict +1 thereafter. The reviewed agreement, producer and consumer conformance tests pin this additive choice; it is not represented as an already implemented convention.
 
 Shared code cannot import server provider/runtime/credential-bearing config. ServerConfig remains #4 server/config.ts, with exact accepted mode/allowlists/keys/models/retrieval/search/CPS/segment/deadline fields. BFF parse/admission/deadline/lease APIs remain accepted assertAdmission(headers,config,requireOrigin):void, readBoundedBody(req,cap,signal):Promise<Uint8Array>, acquireLease(kind):{release():void}, runWithDeadline(ms,caller,work):{result,settled,signal}, deadlineRemainingMs(signal):number, getRuntime():process singleton. Timeout-facing result is never lease-settlement evidence.
@@ -134,26 +134,26 @@ Common pre-stream JSON {error:{code,message,turnId,retryable}}; accepted 400 / 4
 
 ## Client/module evidence versus system evidence
 
-wire-contract-fixtures.ts contains immutable normative simulated traces, exact Atlas record/summary from Task 1 (“Synthetic active project owned by North with three open items.”), mode mock capabilities with unverified live search and malformed variants. Preamble/separator/answer trace is labeled Mock/Contract Simulation, never a provider/live observation.
+wire-contract-fixtures.ts contains immutable normative simulated traces, exact Atlas record/summary from Task 1 (“Synthetic active project owned by North with three open items.”), mode mock capabilities with search unavailable/accountValidation unavailable and malformed variants. Preamble/separator/answer trace is labeled Mock/Contract Simulation, never a provider/live observation.
 
 #6 tests consume this fixture instead of not-yet-delivered #5 helper. Controlled fetch yields split SSE chunks and deferred terminal; production startTurn still calls /api/turn. Real Next page/components run with explicit test-harness interception; no fake production route/fallback/provider claim. This proves client parsing, rendering, generations, history and errors against agreement.
 
 #5 keeps tests/helpers/scripted-providers.ts for complete native Anthropic messages/rounds and real createRetrievalClient HTTP deps. Emit real runTurn/producer events, decode foundation codec, assert actual emitted delta trace equals normative fixture. Preserve multiRoundDeltaFixture export as actual observed sequence or compatible re-export plus equality assertion. #6/#8 no longer depend on that unavailable helper. #5 alone claims full typed server path after actual Fastify HTTP integration.
 
-#11 adds tests/browser/typed-system.spec.ts: actual Next BFF plus actual Fastify and explicit deterministic providers, no turn interception. Recheck incremental text/HTTP project provenance/exacttext-history/search-unavailable ordinaryuse/visible retrievalfailure/no fallback/Busy deliberate recovery. Original #6 full system browser acceptance is explicitly transferred here, not falsely passed by controlled components. Full mock-system evidence remains distinct from original real live-provider/browser acceptance.
+#11 adds tests/browser/typed-system.spec.ts: actual Next BFF plus actual Fastify and explicit deterministic providers, no turn interception. Recheck incremental text/HTTP project provenance/exact text/history/search-unavailable ordinary use/visible retrieval failure/no fallback/Busy deliberate recovery. Original #6 full system browser acceptance is explicitly transferred here, not falsely passed by controlled components. Full mock-system evidence remains distinct from original real live-provider/browser acceptance.
 
 ## Exclusive files and source changes
 
 | Owner | Exclusive files/changes |
 |---|---|
 | CONTRACT | shared contracts/validation/history/SSE, agreement/fixture/public tests, client/contract-probe.tsx and starter app/page.tsx compile import; no server config/runtime/providers |
-| #4 | server config/build-info/http admission/body/errors/leases/deadline/capabilities/runtime/capabilitiesroute/.env.example; admission/config/build/lease/slowdeadline tests; new body.test.ts separates measured-body tests |
+| #4 | server config/build-info/http admission/body/errors/leases/deadline/capabilities/runtime/capabilities route/.env.example; admission/config/build/lease/slow deadline tests; new body.test.ts separates measured-body tests |
 | #6 | client turn-controller/turn-stream/history; Conversation/Answer/ProjectCard/Details/Capabilities/globals/page/layout; UI/history/controller/links/typed.spec.ts/playwrightconfig |
-| CAPTURE-MODULE | voice wav/vad-adapter/capture-session; copy-vad-assets script/exact VAD patch; rootpackage-lock/ patch-package 8.0.1 postinstall / web predev-prebuild; wav/capture-module/vad-lifecycle/assets tests; no Conversation/controller/browserharness |
-| #5 | server providers ModelAdapter/Claude/mock/tools/run-turn/SSEresponse/turnroute, runtime/capabilities after #4; scriptedhelper/typed integration/search/disconnect; consumes shared SSE |
-| #7 | deepgram.ts SpeechAdapter/speechroute/distinct provider and endpoint tests; same-owner mock/runtime/run-turn/capability/audiointegration wiring only after #5 |
+| CAPTURE-MODULE | voice wav/vad-adapter/capture-session; copy-vad-assets script/exact VAD patch; root package/lock, patch-package 8.0.1 postinstall / web predev-prebuild; wav/capture-module/vad-lifecycle/assets tests; no Conversation/controller/browser harness |
+| #5 | server providers ModelAdapter/Claude/mock/tools/run-turn/SSEresponse/turnroute, runtime/capabilities after #4; scripted helper/typed integration/search/disconnect; consumes shared SSE |
+| #7 | deepgram.ts SpeechAdapter/speechroute/distinct provider and endpoint tests; same-owner mock/runtime/run-turn/capability/audio integration wiring only after #5 |
 | #8 | PCM/playback/speech-text/queue and Conversation/controller only after full #6 / #7 |
-| #9 | capture Conversation/controller/browserharness/capture.spec.ts after #8; imports module instead of reowning patch/package/library |
+| #9 | capture Conversation/controller/browser harness/capture.spec.ts after #8; imports module instead of reowning patch/package/library |
 | #10/#11 | Existing scopes; #11 additionally owns joined typed-system test and final contract provenance |
 
 Required accepted authority edits before launch:
@@ -162,16 +162,33 @@ Required accepted authority edits before launch:
 3. #5 moves shared SSE implementation/test to CONTRACT; keeps producer/model/tool/search/retrieval/text/disconnect invariants and complete typed integration; imports/exercises fixture/codec. Still enters after full #4.
 4. #6 blocker changes #5→CONTRACT, fixture dependency changes to foundation; Scope/AC explicitly separate client-contract acceptance from full system browser test moved #11. All client safeguards retained.
 5. #7 retains #4 entry and #5 final serialized-wiring gate/same owner / no partial Done.
-6. #9 extracts complete library/patch/assets to CAPTURE-MODULE; retains all full automatic gesture/start/stop/mute/browseracceptance after #8. Actual pinned VAD/ORT HTTP 200 / MIME / load browser smoke stays #9.
-7. #8 consumes canonical fixture/waitsfull #6 / #7; #10 semantic dependencies remain; #11 adds two new children/full system test. Refresh scopes/source bindings / refinement / forecasts / ranks / dependency edges through registered procedures. Prior approvals/refinement receipts become stale, never reused.
+6. #9 extracts complete library/patch/assets to CAPTURE-MODULE; retains all full automatic gesture/start/stop/mute/browser acceptance after #8. Actual pinned VAD/ORT HTTP 200 / MIME / load browser smoke stays #9.
+7. #8 consumes canonical fixture/waits full #6 / #7; #10 semantic dependencies remain; #11 adds two new children/full system test. Refresh scopes/source bindings / refinement / forecasts / ranks / dependency edges through registered procedures. Prior approvals/refinement receipts become stale, never reused.
 
 Root/package-lock ownership moves from #9 early phase to CAPTURE-MODULE; no concurrent manifest edits by other tracks. Missing dependency requests go root for serialization. Distinct tests prevent source collisions. Foundation modules/fixture remain frozen consumer inputs; incompatible change needs reviewed amendment and coordinated revalidation.
+
+
+### Collision-sensitive exact path index
+
+These exact repository paths override abbreviated ownership prose. All other tests/files retain their detailed task owner; new source sharing requires serialized root coordination.
+
+| Delivery | Collision-sensitive exclusive paths |
+|---|---|
+| CONTRACT | apps/web/shared/contracts.ts; apps/web/shared/validation.ts; apps/web/shared/history.ts; apps/web/shared/sse.ts; apps/web/client/contract-probe.tsx; apps/web/app/page.tsx starter only; scripts/contract-digest.mjs; scripts/contract-digest.d.mts; tests/helpers/wire-contract-fixtures.ts; tests/contracts/sse.test.ts; tests/contracts/contract-digest.test.ts |
+| #4 | apps/web/server/config.ts; apps/web/server/build-info.ts; apps/web/server/http/admission.ts; apps/web/server/http/body.ts; apps/web/server/http/errors.ts; apps/web/server/turns/leases.ts; apps/web/server/turns/deadline.ts; apps/web/server/runtime.ts; apps/web/server/capabilities.ts; apps/web/app/api/capabilities/route.ts; apps/web/.env.example |
+| #5 after #4 | apps/web/server/providers/contracts.ts; apps/web/server/providers/claude.ts; apps/web/server/providers/mock.ts; apps/web/server/turns/run-turn.ts; apps/web/server/runtime.ts; apps/web/server/capabilities.ts; apps/web/server/http/sse-response.ts; apps/web/app/api/turn/route.ts; apps/web/server/tools/lookup-projects.ts; apps/web/server/tools/retrieval-client.ts; tests/helpers/scripted-providers.ts |
+| #7 independent then same-owner after #5 | apps/web/server/providers/deepgram.ts; apps/web/app/api/speech/route.ts independently; apps/web/server/providers/mock.ts; apps/web/server/runtime.ts; apps/web/server/capabilities.ts; apps/web/server/turns/run-turn.ts only after #5 |
+| #6 after CONTRACT | apps/web/client/turn-controller.ts; apps/web/client/turn-stream.ts; apps/web/client/history.ts; apps/web/components/Conversation.tsx; apps/web/app/page.tsx; apps/web/app/layout.tsx; playwright.config.ts; tests/browser/typed.spec.ts; removal of apps/web/client/contract-probe.tsx |
+| CAPTURE-MODULE | apps/web/client/voice/wav.ts; apps/web/client/voice/vad-adapter.ts; apps/web/client/voice/capture-session.ts; scripts/copy-vad-assets.mjs; patches/@ricky0123+vad-web+0.0.31.patch; package.json; package-lock.json; apps/web/package.json; tests/voice/capture-module.test.ts; tests/voice/vad-lifecycle.test.ts; tests/contracts/assets.test.ts |
+| #8 → #9 → #10 serialized | apps/web/components/Conversation.tsx; apps/web/client/turn-controller.ts; new test harness tests/browser/voice-harness.ts (created by #6) are transferred only after each full predecessor integrates. #10 may change capture-session.ts only through serialized compatibility review with module tests rerun; #9 imports it unchanged. |
+| #11 | tests/browser/typed-system.spec.ts plus final original docs/evidence/verifier/CI scope; no ownership of shared contract source during independent rank4 work |
+
 
 ## Capture module as a complete new story
 
 Preserve accepted encodeWav(samples:Float32Array):Blob; CaptureToken={epoch,utteranceId,intentVersion}; exact VadCallbacks rawStart/confirmedStart/misfire/end/frame; createVad(context,acquireStream,stopStream,callbacks)→start/pause/destroy promises; CaptureSession start/mute/unmute/stop/invalidateIntent owns epoch/streams/callercontext/pending initialization. Inject valid-end WAV callback; module knows no Conversation / playback / BFF / provider and creates no second turn controller.
 
-Module criteria: exact WAV clipping / header / 16 kHz / little-endian / 30-second limits checked against foundation parseTurn; no submission on misfire/obsolete/overlong; fresh usable stream resume; stop pending permission / model / worklet / start and admitted frame; real patched MicVAD public destroy / session / tensor release exactly once, no activation after cancel, visible cleanup failures; marker PLUS patch/package digests; pinned local VAD/ORT asset manifest / clean install / build regeneration. Controlled browser-node/ORT boundaries label simulation. Actual browser gesture dual context and HTTP asset / load / microphone / automatic turn acceptance remains #9 / #10 / #11. This extracted issue completes all its reviewed modulecriteria; original #9 does not close early.
+Module criteria: exact WAV clipping / header / 16 kHz / little-endian / 30-second limits checked against foundation parseTurn; no submission on misfire/obsolete/overlong; fresh usable stream resume; stop pending permission / model / worklet / start and admitted frame; real patched MicVAD public destroy / session / tensor release exactly once, no activation after cancel, visible cleanup failures; marker PLUS patch/package digests; pinned local VAD/ORT asset manifest / clean install / build regeneration. Controlled browser-node/ORT boundaries label simulation. Actual browser gesture dual context and HTTP asset / load / microphone / automatic turn acceptance remains #9 / #10 / #11. This extracted issue completes all its reviewed module criteria; original #9 does not close early.
 
 ## Executable verification strategy
 
@@ -179,7 +196,8 @@ Every code step follows failing behavioral test → observe expected missing beh
 
 CONTRACT:
 ```sh
-npx vitest run tests/contracts/wire-contracts.test.ts tests/contracts/public-validation.test.ts tests/contracts/public-history.test.ts tests/contracts/sse.test.ts
+npx vitest run tests/contracts/wire-contracts.test.ts tests/contracts/public-validation.test.ts tests/contracts/public-history.test.ts tests/contracts/sse.test.ts tests/contracts/contract-digest.test.ts
+node scripts/contract-digest.mjs
 npm run typecheck
 npm run build
 npm run lint
@@ -208,7 +226,7 @@ Actual patched library lifecycle / ORT release boundaries rather than fake destr
 
 #5 retains all actual Fastify HTTP typed/search/disconnect/typecheck/fullsuite/lint/format checks plus consumed SSE regression; #7 full provider / endpoints / audio integration; #8/#9/#10 own complete checks. Parent reruns full owning and impacted combined delivered suites after each integration. #11 runs every original root VC / epic trail with both new children / typed-system / browser / live record validation.
 
-All 15 spec cases remain assigned:1/11/13 #5 native orchestration/search;2 #3 exact retrieval;3 CONTRACT SSE plus #8 PCM;4/14/15 #6client guards joined by#10/#11;5/8 CAPTURE-MODULE lifecycle joined by #9 browser;6/10 #8early speech / backpressure joined in final system;7 #5/#7distinct failures with #11 UI;9 #4/#7admission;12 #10misfire / interruption with real latency;15 #4/#5/#7/#10actual settlement and final browser concurrency. Mock evidence never substitutes for live account / omitted-tool / microphone / audio / echo / latency acceptance.
+All 15 spec cases remain assigned:1/11/13 #5 native orchestration/search;2 #3 exact retrieval;3 CONTRACT SSE plus #8 PCM;4/14/15 #6 client guards joined by#10/#11;5/8 CAPTURE-MODULE lifecycle joined by #9 browser;6/10 #8 early speech / backpressure joined in final system;7 #5/#7 distinct failures with #11 UI;9 #4/#7admission;12 #10 misfire / interruption with real latency;15 #4/#5/#7/#10 actual settlement and final browser concurrency. Mock evidence never substitutes for live account / omitted-tool / microphone / audio / echo / latency acceptance.
 
 ## Handoff and limitations
 
@@ -226,6 +244,120 @@ CONTRACT: Beneficiary: developer implementing the browser or BFF. Capability: im
 CAPTURE-MODULE: Beneficiary: person using hands-free capture. Capability: produce bounded valid utterances and stop capture resources reliably through the pinned VAD package. Need: pending permission, model initialization and inference can outlive Stop, while malformed WAV or unbounded capture prevents safe automatic submission. Value: downstream browser wiring receives attributable utterances and cancellation cannot leave microphone/model resources active.
 
 If installed native dependencies cannot represent #7 independent entry separately from its final #5 wiring gate, hold the whole #7 until #5 strict Done. Browser #6 and CAPTURE-MODULE remain genuinely independent, so that limitation does not justify removing a blocker or partial completion.
+
+
+## Complete normative event agreement and decoder signals
+
+The following definitions are part of CONTRACT's frozen public agreement, not future ad hoc producer choices.
+
+### Full Atlas fixture and producer ordering
+
+The deterministic typed Atlas fixture contains no transcript.final and no sources event (there are no public citations). Its complete event sequence and data are:
+
+```ts
+const atlasCatalog:ProjectCatalog={schemaVersion:1,source:'synthetic-project-catalog',records:[
+  {id:'atlas',name:'Atlas',status:'active',ownerTeam:'North',openItems:3,
+   summary:'Synthetic active project owned by North with three open items.'}
+]};
+const wireTurnId='11111111-1111-4111-8111-111111111111';
+const payloads:Array<{type:keyof EventPayloads;data:EventPayloads[keyof EventPayloads]}>=[
+  {type:'turn.accepted',data:{mode:'mock'}},
+  {type:'stage',data:{stage:'researching'}},
+  {type:'answer.delta',data:{text:'Let me check Atlas.'}},
+  {type:'tool.started',data:{name:'lookup_projects',summary:'Lookup Atlas'}},
+  {type:'stage',data:{stage:'retrieving'}},
+  {type:'tool.completed',data:{result:atlasCatalog}},
+  {type:'stage',data:{stage:'answering'}},
+  {type:'answer.delta',data:{text:'\n\n'}},
+  {type:'answer.delta',data:{text:'Atlas is active, owned by North, with 3 open items.'}},
+  {type:'turn.completed',data:{
+    text:'Let me check Atlas.\n\nAtlas is active, owned by North, with 3 open items.',
+    status:'complete',usage:{inputTokens:20,outputTokens:30,searchUses:0}
+  }}
+];
+// Construct the union through validateTurnEvent, not an unsafe union cast:
+const wireEvents:readonly TurnEvent[]=payloads.map((payload,seq)=>
+  validateTurnEvent({schemaVersion:1,turnId:wireTurnId,seq,...payload}));
+```
+
+ScriptedModel round1 and round2 each have fixed native usage10 input/15 output tokens and zero search uses, yielding complete usage20/30/0. This is deterministic simulated usage, never paid usage evidence. #5 normalizes only its generated UUID to wireTurnId and requires full (type,data) equality, not just deltas. The producer emits the exact 'Lookup Atlas' summary and stage order above in that conformance case. Producer round-native tool_use identity still independently equals tool-atlas-1 in next matching result.
+
+General ordering grammar, recorded in docs/contracts/voice-bff-v1.md and tested in sse.test.ts:
+- Exactly one accepted at seq0; final successful stream has exactly one completed or failed; no event after terminal; seq+1 and one UUID throughout.
+- Optional stage:transcribing occurs only for audio before optional transcript.final. A nonempty successful audio transcription emits exactly one transcript.final before model answer/tool work. No-speech ends completed{status:'no-speech',text:''} without model/tool/delta/source work.
+- Stage:researching/answering may repeat or be omitted between nonterminal answer/tool/source events; stages are status hints, never required before rendering text. Stage:retrieving, when emitted, occurs after corresponding tool.started and before its tool.completed or failed terminal.
+- A public custom-tool operation emits tool.started before its corresponding tool.completed; operations are serialized, one public lookup at a time. Failure may terminate with pending lookup. Sources are optional validated source snapshots and may interleave with answer.delta while answering; source rendering must not depend on a final-only placement.
+- Answer deltas append literally; completed text must equal their concatenation except no-speech's empty string. Truncated text also equals accumulated deltas and is not history-ready. Usage is optional in general, present exactly as above in this fixture; missing usage is never invented.
+- Clients accept all grammar-permitted stage/source placements and zero-tool ordinary answers. #6 exercises at least a second permitted trace with repeated researching/answering hints and sources interleaved between deltas, plus a no-tool answer and no-speech trace. The normative Atlas equality test does not imply every valid turn has that shape.
+
+CONTRACT exports assertTurnSequence(events:ReadonlyArray<TurnEvent>):void from sse.ts for complete collected-stream conformance. It throws the same INVALID_STREAM error for grammar violations; decodeSse enforces the grammar incrementally. Producer and consumer tests each call it; neither may validate only their own hand-built shape.
+
+### Stable decoder errors
+
+Export from shared/sse.ts:
+
+```ts
+export type SseDecodeCode='STREAM_DISCONNECTED'|'INVALID_STREAM';
+export class SseDecodeError extends Error {
+  constructor(readonly code:SseDecodeCode,message:string,options?:ErrorOptions) {
+    super(message,options); this.name='SseDecodeError';
+  }
+}
+```
+
+The code is the public machine contract; message text/cause is diagnostic and clients do not pattern-match it. STREAM_DISCONNECTED and INVALID_STREAM are stable client-only reasons added to the common list. They never become an automatic reconnect or paid replay.
+- EOF before terminal, empty stream, transport read rejection or EOF mid-JSON in an unterminated final frame throws STREAM_DISCONNECTED.
+- A complete, syntactically valid unterminated terminal frame is validated and accepted; complete nonterminal at EOF is yielded then STREAM_DISCONNECTED; syntactically valid JSON with invalid envelope/schema/sequence/grammar at EOF throws INVALID_STREAM.
+- A blank-line-terminated frame with invalid JSON, schema/data, seq gap/duplicate, mixed ID, event before accepted, duplicate accepted, invalid tool/stage ordering or post-terminal data throws INVALID_STREAM. Unparseable JSON without a final frame delimiter is classified as interrupted transport (STREAM_DISCONNECTED), including a partial turn.failed; it is never invented as a terminal event.
+- Consumer-requested abort preserves AbortError from its caller rather than showing an obsolete current error; current-generation checks still suppress callbacks. Unexpected upstream iterator failure before terminal is wrapped as STREAM_DISCONNECTED with cause.
+
+CONTRACT tests pin thrown class/name/code for terminated malformed JSON, partial final JSON, partial failed terminal, empty/no-terminal EOF, complete unterminated terminal, complete unterminated nonterminal, malformed schema, all ordering/seq cases and read rejection. #6 tests distinct visible messages, preserved incomplete text, excluded history and deliberate recovery for each code. Complete raw-frame expected bytes remain independent of encodeSse. Canonical envelope ordering schemaVersion/turnId/seq/type/data makes raw framing deterministic even if producer object insertion order differs.
+
+### Deterministic contract digest
+
+CONTRACT creates scripts/contract-digest.mjs and tests/contracts/contract-digest.test.ts; these files have exclusive foundation ownership. The accompanying scripts/contract-digest.d.mts declares export function computeContractDigest(read:(path:string)=>Uint8Array):string for TypeScript test imports. One aggregate SHA-256 digest covers exactly these five repository-relative files, in ascending ASCII path order:
+1. apps/web/shared/contracts.ts
+2. apps/web/shared/history.ts
+3. apps/web/shared/sse.ts
+4. apps/web/shared/validation.ts
+5. tests/helpers/wire-contract-fixtures.ts
+
+For each entry update SHA-256 with UTF-8 path, a NUL byte, ASCII decimal raw file byteLength, a NUL byte, the raw file bytes, then one NUL byte. No newline/BOM normalization. Output exactly sha256: followed by 64 lowercase hex digits and stdout newline. The doc, digest script/tests, browser probe/starter page, generated assets and review collateral are excluded from hashed membership. Doc/type/fixture agreement and script/test correctness are separately reviewed; changing this reviewed recipe is a compatibility change even if excluded script bytes do not alter a source digest.
+
+```js
+import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {resolve} from 'node:path';
+const root=new URL('../',import.meta.url);
+const paths=['apps/web/shared/contracts.ts','apps/web/shared/history.ts',
+  'apps/web/shared/sse.ts','apps/web/shared/validation.ts','tests/helpers/wire-contract-fixtures.ts'];
+export function computeContractDigest(read) {
+  const hash=createHash('sha256');
+  for(const path of paths) {
+    const bytes=read(path);
+    hash.update(path,'utf8'); hash.update(Buffer.from([0]));
+    hash.update(String(bytes.byteLength),'ascii'); hash.update(Buffer.from([0]));
+    hash.update(bytes); hash.update(Buffer.from([0]));
+  }
+  return 'sha256:'+hash.digest('hex');
+}
+if(process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
+  console.log(computeContractDigest(path=>readFileSync(fileURLToPath(new URL(path,root)))));
+}
+```
+
+Run node scripts/contract-digest.mjs; consumers/root use this delivered command, never their own recipe. Tests independently build an expected byte buffer for path/framing and known small bytes, verify identical input reproducible, one-byte source change alters digest, path changes alter digest and unrelated doc/probe changes leave digest unchanged. Hash tests import computeContractDigest(read:(path:string)=>Uint8Array):string with an injected file reader; they exercise all five exact paths and do not run the guarded CLI; production CLI exact path list remains closed. Record the output in docs/contracts/voice-bff-v1.md (which is outside the hash) and consumer review evidence. Any failure/missing source file is nonzero, never an empty successful digest.
+
+### Capture gesture and restart contract
+
+CAPTURE-MODULE start() synchronously invokes deps.createContext() and initiates captureContext.resume() before its first await, before acquireStream/createVad. It records that context in session state before any asynchronous work; start double-click reuses the existing pending promise/context. The injected createContext returns the context created/resumed by #9's same synchronous Start handler (or creates it synchronously there); start must still initiate resume synchronously. #9 simultaneously creates/resumes the dedicated playback context in the same gesture before awaiting capture start.
+
+Add capture-module.test.ts spies with a deferred acquireStream/createVad: immediately after calling start() and before flushing microtasks, createContext/resume were called in that order; permission/model callbacks do not precede them. The module may await resume before requesting stream/model, but it may not await anything before creating/initiating resume. Rejected resume is visible CAPTURE_LOAD_FAILED and cleanup releases the allocated context.
+
+Overlong discard/restart and microphone mute/unmute reuse the existing session capture context and never call createContext again outside a new Start gesture. They pause/destroy/recreate VAD/stream as needed, keeping the caller-owned context; close it only on final Stop or failed startup. A fresh context is created only by a fresh user Start after Stop. Test context creation count1 across overlong recovery and mute/unmute, then count2 after Stop/new Start; old context closed once, fresh stream usable. #10 confirmation invalidates answer/intent without creating a context. All original patch/resource cleanup and exact callback-token guarantees remain.
+
+CONTRACT also adds cross-boundary test reading delivered apps/retrieval/fixtures/projects.json through validateProjectCatalog and asserting the exact three accepted records; production shared code imports neither fixture nor server service. Run fixture schema and public validator together before freeze to catch early #3/shared drift.
 
 
 ## Estimated effort redistribution
@@ -258,18 +390,19 @@ The eight-hour baseline budget and six-hour owner check-in remain timebox observ
 
 **Interfaces:** Export all public types above from contracts.ts. Export AppError class there with readonly httpStatus/code/turnId/retryable and inherited message; validation throws this one class. Export validateProjectCatalog(value:unknown):ProjectCatalog, validateCapabilities(value:unknown):Capabilities and validateTurnEvent(value:unknown):TurnEvent from validation.ts, alongside parseTurn/validateSpeech/validateHistory. Public validators clone validated inputs, reject additional fields, nonfinite/noninteger usage or seq, wrong schemaVersion/literal enums and malformed UUIDs. Project openItems must be a nonnegative integer, status one of active/paused/complete; names/summary/owner/id are strings. Capabilities segmentChars is positive integer <=120, literal backlog/water values exact; models/build IDs/reasons are string or null; no key-like extra fields. Source URLs are strings at the wire boundary; #6 safe URL rendering separately blocks unsafe schemes. SSE validates envelope and payload with these exports.
 
-- [ ] Add one exact fixture in wire-contract-fixtures.ts, with fixed UUID 11111111-1111-4111-8111-111111111111, accepted seq0 mode mock, answer deltas ['Let me check Atlas.','\n\n','Atlas is active, owned by North, with 3 open items.'], exact Atlas catalog tool.completed and complete final text equal to their join. Use the delivered fixture values, not a separate invented catalog. Export wireTurnId:string, wireDeltaFixture:readonly string[], wireEvents:readonly TurnEvent[], mockCapabilities:Capabilities and invalidWireValues:readonly unknown[]. The fixture prominently labels Mock/Contract Simulation and search configured/pending or unavailable, never verified live account success.
+- [ ] Add one exact fixture in wire-contract-fixtures.ts, with fixed UUID 11111111-1111-4111-8111-111111111111, accepted seq0 mode mock, answer deltas ['Let me check Atlas.','\n\n','Atlas is active, owned by North, with 3 open items.'], exact Atlas catalog tool.completed and complete final text equal to their join. Use the delivered fixture values, not a separate invented catalog. Export wireTurnId:string, wireDeltaFixture:readonly string[], wireEvents:readonly TurnEvent[], mockCapabilities:Capabilities and invalidWireValues:readonly unknown[]. The fixture prominently labels Mock/Contract Simulation and search.state:'unavailable', search.reason:'Mock/Contract Simulation does not verify hosted search.', search.accountValidation:'unavailable', never verified live account success.
 - [ ] Add and observe red behavioral validation tests: allowed fields/boundaries; duplicate multipart fields; both/neither text/audio; 2000/2001 text; 8/9 messages; 16000/16001 JS-string history; malformed UUID/JSON; empty PCM accepted for later no-speech; exact 480000-sample PCM accepted, next sample rejected; unknown valid padded WAV chunk skipped; duplicate/truncated fmt/data rejected. The wire parser receives already bounded bytes and independently rejects >2MiB; #4 still owns streaming counted reads before it.
-- [ ] Implement parseTurn using new Request with only bounded bytes and contentType, then FormData; only turnId/history and exactly text or audio. Validate MIME boundary, string fields, JSON history and WAV structure; text turn strips no meaningful text and rejects empty input. Reject non-audio File types/extra inputs rather than trusting MIME alone. Speech validation uses exact fields UUID/nonempty segmentId <=80/nonempty text<=supplied positive integer cap<=120. Own malformed-request AppError400 and body-size AppError413 only; paid admission remains #4.
-- [ ] Add public-history red assertions, then implement the exact retainPairs algorithm below. Inbound validateHistory requires alternating user/assistant pairs, <=4 pairs/eight messages/16000 chars and never trims. Retention clones each message; oversized newest pair is omitted with notice while preserving previously valid pairs. Do not mix generation ownership into this pure module.
+- [ ] Implement parseTurn using new Request with only bounded bytes and contentType, then FormData; only turnId/history and exactly text or audio. Validate MIME boundary, string fields, JSON history and WAV structure; text turn preserves supplied text bytes/string but rejects text whose trim() is empty. Its 2,000 bound counts JavaScript UTF-16 code units, including two per astral emoji. The audio File part must have exact case-insensitive media type audio/wav (optional parameters rejected); reject other/empty part MIME and extra inputs. Still validate RIFF bytes independently of MIME. Speech validation uses exact fields UUID/nonempty segmentId <=80/nonempty text<=supplied positive integer cap<=120. Own malformed-request AppError400 and body-size AppError413 only; paid admission remains #4.
+- [ ] Add public-history red assertions, then implement the bounded retainPairs algorithm below. After oversized-newest omission still apply the whole-oldest trimming loop; this preserves accepted valid-store behavior while making the public export bounded for arbitrary valid pairs. Test six ordinary pairs plus an oversized newest pair returns <=4 pairs/16000 chars with omitted:true. Inbound validateHistory requires alternating user/assistant pairs, <=4 pairs/eight messages/16000 chars and never trims. Retention clones each message; oversized newest pair is omitted with notice while preserving previously valid pairs. Do not mix generation ownership into this pure module.
 
 ```ts
 export function retainPairs(input:ReadonlyArray<readonly [HistoryMessage,HistoryMessage]>) {
   const pairs:Array<[HistoryMessage,HistoryMessage]>=input.map(p=>[{...p[0]},{...p[1]}]);
   const size=(p:[HistoryMessage,HistoryMessage])=>p[0].content.length+p[1].content.length;
-  if(pairs.length && size(pairs[pairs.length-1])>16000) return {pairs:pairs.slice(0,-1),omitted:true};
+  let omitted=false;
+  if(pairs.length && size(pairs[pairs.length-1])>16000) { pairs.pop(); omitted=true; }
   while(pairs.length>4 || pairs.reduce((n,p)=>n+size(p),0)>16000) pairs.shift();
-  return {pairs,omitted:false};
+  return {pairs,omitted};
 }
 ```
 
@@ -291,7 +424,7 @@ expect(encodeSse(wireEvents[0])).toEqual(rawAcceptedFrame);
 
 The expected raw frame is hand-authored, never generated by encodeSse. Separator bytes are [10,10], not four backslash/n bytes. SSE line/frame delimiters are actual LF bytes. The independently authored raw frame and malformed fixtures must fail a broken encoder even if its decoder shares the defect.
 
-- [ ] Add SSE red conformance test, then codec. encodeSse uses UTF-8 'event: '+type+'\ndata: '+JSON.stringify(event)+'\n\n'; no provider raw blocks. decodeSse uses streaming TextDecoder, handles LF/CRLF, joins multiline data with newline, ignores comment lines, requires event field (if present) match envelope type, validates JSON/event shape and fixed turnId/seq0/+1. At least one turn.accepted starts a stream; at most one turn.completed/turn.failed terminal; EOF before terminal produces a disconnected client condition, never synthetic complete. Final unterminated frame is decoded and validated, not silently discarded. Reject events before accepted, duplicate accepted, sequence gaps/duplicates, mixed IDs and post-terminal events. Abort/disconnect remains consumer-owned.
+- [ ] Add SSE red conformance test, then codec. encodeSse canonicalizes envelope insertion order {schemaVersion,turnId,seq,type,data}, then uses UTF-8 'event: '+type+'\ndata: '+JSON.stringify(canonicalEnvelope)+'\n\n'; no provider raw blocks. decodeSse uses streaming TextDecoder, handles LF/CRLF, joins multiline data with newline, ignores comment lines, requires event field (if present) match envelope type, validates JSON/event shape and fixed turnId/seq0/+1. At least one turn.accepted starts a stream; at most one turn.completed/turn.failed terminal; EOF before terminal throws SseDecodeError('STREAM_DISCONNECTED','Connection ended before terminal.'), never synthetic complete; exact EOF/protocol classification is defined in the stable decoder errors section. A syntactically complete final unterminated frame is decoded/validated: valid terminal succeeds, valid nonterminal then throws STREAM_DISCONNECTED, valid JSON with invalid schema/order throws INVALID_STREAM; unparseable partial final JSON throws STREAM_DISCONNECTED. Terminated malformed JSON always throws INVALID_STREAM. Reject events before accepted, duplicate accepted, sequence gaps/duplicates, mixed IDs and post-terminal events. Abort/disconnect remains consumer-owned.
 
 ```ts
 it('preserves a simulated trace at every UTF-8 split',async()=>{
@@ -324,7 +457,7 @@ export default function ContractProbe() {
 The Server starter page imports ContractProbe and renders it. No effect, capture or endpoint call runs. CONTRACT executes npm run build on actual Next app so all four modules are traversed by browser compiler, plus transitive import checks. #6 replaces starter page with Conversation and deletes temporary contract-probe.tsx after validating its own real browser consumer build. This concrete compile seam exercises public imports rather than building an unrelated page.
 
 - [ ] Add public dependency-boundary tests that follow local static imports/exports recursively from all four shared entry files and reject server/, node: imports, provider SDKs and secret-bearing config. Public modules may use standard web APIs/types only; NodeJS.ProcessEnv and Anthropic native types are server-only. Browser build/typecheck checks actual import compatibility; a lexical test alone does not prove bundle contents.
-- [ ] Run the exact CONTRACT verifiers above, inspect nonempty test output and diff, commit under its assigned real issue. Controller integrates reviewed source and freezes shared agreement bytes/digest, fixture and validator version before consumer fanout. Record that digest in docs/contracts/voice-bff-v1.md and consumer review evidence; hashing excludes the doc's own digest field to avoid a circular self-hash. Contracts source/fixture files are the hashed inputs, sorted paths plus bytes.
+- [ ] Run the exact CONTRACT verifiers above, inspect nonempty test output and diff, commit under its assigned real issue. Controller integrates reviewed source and freezes shared agreement bytes/digest, fixture and validator version before consumer fanout. Record that digest in docs/contracts/voice-bff-v1.md and consumer review evidence; the contract digest uses exactly the five-file deterministic recipe above. The document is excluded; doc/type agreement is verified separately.
 
 **Full AC/VC:** Foundation passes all public schemas/boundaries, history/SSE and import restrictions, exact normative docs/types/fixtures agree, no provider/upstream call exists, and scoped typecheck/lint/format pass. Independently earn canonical Test, independent code review, approved delivery and Close. No claim that real BFF or browser/provider end-to-end is already working.
 
@@ -342,7 +475,7 @@ The Server starter page imports ContractProbe and renders it. No effect, capture
 
 **Interfaces:** Native Anthropic.MessageParam/Message blocks remain in server/providers/contracts.ts. ModelAdapter.runRound(input:{messages:Anthropic.MessageParam[];searchRemaining:number;searchEnabled:boolean;maxTokens:1024},signal):AsyncIterable<ModelEvent>; ModelEvent text/source/round union remains accepted. runTurn(input:TurnInput,deps:{model;lookup;transcribe;mode;capabilities},signal):AsyncIterable<TurnEvent>. createRetrievalClient(baseUrl:string):(name:string|undefined,signal)=>Promise<ProjectCatalog>. Do not move server tool/native types into shared modules.
 
-- [ ] Add actual producer conformance in tests/integration/typed-turn.test.ts: start actual Fastify app at ephemeral loopback origin; ScriptedModel emits native preamble tool_use and end_turn answer; real retrieval client gets exact catalog; runTurn emits events encoded by encodeSse and decoded by decodeSse. Assert emitted delta sequence equals wireDeltaFixture, seq accepted0/+1, final text equals join, actual tool-result ID/provenance and no transcript function call for typed input. Do not stub runTurn itself to pass agreement.
+- [ ] Add actual producer conformance in tests/integration/typed-turn.test.ts: start actual Fastify app at ephemeral loopback origin; ScriptedModel emits native preamble tool_use and end_turn answer; real retrieval client gets exact catalog; runTurn emits events encoded by encodeSse and decoded by decodeSse. Assert full normalized type/data event sequence equals wireEvents (only turnId normalization; scripted usage fixed20/30/0), as well as delta sequence equals wireDeltaFixture, seq accepted0/+1, final text equals join, actual tool-result ID/provenance and no transcript function call for typed input. Do not stub runTurn itself to pass agreement.
 - [ ] Retain all existing tests for 3 rounds/4 custom attempts/exact-four final answer/excess batch truncation/1024 tokens, unchanged native blocks and pause continuations, shared search2 accounting, unknown/contradictory usage disables more search, disabled/configured/verified/unavailable states, explicit rejection without replay and hidden fallback exclusion. Official SDK maxRetries0; validate real Models capability separately from account search success.
 - [ ] Preserve one accumulator: append each delta once; within-round no invented separators; later first nonempty text emits standalone two-newlines only if previous text exists without trailing whitespace; final native text is never appended twice. Keep helper multiRoundDeltaFixture as observed producer sequence or compatibility reexport with actual equality test. Foundation fixture does not prove producer correctness on its own.
 - [ ] Actual POST turn route: admission → deadline → counted body/parse → lease → normalized SSE; pre-stream JSON common error, one turn.failed after accepted SSE; producer/upstream settlement retains lease. First delta visible before deferred round finishes; disconnected request never paid-replayed. Run typed/search/slow/conformance/typecheck/lint/format and full available suites, then whole-story gates.
@@ -351,9 +484,9 @@ The Server starter page imports ContractProbe and renders it. No effect, capture
 
 **Interfaces:** Preserve TurnToken{generation,turnId}, TurnController begin/current/attachAbort/cancelCurrent/apply, HistoryStore complete/messages and startTurn exact accepted signatures. HistoryStore uses shared retainPairs and injected isCurrent, never calls server imports. startTurn builds multipart and fetches same-origin /api/turn, iteratively decodes shared codec, validates token/seq and accumulated final text. Production code contains no controlled provider/retrieval fallback.
 
-- [ ] Add controller/history/UI red tests fed wireEvents, including duplicate/gapped seq, mismatched IDs/final text, old Atlas after Beacon, failed/truncated/interrupted/no-speech/pre-transcript, oversized pair notice and unsafe HTTP schemes. Implement current-generation atomic complete only; retain display after speech failure/mute. Decode failures show explicit error and allow deliberate new question without reconnect/replay.
+- [ ] Add controller/history/UI red tests fed wireEvents, including duplicate/gapped seq, mismatched IDs/final text, old Atlas after Beacon, failed/truncated/interrupted/no-speech/pre-transcript, oversized pair notice and unsafe HTTP schemes. Implement current-generation atomic complete only; retain display after speech failure/mute. Decode failures map STREAM_DISCONNECTED to 'Connection ended before the answer completed.' and INVALID_STREAM to 'The server sent an invalid response.'; both preserve partial text, exclude history and allow deliberate retry. These stable client reason codes are never server-paid retry instructions. Decode failures show explicit error and allow deliberate new question without reconnect/replay.
 - [ ] Run actual React page in tests/browser/typed.spec.ts with test-only Playwright route interception on /api/turn and /api/capabilities, or injected test transport only in harness. Label visible Mock/Contract Simulation. Yield first delta then defer terminal; prove early text, collapsed trace, exact cards, safe links, deliberate Busy retry and Strict Mode no effect-based duplicate paid calls. Browser consumer result is client-contract acceptance only. No assertion that a fixture card proves HTTP retrieval.
-- [ ] Add tests/ui/conversation.test.tsx and history/controller/links suites using fixture imports from tests/helpers only. No production import of tests or sibling server internals. Run declared #6 suite/browser typed/typecheck/lint/format and canonical gates. The original real-process typed acceptance is owned by #11 below.
+- [ ] Create tests/browser/voice-harness.ts as the explicit new test-only controlled transport helper for typed.spec.ts and later capture/interruption suites; no production imports. Add tests/ui/conversation.test.tsx and history/controller/links suites using fixture imports from tests/helpers only. No production import of tests or sibling server internals. Run declared #6 suite/browser typed/typecheck/lint/format and canonical gates. The original real-process typed acceptance is owned by #11 below.
 
 ## Detailed complete capture module execution
 
