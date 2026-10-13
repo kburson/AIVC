@@ -27,3 +27,7 @@ States: `Backlog → Refine → Ready for Planning → Plan → Develop → Test
 
 Test → Review: agent self-report REVIEW_COMPLETE (no CLI verb).
 <!-- ai-task-manager:codex-superpowers:end -->
+
+## Native AI peer review
+
+For user-requested Codex fanout reviews, read `.codex/peer-review-orchestration.md` alongside the installed `peer-review` skill. Use native launch and supervision with the sealed ai-peer-review protocol. The established native workflow uses explicit manual protocol transport and authentic MCP handoff waits; `automatic-required` checks the separate package-managed resident transport and is not a prerequisite for ordinary Codex agent spawning. Preserve genuine distinct session identities, requested per-run model/effort selections, tracked issue binding, and all author/reviewer boundaries.
