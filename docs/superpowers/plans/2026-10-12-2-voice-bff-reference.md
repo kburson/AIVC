@@ -71,7 +71,7 @@ Resolved metadata discrepancy: the accepted spec has **15** numbered verificatio
 
 - Priority: P1
 - Size: XL
-- Estimate: 38 hours expected implementation/review/live-debug effort; plausible range 27-55 hours before provider/account delays
+- Estimate: 39 hours expected implementation/review/live-debug effort; plausible range 28-57 hours before provider/account delays
 - Labels: epic, architecture, voice, bff
 - Refinement snapshot: XL/8 hours is a **provisional one-day timebox budget**, not a fixed delivery promise. The current authoritative issue field remains root-owned until the governed estimate/forecast update.
 - Dependency order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9. Task 5's provider adapter can be developed after Task 2, but final integration follows typed-path validation. Do not fan out tasks that mutate the same shared contracts.
@@ -84,11 +84,13 @@ Resolved metadata discrepancy: the accepted spec has **15** numbered verificatio
 | 4 Typed UI/history | 3.5 h | 2-5 h | Stale events and atomic history |
 | 5 Deepgram/voice HTTP | 3 h | 2-4 h | SDK stream/error/cancellation behavior |
 | 6 PCM/speech queue | 5 h | 3-7 h | Audio clock accounting and segmentation |
-| 7 Capture/VAD | 4 h | 3-6 h | WASM/assets, permission lifecycle |
+| 7 Capture/VAD | 5 h | 4-8 h | WASM/assets, permission lifecycle and maintained lifecycle patch |
 | 8 Interruption | 4 h | 3-6 h | Async suspend/resume races, echo |
 | 9 Evidence/tutorial | 7 h | 5-10 h | Live account support and device timing |
 
 Effort signals are human-hour planning inputs, not model-token or wall-clock guarantees. Tasks 2/3/6/8 have high coupling and failure impact (paid calls, provider native blocks, PCM accounting, concurrency races); Tasks 1/4/5/7 have medium coupling; Task 9 has high external uncertainty. All nine tasks require new tests because this is a new application; no existing application tests are expected to be removed. Each interface owner supplies additive contract tests before downstream work, and a failed provider/browser compatibility check may require revisiting its owning task. These signals and the per-task ranges above supply the root's genuine Plan-estimation input after governed decomposition.
+
+SPR revision adds one expected hour to Task 7 (range increases from 3-6 to 4-8 hours) for a version-bound VAD lifecycle patch and tests against the real pinned cleanup implementation. This raises the bottom-up total from 38 to 39 hours and range from 27-55 to 28-57; the nine task boundaries and accepted application scope stay the same. Root-owned issue/forecast metadata will be reconciled after the sealed review, rather than mutated during it.
 
 At eight elapsed implementation hours, report which requirements and verifiers remain open; do not remove requirements or label a partial typed/mock demo complete. Continue only within the owner's authorized implementation time. A smaller scope requires explicit new agreement. Prioritize working typed aggregation, then the complete voice loop, then evidence and concise tutorial; decoration has no separate task.
 
@@ -452,13 +454,13 @@ const { data, rawResponse } = await client.speak.v1.audio.generate({
   text: input.text, model: config.ttsModel, encoding:'linear16', sample_rate:24000, container:'none'
 }, { abortSignal:signal, maxRetries:0, timeoutInSeconds:20 }).withRawResponse();
 const contentType = rawResponse.headers.get('content-type') ?? '';
-if (!contentType.toLowerCase().startsWith('audio/l16')) throw speechError;
+if (!isExpectedPcmMime(contentType)) throw speechError;
 const stream = data.stream();
 if (!stream) throw speechError;
 return { stream, format:{ encoding:'pcm_s16le', sampleRate:24000, channels:1 } };
 ```
 
-`speechError` is `new AppError(502,'SPEECH_FAILED','Speech provider returned invalid audio.',input.turnId,false)`. Header inspection must use the actual `rawResponse` type from the pinned SDK; compile and test it, without coercing an incompatible header object. Check error responses are JSON before audio starts. STT uses `listen.v1.media.transcribeFile(new Blob([wav],{type:'audio/wav'}),{model:config.sttModel},{abortSignal:signal,maxRetries:0,timeoutInSeconds:60})` under the shared turn deadline.
+`isExpectedPcmMime(value:string):boolean` is a pure helper in deepgram.ts: parse the exact case-insensitive media type `audio/l16`, reject malformed or duplicate parameter names, and reject any supplied `rate` other than `24000` or `channels` other than `1`. Absent rate/channels use the fixed requested contract; real PCM format is separately verified live. Never accept a mere prefix such as audio/l16evil. Controlled-fetch tests include contradictory rate/channel metadata, duplicate rate, malformed type, JSON and the documented valid type. `speechError` is `new AppError(502,'SPEECH_FAILED','Speech provider returned invalid audio.',input.turnId,false)`. Header inspection must use the actual `rawResponse` type from the pinned SDK; compile and test it, without coercing an incompatible header object. Check error responses are JSON before audio starts. STT uses `listen.v1.media.transcribeFile(new Blob([wav],{type:'audio/wav'}),{model:config.sttModel},{abortSignal:signal,maxRetries:0,timeoutInSeconds:60})` under the shared turn deadline.
 
 - [ ] Write endpoint tests for pre-body Origin/Host rejection, JSON body cap, UUID/segmentId/nonempty text, hard120 and effective84 limits, missing capability, two active speech leases and third429. Apply an explicit 8 KiB measured JSON-body cap as an additional bounded transport implementation choice; all permitted <=120-character segments fit. Validate segment ID as a bounded nonempty string <=80 chars, never a provider configuration field. Effective duration estimate is `text.length / CPS <=6`.
 - [ ] Adapt speech route to Node response streaming with `Content-Type:application/octet-stream`, `X-Audio-Encoding:pcm_s16le`, `X-Audio-Sample-Rate:24000`, `X-Audio-Channels:1`, no-store. Normalize provider metadata, never return credential-bearing headers. Keep lease until network/upstream reader settles; canceled response cancels provider stream and abort signal. A deadline/stream failure after bytes starts terminates stream; client displays speech-error reason and retains text. Before bytes, use common JSON/HTTP status.
@@ -508,8 +510,18 @@ const outstanding = scheduledRemaining + unscheduledSamples/24000;
 // Keep source handles until ended/cancel; stop every source for canceled token.
 ```
 
-- [ ] Write text segmentation tests: decimals `3.5`, abbreviations `Dr.`, URL punctuation, source markers, code/Markdown formatting and final fragments. Preserve meaningful numbers; strip URL/citation/formatting for speech without changing displayed text. Stable sentences queue immediately, split at safe word boundaries <=effective cap. One token longer than cap is omitted with explicit speech status; no oversized request. Measure backlog as unsent sanitized characters <=2,400.
-- [ ] Implement deterministic `SpeechText` sentence detection with a guarded punctuation boundary (whitespace/end after punctuation, decimal/abbreviation/URL exceptions), then word-boundary split. Do not call a second LLM. Flush last fragment only on text terminal completion, including a visible truncated answer if speech is permitted; no history inclusion for truncation.
+- [ ] Write text segmentation tests for decimals `3.5`, abbreviations `Dr.` and `U.S.`, URLs, split citations/Markdown links/code delimiters and final fragments. For each complete representative input, compare unsplit parsing with every two-way character split and with one-character chunks; concatenate `push` output and `finish` output and require identical sanitized segments. Before the suffix arrives, pushes ending in `The value is 3.`, `https://example.`, `Dr.`, an open citation/link or partial code delimiter must emit no irreversible segment from that ambiguous token. Assert an unambiguous completed sentence followed by more answer text emits before model completion.
+- [ ] Implement `SpeechText` as an incremental buffer/scanner. A delta/network chunk boundary is never an end-of-sentence signal. In `push`, hold trailing punctuation until actual following whitespace is received and lexical state proves it is outside a decimal, known abbreviation, URL, citation, Markdown link or code span/fence; hold partial delimiter runs and incomplete structured tokens until closed or `finish`. URL/citation removal operates on complete tokens, never partial prefixes. Preserve ordinary numeric text and perform safe word splits only on stable sanitized sentences. No second LLM is used.
+
+```ts
+// Inside SpeechText's scanner, buffer includes ALL retained uncommitted chunks.
+const hasRightContext = i + 1 < buffer.length && /\\s/u.test(buffer[i + 1]);
+// Sentence emission additionally requires closed lexical state and the
+// decimal/abbreviation/URL/citation/Markdown exceptions above.
+// i === buffer.length - 1 is provisional in push, even if it is punctuation.
+```
+
+- [ ] Reserve true answer-end flushing for `finish()` called once on an allowed complete/truncated terminal event. A dangling URL/link/citation/code token is sanitized conservatively at finish; failed/interrupted turns cancel unsent speech instead. Stable sentences split immediately at word boundaries <=effective cap; one overlong token is omitted with a visible reason. The 2,400-character backlog bound includes raw uncommitted scanner text plus sanitized unsent queue text, counted once, so partial tokens cannot bypass the bound. Preserve displayed text unchanged.
 - [ ] Write fast-producer test with synthetic multi-sentence answer shorter than backlog cap: first speech starts before model complete, only one request active, active body drained promptly, no next request until audio <=2 seconds/running/not tentative, and every admitted sentence eventually plays without overflow cutoff. Reject extra bytes immediately if actual active response exceeds ten seconds, cancel all scheduled/unscheduled PCM, clear text, abort synthesis, disable remaining speech and preserve model text.
 - [ ] Create/resume the dedicated playback context directly in the typed-submit user gesture as well as Start conversation, so typed fallback speaks when output is enabled even before microphone conversation mode starts. Reuse the same playback instance per mounted conversation and clean it on Stop/unmount; permission/capture is unnecessary for a typed answer.
 - [ ] Implement a pump awakened by text arrival, stream completion, playback progress/resume and tentative clear. Long answers remain queued as text. Do not pause an active network body waiting for playback. Default six-second estimate admission at <=2 seconds leaves safety margin; actual PCM emergency check still governs. Pending-text overflow clears unsent text and disables future speech, but already generated audio can finish (unlike audio oversize/stall teardown).
@@ -535,9 +547,9 @@ npm run typecheck
 
 #### Files
 
-Create `apps/web/client/voice/wav.ts`, `apps/web/client/voice/vad-adapter.ts`, `apps/web/client/voice/capture-session.ts`, `scripts/copy-vad-assets.mjs`, `tests/voice/wav.test.ts`, `tests/voice/capture-session.test.ts`, `tests/contracts/assets.test.ts`, `tests/browser/capture.spec.ts`. Modify Conversation, web scripts and mock browser harness.
+Create `apps/web/client/voice/wav.ts`, `apps/web/client/voice/vad-adapter.ts`, `apps/web/client/voice/capture-session.ts`, `scripts/copy-vad-assets.mjs`, `patches/@ricky0123+vad-web+0.0.31.patch`, `tests/voice/wav.test.ts`, `tests/voice/capture-session.test.ts`, `tests/voice/vad-lifecycle.test.ts`, `tests/contracts/assets.test.ts`, `tests/browser/capture.spec.ts`. Modify Conversation, root package/lock, web scripts and mock browser harness. Pin root devDependency `patch-package` 8.0.1 and root `postinstall` to `patch-package --error-on-fail`; this is application dependency maintenance, with no change to global peer-review tooling.
 
-**Interfaces:** `encodeWav(samples:Float32Array):Blob` produces Task 2 WAV contract; `VadCallbacks={ rawStart():void; confirmedStart():void; misfire():void; end(samples:Float32Array):void; frame(samples:Float32Array):void }`; `createVad(context:AudioContext,stream:MediaStream,callbacks:VadCallbacks):Promise<{start():Promise<void>;pause():Promise<void>;destroy():Promise<void>}>`. `CaptureSession.start():Promise<void>`, `mute():Promise<void>`, `unmute():Promise<void>`, `stop():Promise<void>` owns one session epoch, stream, capture context/VAD and pending start promise. Playback is the distinct Task 6 context.
+**Interfaces:** `encodeWav(samples:Float32Array):Blob` produces Task 2 WAV contract; `CaptureToken={ epoch:number; utteranceId:number; intentVersion:number }`; `VadCallbacks={ rawStart(capture:CaptureToken):void; confirmedStart(capture:CaptureToken):void; misfire(capture:CaptureToken):void; end(capture:CaptureToken,samples:Float32Array):void; frame(samples:Float32Array):void }`; `createVad(context:AudioContext,stream:MediaStream,callbacks:VadCallbacks):Promise<{start():Promise<void>;pause():Promise<void>;destroy():Promise<void>}>`. `CaptureSession.start():Promise<void>`, `mute():Promise<void>`, `unmute():Promise<void>`, `stop():Promise<void>` owns one session epoch, stream, capture context/VAD and pending start promise. Playback is the distinct Task 6 context.
 
 - [ ] Write WAV tests for clipped normalized floats, extrema/little endian/header sizes/sample rate and 30-second cap. Encoder writes RIFF44 bytes+sampleCount*2 with mono PCM16/16000 and clips [-1,1]. Reject empty/excess samples on client with a visible nonfatal status, rather than sending garbage.
 
@@ -548,21 +560,28 @@ view.setInt16(44+i*2,clipped<0?Math.round(clipped*32768):Math.round(clipped*3276
 // byteRate32000/blockAlign2/bits16/data length2*n.
 ```
 
+- [ ] Resolve the pinned-library cleanup gap explicitly with the checked-in narrow patch `patches/@ricky0123+vad-web+0.0.31.patch`. The app imports the package module entry `dist/index.js`, whose MicVAD implementation is `dist/real-time-vad.js`; it does not import the unpatched CDN bundle. Patch only lifecycle disposal, cancellation guards during asynchronous start, and in-flight frame accounting in that implementation. A clean `npm ci` must apply the patch with `--error-on-fail`; altered/missing upstream context fails setup instead of silently dropping the fix. Record upstream version/git head, patch SHA-256 and modified package-file digest in the VAD asset manifest/README and live package provenance.
+- [ ] Make the patched public `destroy()` safe for allocated-but-never-started, partial-start and fully started instances. Cache one disposal promise; mark destroyed and block new start/frame work first, stop already acquired tracks immediately, and retain pending-start/frame promises. Add destroyed-state checks after each awaited stream/worklet initialization and immediately before media-node connection or setting listening; a canceled pending start cannot activate listening. Destroy awaits pending initialization and admitted frame work, then clears worklet message handlers/notifies stop, disconnects whichever nodes exist and releases every late acquired stream/node before model release. Use guarded cleanup with `finally` so absent nodes or a node-cleanup error cannot skip `model.release()`. Call release once; the pinned Silero release reaches its ORT session release plus state/sample-rate tensor disposal. Close only a package-owned context; the adapter always closes its caller-owned capture context. Cleanup errors remain visible, never counted as successful release. The patch preserves speech thresholds, model inference, sample rate and ordinary successful callback semantics, and the adapter never reaches into private model fields.
+- [ ] Add `vad-lifecycle.test.ts` against the actual patched MicVAD module, with controlled model factory/ORT session and browser-node boundaries. Exercise model creation resolving after Stop before start, worklet addModule rejecting after model allocation, a pending successful worklet load canceled by Stop, a normal initialized destroy and two concurrent destroys. Instrument model release and its session/tensor release path, not merely a mock adapter destroy method. Assert exactly one release, stopped tracks/disconnected nodes/closed caller context, no post-cancel listening/submission, and a successful fresh Start. Hold a frame inference promise during normal destroy and prove release waits for its settlement; new frames are rejected while disposing. Keep an independent browser smoke test using actual VAD/ORT assets.
 - [ ] Copy pinned VAD worklet, `silero_vad_v5.onnx` and required ORT `.wasm`/`.mjs` files from the actual resolved dependency directories into `apps/web/public/vad/` and `/vad/ort/`. Use `createRequire.resolve` to find package roots; fail if required files absent, write a manifest with version/file SHA-256, and ignore copied assets while regenerating them in predev/prebuild. Never fetch CDN/latest assets during runtime. Set `baseAssetPath:'/vad/'`, `onnxWASMBasePath:'/vad/ort/'` and verify HTTP200/expected MIME in browser. Tests check manifest hashes and browser starts actual pinned VAD once; mocks alone cannot validate WASM assets.
-- [ ] Implement adapter with supported pinned API and caller-owned capture context. Use `startOnLoad:false`, `model:'v5'`, `processorType:'AudioWorklet'`, `redemptionMs:800`, `preSpeechPadMs:800`, `minSpeechMs:400`, initial thresholds .3/.25. Supply the acquired stream via getStream; pause stops tracks and resume reacquires echo/noise-suppressed mono capture. `onSpeechRealStart` confirms during speech, never wait until `onSpeechEnd`.
+- [ ] Implement adapter with the public API of the explicitly patched pinned package and caller-owned capture context. The adapter supplies immutable capture tokens to application callbacks: increment utteranceId at each raw start, snapshot epoch/intentVersion, then attach the same token to that utterance's real-start/misfire/end callbacks before any asynchronous work. Export `CaptureSession.invalidateIntent():void` to increment intentVersion and invalidate pending capture on typed submit/Stop/microphone mute/overlong discard. Session epoch changes on capture restart. Late callbacks carry their old snapshot and cannot acquire a new token. Use `startOnLoad:false`, `model:'v5'`, `processorType:'AudioWorklet'`, `redemptionMs:800`, `preSpeechPadMs:800`, `minSpeechMs:400`, initial thresholds .3/.25. Supply the acquired stream via getStream; pause stops tracks and resume reacquires echo/noise-suppressed mono capture. `onSpeechRealStart` confirms during speech, never wait until `onSpeechEnd`.
 
 ```ts
 const vad=await MicVAD.new({ audioContext:captureContext, startOnLoad:false,
   model:'v5',processorType:'AudioWorklet',baseAssetPath:'/vad/',onnxWASMBasePath:'/vad/ort/',
   redemptionMs:800,preSpeechPadMs:800,minSpeechMs:400,
   getStream:async()=>stream,
-  onSpeechStart:callbacks.rawStart,onSpeechRealStart:callbacks.confirmedStart,
-  onVADMisfire:callbacks.misfire,onSpeechEnd:callbacks.end,
+  onSpeechStart:()=>callbacks.rawStart(beginCapture()),
+  onSpeechRealStart:()=>callbacks.confirmedStart(currentCapture()),
+  onVADMisfire:()=>callbacks.misfire(currentCapture()),
+  onSpeechEnd:audio=>callbacks.end(currentCapture(),audio),
   onFrameProcessed:(_probs,frame)=>callbacks.frame(frame)
 });
 ```
 
-- [ ] In the actual Start click create/resume both contexts synchronously before asynchronous permission/VAD initialization; request `channelCount:1`, `echoCancellation:true`, `noiseSuppression:true`, `autoGainControl:true` where supported. No effect starts capture/paid work. Session start is idempotent; Stop invalidates epoch first, then awaits pending initialization and releases late stream/VAD/context. Pinned destroy assumes initialized internal nodes: on partially initialized failure explicitly stop acquired tracks and close caller-owned context, and call destroy only for a successfully started VAD instance. Verify failure cleanup against the pinned implementation.
+`beginCapture():CaptureToken` and `currentCapture():CaptureToken` are local adapter helpers implemented in vad-adapter.ts from the CaptureSession-owned epoch/intentVersion and adapter utterance counter; currentCapture returns the immutable raw-start snapshot, never a fresh current epoch. Ignore a callback if no raw-start snapshot exists. The adapter snapshots the token synchronously before dispatching a callback or promise.
+
+- [ ] In the actual Start click create/resume both contexts synchronously before asynchronous permission/VAD initialization; request `channelCount:1`, `echoCancellation:true`, `noiseSuppression:true`, `autoGainControl:true` where supported. No effect starts capture/paid work. Session start is idempotent; Stop invalidates epoch/intent first, then awaits pending model/start promises and destroys every allocated VAD using the patched public destroy, even if start was never called or failed. If model creation resolves after Stop, destroy it immediately without calling start/getStream; never activate listening to make cleanup possible. If start was already pending, invoke the patched destroy immediately so it marks initialization canceled before awaiting settlement; the patched start guards prevent activation and destroy releases partial/late resources. If no VAD instance was allocated, release any acquired stream/context directly. Keep cleanup idempotent and observable across all paths.
 - [ ] Track 16 kHz frame/sample length since raw start including pre-roll conservatively. At 30 seconds deliberately discard overlong utterance, pause/destroy/restart bounded VAD capture after resetting candidate, display duration notice and issue no turn. This prevents the VAD's internal utterance buffer from growing indefinitely; allow the user to speak again. Never just reject at speech end while keeping unbounded capture. Normal end emits WAV once automatically through same turn path, showing transcript only inside collapsed details; no approval action.
 - [ ] Test permission denied, permission pending then Stop, VAD asset/load failure, start double-click, Strict Mode mount/unmount/remount, microphone mute/unmute, overlong continuous utterance and Stop during speech. Spies prove exactly one submission per valid end, zero on misfire/overlong/obsolete epoch, every acquired track stopped and contexts/nodes/VAD released. Browser simulation uses synthetic audio explicitly; real microphone remains Task 9 evidence.
 - [ ] Run WAV/capture/assets/browser tests and commit scoped task.
@@ -572,7 +591,7 @@ const vad=await MicVAD.new({ audioContext:captureContext, startOnLoad:false,
 ```sh
 npm run assets:vad
 npm run test:voice
-npx vitest run tests/contracts/assets.test.ts
+npx vitest run tests/contracts/assets.test.ts tests/voice/vad-lifecycle.test.ts
 npm run test:browser -- --grep capture
 npm run typecheck
 npm run build
@@ -591,23 +610,31 @@ npm run build
 
 Create `apps/web/client/voice/interruption.ts`, `tests/voice/interruption.test.ts`, `tests/slow/rapid-interruption.test.ts`, `tests/browser/interruption.spec.ts`. Modify CaptureSession/controller/queue/Conversation to wire callbacks and mute/Stop behavior.
 
-**Interfaces:** `Interruption.rawStart(sessionEpoch:number):void`, `confirmedStart(sessionEpoch:number):void`, `misfire(sessionEpoch:number):void`, `end(sessionEpoch:number,samples:Float32Array):void`, `cancel():void`. It retains `{candidateId:number,token:TurnToken,phase:'tentative'|'confirmed'}`. Playback suspend/resume promises and all callbacks check candidate ID, capture epoch and current generation before changing anything. End submits exactly one newly confirmed utterance after VAD silence; raw start itself never launches a request.
+**Interfaces:** `Interruption.rawStart(capture:CaptureToken):void`, `confirmedStart(capture:CaptureToken):void`, `misfire(capture:CaptureToken):void`, `end(capture:CaptureToken,samples:Float32Array):void`, `cancel():void`. `Candidate={ capture:CaptureToken; answerToken:TurnToken|null; phase:'tentative'|'confirmed'|'consumed' }`; it separates captured-utterance ownership from the answer it may interrupt. `captureIsCurrent(capture):boolean` requires matching active CaptureSession epoch, intentVersion and utteranceId/active candidate identity. Tentative pause/restoration additionally require `answerToken !== null` and `controller.current(answerToken)`. Confirmed end admission uses capture ownership and confirmed/unconsumed phase only: the deliberate old-answer invalidation does not revoke its utterance. No-active-answer candidates have answerToken null and still confirm/end automatically. Raw start never launches a request.
 
 - [ ] Write red tests with delayed playback suspend promises: raw start in Speaking retains handles/queue/generation, sets tentative admission pause and requests playback suspend; active model/lookup/small synthesis signals remain un-aborted. A misfire resumes retained audio and current Working slow lookup with zero new calls. If suspend resolves after misfire, resume only if that same tentative candidate/current token remains valid; if confirmation/new turn intervened, never restore old audio.
-- [ ] Implement two-phase ownership transitions. Raw start creates tentative candidate only for current active capture epoch and outstanding Working/Speaking generation. Confirmation changes phase first, invalidates current generation, stops every source, clears PCM/pending text and aborts attached turn/speech controllers; this prevents a late misfire from resuming. Capture context/VAD keeps listening and next request waits for speech end.
+- [ ] Add the full red raw-start → real-start → old-answer invalidation → speech-end test: exactly one new turn submits even though controller.current(oldAnswerToken) is false. Repeat from initial Listening with no answerToken, and with typed submit, Stop, microphone mute, overlong discard or a newer raw-start candidate intervening between confirmation and end; the obsolete end submits zero. Duplicate end is consumed once. Output mute cancels output only and does not invalidate an otherwise valid capture.
+- [ ] Implement two-phase ownership transitions. Raw start records a valid capture candidate with the current answer token or null. Confirmation requires captureIsCurrent and tentative phase; mark confirmed before canceling the old answer. If its answerToken is still current, invalidate/abort old model/lookup/speech and stop/clear old audio. Keep the confirmed capture candidate current so its later end remains admitted. A typed submit, Stop, microphone mute, overlong discard, capture restart or newer candidate invalidates prior capture intent/identity independently of answer generation. Capture continues through genuine interruption; request submission waits for VAD speech end.
 
 ```ts
-// Conceptual ordering, using the interfaces above:
 function commitCandidate(candidate: Candidate) {
-  if (candidate.phase!=='tentative'||!controller.current(candidate.token)) return;
+  if (candidate.phase!=='tentative'||!captureIsCurrent(candidate.capture)) return;
   candidate.phase='confirmed';
-  controller.cancelCurrent('interrupted');
-  queue.cancel(candidate.token,'interrupted');
-  playback.cancel(candidate.token);
+  const old=candidate.answerToken;
+  if (old && controller.current(old)) {
+    controller.cancelCurrent('interrupted');
+    queue.cancel(old,'interrupted');
+    playback.cancel(old);
+  }
+}
+function admitEnd(candidate: Candidate, capture: CaptureToken): boolean {
+  if (candidate.phase!=='confirmed'||candidate.capture!==capture||!captureIsCurrent(capture)) return false;
+  candidate.phase='consumed'; // Consume BEFORE beginning the new answer generation.
+  return true;
 }
 ```
 
-`Candidate` is the exact retained shape in the interface; dependencies are injected into Interruption. For an initial Listening utterance with no active answer, confirmation records a candidate without canceling anything, then end starts its new turn. On typed submit, invalidate/cancel directly and clear any tentative candidate before submitting. Output mute cancels speech only, never model text/history; microphone mute stops capture/candidate, not completed answer text. Stop invalidates epochs/generation, aborts model and speech, releases capture/playback and timers.
+`Candidate` is the exact shape above. Dependencies include controller, queue, playback and CaptureSession identity predicate; callbacks retain the same immutable CaptureToken object. On typed submit call CaptureSession.invalidateIntent(), cancel the candidate, then cancel/submit the answer directly. Misfire and delayed suspend/resume require the same tentative capture plus still-current answer; confirmed, consumed, stale or watchdog-canceled candidates cannot restore old audio. Output mute preserves capture/text/history. Microphone mute and Stop invalidate capture; Stop also invalidates answer generation, aborts work and releases capture/playback/timers.
 
 - [ ] Add stale-callback tests for old transcript/delta/tool result/completion/speech byte/source-ended callback and old capture end; none may update the current card/text/playback/history. Completed old text already committed stays history with interrupted-speech marker. Partial/canceled text stays visible incomplete and contributes neither history message.
 - [ ] Rapid-interruption test controls upstream settlement, fires three confirmed turns and verifies third rejects Busy while two old canceled-but-unsettled jobs still hold slots. There is no automatic 429 or paid replay. After settlement a deliberate new question works. Include all four upstream abort paths (model, STT, retrieval, TTS) and transport support limits.
