@@ -1,0 +1,10 @@
+node_modules/
+**/.next/
+**/dist/
+apps/web/public/vendor/
+docs/peer-reviews/
+.superpowers/
+.scratch/
+.tmp/
+vendors/
+package-lock.json
