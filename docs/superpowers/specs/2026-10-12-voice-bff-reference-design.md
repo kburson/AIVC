@@ -6,7 +6,7 @@ Status: specification for review and transfer to a new repository. Implementatio
 
 ## Purpose and agreed intent
 
-Build a small reference application for learning React, Next.js, backend-for-frontend design and frontier-model integration. The user speaks naturally, the application sends the question through a BFF to an AI API and specialized data service, and the answer appears as formatted text and generated speech. The transcript is optional; inspecting or approving it is never a normal step.
+Build a small reference architecture to demonstrate React, Next.js, backend-for-frontend design and frontier-model integration. The user speaks naturally, the application sends the question through a BFF to an AI API and specialized data service, and the answer appears as formatted text and generated speech. The transcript is optional; inspecting or approving it is never a normal step.
 
 The application should make **client ↔ BFF ↔ AI API and data services** easy to trace. A later tutorial will explain the working implementation, rather than inventing an architecture the code does not use.
 
