@@ -177,3 +177,33 @@ it('rejects bad capabilities Host before reading build metadata', async () => {
   });
   expect(metadata).not.toHaveBeenCalled();
 });
+
+it('preserves BUSY status from an old pool after the errors module reloads', async () => {
+  const { getLeasePools } = await import('../../apps/web/server/turns/leases');
+  const pools = getLeasePools();
+  const first = pools.acquire('turn');
+  const second = pools.acquire('turn');
+  try {
+    let failure: unknown;
+    try {
+      pools.acquire('turn');
+    } catch (error) {
+      failure = error;
+    }
+    vi.resetModules();
+    const reloaded = await import('../../apps/web/server/http/errors');
+    const response = reloaded.errorResponse(failure);
+    expect(response.status).toBe(429);
+    expect(await response.json()).toEqual({
+      error: {
+        code: 'BUSY',
+        message: 'Busy. Ask again after active work settles.',
+        turnId: null,
+        retryable: true,
+      },
+    });
+  } finally {
+    first.release();
+    second.release();
+  }
+});

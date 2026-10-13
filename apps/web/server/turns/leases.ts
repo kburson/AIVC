@@ -1,4 +1,4 @@
-import { AppError } from '../../shared/contracts';
+import { AppError } from '../http/errors';
 export type LeaseKind = 'turn' | 'speech';
 export type Lease = { release(): void };
 export class LeasePools {

@@ -1,4 +1,4 @@
-import { AppError } from '../../shared/contracts';
+import { AppError } from './errors';
 import type { ServerConfig } from '../config';
 function reject(): never {
   throw new AppError(

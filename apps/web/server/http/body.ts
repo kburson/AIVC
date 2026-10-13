@@ -1,5 +1,5 @@
 import type { TurnInput } from '../../shared/contracts';
-import { AppError } from '../../shared/contracts';
+import { AppError } from './errors';
 import { parseTurn } from '../../shared/validation';
 import type { ServerConfig } from '../config';
 import { assertAdmission } from './admission';

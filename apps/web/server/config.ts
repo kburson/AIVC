@@ -1,4 +1,4 @@
-import { AppError } from '../shared/contracts';
+import { AppError } from './http/errors';
 export type ServerConfig = {
   mode: 'live' | 'mock';
   allowedOrigins: ReadonlySet<string>;
