@@ -11,15 +11,55 @@
     "url": "git+https://github.com/kburson/AIVC.git"
   },
   "author": "kburson",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node scripts/dev.mjs",
+    "start": "node scripts/dev.mjs --production",
+    "build:clean": "node scripts/clean-build.mjs",
+    "test:browser:install": "playwright install chromium",
+    "build": "npm run build --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "node scripts/run-tests.mjs unit",
+    "test:contracts": "node scripts/run-tests.mjs contracts",
+    "test:integration": "node scripts/run-tests.mjs integration",
+    "test:voice": "node scripts/run-tests.mjs voice",
+    "test:browser": "playwright test",
+    "test:slow": "node scripts/run-tests.mjs slow",
+    "lint": "eslint apps tests scripts --max-warnings=0",
+    "format:check": "node scripts/format-check.mjs",
+    "verify:live": "node scripts/verify-live.mjs",
+    "verify:docs": "node scripts/verify-docs.mjs",
+    "assets:vad": "node scripts/copy-vad-assets.mjs",
+    "verify:toolchain": "node scripts/verify-toolchain.mjs",
+    "preinstall": "node scripts/verify-toolchain.mjs"
   },
   "devDependencies": {
-    "@kburson/ai-task-manager": "file:vendors/kburson-ai-task-manager-0.1.0.tgz"
-  }
+    "@kburson/ai-task-manager": "file:vendors/kburson-ai-task-manager-0.1.0.tgz",
+    "typescript": "5.9.3",
+    "tsx": "4.20.6",
+    "vitest": "4.0.18",
+    "eslint": "9.39.1",
+    "eslint-config-next": "16.4.0",
+    "prettier": "3.9.10",
+    "jsdom": "26.1.0",
+    "@testing-library/react": "16.3.3",
+    "@playwright/test": "1.64.0",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0"
+  },
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "apps/retrieval"
+  ],
+  "engines": {
+    "node": ">=26",
+    "npm": "12.0.2"
+  },
+  "packageManager": "npm@12.0.2"
 }
