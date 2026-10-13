@@ -130,7 +130,9 @@ For each test-bearing checkbox below, add one boundary scenario, run the owning 
 - **Need:** local fixture substitution inside the BFF would conceal the independent HTTP retrieval boundary
 - **Value or failure prevented:** the developer can reproduce exact answers and observe service failure without private data or a database
 
-**Files:** Create `.nvmrc`, `.npmrc`, `tsconfig.base.json`, `vitest.config.ts`, `eslint.config.mjs`, `.prettierrc.json`, `.prettierignore`, `apps/retrieval/package.json`, `apps/retrieval/tsconfig.json`, `apps/retrieval/src/projects/catalog.ts`, `apps/retrieval/src/http/app.ts`, `apps/retrieval/src/index.ts`, `apps/retrieval/fixtures/projects.json`, `apps/web/package.json`, `apps/web/tsconfig.json`, `apps/web/next.config.ts`, `apps/web/app/layout.tsx`, `apps/web/app/page.tsx`, `scripts/dev.mjs`, `scripts/run-tests.mjs`, `scripts/format-check.mjs`, `scripts/task-tracker/verify-epic-trail.mjs`, `tests/contracts/retrieval.test.ts`, `tests/scripts/epic-wrapper.test.ts`. Modify root `package.json`, `package-lock.json`, `.gitignore`.
+#### Files
+
+Create `.nvmrc`, `.npmrc`, `tsconfig.base.json`, `vitest.config.ts`, `eslint.config.mjs`, `.prettierrc.json`, `.prettierignore`, `apps/retrieval/package.json`, `apps/retrieval/tsconfig.json`, `apps/retrieval/src/projects/catalog.ts`, `apps/retrieval/src/http/app.ts`, `apps/retrieval/src/index.ts`, `apps/retrieval/fixtures/projects.json`, `apps/web/package.json`, `apps/web/tsconfig.json`, `apps/web/next.config.ts`, `apps/web/app/layout.tsx`, `apps/web/app/page.tsx`, `scripts/dev.mjs`, `scripts/run-tests.mjs`, `scripts/format-check.mjs`, `scripts/task-tracker/verify-epic-trail.mjs`, `tests/contracts/retrieval.test.ts`, `tests/scripts/epic-wrapper.test.ts`. Modify root `package.json`, `package-lock.json`, `.gitignore`.
 
 **Interfaces:** `createRetrievalApp(): FastifyInstance`; `lookupProjects(name?: string): ProjectCatalog`; `ProjectRecord = { id: string; name: string; status: 'active'|'paused'|'complete'; ownerTeam: string; openItems: number; summary: string }`; `ProjectCatalog = { schemaVersion: 1; source: 'synthetic-project-catalog'; records: ProjectRecord[] }`. Task 2 owns the shared copy of these wire types; retrieval may import it once created, avoiding a third running service.
 
@@ -225,7 +227,9 @@ npm run format:check
 - **Need:** a loopback paid endpoint can receive simple cross-origin requests and cancellation may outlive its HTTP response
 - **Value or failure prevented:** unintended paid calls, unbounded buffering and excess upstream concurrency are prevented
 
-**Files:** Create `apps/web/shared/contracts.ts`, `apps/web/shared/validation.ts`, `apps/web/shared/history.ts`, `apps/web/server/config.ts`, `apps/web/server/http/admission.ts`, `apps/web/server/http/body.ts`, `apps/web/server/http/errors.ts`, `apps/web/server/turns/leases.ts`, `apps/web/server/turns/deadline.ts`, `apps/web/server/capabilities.ts`, `apps/web/server/runtime.ts`, `apps/web/app/api/capabilities/route.ts`, `apps/web/.env.example`, `tests/contracts/config.test.ts`, `tests/contracts/admission.test.ts`, `tests/contracts/input.test.ts`, `tests/contracts/leases.test.ts`, `tests/slow/deadlines.test.ts`.
+#### Files
+
+Create `apps/web/shared/contracts.ts`, `apps/web/shared/validation.ts`, `apps/web/shared/history.ts`, `apps/web/server/config.ts`, `apps/web/server/http/admission.ts`, `apps/web/server/http/body.ts`, `apps/web/server/http/errors.ts`, `apps/web/server/turns/leases.ts`, `apps/web/server/turns/deadline.ts`, `apps/web/server/capabilities.ts`, `apps/web/server/runtime.ts`, `apps/web/app/api/capabilities/route.ts`, `apps/web/.env.example`, `tests/contracts/config.test.ts`, `tests/contracts/admission.test.ts`, `tests/contracts/input.test.ts`, `tests/contracts/leases.test.ts`, `tests/slow/deadlines.test.ts`.
 
 **Interfaces:** `loadConfig(env: NodeJS.ProcessEnv): ServerConfig`; `assertAdmission(headers: Headers, config: ServerConfig, requireOrigin: boolean): void`; `readBoundedBody(req: Request, maxBytes: number): Promise<Uint8Array>`; `parseTurn(bytes: Uint8Array, contentType: string): Promise<TurnInput>`; `validateSpeech(value: unknown, cap: number): SpeechInput`; `validateHistory(value: unknown): HistoryMessage[]`; `acquireLease(kind: 'turn'|'speech'): { release(): void }` throws `AppError` when busy; `runWithDeadline<T>(ms: number, caller: AbortSignal, work: (signal: AbortSignal)=>Promise<T>): { result: Promise<T>; settled: Promise<void>; signal: AbortSignal }` separates the deadline-facing result from actual upstream settlement. The result rejects at timeout/caller abort; the settled promise resolves only after the work really settles and has its own rejection handler. Lease release is attached to settled, never to the timeout-facing result. `createRetrievalClient(baseUrl:string): (name:string|undefined,signal:AbortSignal)=>Promise<ProjectCatalog>` is exported by Task 3. `getRuntime()` is one process singleton under `globalThis` across module reloads, containing config/capabilities/adapters and separate two-slot pools.
 
@@ -320,7 +324,9 @@ npm run typecheck
 - **Need:** tool IDs, provider pauses and request-scoped search limits can be lost during multi-round orchestration
 - **Value or failure prevented:** grounded project cards and citations remain attributable while infinite loops, search-budget overruns and hidden replays are prevented
 
-**Files:** Create `apps/web/server/providers/contracts.ts`, `apps/web/server/providers/claude.ts`, `apps/web/server/providers/mock.ts`, `apps/web/server/tools/lookup-projects.ts`, `apps/web/server/tools/retrieval-client.ts`, `apps/web/server/turns/run-turn.ts`, `apps/web/shared/sse.ts`, `apps/web/server/http/sse-response.ts`, `apps/web/app/api/turn/route.ts`, `tests/helpers/scripted-providers.ts`, `tests/integration/typed-turn.test.ts`, `tests/contracts/search-budget.test.ts`, `tests/contracts/sse.test.ts`, `tests/slow/disconnect.test.ts`. Modify runtime/capabilities from Task 2.
+#### Files
+
+Create `apps/web/server/providers/contracts.ts`, `apps/web/server/providers/claude.ts`, `apps/web/server/providers/mock.ts`, `apps/web/server/tools/lookup-projects.ts`, `apps/web/server/tools/retrieval-client.ts`, `apps/web/server/turns/run-turn.ts`, `apps/web/shared/sse.ts`, `apps/web/server/http/sse-response.ts`, `apps/web/app/api/turn/route.ts`, `tests/helpers/scripted-providers.ts`, `tests/integration/typed-turn.test.ts`, `tests/contracts/search-budget.test.ts`, `tests/contracts/sse.test.ts`, `tests/slow/disconnect.test.ts`. Modify runtime/capabilities from Task 2.
 
 **Interfaces:** `ModelAdapter.runRound(input: ModelRoundInput, signal: AbortSignal): AsyncIterable<ModelEvent>`; `ModelRoundInput = { messages: Anthropic.MessageParam[]; searchRemaining: number; searchEnabled: boolean; maxTokens:1024 }`; native SDK message/block types are server-only. `ModelEvent` is `{type:'text';text:string}` or `{type:'sources';sources:Source[]}` or `{type:'round';message:Anthropic.Message;searchUses:number|null;usage?:Usage}`. `runTurn(input:TurnInput, deps:TurnDeps, signal:AbortSignal): AsyncIterable<TurnEvent>`; `TurnDeps` has `model:ModelAdapter`, `lookup:(name:string|undefined,signal:AbortSignal)=>Promise<ProjectCatalog>`, `transcribe:(wav:Uint8Array,signal:AbortSignal)=>Promise<string>`, `mode:'live'|'mock'`, `capabilities:Capabilities`. Task 5 implements live transcription; typed tests supply a function that throws if called. `encodeSse(event:TurnEvent):Uint8Array`; `decodeSse(bytes:AsyncIterable<Uint8Array>):AsyncIterable<TurnEvent>` validates envelope/data/sequence and incremental UTF-8/framing.
 
@@ -380,7 +386,9 @@ npm run typecheck
 - **Need:** late callbacks, incomplete turns and unsafe model links can corrupt visible answers or conversation context
 - **Value or failure prevented:** stale responses cannot overwrite a new question and incomplete content cannot masquerade as established history
 
-**Files:** Create `apps/web/client/turn-controller.ts`, `apps/web/client/turn-stream.ts`, `apps/web/client/history.ts`, `apps/web/components/Conversation.tsx`, `apps/web/components/Answer.tsx`, `apps/web/components/ProjectCard.tsx`, `apps/web/components/Details.tsx`, `apps/web/components/Capabilities.tsx`, `apps/web/app/globals.css`, `tests/ui/conversation.test.tsx`, `tests/contracts/history.test.ts`, `tests/contracts/turn-controller.test.ts`, `tests/contracts/links.test.tsx`, `tests/browser/typed.spec.ts`, `playwright.config.ts`. Modify page/layout.
+#### Files
+
+Create `apps/web/client/turn-controller.ts`, `apps/web/client/turn-stream.ts`, `apps/web/client/history.ts`, `apps/web/components/Conversation.tsx`, `apps/web/components/Answer.tsx`, `apps/web/components/ProjectCard.tsx`, `apps/web/components/Details.tsx`, `apps/web/components/Capabilities.tsx`, `apps/web/app/globals.css`, `tests/ui/conversation.test.tsx`, `tests/contracts/history.test.ts`, `tests/contracts/turn-controller.test.ts`, `tests/contracts/links.test.tsx`, `tests/browser/typed.spec.ts`, `playwright.config.ts`. Modify page/layout.
 
 **Interfaces:** `TurnToken={ generation:number; turnId:string }`; `TurnController.begin():TurnToken` increments and aborts old work; `current(token:TurnToken):boolean`; `attachAbort(token, controller):void`; `cancelCurrent(reason:string):void`; `apply(token,event):void` accepts validated matching events only. `HistoryStore.complete(token:TurnToken,user:string,text:string,status:TurnStatus):{ omitted:boolean }`; `messages():HistoryMessage[]` returns immutable whole pairs. `startTurn(token,input:{text?:string;wav?:Blob},history:HistoryMessage[],signal:AbortSignal):AsyncIterable<TurnEvent>`. The store receives an injected `isCurrent(token)` predicate. Visible timeline entries retain partial/status/speech status separately from history.
 
@@ -429,7 +437,9 @@ npm run typecheck
 - **Need:** provider errors, header formats and hidden SDK retries can turn bounded requests into invalid audio or duplicate paid work
 - **Value or failure prevented:** voice is attributable to the selected provider and failed speech cannot destroy the text conversation
 
-**Files:** Create `apps/web/server/providers/deepgram.ts`, `apps/web/app/api/speech/route.ts`, `tests/contracts/deepgram.test.ts`, `tests/integration/audio-turn.test.ts`, `tests/contracts/speech-endpoint.test.ts`. Modify mock/runtime/run-turn/capabilities.
+#### Files
+
+Create `apps/web/server/providers/deepgram.ts`, `apps/web/app/api/speech/route.ts`, `tests/contracts/deepgram.test.ts`, `tests/integration/audio-turn.test.ts`, `tests/contracts/speech-endpoint.test.ts`. Modify mock/runtime/run-turn/capabilities.
 
 **Interfaces:** `SpeechAdapter.transcribe(wav:Uint8Array,signal:AbortSignal):Promise<string>`; `SpeechAdapter.synthesize(input:SpeechInput,signal:AbortSignal):Promise<{stream:ReadableStream<Uint8Array>;format:{encoding:'pcm_s16le';sampleRate:24000;channels:1}}>`; `createDeepgramAdapter(config:ServerConfig, fetchImpl?:typeof fetch):SpeechAdapter`. Mock adapter returns deterministic text and chunked synthetic PCM, explicitly mock. `AppError`/leases/deadlines are Task 2 contracts.
 
@@ -471,7 +481,9 @@ npm run typecheck
 - **Need:** fast synthesis and a suspended playback clock can accumulate generated audio beyond the playback budget
 - **Value or failure prevented:** normal answers remain audible while overflow, stalls and incorrect sample handling cannot create unbounded speech backlog
 
-**Files:** Create `apps/web/client/voice/pcm.ts`, `apps/web/client/voice/playback.ts`, `apps/web/client/voice/speech-text.ts`, `apps/web/client/voice/speech-queue.ts`, `tests/voice/pcm.test.ts`, `tests/voice/playback.test.ts`, `tests/voice/speech-queue.test.ts`, `tests/voice/speech-text.test.ts`, `tests/slow/playback-watchdog.test.ts`. Modify Conversation/controller to attach text/speech status.
+#### Files
+
+Create `apps/web/client/voice/pcm.ts`, `apps/web/client/voice/playback.ts`, `apps/web/client/voice/speech-text.ts`, `apps/web/client/voice/speech-queue.ts`, `tests/voice/pcm.test.ts`, `tests/voice/playback.test.ts`, `tests/voice/speech-queue.test.ts`, `tests/voice/speech-text.test.ts`, `tests/slow/playback-watchdog.test.ts`. Modify Conversation/controller to attach text/speech status.
 
 **Interfaces:** `PcmDecoder.push(bytes:Uint8Array):Float32Array`, `finish():void`; `Playback.enqueue(token:TurnToken,samples:Float32Array):void`, `outstandingSeconds():number`, `isRunning():boolean`, `suspend():Promise<void>`, `resume():Promise<void>`, `cancel(token:TurnToken):void`, `dispose():Promise<void>`; playback takes dedicated AudioContext and `isCurrent`. `SpeechText.push(delta:string):string[]`, `finish():string[]`; `SpeechQueue.accept(token,text):void`, `flush(token):void`, `setTentative(token,value:boolean):void`, `cancel(token,reason:string):void`, `dispose():void`. Queue dependencies include `synthesize` fetch function, playback, capability segment cap, `isCurrent`, status callback and monotonic wall clock.
 
@@ -521,7 +533,9 @@ npm run typecheck
 - **Need:** VAD assets, browser permission and asynchronous startup can clip speech, duplicate sessions or leave the microphone active after Stop
 - **Value or failure prevented:** natural turns remain automatic and microphone/audio resources end when requested
 
-**Files:** Create `apps/web/client/voice/wav.ts`, `apps/web/client/voice/vad-adapter.ts`, `apps/web/client/voice/capture-session.ts`, `scripts/copy-vad-assets.mjs`, `tests/voice/wav.test.ts`, `tests/voice/capture-session.test.ts`, `tests/contracts/assets.test.ts`, `tests/browser/capture.spec.ts`. Modify Conversation, web scripts and mock browser harness.
+#### Files
+
+Create `apps/web/client/voice/wav.ts`, `apps/web/client/voice/vad-adapter.ts`, `apps/web/client/voice/capture-session.ts`, `scripts/copy-vad-assets.mjs`, `tests/voice/wav.test.ts`, `tests/voice/capture-session.test.ts`, `tests/contracts/assets.test.ts`, `tests/browser/capture.spec.ts`. Modify Conversation, web scripts and mock browser harness.
 
 **Interfaces:** `encodeWav(samples:Float32Array):Blob` produces Task 2 WAV contract; `VadCallbacks={ rawStart():void; confirmedStart():void; misfire():void; end(samples:Float32Array):void; frame(samples:Float32Array):void }`; `createVad(context:AudioContext,stream:MediaStream,callbacks:VadCallbacks):Promise<{start():Promise<void>;pause():Promise<void>;destroy():Promise<void>}>`. `CaptureSession.start():Promise<void>`, `mute():Promise<void>`, `unmute():Promise<void>`, `stop():Promise<void>` owns one session epoch, stream, capture context/VAD and pending start promise. Playback is the distinct Task 6 context.
 
@@ -573,7 +587,9 @@ npm run build
 - **Need:** canceling on every raw VAD start loses slow work and misfires can resurrect obsolete audio after confirmation
 - **Value or failure prevented:** ordinary noise causes no paid replay while genuine interruption prevents stale audio, cards and history from overtaking the new turn
 
-**Files:** Create `apps/web/client/voice/interruption.ts`, `tests/voice/interruption.test.ts`, `tests/slow/rapid-interruption.test.ts`, `tests/browser/interruption.spec.ts`. Modify CaptureSession/controller/queue/Conversation to wire callbacks and mute/Stop behavior.
+#### Files
+
+Create `apps/web/client/voice/interruption.ts`, `tests/voice/interruption.test.ts`, `tests/slow/rapid-interruption.test.ts`, `tests/browser/interruption.spec.ts`. Modify CaptureSession/controller/queue/Conversation to wire callbacks and mute/Stop behavior.
 
 **Interfaces:** `Interruption.rawStart(sessionEpoch:number):void`, `confirmedStart(sessionEpoch:number):void`, `misfire(sessionEpoch:number):void`, `end(sessionEpoch:number,samples:Float32Array):void`, `cancel():void`. It retains `{candidateId:number,token:TurnToken,phase:'tentative'|'confirmed'}`. Playback suspend/resume promises and all callbacks check candidate ID, capture epoch and current generation before changing anything. End submits exactly one newly confirmed utterance after VAD silence; raw start itself never launches a request.
 
@@ -616,7 +632,9 @@ npm run typecheck
 - **Need:** mocked voice, configured search and a few timing trials cannot establish live acceptance or production performance
 - **Value or failure prevented:** the developer can reproduce verified behavior without mistaking unavailable capabilities or unresolved echo for successful delivery
 
-**Files:** Create `scripts/verify-live.mjs`, `scripts/verify-docs.mjs`, `tests/scripts/verify-live.test.ts`, `tests/scripts/verify-docs.test.ts`, `docs/specification.md`, `docs/architecture.md`, `docs/tutorial.md`, `docs/live-validation.md`, `docs/evidence/live-validation.json`, `.github/workflows/ci.yml`. Modify `README.md`, configuration example and relevant test files when live findings require fixes. Historical sealed review artifacts remain byte-identical and outside formatting mutation.
+#### Files
+
+Create `scripts/verify-live.mjs`, `scripts/verify-docs.mjs`, `tests/scripts/verify-live.test.ts`, `tests/scripts/verify-docs.test.ts`, `docs/specification.md`, `docs/architecture.md`, `docs/tutorial.md`, `docs/live-validation.md`, `docs/evidence/live-validation.json`, `.github/workflows/ci.yml`. Modify `README.md`, configuration example and relevant test files when live findings require fixes. Historical sealed review artifacts remain byte-identical and outside formatting mutation.
 
 **Interfaces:** live JSON `schemaVersion:1`, `gitHead:string`, `sourceDigest:string`, `mode:'live'`, `nodeVersion:string`, `packages:Record<string,string>`, `providers:{claudeModel:string;sttModel:string;ttsModel:string}`, `browser:{name:string;version:string;os:string}`, `cases:Array<{id:string;status:'pass'|'fail'|'unverified';observations:string;artifact:string|null}>`, `timings:Array<{scenario:string;sample:number;vadMs:number|null;sttMs:number|null;modelToolMs:number|null;ttsMs:number|null;bufferMs:number|null;speechEndToTextMs:number|null;speechEndToAudioMs:number|null;callbackToSilenceMs:number|null;confirmationToCancelMs:number|null;acousticOnsetToSilenceMs:number|null}>`, `usage:Usage[]`, `limitations:string[]`. No credentials, raw private audio or fabricated usage/costs. Each artifact path is repo-relative sanitized evidence, not a remote credential endpoint.
 
