@@ -1,4 +1,5 @@
 [mcp_servers.peer-review]
-command = "peer-review-mcp"
+command = "/Users/kpburson/.nvm/versions/node/v26.8.1/bin/node"
+args = ["/Users/kpburson/.nvm/versions/node/v26.8.1/lib/node_modules/@kburson/ai-peer-review/bin/peer-review-mcp.mjs"]
 startup_timeout_sec = 30
 tool_timeout_sec = 28800
