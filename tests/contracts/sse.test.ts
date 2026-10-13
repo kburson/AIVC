@@ -371,3 +371,47 @@ it('classifies iterator acquisition failure as a disconnected stream with its ca
     cause,
   });
 });
+
+function failedWithPayloadId(turnId: string | null): TurnEvent {
+  return {
+    schemaVersion: 1,
+    turnId: wireTurnId,
+    seq: 1,
+    type: 'turn.failed',
+    data: {
+      code: 'MODEL_FAILED',
+      message: 'Model failed.',
+      turnId,
+      retryable: false,
+    },
+  };
+}
+it('rejects a collected failure payload correlated to another UUID', () => {
+  const events = [
+    wireEvents[0],
+    failedWithPayloadId('22222222-2222-4222-8222-222222222222'),
+  ];
+  expect(() => assertTurnSequence(events)).toThrow(SseDecodeError);
+  expect(() => assertTurnSequence(events)).toThrowError(
+    expect.objectContaining({ code: 'INVALID_STREAM' }),
+  );
+});
+it.each([true, false])(
+  'rejects mismatched failure correlation in streaming terminal with delimiter %s',
+  async (terminated) => {
+    const bytes = raw([
+      wireEvents[0],
+      failedWithPayloadId('22222222-2222-4222-8222-222222222222'),
+    ]);
+    await rejects(terminated ? bytes : bytes.slice(0, -2), 'INVALID_STREAM');
+  },
+);
+it.each([wireTurnId, null])(
+  'preserves matching or nullable failure correlation %s throughout collected and streaming validation',
+  async (turnId) => {
+    const events = [wireEvents[0], failedWithPayloadId(turnId)];
+    expect(() => assertTurnSequence(events)).not.toThrow();
+    expect(await collect(chunks(raw(events)))).toEqual(events);
+    expect(await collect(chunks(raw(events).slice(0, -2)))).toEqual(events);
+  },
+);

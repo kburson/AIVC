@@ -275,13 +275,15 @@ export function validateTurnEvent(value: unknown): TurnEvent {
     }
     case 'turn.failed': {
       const d = object(v.data, ['code', 'message', 'turnId', 'retryable']);
+      const payloadTurnId = d.turnId === null ? null : uuid(d.turnId);
+      if (payloadTurnId !== null && payloadTurnId !== base.turnId) invalid();
       return {
         ...base,
         type: v.type,
         data: {
           code: str(d.code),
           message: str(d.message),
-          turnId: d.turnId === null ? null : uuid(d.turnId),
+          turnId: payloadTurnId,
           retryable: bool(d.retryable),
         },
       };

@@ -397,3 +397,34 @@ describe('public schemas', () => {
       ).toThrow(AppError),
   );
 });
+
+it('rejects a failure payload UUID different from its envelope correlation', () => {
+  const failure = {
+    schemaVersion: 1,
+    turnId: id,
+    seq: 1,
+    type: 'turn.failed',
+    data: {
+      code: 'MODEL_FAILED',
+      message: 'Model failed.',
+      turnId: '22222222-2222-4222-8222-222222222222',
+      retryable: false,
+    },
+  };
+  expect(() => validateTurnEvent(failure)).toThrow(AppError);
+});
+it.each([id, null])('preserves failure payload correlation %s', (turnId) => {
+  const failure = {
+    schemaVersion: 1,
+    turnId: id,
+    seq: 1,
+    type: 'turn.failed',
+    data: {
+      code: 'MODEL_FAILED',
+      message: 'Model failed.',
+      turnId,
+      retryable: false,
+    },
+  };
+  expect(validateTurnEvent(failure)).toEqual(failure);
+});
