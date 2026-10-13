@@ -35,7 +35,8 @@
     "verify:docs": "node scripts/verify-docs.mjs",
     "assets:vad": "node scripts/copy-vad-assets.mjs",
     "verify:toolchain": "node scripts/verify-toolchain.mjs",
-    "preinstall": "node scripts/verify-toolchain.mjs"
+    "preinstall": "node scripts/verify-toolchain.mjs",
+    "test:unit": "node scripts/run-tests.mjs unit"
   },
   "devDependencies": {
     "@kburson/ai-task-manager": "file:vendors/kburson-ai-task-manager-0.1.0.tgz",
