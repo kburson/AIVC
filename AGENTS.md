@@ -31,3 +31,5 @@ Test → Review: agent self-report REVIEW_COMPLETE (no CLI verb).
 ## Native AI peer review
 
 For user-requested Codex fanout reviews, read `.codex/peer-review-orchestration.md` alongside the installed `peer-review` skill. Use native launch and supervision with the sealed ai-peer-review protocol. The established native workflow uses explicit manual protocol transport and authentic MCP handoff waits; `automatic-required` checks the separate package-managed resident transport and is not a prerequisite for ordinary Codex agent spawning. Preserve genuine distinct session identities, requested per-run model/effort selections, tracked issue binding, and all author/reviewer boundaries.
+
+All SAR/SPR/XPR collateral for one artifact must share `docs/peer-reviews/<kind>/<artifact-slug>-<group-review-id>/{sar|spr|xpr}/`. For the voice BFF reference design, use `docs/peer-reviews/spec/voice-bff-reference-design-review-6e1eb912f8ea1307f0464d76a1501a3b/`. Follow the explicit per-run path-template instructions in `.codex/peer-review-orchestration.md`; preserve sealed historical bytes when relocating terminal evidence.

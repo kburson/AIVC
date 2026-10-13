@@ -34,5 +34,8 @@
       "codex"
     ],
     "automatic_adapters_added": []
+  },
+  "review": {
+    "reviews_root": "docs/peer-reviews"
   }
 }
