@@ -36,7 +36,19 @@ Current live field ranks: #4=3; #5=4; #6=5; #7=4; #8=7; #9=7; #10=9; #11=10. Thi
 
 The amendment author is genuinely bound as issue #2 orchestrator in native session 01a135ad-c1bc-7492-9e5f-be69bf8257f4, branch codex/2-draft. This is planning collateral only. The actual canonical child state can change during review; root revalidates it before scheduling. No new source implementation is claimed here.
 
-## Defineed smallest complete graph
+## Runtime tracks and ownership
+
+```mermaid
+flowchart LR
+  C[Browser: typed UI, capture, playback] -->|same-origin public request and SSE contract| B[Next.js Node BFF: admission, Claude, Deepgram]
+  B -->|fixed server-owned HTTP origin| F[Fastify: exact synthetic project catalog]
+  K[Contract foundation: types, validators, codecs, fixtures] -. frozen agreement .-> C
+  K -. frozen agreement .-> B
+```
+
+Browser and BFF are independent implementation tracks after agreeing the public API. Fastify is the already implemented third runtime boundary and is reused. Native provider/tool/config state stays server-owned. Final joined tests connect all three runtime boundaries.
+
+## Smallest complete graph
 
 Create exactly TWO new governed child stories, symbolically CONTRACT and CAPTURE-MODULE until canonical creation assigns real numeric IDs. CONTRACT is a complete executable public agreement delivery. CAPTURE-MODULE is a complete independently reviewable library/patch/assets delivery. Narrow existing scopes explicitly; do not close a partial phase of an unchanged original story.
 
@@ -64,7 +76,7 @@ New stories/scopes/ranks/digests are not yet authoritative and the root has not 
 
 ## Executable API agreement
 
-CONTRACT owns apps/web/shared/contracts.ts, validation.ts, history.ts and sse.ts. New proposed artifacts: docs/contracts/voice-bff-v1.md, tests/helpers/wire-contract-fixtures.ts, tests/contracts/wire-contracts.test.ts, public-validation.test.ts, public-history.test.ts; tests/contracts/sse.test.ts moves from #5. Agreement records schemaVersion 1, exact limits/errors/headers/framing/sequence/terminal semantics and trace fixtures. Production modules/types and executable conformance—not prose alone—are consumer authority.
+CONTRACT owns apps/web/shared/contracts.ts, validation.ts, history.ts and sse.ts. It also owns apps/web/client/contract-probe.tsx plus the temporary starter app/page.tsx import for actual browser bundle compilation; #6 replaces that starter page after foundation delivery. New proposed artifacts: docs/contracts/voice-bff-v1.md, tests/helpers/wire-contract-fixtures.ts, tests/contracts/wire-contracts.test.ts, public-validation.test.ts, public-history.test.ts; tests/contracts/sse.test.ts moves from #5. Agreement records schemaVersion 1, exact limits/errors/headers/framing/sequence/terminal semantics and trace fixtures. Production modules/types and executable conformance—not prose alone—are consumer authority.
 
 Exact accepted types:
 ```ts
@@ -134,7 +146,7 @@ wire-contract-fixtures.ts contains immutable normative simulated traces, exact A
 
 | Owner | Exclusive files/changes |
 |---|---|
-| CONTRACT | shared contracts/validation/history/SSE, agreement/fixture/public tests; no server config/runtime/providers |
+| CONTRACT | shared contracts/validation/history/SSE, agreement/fixture/public tests, client/contract-probe.tsx and starter app/page.tsx compile import; no server config/runtime/providers |
 | #4 | server config/build-info/http admission/body/errors/leases/deadline/capabilities/runtime/capabilitiesroute/.env.example; admission/config/build/lease/slowdeadline tests; new body.test.ts separates measured-body tests |
 | #6 | client turn-controller/turn-stream/history; Conversation/Answer/ProjectCard/Details/Capabilities/globals/page/layout; UI/history/controller/links/typed.spec.ts/playwrightconfig |
 | CAPTURE-MODULE | voice wav/vad-adapter/capture-session; copy-vad-assets script/exact VAD patch; rootpackage-lock/ patch-package 8.0.1 postinstall / web predev-prebuild; wav/capture-module/vad-lifecycle/assets tests; no Conversation/controller/browserharness |
@@ -169,6 +181,7 @@ CONTRACT:
 ```sh
 npx vitest run tests/contracts/wire-contracts.test.ts tests/contracts/public-validation.test.ts tests/contracts/public-history.test.ts tests/contracts/sse.test.ts
 npm run typecheck
+npm run build
 npm run lint
 npm run format:check
 ```
@@ -241,11 +254,11 @@ The eight-hour baseline budget and six-hour owner check-in remain timebox observ
 
 **Story Intent:** Beneficiary: developer implementing browser or BFF; Capability: implement both sides against shared validated requests, normalized events and executable traces; Need: independently developed endpoints/consumers can drift in fields, framing, text and terminal semantics; Value: independently tested components compose without malformed inputs, stale results or false completion.
 
-**Files:** Create the exact shared modules, docs/contracts/voice-bff-v1.md, tests/helpers/wire-contract-fixtures.ts, tests/contracts/wire-contracts.test.ts, public-validation.test.ts, public-history.test.ts and sse.test.ts listed above. Modify no server/config/provider/UI code or root manifests. Consume the delivered #3 ProjectRecord/ProjectCatalog shape, with no runtime fixture import into browser production code.
+**Files:** Create the exact shared modules, docs/contracts/voice-bff-v1.md, tests/helpers/wire-contract-fixtures.ts, tests/contracts/wire-contracts.test.ts, public-validation.test.ts, public-history.test.ts and sse.test.ts listed above. Modify no server/config/provider implementation or root manifests. Modify only the existing starter apps/web/app/page.tsx to import a public contract bundle probe; no Conversation or production feature UI is created here. Consume the delivered #3 ProjectRecord/ProjectCatalog shape, with no runtime fixture import into browser production code.
 
 **Interfaces:** Export all public types above from contracts.ts. Export AppError class there with readonly httpStatus/code/turnId/retryable and inherited message; validation throws this one class. Export validateProjectCatalog(value:unknown):ProjectCatalog, validateCapabilities(value:unknown):Capabilities and validateTurnEvent(value:unknown):TurnEvent from validation.ts, alongside parseTurn/validateSpeech/validateHistory. Public validators clone validated inputs, reject additional fields, nonfinite/noninteger usage or seq, wrong schemaVersion/literal enums and malformed UUIDs. Project openItems must be a nonnegative integer, status one of active/paused/complete; names/summary/owner/id are strings. Capabilities segmentChars is positive integer <=120, literal backlog/water values exact; models/build IDs/reasons are string or null; no key-like extra fields. Source URLs are strings at the wire boundary; #6 safe URL rendering separately blocks unsafe schemes. SSE validates envelope and payload with these exports.
 
-- [ ] Add one exact fixture in wire-contract-fixtures.ts, with fixed UUID 11111111-1111-4111-8111-111111111111, accepted seq0 mode mock, answer deltas ['Let me check Atlas.','\\n\\n','Atlas is active, owned by North, with 3 open items.'], exact Atlas catalog tool.completed and complete final text equal to their join. Use the delivered fixture values, not a separate invented catalog. Export wireTurnId:string, wireDeltaFixture:readonly string[], wireEvents:readonly TurnEvent[], mockCapabilities:Capabilities and invalidWireValues:readonly unknown[]. The fixture prominently labels Mock/Contract Simulation and search configured/pending or unavailable, never verified live account success.
+- [ ] Add one exact fixture in wire-contract-fixtures.ts, with fixed UUID 11111111-1111-4111-8111-111111111111, accepted seq0 mode mock, answer deltas ['Let me check Atlas.','\n\n','Atlas is active, owned by North, with 3 open items.'], exact Atlas catalog tool.completed and complete final text equal to their join. Use the delivered fixture values, not a separate invented catalog. Export wireTurnId:string, wireDeltaFixture:readonly string[], wireEvents:readonly TurnEvent[], mockCapabilities:Capabilities and invalidWireValues:readonly unknown[]. The fixture prominently labels Mock/Contract Simulation and search configured/pending or unavailable, never verified live account success.
 - [ ] Add and observe red behavioral validation tests: allowed fields/boundaries; duplicate multipart fields; both/neither text/audio; 2000/2001 text; 8/9 messages; 16000/16001 JS-string history; malformed UUID/JSON; empty PCM accepted for later no-speech; exact 480000-sample PCM accepted, next sample rejected; unknown valid padded WAV chunk skipped; duplicate/truncated fmt/data rejected. The wire parser receives already bounded bytes and independently rejects >2MiB; #4 still owns streaming counted reads before it.
 - [ ] Implement parseTurn using new Request with only bounded bytes and contentType, then FormData; only turnId/history and exactly text or audio. Validate MIME boundary, string fields, JSON history and WAV structure; text turn strips no meaningful text and rejects empty input. Reject non-audio File types/extra inputs rather than trusting MIME alone. Speech validation uses exact fields UUID/nonempty segmentId <=80/nonempty text<=supplied positive integer cap<=120. Own malformed-request AppError400 and body-size AppError413 only; paid admission remains #4.
 - [ ] Add public-history red assertions, then implement the exact retainPairs algorithm below. Inbound validateHistory requires alternating user/assistant pairs, <=4 pairs/eight messages/16000 chars and never trims. Retention clones each message; oversized newest pair is omitted with notice while preserving previously valid pairs. Do not mix generation ownership into this pure module.
@@ -260,7 +273,25 @@ export function retainPairs(input:ReadonlyArray<readonly [HistoryMessage,History
 }
 ```
 
-- [ ] Add SSE red conformance test, then codec. encodeSse uses UTF-8 'event: '+type+'\\ndata: '+JSON.stringify(event)+'\\n\\n'; no provider raw blocks. decodeSse uses streaming TextDecoder, handles LF/CRLF, joins multiline data with newline, ignores comment lines, requires event field (if present) match envelope type, validates JSON/event shape and fixed turnId/seq0/+1. At least one turn.accepted starts a stream; at most one turn.completed/turn.failed terminal; EOF before terminal produces a disconnected client condition, never synthetic complete. Final unterminated frame is decoded and validated, not silently discarded. Reject events before accepted, duplicate accepted, sequence gaps/duplicates, mixed IDs and post-terminal events. Abort/disconnect remains consumer-owned.
+- [ ] Pin actual newline bytes in independently authored fixtures before codec implementation:
+
+```ts
+export const wireDeltaFixture = [
+  'Let me check Atlas.',
+  '\n\n',
+  'Atlas is active, owned by North, with 3 open items.'
+] as const;
+const expectedSeparatorBytes = new Uint8Array([10, 10]);
+const rawAcceptedFrame = new TextEncoder().encode(
+  'event: turn.accepted\ndata: {"schemaVersion":1,"turnId":"11111111-1111-4111-8111-111111111111","seq":0,"type":"turn.accepted","data":{"mode":"mock"}}\n\n'
+);
+expect(new TextEncoder().encode(wireDeltaFixture[1])).toEqual(expectedSeparatorBytes);
+expect(encodeSse(wireEvents[0])).toEqual(rawAcceptedFrame);
+```
+
+The expected raw frame is hand-authored, never generated by encodeSse. Separator bytes are [10,10], not four backslash/n bytes. SSE line/frame delimiters are actual LF bytes. The independently authored raw frame and malformed fixtures must fail a broken encoder even if its decoder shares the defect.
+
+- [ ] Add SSE red conformance test, then codec. encodeSse uses UTF-8 'event: '+type+'\ndata: '+JSON.stringify(event)+'\n\n'; no provider raw blocks. decodeSse uses streaming TextDecoder, handles LF/CRLF, joins multiline data with newline, ignores comment lines, requires event field (if present) match envelope type, validates JSON/event shape and fixed turnId/seq0/+1. At least one turn.accepted starts a stream; at most one turn.completed/turn.failed terminal; EOF before terminal produces a disconnected client condition, never synthetic complete. Final unterminated frame is decoded and validated, not silently discarded. Reject events before accepted, duplicate accepted, sequence gaps/duplicates, mixed IDs and post-terminal events. Abort/disconnect remains consumer-owned.
 
 ```ts
 it('preserves a simulated trace at every UTF-8 split',async()=>{
@@ -274,6 +305,23 @@ it('preserves a simulated trace at every UTF-8 split',async()=>{
 ```
 
 concatBytes/chunks are local helpers in sse.test.ts: concatenate Uint8Arrays without reencoding, and an async generator yielding each provided byte chunk. Add emoji/CRLF/multiline and trailing-frame fixtures; run one-byte-chunk and every two-way split tests. Invalid fixture tests prove malformed payloads/seq/terminal behavior reject, not merely roundtrip implementation output.
+
+- [ ] Create concrete browser compilation entry apps/web/client/contract-probe.tsx, imported by delivered starter apps/web/app/page.tsx. It reaches all four shared modules in a real Next Client Component bundle:
+
+```tsx
+'use client';
+import { AppError } from '../shared/contracts';
+import { parseTurn, validateSpeech, validateHistory, validateTurnEvent, validateCapabilities, validateProjectCatalog } from '../shared/validation';
+import { retainPairs } from '../shared/history';
+import { encodeSse, decodeSse } from '../shared/sse';
+export default function ContractProbe() {
+  const operations = [AppError, parseTurn, validateSpeech, validateHistory, validateTurnEvent,
+    validateCapabilities, validateProjectCatalog, retainPairs, encodeSse, decodeSse];
+  return <p>Contract foundation: {operations.map(operation => typeof operation).join(', ')}</p>;
+}
+```
+
+The Server starter page imports ContractProbe and renders it. No effect, capture or endpoint call runs. CONTRACT executes npm run build on actual Next app so all four modules are traversed by browser compiler, plus transitive import checks. #6 replaces starter page with Conversation and deletes temporary contract-probe.tsx after validating its own real browser consumer build. This concrete compile seam exercises public imports rather than building an unrelated page.
 
 - [ ] Add public dependency-boundary tests that follow local static imports/exports recursively from all four shared entry files and reject server/, node: imports, provider SDKs and secret-bearing config. Public modules may use standard web APIs/types only; NodeJS.ProcessEnv and Anthropic native types are server-only. Browser build/typecheck checks actual import compatibility; a lexical test alone does not prove bundle contents.
 - [ ] Run the exact CONTRACT verifiers above, inspect nonempty test output and diff, commit under its assigned real issue. Controller integrates reviewed source and freezes shared agreement bytes/digest, fixture and validator version before consumer fanout. Record that digest in docs/contracts/voice-bff-v1.md and consumer review evidence; hashing excludes the doc's own digest field to avoid a circular self-hash. Contracts source/fixture files are the hashed inputs, sorted paths plus bytes.
@@ -311,7 +359,7 @@ concatBytes/chunks are local helpers in sse.test.ts: concatenate Uint8Arrays wit
 
 **Story Intent:** Beneficiary: hands-free capture user; Capability: produce bounded attributable WAV utterances and stop resources reliably; Need: late permission/model/inference can outlive Stop or allow malformed/unbounded capture; Value: downstream wiring receives valid utterances without leaving microphone or model resources alive.
 
-**Interfaces:** Keep encodeWav(samples:Float32Array):Blob, CaptureToken and VadCallbacks/createVad above. Explicit module constructor to remove UI dependence: CaptureSession(deps:{createContext:()=>AudioContext;acquireStream:()=>Promise<MediaStream>;createVad:typeof createVad;onUtterance:(token:CaptureToken,wav:Blob)=>void;onStatus:(reason:string)=>void}). Session exposes start/mute/unmute/stop/invalidateIntent and isCurrent(token):boolean. The Start handler later supplies/resumes its caller-owned context in the synchronous gesture through createContext; module never creates a playback context. onUtterance only signals a valid complete current capture; #9 owns actual BFF submission. onStatus uses explicit module reason strings for permission/load/overlong/cleanup failure, mapped visibly by #9.
+**Interfaces:** Keep encodeWav(samples:Float32Array):Blob, CaptureToken and VadCallbacks/createVad above. Explicit module constructor to remove UI dependence: CaptureSession(deps:{createContext:()=>AudioContext;acquireStream:()=>Promise<MediaStream>;createVad:typeof createVad;onVadEvent:(event:CaptureVadEvent)=>void;onUtterance:(token:CaptureToken,wav:Blob)=>void;onStatus:(reason:CaptureReason)=>void}). Session exposes start/mute/unmute/stop/invalidateIntent and isCurrent(token):boolean. The Start handler later supplies/resumes its caller-owned context in the synchronous gesture through createContext; module never creates a playback context. onUtterance only signals a valid complete current capture; #9 owns actual BFF submission. Export CaptureVadEvent={type:'rawStart'|'confirmedStart'|'misfire';capture:CaptureToken} and CaptureReason='CAPTURE_PERMISSION_DENIED'|'CAPTURE_LOAD_FAILED'|'CAPTURE_OVERLONG'|'CAPTURE_CLEANUP_FAILED' from capture-session.ts. onVadEvent runs synchronously with the same immutable raw-start token and is the single observer seam for #10 reversible/confirmed/misfire handling; it never submits a turn. The one onUtterance callback owns valid end notification; #9/#10 map it to at most one BFF submit after capture/candidate checks. No second end subscriber or submit through raw/confirmed observers. onStatus reports those reasons visibly through #9 without hiding cleanup failures. Module tests assert observer token identity, event order and exactly one valid-end notification, with zero after intent/epoch invalidation.
 
 - [ ] Add WAV red tests for clipping/extrema/RIFF44/little-endian/16kHz/empty/excess; implement exact headers and Math.round negative*32768/positive*32767. Convert produced Blob to bytes and wrap multipart for shared parseTurn in wav.test.ts. Valid max-duration encoding parses; invalid/excess rejected; no empty submission.
 - [ ] Add lifecycle red tests against actual pinned MicVAD module, controlled model/ORT/browser-node factories: allocated-never-started, pending model then Stop, worklet reject, pending worklet success then Stop, concurrent destroy, admitted frame inference unresolved. Apply narrow patch to dist/real-time-vad.js/d.ts only: cached disposal, destroyed-before-await guards, frame accounting, late stream/node stop and finally model.release once including ORT session/state/sample-rate tensors. Test waits for frame settlement, refuses new frames/listening after cancel, cleanup failures visible and fresh Start succeeds. Public static lifecyclePatchRevision='aivc-vad-lifecycle-v1' plus patch/applied-file digests are mandatory. Never access private model fields from adapter.
