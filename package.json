@@ -1,0 +1,25 @@
+{
+  "name": "aivc",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/kburson/AIVC#readme",
+  "bugs": {
+    "url": "https://github.com/kburson/AIVC/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kburson/AIVC.git"
+  },
+  "author": "kburson",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@kburson/ai-task-manager": "file:vendors/kburson-ai-task-manager-0.1.0.tgz"
+  }
+}
