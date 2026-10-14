@@ -36,3 +36,13 @@ export type TurnDeps = {
   mode: 'live' | 'mock';
   capabilities: Capabilities;
 };
+export interface SpeechAdapter {
+  transcribe(wav: Uint8Array, signal: AbortSignal): Promise<string>;
+  synthesize(
+    input: import('../../shared/contracts').SpeechInput,
+    signal: AbortSignal,
+  ): Promise<{
+    stream: ReadableStream<Uint8Array>;
+    format: { encoding: 'pcm_s16le'; sampleRate: 24000; channels: 1 };
+  }>;
+}
