@@ -1,5 +1,7 @@
 # #7 Deepgram adapter delivery
 
+> **Preserved historical preparation checkpoint.** All status and dependency statements below describe the earlier preparation, before implementation. Current delivery and verification are recorded in [Story #7 implementation verification](7-verification.md). The original preparation narrative remains for provenance.
+
 [Story #7](https://github.com/kburson/AIVC/issues/7) retains bounded prerecorded transcription, streamed synthesis, the speech endpoint, and complete audio-turn integration. **Implementation has not started. Story code review is pending.** This branch publishes planning collateral, with no application verification or live-provider success claimed.
 
 ## Governing artifacts
