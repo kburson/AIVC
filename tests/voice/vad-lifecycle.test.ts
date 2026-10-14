@@ -21,10 +21,12 @@ const { Silero } = require('@ricky0123/vad-web/dist/models/silero') as {
 };
 function deferred<T>() {
   let resolve!: (value: T) => void;
-  const promise = new Promise<T>((r) => {
+  let reject!: (reason: unknown) => void;
+  const promise = new Promise<T>((r, failure) => {
     resolve = r;
+    reject = failure;
   });
-  return { promise, resolve };
+  return { promise, resolve, reject };
 }
 type TensorValue = { data: ArrayLike<number | bigint>; dispose: () => void };
 let tensors: TensorValue[],
@@ -74,9 +76,10 @@ function context(addModule: () => Promise<void> = async () => {}) {
   } as unknown as AudioContext;
 }
 function stream() {
-  const stop = vi.fn();
+  const stop = vi.fn(),
+    track = { stop };
   return {
-    value: { getTracks: () => [{ stop }] } as unknown as MediaStream,
+    value: { getTracks: () => [track] } as unknown as MediaStream,
     stop,
   };
 }
@@ -129,6 +132,202 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 describe('actual pinned MicVAD lifecycle', () => {
+  it('late actual model disposal failure rejects Stop without activating capture', async () => {
+    vi.stubGlobal('location', { origin: 'http://localhost:3000' });
+    const gate = deferred<void>(),
+      requested = deferred<void>(),
+      factory = vi.mocked(Silero.new).getMockImplementation()!;
+    vi.spyOn(Silero, 'new').mockImplementation(async (ort, fetcher) => {
+      requested.resolve();
+      await gate.promise;
+      return factory(ort, fetcher);
+    });
+    release.mockRejectedValueOnce(Error('late model release failed'));
+    const ctx = context(),
+      statuses: string[] = [],
+      seen = vi.fn(),
+      acquire = vi.fn(async () => stream().value);
+    Object.assign(ctx, { resume: async () => {} });
+    const session = new CaptureSession({
+      createContext: () => ctx,
+      acquireStream: acquire,
+      createVad,
+      onVadEvent: seen,
+      onUtterance: seen,
+      onStatus: (reason) => statuses.push(reason),
+    });
+    const starting = session.start();
+    await requested.promise;
+    const stopping = session.stop(),
+      outcomes = Promise.allSettled([starting, stopping]);
+    gate.resolve();
+    expect((await outcomes)[1].status).toBe('rejected');
+    expect(statuses).toContain('CAPTURE_CLEANUP_FAILED');
+    expect(statuses).not.toContain('CAPTURE_LOAD_FAILED');
+    expect(acquire).not.toHaveBeenCalled();
+    expect(seen).not.toHaveBeenCalled();
+    expect(release).toHaveBeenCalledTimes(1);
+    expect(ctx.close).toHaveBeenCalledTimes(1);
+    expect(worklets).toHaveLength(0);
+  });
+  it.each([false, true])(
+    'late worklet rejection preserves real cleanup failure=%s without reporting obsolete load errors',
+    async (failsCleanup) => {
+      vi.stubGlobal('location', { origin: 'http://localhost:3000' });
+      const gate = deferred<void>(),
+        requested = deferred<void>(),
+        s = stream(),
+        statuses: string[] = [],
+        seen = vi.fn();
+      if (failsCleanup)
+        s.stop.mockImplementation(() => {
+          throw Error('worklet cancellation stream cleanup failed');
+        });
+      const ctx = context(() => {
+        requested.resolve();
+        return gate.promise;
+      });
+      Object.assign(ctx, { resume: async () => {} });
+      const session = new CaptureSession({
+        createContext: () => ctx,
+        acquireStream: async () => s.value,
+        createVad,
+        onVadEvent: seen,
+        onUtterance: seen,
+        onStatus: (reason) => statuses.push(reason),
+      });
+      const starting = session.start();
+      await requested.promise;
+      const stopping = session.stop(),
+        outcomes = Promise.allSettled([starting, stopping]);
+      gate.reject(Error('obsolete worklet load failure'));
+      const result = await outcomes;
+      expect(result[1].status).toBe(failsCleanup ? 'rejected' : 'fulfilled');
+      expect(statuses.includes('CAPTURE_CLEANUP_FAILED')).toBe(failsCleanup);
+      expect(statuses).not.toContain('CAPTURE_LOAD_FAILED');
+      expect(s.stop).toHaveBeenCalledTimes(1);
+      expect(release).toHaveBeenCalledTimes(1);
+      expect(ctx.close).toHaveBeenCalledTimes(1);
+      expect(seen).not.toHaveBeenCalled();
+      expect(worklets).toHaveLength(0);
+      expect(sources).toHaveLength(0);
+    },
+  );
+
+  it.each(['stop', 'mute'] as const)(
+    'actual adapter reports late permission cleanup failure after Session %s',
+    async (operation) => {
+      vi.stubGlobal('location', { origin: 'http://localhost:3000' });
+      const gate = deferred<MediaStream>(),
+        requested = deferred<void>(),
+        ctx = context();
+      Object.assign(ctx, { resume: async () => {} });
+      const track = {
+          stop: vi.fn(() => {
+            throw Error('late track stop failed');
+          }),
+        },
+        seen = vi.fn(),
+        statuses: string[] = [];
+      const session = new CaptureSession({
+        createContext: () => ctx,
+        acquireStream: () => {
+          requested.resolve();
+          return gate.promise;
+        },
+        createVad,
+        onVadEvent: seen,
+        onUtterance: seen,
+        onStatus: (reason) => statuses.push(reason),
+      });
+      const starting = session.start();
+      await requested.promise;
+      const disposing = session[operation]();
+      const outcomes = Promise.allSettled([starting, disposing]);
+      gate.resolve({ getTracks: () => [track] } as unknown as MediaStream);
+      const result = await outcomes;
+      expect(result[1].status).toBe('rejected');
+      expect(statuses).toContain('CAPTURE_CLEANUP_FAILED');
+      expect(statuses).not.toContain('CAPTURE_LOAD_FAILED');
+      expect(track.stop).toHaveBeenCalledTimes(1);
+      expect(release).toHaveBeenCalledTimes(1);
+      expect(worklets).toHaveLength(0);
+      expect(sources).toHaveLength(0);
+      expect(seen).not.toHaveBeenCalled();
+      if (operation === 'mute') await session.stop();
+      expect(ctx.close).toHaveBeenCalledTimes(1);
+    },
+  );
+  it.each(['sync', 'async'] as const)(
+    'actual destroy retains a %s late stream cleanup rejection',
+    async (kind) => {
+      const gate = deferred<MediaStream>(),
+        s = stream(),
+        failure = Error('late pause failed'),
+        stop = vi.fn(() => {
+          if (kind === 'sync') throw failure;
+          return Promise.reject(failure);
+        });
+      const vad = await MicVAD.new(
+        options(context(), s, {
+          getStream: () => gate.promise,
+          pauseStream: stop,
+        }),
+      );
+      const starting = vad.start(),
+        disposing = vad.destroy();
+      const outcomes = Promise.allSettled([starting, disposing]);
+      gate.resolve(s.value);
+      const result = await outcomes;
+      expect(result[0].status).toBe('rejected');
+      expect(result[1].status).toBe('rejected');
+      await expect(vad.destroy()).rejects.toThrow('MicVAD cleanup failed');
+      expect(stop).toHaveBeenCalledTimes(1);
+      expect(release).toHaveBeenCalledTimes(1);
+      expect(vad.listening).toBe(false);
+      expect(worklets).toHaveLength(0);
+      expect(sources).toHaveLength(0);
+    },
+  );
+  it('actual destroy retains late resume cleanup failure and prevents activation', async () => {
+    const first = stream(),
+      fresh = stream(),
+      gate = deferred<MediaStream>(),
+      requested = deferred<void>();
+    const pause = vi.fn(async (value: MediaStream) => {
+      if (value === fresh.value)
+        throw Error('late resumed stream cleanup failed');
+      value.getTracks().forEach((track) => track.stop());
+    });
+    const vad = await MicVAD.new(
+      options(context(), first, {
+        pauseStream: pause,
+        resumeStream: () => {
+          requested.resolve();
+          return gate.promise;
+        },
+      }),
+    );
+    await vad.start();
+    await vad.pause();
+    const starting = vad.start();
+    await requested.promise;
+    const disposing = vad.destroy(),
+      outcomes = Promise.allSettled([starting, disposing]);
+    gate.resolve(fresh.value);
+    const result = await outcomes;
+    expect(result[1].status).toBe('rejected');
+    await expect(vad.destroy()).rejects.toThrow();
+    expect(pause.mock.calls.map(([value]) => value)).toEqual([
+      first.value,
+      fresh.value,
+    ]);
+    expect(sources).toHaveLength(1);
+    expect(sources[0].connect).toHaveBeenCalledTimes(1);
+    expect(vad.listening).toBe(false);
+    expect(release).toHaveBeenCalledTimes(1);
+  });
+
   it('releases allocated-never-started model via actual Silero session/state/sample-rate cleanup', async () => {
     const s = stream(),
       ctx = context(),

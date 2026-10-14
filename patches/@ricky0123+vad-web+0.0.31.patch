@@ -1,8 +1,8 @@
 diff --git a/node_modules/@ricky0123/vad-web/dist/real-time-vad.js b/node_modules/@ricky0123/vad-web/dist/real-time-vad.js
-index 3c23e2ab6fd7f30feb628ab97f1c5d8f1c554785..05dfffd011909970e09f4e3ce437a26fdba7c221 100644
+index 3c23e2ab6fd7f30feb628ab97f1c5d8f1c554785..4213050c5a6b73b500c03d693108e62c1cfb161f 100644
 --- a/node_modules/@ricky0123/vad-web/dist/real-time-vad.js
 +++ b/node_modules/@ricky0123/vad-web/dist/real-time-vad.js
-@@ -195,10 +195,22 @@ class MicVAD {
+@@ -195,10 +195,27 @@ class MicVAD {
              };
          };
          this.setErrored = (error) => {
@@ -14,19 +14,24 @@ index 3c23e2ab6fd7f30feb628ab97f1c5d8f1c554785..05dfffd011909970e09f4e3ce437a26f
 +        this._startPromise = null;
 +        this._destroyPromise = null;
 +        this._frames = new Set();
-+        this._stoppedStreams = new WeakSet();
++        this._stoppedStreams = new WeakMap();
 +        this.stopStreamOnce = (stream) => {
-+            if (!stream || this._stoppedStreams.has(stream)) return Promise.resolve();
-+            this._stoppedStreams.add(stream);
-+            try { return Promise.resolve(this.options.pauseStream(stream)); }
-+            catch (error) { return Promise.reject(error); }
++            if (!stream) return Promise.resolve();
++            const existing = this._stoppedStreams.get(stream);
++            if (existing) return existing;
++            let resolve, reject;
++            const stopped = new Promise((ok, failed) => { resolve = ok; reject = failed; });
++            this._stoppedStreams.set(stream, stopped);
++            try { resolve(this.options.pauseStream(stream)); }
++            catch (error) { reject(error); }
++            return stopped;
 +        };
 +        this._start = async () => {
 +            if (this.initializationState === "destroyed") return;
              switch (this.initializationState) {
                  case "uninitialized": {
                      logging_1.log.debug("initializing micVAD");
-@@ -216,6 +228,10 @@ class MicVAD {
+@@ -216,6 +233,10 @@ class MicVAD {
                          }
                          throw error;
                      }
@@ -37,7 +42,7 @@ index 3c23e2ab6fd7f30feb628ab97f1c5d8f1c554785..05dfffd011909970e09f4e3ce437a26f
                      if (this.options.audioContext) {
                          console.log("using custom audio context");
                          this._audioContext = this.options.audioContext;
-@@ -251,9 +267,11 @@ class MicVAD {
+@@ -251,9 +272,11 @@ class MicVAD {
                              `Unsupported audio processor adapter type: ${this._audioProcessorAdapterType}`);
                          }
                      }
@@ -49,7 +54,7 @@ index 3c23e2ab6fd7f30feb628ab97f1c5d8f1c554785..05dfffd011909970e09f4e3ce437a26f
                      this._mediaStreamAudioSourceNode.connect(this._vadNode);
                      logging_1.log.debug("started micVAD");
                      this.listening = true;
-@@ -268,13 +286,18 @@ class MicVAD {
+@@ -268,13 +291,18 @@ class MicVAD {
                      if (this.listening) {
                          return;
                      }
@@ -70,7 +75,7 @@ index 3c23e2ab6fd7f30feb628ab97f1c5d8f1c554785..05dfffd011909970e09f4e3ce437a26f
                      break;
                  }
                  case "destroyed": {
-@@ -291,38 +314,74 @@ class MicVAD {
+@@ -291,38 +319,74 @@ class MicVAD {
                  }
              }
          };
@@ -161,7 +166,7 @@ index 3c23e2ab6fd7f30feb628ab97f1c5d8f1c554785..05dfffd011909970e09f4e3ce437a26f
              switch (ev.msg) {
                  case messages_1.Message.FrameProcessed:
                      void this.options.onFrameProcessed(ev.probs, ev.frame);
-@@ -381,11 +440,13 @@ class MicVAD {
+@@ -381,11 +445,13 @@ class MicVAD {
              }
              catch (e) {
                  console.error("Error starting micVad", e);

@@ -127,6 +127,51 @@ function harness() {
   };
 }
 describe('bounded capture owner', () => {
+  it.each(['stop', 'mute'] as const)(
+    'preserves a late track cleanup rejection after %s cancels pending permission',
+    async (operation) => {
+      const h = harness(),
+        gate = deferred<MediaStream>(),
+        requested = deferred<void>();
+      const failed = {
+          stop: vi.fn(() => {
+            throw Error('late track cleanup failed');
+          }),
+        },
+        healthy = { stop: vi.fn() };
+      h.deps.acquireStream.mockImplementationOnce(() => {
+        requested.resolve();
+        return gate.promise;
+      });
+      const session = new CaptureSession(h.deps),
+        starting = session.start();
+      await requested.promise;
+      const disposing = session[operation]();
+      const outcomes = Promise.allSettled([starting, disposing]);
+      gate.resolve({
+        getTracks: () => [failed, healthy],
+      } as unknown as MediaStream);
+      const result = await outcomes;
+      expect(result[1].status).toBe('rejected');
+      expect(h.statuses).toContain('CAPTURE_CLEANUP_FAILED');
+      expect(h.statuses).not.toContain('CAPTURE_LOAD_FAILED');
+      expect(failed.stop).toHaveBeenCalledTimes(1);
+      expect(healthy.stop).toHaveBeenCalledTimes(1);
+      expect(h.events).toHaveLength(0);
+      expect(h.utterances).toHaveLength(0);
+      if (operation === 'stop') {
+        await expect(session.stop()).rejects.toThrow();
+        expect(h.contexts[0].close).toHaveBeenCalledTimes(1);
+      } else {
+        await session.stop();
+        expect(h.contexts[0].close).toHaveBeenCalledTimes(1);
+      }
+      await session.start();
+      await session.stop();
+      expect(h.contexts).toHaveLength(2);
+    },
+  );
+
   it('refuses a reused stopped stream on unmute and allows a fresh user Start', async () => {
     const h = harness(),
       s = new CaptureSession(h.deps);

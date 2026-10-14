@@ -56,6 +56,10 @@ export class CaptureSession {
   private recovery: Promise<void> | null = null;
   private stopping: Promise<void> | null = null;
   private stoppedTracks = new WeakSet<MediaStreamTrack>();
+  private trackStopFailures = new WeakMap<
+    MediaStreamTrack,
+    { error: unknown }
+  >();
   private closedContexts = new WeakSet<AudioContext>();
   private destroyedVads = new WeakMap<VadHandle, Promise<void>>();
   constructor(private readonly deps: Dependencies) {}
@@ -213,7 +217,7 @@ export class CaptureSession {
     } catch (error) {
       if (!this.active(run)) {
         if (error instanceof CanceledCapture) return;
-        // A canceled initialization error is not a current load failure; shutdown still reports disposal errors.
+        // Obsolete load errors are benign; cached cleanup outcomes remain observable through shutdown.
         return;
       }
       this.run = null;
@@ -339,11 +343,16 @@ export class CaptureSession {
   private async stopStream(stream: MediaStream): Promise<void> {
     const errors: unknown[] = [];
     for (const track of stream.getTracks()) {
-      if (this.stoppedTracks.has(track)) continue;
+      if (this.stoppedTracks.has(track)) {
+        const failure = this.trackStopFailures.get(track);
+        if (failure) errors.push(failure.error);
+        continue;
+      }
       this.stoppedTracks.add(track);
       try {
         track.stop();
       } catch (error) {
+        this.trackStopFailures.set(track, { error });
         errors.push(error);
       }
     }
