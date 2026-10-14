@@ -1,6 +1,6 @@
 # #5 Claude orchestration
 
-Implementation is in progress after registered Plan approval and Develop entry. Story review is pending. This draft collateral records the accepted scope and planned checks; it does not approve Plan, Develop, or a rank wave.
+Source implementation is complete after registered Plan approval and Develop entry. Author verification is recorded in [5-verification.md](5-verification.md). Independent review, exact-head lifecycle checks, actual cloud merge and Close remain pending. Earlier setup checkpoints below remain historical.
 
 ## Governing authority
 
@@ -28,7 +28,7 @@ Owned evidence paths are `tests/helpers/scripted-providers.ts`, `tests/integrati
 - Exercise incremental first-delta delivery, pre-stream errors, one accepted-stream failure, pre-aborted requests, and disconnect settlement that retains the lease until upstream work settles.
 - Check that browser imports cannot reach server-native SDK modules. Preserve accepted runtime/dependency pins without application credentials or a live model choice for offline checks.
 
-The accepted verifier commands are planned, not passing results:
+The accepted verifier commands are recorded below; current observed results are in [5-verification.md](5-verification.md):
 
 ```sh
 npm run test:integration
@@ -40,7 +40,7 @@ npm run lint
 npm run format:check
 ```
 
-Whole-story implementation, per-criterion evidence, review, delivery, and Close remain pending. The parent owner retains review, integration, and Close authority.
+Source behavior and offline verification are complete; registered per-criterion lifecycle evidence, review, delivery and Close remain pending. The parent owner retains review, integration, and Close authority.
 
 ## Integrated boundary readiness
 
@@ -78,4 +78,10 @@ Implementation is still unstarted in Ready for Planning. Native READY confirmati
 
 ## Active execution checkpoint
 
-Actual native admission is now READY. Registered Plan entry, narrative deep dive, truthful Full-Auto Plan approval and Develop entry completed before authored application source. Implementation is in progress; the older refusal/setup checkpoints are retained as history. Root still owns independent review, exact-head lifecycle verification, cloud merge and Close. Source delivery remains whole-story only.
+Actual native admission is now READY. Registered Plan entry, narrative deep dive, truthful Full-Auto Plan approval and Develop entry completed before authored application source. Source implementation and author verification are complete; the older refusal/setup checkpoints are retained as history. Root still owns independent review, exact-head lifecycle verification, cloud merge and Close. Source delivery remains whole-story only.
+
+## Immutable planning references and review handoff
+
+The governing contract-first amendment remains [6eda972](https://github.com/kburson/AIVC/blob/6eda972a9df1bcbe1f8f650e9506c709026b02d8/docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md), with accepted base cb82f730 and Node amendment 3574e5 retained in Git history. Current formatted views do not replace sealed accepted bytes; owner #25 archives are in [quality-evidence](../quality-evidence/README.md).
+
+The epic orchestrator allocated scripts/format-check.d.mts as a narrow integration declaration only. Its inspected runtime APIs and drift risk are covered in the verification report; no #25 behavioral source or fixture was edited. Review should inspect the nine server source files, four owned test/helper files, three authored documents and that explicit declaration bridge. The draft PR targets codex/2-draft; its actual merge must precede Done.
