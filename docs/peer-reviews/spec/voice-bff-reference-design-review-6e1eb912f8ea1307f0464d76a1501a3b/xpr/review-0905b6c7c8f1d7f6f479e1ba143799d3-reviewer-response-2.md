@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/spec/voice-bff-reference-design-review-6e1eb912f8ea1307f0464d76a1501a3b/xpr/review-0905b6c7c8f1d7f6f479e1ba143799d3-reviewer-response-2.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `13d5b37f377cb51f7433743a7bc9c525d5f1c728220e24532c27bcc0c4568799`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-0905b6c7c8f1d7f6f479e1ba143799d3"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-0905b6c7c8f1d7f6f479e1ba143799d3'
+role: 'reviewer'
 turn: 2
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/specs/2026-10-12-voice-bff-reference-design.md"
-artifact_commit: "bc6e15ecb2f48c9f3b0cc030609fd99a8f17adac"
-artifact_blob: "1f3b495cdc97e23b2b50786f4ca42cdef1e95d6c"
-artifact_digest: "sha256:8512daa8c456af00628a16471d4b13526c7585172c223c8bfa0f2323bee4fff6"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/specs/2026-10-12-voice-bff-reference-design.md'
+artifact_commit: 'bc6e15ecb2f48c9f3b0cc030609fd99a8f17adac'
+artifact_blob: '1f3b495cdc97e23b2b50786f4ca42cdef1e95d6c'
+artifact_digest: 'sha256:8512daa8c456af00628a16471d4b13526c7585172c223c8bfa0f2323bee4fff6'
 agent:
-  host: "claude-code"
-  provider: "anthropic"
-  model_id: "claude-opus-5-5"
-  model_display: "claude-opus-5-5"
-  session_fingerprint: "sha256:fda8e7de99ee2c1fed79750f470d63803a60856d5cb5b7c62647757e55d14659"
-  identity_source: "runtime"
-started_at: "2026-10-13T03:13:14.779Z"
-submitted_at: "2026-10-13T03:26:36.481Z"
-finding_ids: ["R2-F001","R2-F002","R2-F003","R2-F004"]
+  host: 'claude-code'
+  provider: 'anthropic'
+  model_id: 'claude-opus-5-5'
+  model_display: 'claude-opus-5-5'
+  session_fingerprint: 'sha256:fda8e7de99ee2c1fed79750f470d63803a60856d5cb5b7c62647757e55d14659'
+  identity_source: 'runtime'
+started_at: '2026-10-13T03:13:14.779Z'
+submitted_at: '2026-10-13T03:26:36.481Z'
+finding_ids: ['R2-F001', 'R2-F002', 'R2-F003', 'R2-F004']
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
@@ -42,6 +46,7 @@ Disposition verification:
   3. A misfire restores playback and keeps a pending Working turn current.
 
   Stale candidates cannot revive a canceled generation. The 200 ms target is now measured honestly from callback to silence, separately from confirmation-to-cancellation and from acoustic onset. Speaker-mode mitigations are named, and unresolved self-triggering is reported as a limitation instead of being worked around by disabling listening. Requirement 12 and the manual misfire case cover this. Suspending a context freezes `currentTime`, so retained scheduled sources resume contiguously, which makes the reversible pause sound.
+
 - **R1-F003 (resolved).** `CLAUDE_WEB_SEARCH`, `CLAUDE_WEB_SEARCH_TOOL_VERSION`, `BFF_ALLOWED_ORIGINS`, `BFF_ALLOWED_HOSTS` and `SPEECH_CHARS_PER_SECOND` now have sanitized defaults, and invalid admission configuration fails closed. Search availability has four explicit states, and an explicit hosted-tool rejection latches search off for the process with a reason. The author chose to fail the affected turn visibly with `SEARCH_UNAVAILABLE` rather than replay it. That is a legitimate choice under the no-replay rule, and project lookup stays usable. Requirement 13 covers it.
 - **R1-F004 (resolved).** History is whole-pair and completed-text only. Interrupted, failed, truncated, no-speech and pre-transcript turns contribute nothing, and no placeholders are invented. The oldest pairs are trimmed whole, and an oversize single pair is omitted with a notice. The BFF validates the pair structure as untrusted input. This makes the "Who owns it?" follow-up after an interrupted Beacon answer deterministic. Requirement 14 covers it.
 - **R1-F005 (incorporated).** Live validation of a continuation that keeps the prior hosted blocks but omits the exhausted tool definition is now required. If the provider rejects that form, the turn ends with an explicit partial/truncated status instead of re-enabling search.

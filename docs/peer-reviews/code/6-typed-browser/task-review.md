@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/code/6-typed-browser/task-review.md) and its exact bytes remain available in the [evidence archive](../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `c1a2a2a1d219aece15163c1194f4386f8121b8b2ecf32892422aa4ca0901f70a`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Story #6 independent task review
 
 ## Spec Compliance
@@ -11,7 +15,7 @@
 - The server page mounts the actual Conversation at `apps/web/app/page.tsx:1`; labeled typed controls, status, mutes, capability explanations, partial timeline and collapsed normalized diagnostics are present at `apps/web/components/Conversation.tsx:127`, `apps/web/components/Capabilities.tsx:15` and `apps/web/components/Details.tsx:4`. Capture/playback remain explicitly pending.
 - Required history/controller/link/UI/browser files are delivered, the starter probe is removed, and the frozen contract/fixture files, manifests, provider and capture implementation are absent from the change list. Exact same-origin positive behavior is asserted at `tests/browser/typed.spec.ts:23`; foreign URLs are excluded from harness interception at `tests/browser/voice-harness.ts:39`. The foreign-negative case at `tests/browser/typed.spec.ts:109` uses an explicitly denied test base transport: it proves matcher isolation, not server admission or an actual foreign network exchange.
 
-**CannotVerifyFromDiff boundaries**
+### CannotVerifyFromDiff boundaries
 
 - Frozen contract/fixture byte integrity, runtime/dependency pins, original TDD execution order and test exit statuses are not established merely by code inspection. The author records the frozen digest `ef4409385e545e82b91fcd44caaab02e457e8af9404d5abba3f07b8956a1d58c`, pinned Node 26.8.1/npm 12.0.2 and source-SHA Test receipt `01M4VV7JM4YF8QXF34S2V7X73W` in `docs/implementation/2026-10-13-6-typed-browser-delivery.md:21`. That source receipt is not a receipt for the later documentation head.
 - Simulated browser cards do not establish actual HTTP retrieval, live model/search/account validation, speech, microphone capture/playback, all 15 system cases or final joined Next/Fastify acceptance. Those remain downstream obligations. See the explicit simulation statement at `docs/implementation/2026-10-13-6-typed-browser-delivery.md:19` and `apps/web/components/Capabilities.tsx:17`.

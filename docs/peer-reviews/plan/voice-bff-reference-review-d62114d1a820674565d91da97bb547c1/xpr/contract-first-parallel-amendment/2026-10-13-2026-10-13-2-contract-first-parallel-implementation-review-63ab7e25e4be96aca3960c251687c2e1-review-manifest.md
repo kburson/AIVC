@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/xpr/contract-first-parallel-amendment/2026-10-13-2026-10-13-2-contract-first-parallel-implementation-review-63ab7e25e4be96aca3960c251687c2e1-review-manifest.md) and its exact bytes remain available in the [evidence archive](../../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `e9a9af2d147eee0970ccd366dfa4ad73ca77848975a7b21a508dfe78f42376b6`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:e53bf4d9991ae94a699fede1d62fd90324e45923de951babcb8d9ad237900bd9" -->
 
 # Review manifest
@@ -167,9 +171,7 @@ Mode: `normal`
   },
   "record_id": "review-63ab7e25e4be96aca3960c251687c2e1",
   "recoveries": [],
-  "residual_risk": [
-    "human-authority-unavailable"
-  ],
+  "residual_risk": ["human-authority-unavailable"],
   "review_id": "review-63ab7e25e4be96aca3960c251687c2e1",
   "runtime": {
     "adapter_version": "1.0.0",
@@ -242,12 +244,7 @@ Mode: `normal`
       },
       "commit": "6eda972a9df1bcbe1f8f650e9506c709026b02d8",
       "decision": "revisions-requested",
-      "finding_ids": [
-        "R2-F001",
-        "R2-F002",
-        "R2-F003",
-        "R2-F004"
-      ],
+      "finding_ids": ["R2-F001", "R2-F002", "R2-F003", "R2-F004"],
       "reviewer_response": {
         "digest": "sha256:3a99e55eeee8d392102efac0abf5d1a0699448c10cccc63ba1c2a10df0ad2368",
         "path": "docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/xpr/contract-first-parallel-amendment/2026-10-13-2026-10-13-2-contract-first-parallel-implementation-review-63ab7e25e4be96aca3960c251687c2e1-reviewer-response-2.md"

@@ -1,23 +1,43 @@
 # Epic #2 session runtime admission
 
-The application remains on the accepted Node >=26 stack (exact reproduction Node 26.8.1 / npm 12.0.2). Global ai-peer-review 0.4.1 is a separate local-tarball installation and is unchanged by these AITM runtime checkpoints.
+The application uses Node >=26 (exact reproduction Node 26.8.1 / npm 12.0.2). Global ai-peer-review 0.4.1 is a separate local-tarball installation and remains unchanged.
 
-## Isolated AITM candidate
+## Reviewed local AITM candidates
 
-AITM #2009 addresses canonical reviewed Scope pointers changing the native wave fingerprint after implementation verification. Its first source candidate d3fff21188461a900065e4636bf7a8b75d36a642 was independently reviewed by Astra 6/high after a genuine author stop and separate reviewer binding. [Published review and provenance](https://github.com/kburson/ai-task-manager/blob/af88fdca5a7db160d350ace4d08ef77005e1e290/docs/peer-reviews/code/2009-reviewed-scope-normalization-d3fff211/independent-review.md) record Spec PASS / quality Approved / exact isolated local adoption Approved, with 226 independent affected and adjacent tests passing. Complete upstream slow rerun and canonical Test/Review/Done remain pending.
+AITM #2008 corrects legacy orchestration snapshot identity. Its reviewed source is 909e35f1db8c85dc218d69b80dd5167e3c0987f6; [draft PR #2010](https://github.com/kburson/ai-task-manager/pull/2010) preserves the source.
 
-Root verified and admitted the exact locally built tarball at 2026-10-14T01:23:28.223Z into the isolated ignored prefix `.scratch/runtime/2009-d3fff211/`. Tarball size is 3,004,437 bytes and SHA-256 is `9dcb289ab72a0207d2b4c916bde90c0262c47558c5acc1d0ae3835e8fb14c460`. SHA-512 SRI matches the review sidecar. Package entrypoint, refinement, orchestration and strict reviewed-Scope model bytes match both the reviewed Git source and installed package. The primary consumer package and global AIPR were preserved. Local admission provenance is `.scratch/runtime/2009-d3fff211/admission-provenance.json`.
+AITM #2009 normalizes validated reviewed Scope pointers and preserves exact retained legacy fingerprints for strictly completed Done children. Source 5bc77afc43afb205036702d37aee13f57db06fa7 follows the first d3fff211 candidate. Independent Astra 6/high review found specification PASS and code Approved, with 231 affected and adjacent tests passing. [Published review](https://github.com/kburson/ai-task-manager/blob/2fd90eb3f84f442e0329783943ed432b45d25473/docs/peer-reviews/code/2009-reviewed-scope-normalization-5bc77afc4/independent-review.md) and [draft PR #2011](https://github.com/kburson/ai-task-manager/pull/2011) retain both rounds. Complete upstream slow rerun, canonical Test/Review/Done and upstream merge remain pending; this is bounded local adoption.
 
-## Actual consumer result and remaining correction
+Root admitted the exact locally built package at 2026-10-14T02:14:37.113Z into ignored isolated prefix .scratch/runtime/2009-5bc77afc4/. Tarball size is 3,005,031 bytes; SHA-256 is 493593b737626a15661c42c5711938cf3788f294a5bda7d6ee1a2c1d42a2bbce. Root verified SHA-512 SRI and six packaged modules against reviewed Git source and installed bytes. source-provenance.json and admission-provenance.json remain in that local prefix. The primary consumer package, global runtime and earlier candidate bytes remain preserved.
 
-The first candidate restores the exact frozen #4 and #6 fingerprints. Actual registered native wave show still refuses `rank-wave-graph-stale`. Read-only mapping of all eleven children isolates the remaining difference to completed #3 and #13: their canonical Scope pointers already existed when the original wave was authorized. New normalization recalculates their historical fingerprints.
+## Actual native consumer result
 
-The unchanged original helper at source909e35f1 reproduces both retained grant hashes from the complete current closed bodies and labels: #3 `e0cfb24505df058238165950a3956de4cde6096fb23a5587bf98979c3844ca61`, #13 `ed0551789217fc101e735a73123ffbc11447cc4970e96a1208c2d7caa6b5bb8f`. Every other child fingerprint, rank and dependency matches. This is a demonstrated compatibility gap, not native admission success.
+The real registered Prepare succeeded with the exact original eleven-child frozen graph and parent identity. Operation a3fe2811-1c1b-472a-a3b6-81e0389fcb93 has proposal digest 39fc17526de4df5b4c86f463242f691ef102a59fc77afa5cf0cc2a0423a68203. At preparation, the only changed member binding was the genuine current #14 Astra reviewer. No graph hashes, source messages, session identities or provider receipts were substituted.
 
-The governed #2009 source author is correcting that compatibility and will hand off for distinct Astra re-review before any replacement runtime is admitted. Existing installed bytes and original authorization remain unchanged; no issue evidence, frozen graph, session identity or provider receipt is fabricated. [Draft PR #2011](https://github.com/kburson/ai-task-manager/pull/2011) preserves source/review history, stacked on the separately reviewed #2008 [PR #2010](https://github.com/kburson/ai-task-manager/pull/2010).
+The following actual Refresh refused rank-wave-source-unverified and published no replacement grant. Read-only inspection through the exported native transcript loader identifies rank-wave-source-contradiction: the sole subsequent statement is the owner's instruction to pause when wave 4 is complete and continue #2 in a fresh chat. The runtime incorrectly treats this future completion condition as an immediate withdrawal. A separate governed source defect is being prepared; #2009 does not authorize changing source grammar.
 
-## Wave and delivery boundary
+The original human authorization for rank4 stories #4/#5/#6/#7/#14 remains the intended scope. A correction must preserve immediate revocations and the future stop boundary. No child source entry is permitted until actual native admission succeeds. Local package acceptance alone is not native grant readiness.
 
-#4 and #6 are merged into the feature branch and governed Done. #14 independent code review proceeds under a genuine new reviewer after normal author discharge. #5 awaits actual native admission and #7 also awaits whole #5 Done. Do not interpret isolated candidate admission as a working native-wave grant.
+## Delivery and stop boundary
 
-The owner authorized rank4 stories #4/#5/#6/#7/#14 and requested a pause after the whole wave is delivered and Done. Stop before #8 and save a fresh-chat handoff. The delivery ledger and PR bodies identify exact accepted revisions and receipts; this document and local runtime files are evidence, not a substitute for current Tier-1 guidance or Explain authority.
+\#4 and #6 are merged and governed Done. #14 PR #21 merged at 2026-10-14T02:28:26Z, accepted head 4f80d9d1fc6ddf0660977b78816bef9613577d5b, merge 372f5a7f8d6fff945ef5269874e5d56d03524d74; governed Close completed at2026-10-14T02:34:17Z and real reviewer occupancy is discharged. #5 awaits native admission; #7 also awaits whole #5 Done.
+
+Finish the whole authorized wave through review, exact-head verification, merged cloud delivery and governed Done, then pause before #8 and publish a fresh-chat handoff. The delivery ledger, live issue records and PR metadata retain exact provenance. This checkpoint does not replace current Tier-1 guidance or Explain authority.
+
+## Native source recovery checkpoint
+
+The proposed #2012 grammar correction has focused55 checks reported green, but final quality runs, source commit, immutable package and independent review are pending. Native hooks project the parent session ID into the separate source agent thread and refuse writes/tests despite its valid #2012 binding. The author is registered paused. [Exact preserved proposal and recovery details](../runtime/2012-pending-source/checkpoint.md) distinguish the working proposal from an accepted runtime. No replacement package or ready grant is claimed.
+
+## Standalone source author completed
+
+The owner authorized the two standalone AITM chats and their coordination. The Sol6.1/high author session01a138e5-7d07-7671-883d-e4ef5d43f917 completed validated source b5528ee33b517202aa5091d5271404e1ae79c795 and pushed publication headba55a86ccb6e605b819c4d4006237ad46126e644 to PR2013. Its actual root-session context permits source operations; the previous subagent claim was released normally. The author reported final55 focused tests,127 affected tests,961 fast files, lint and format passing, with normal Stop and occupancy discharge. The final repair additionally protects neutral deployment operations.
+
+Standalone Astra6/high reviewer session01a138f7-8083-7d31-9344-a35863d2499e is reviewing the exact source and package. Root copied the local tarball into .scratch/runtime/2012-b5528ee33/ and independently verified size3005649, SHA2565d00afbead05bb23fc824f85709d4ee91a0a4e7cdf89397e82c3f4f3c7d46626, SHA512SRI and nine modules against Git and the tarball. It is staged only: independent review and installation/admission are pending. No ready native grant is claimed.
+
+The preserved proposal at checkpoint39c18e0 remains historical; its raw verification draft is not the final source attestation. AIVC resumed through the registered verb with original generation39179cee-5b3f-444c-8b8c-b4499ff99018 unchanged. Finish #5 then #7 under lawful entry and their whole-story dependencies; stop before #8 after whole wave4 delivery and Done.
+
+## Independent review refused the first final candidate
+
+Standalone Astra 6/high published report commit e50b2c146327f20735c4071dc7675d37db566198 on draft PR2013. Specification PASS; code ChangesRequested; exact b5528ee33 local-tarball adoption Refused. Independent verification passed 146 affected and adjacent tests, while twenty source/base/package comparisons reproduced two blocking findings: joined deployment/admission stop objects can conceal immediate withdrawal (P1), and deferred-pause context can misclassify a negated testing/deployment preference as withdrawal (P2). All917 packed files match source; provenance passed but behavior did not.
+
+The rejected package remains immutable and uninstalled. The reviewer stopped normally and verified discharge. The same owner-authorized Sol author chat is correcting both findings with RED regressions and will publish a new immutable candidate for the same standalone Astra chat to re-review. Root continues using the admitted 5bc77 runtime until exact-source/package approval and actual native admission succeed. Existing active story PR22 and PR24 are being refreshed with approved feature-branch history, including owner story #25 quality scans, without starting their blocked source phases.

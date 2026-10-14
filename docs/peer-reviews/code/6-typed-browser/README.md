@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/code/6-typed-browser/README.md) and its exact bytes remain available in the [evidence archive](../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `0c395229d2d75dac025b6cab9bdc422b2368dd42ac52dd35c6af1711d605ff6e`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Story #6 review provenance
 
 [Independent task review](task-review.md) records **Spec PASS / Task quality Approved** for product source `421acd1b76848165fa276c48ca2360030361e579`, reviewed through documentation head `e0df7ff7832f95564902dbeabeb19729f548f6ce`. This review documentation is a later addition; the original review range and source receipts remain unchanged.

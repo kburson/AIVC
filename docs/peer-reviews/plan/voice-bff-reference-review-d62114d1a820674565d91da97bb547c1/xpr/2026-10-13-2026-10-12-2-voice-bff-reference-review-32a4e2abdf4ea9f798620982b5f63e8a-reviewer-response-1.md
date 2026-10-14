@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/xpr/2026-10-13-2026-10-12-2-voice-bff-reference-review-32a4e2abdf4ea9f798620982b5f63e8a-reviewer-response-1.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `af2acc657cf7bf8fc7e2fddb2fe202c62b775cbe9bce0ac5f1b82bc24eba662c`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-32a4e2abdf4ea9f798620982b5f63e8a"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-32a4e2abdf4ea9f798620982b5f63e8a'
+role: 'reviewer'
 turn: 1
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md"
-artifact_commit: "183bfda3715ff7d6dd5ffd7cfaecbf5987d971eb"
-artifact_blob: "8f2f3f3551512ba83c90ef94c7ab34114413dbef"
-artifact_digest: "sha256:555fdbbcf7ecc3234087733cc694bb7bbf5952d773739258c2b285a0bd69e3de"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md'
+artifact_commit: '183bfda3715ff7d6dd5ffd7cfaecbf5987d971eb'
+artifact_blob: '8f2f3f3551512ba83c90ef94c7ab34114413dbef'
+artifact_digest: 'sha256:555fdbbcf7ecc3234087733cc694bb7bbf5952d773739258c2b285a0bd69e3de'
 agent:
-  host: "claude-code"
-  provider: "anthropic"
-  model_id: "claude-opus-5-5"
-  model_display: "claude-opus-5-5"
-  session_fingerprint: "sha256:54bb4b51f8ef2cf4bc224815244edf83497147eeef35a62104d8cd8661463384"
-  identity_source: "runtime"
-started_at: "2026-10-13T05:51:08.220Z"
-submitted_at: "2026-10-13T05:56:21.910Z"
-finding_ids: ["R1-F001","R1-F002","R1-F003","R1-F004","R1-F005","R1-F006"]
+  host: 'claude-code'
+  provider: 'anthropic'
+  model_id: 'claude-opus-5-5'
+  model_display: 'claude-opus-5-5'
+  session_fingerprint: 'sha256:54bb4b51f8ef2cf4bc224815244edf83497147eeef35a62104d8cd8661463384'
+  identity_source: 'runtime'
+started_at: '2026-10-13T05:51:08.220Z'
+submitted_at: '2026-10-13T05:56:21.910Z'
+finding_ids: ['R1-F001', 'R1-F002', 'R1-F003', 'R1-F004', 'R1-F005', 'R1-F006']
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
@@ -35,21 +39,21 @@ Revisions requested. The plan is thorough, faithfully tracks the accepted specif
 
 This is an independent cross-provider plan review, not implementation verification or Plan approval. I read the complete 745-line artifact at the recorded commit/blob and the complete accepted specification, inspected the root `package.json`, `.gitignore`, `.claude/settings.json` hook entrypoint resolution, and the installed `@kburson/ai-task-manager` `verify-epic-trail.mjs` (`main(argv, deps)` export, direct-invocation guard, `AITM_TEST_ISSUE_NUMBER` handling). I did not run Git, edit the artifact, install dependencies, execute application code or call any provider. External web access was unavailable in this session, so claims about third-party library internals below are stated from the plan's own text or from well-established framework defaults and are marked where they need confirmation. Authority assurance is unavailable as recorded by the protocol.
 
-**Coverage assessment**
+### Coverage assessment
 
-| Area | Assessment |
-|---|---|
-| Architecture and scope | Two loopback processes, no Edge/custom server/second gateway, exclusions and extension prose match the spec. |
-| Spec cases 1–15 | Every case has an owning task and automated evidence; live evidence mapping L1–L8 matches the eight manual scenarios. |
+| Area                       | Assessment                                                                                                                                                                                                                                                        |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Architecture and scope     | Two loopback processes, no Edge/custom server/second gateway, exclusions and extension prose match the spec.                                                                                                                                                      |
+| Spec cases 1–15            | Every case has an owning task and automated evidence; live evidence mapping L1–L8 matches the eight manual scenarios.                                                                                                                                             |
 | Task 1 workspace/retrieval | Concrete pins, script map and runner rules; epic wrapper import path resolves to the installed package and does not double-run its `main` (direct-invocation guard compares argv[1] to the package path). Fastify validation semantics need correction (R1-F004). |
-| Task 2 admission/leases | Pre-body admission, measured body cap, WAV/history validation and settlement-owned leases are coherent and well tested. |
-| Task 3 Claude/search/SSE | Native block retention, search budget accounting and `no-transform` SSE are sound. Multi-round text joining is undefined (R1-F003). |
-| Task 4 history/UI | Atomic whole-pair history and stale-event gating match spec case 14/4. |
-| Task 5 Deepgram | Raw stream, MIME parsing and zero retries are sound; hard-coded SDK timeouts conflict with configurable deadlines (optional 3). |
-| Task 6 playback | PCM ledger, segmentation and backpressure are precise. Admission requires a running playback context, which interacts badly with Task 8 (R1-F001). |
-| Task 7 capture | Patch-based lifecycle cleanup and token snapshots are thorough. The `getStream` example contradicts the stated pause/resume reacquisition (R1-F005). |
-| Task 8 interruption | Capture/answer ownership separation fixes the previously reviewed end-admission ambiguity. Nothing returns the suspended playback context to running after confirmation (R1-F001). |
-| Task 9 evidence | Read-only `verify:live`, source/patch/module digests and honest unverified states are strong. The required clean production build has no owned launch command or build-id mechanism (R1-F002); CI omits browser binaries (R1-F006). |
+| Task 2 admission/leases    | Pre-body admission, measured body cap, WAV/history validation and settlement-owned leases are coherent and well tested.                                                                                                                                           |
+| Task 3 Claude/search/SSE   | Native block retention, search budget accounting and `no-transform` SSE are sound. Multi-round text joining is undefined (R1-F003).                                                                                                                               |
+| Task 4 history/UI          | Atomic whole-pair history and stale-event gating match spec case 14/4.                                                                                                                                                                                            |
+| Task 5 Deepgram            | Raw stream, MIME parsing and zero retries are sound; hard-coded SDK timeouts conflict with configurable deadlines (optional 3).                                                                                                                                   |
+| Task 6 playback            | PCM ledger, segmentation and backpressure are precise. Admission requires a running playback context, which interacts badly with Task 8 (R1-F001).                                                                                                                |
+| Task 7 capture             | Patch-based lifecycle cleanup and token snapshots are thorough. The `getStream` example contradicts the stated pause/resume reacquisition (R1-F005).                                                                                                              |
+| Task 8 interruption        | Capture/answer ownership separation fixes the previously reviewed end-admission ambiguity. Nothing returns the suspended playback context to running after confirmation (R1-F001).                                                                                |
+| Task 9 evidence            | Read-only `verify:live`, source/patch/module digests and honest unverified states are strong. The required clean production build has no owned launch command or build-id mechanism (R1-F002); CI omits browser binaries (R1-F006).                               |
 
 ## Findings
 
@@ -57,7 +61,7 @@ This is an independent cross-provider plan review, not implementation verificati
 
 **Priority:** P1. **Location:** Task 6 admission (line 525: "no next request until audio <=2 seconds/running/not tentative"), Task 6 gesture resume (line 526), watchdog (line 528), Task 8 transitions (lines 615, 617, 619–635, 637). **Affected contract:** spec automatic turn behavior step 6–7, spec case 12, live scenario L3 ("interrupt … and ask about Beacon").
 
-Task 8 raw start suspends the dedicated playback `AudioContext` (spec: during both Working and Speaking). Misfire resumes it. Confirmation (`commitCandidate`) cancels the old answer, queue and sources — but no step resumes the context. The playback context is resumed only in a user gesture (Start or typed submit, line 526). Task 6 speech admission requires playback to be *running*. Consequently, after the canonical voice barge-in (raw start → confirm → speech end → new turn), the new answer's text streams but its first speech segment is never admitted: the context stays suspended, `isRunning()` is false, and because no audio is outstanding the three-second watchdog never fires either, so there is no visible error. The same stuck state follows a watchdog `PLAYBACK_STALLED` teardown (the context is left suspended for the next answer) and a candidate invalidated by Stop-less paths (newer raw start, microphone mute, overlong discard) while suspension is in effect. Line 615's "if confirmation/new turn intervened, never restore old audio" can additionally be read as "never resume", reinforcing the defect. The typed path masks the bug because its gesture resumes the context, so typed browser tests would pass while L3 fails live.
+Task 8 raw start suspends the dedicated playback `AudioContext` (spec: during both Working and Speaking). Misfire resumes it. Confirmation (`commitCandidate`) cancels the old answer, queue and sources — but no step resumes the context. The playback context is resumed only in a user gesture (Start or typed submit, line 526). Task 6 speech admission requires playback to be _running_. Consequently, after the canonical voice barge-in (raw start → confirm → speech end → new turn), the new answer's text streams but its first speech segment is never admitted: the context stays suspended, `isRunning()` is false, and because no audio is outstanding the three-second watchdog never fires either, so there is no visible error. The same stuck state follows a watchdog `PLAYBACK_STALLED` teardown (the context is left suspended for the next answer) and a candidate invalidated by Stop-less paths (newer raw start, microphone mute, overlong discard) while suspension is in effect. Line 615's "if confirmation/new turn intervened, never restore old audio" can additionally be read as "never resume", reinforcing the defect. The typed path masks the bug because its gesture resumes the context, so typed browser tests would pass while L3 fails live.
 
 **Required change:** Separate "restore old audio" from "return the playback context to running". After confirmation has stopped/cleared the old answer's sources (and after any pending `suspend()` has settled), resume the dedicated context so the next generation can play; likewise after watchdog teardown and whenever a tentative candidate becomes stale without restoration. Resumption must happen only once no old-generation source can still play. Note that programmatic `resume()` after the page has received user activation (Start click) is expected to succeed in Chromium, but the plan should treat a rejected/still-suspended resume as a visible speech error rather than a silent hang. Optionally have the speech pump surface a non-running context while text is pending as a status rather than waiting indefinitely.
 
@@ -87,7 +91,7 @@ Claude commonly emits text in a tool-use round (e.g., "Let me look that up.") an
 
 **Priority:** P2. **Location:** Task 1 retrieval behavior (line 170) and implementation notes (lines 198–199). **Affected contract:** spec case 2 ("rejects malformed requests"); plan's own 400 requirements.
 
-The plan states unknown query fields receive 400 and relies on "Fastify query schema has additionalProperties:false". Fastify's documented default Ajv configuration uses `removeAdditional: true` (and `coerceTypes: 'array'`), under which `additionalProperties:false` silently *removes* unknown properties instead of failing validation, so `/v1/projects?foo=1` would return 200 with all records. Likewise, Fastify response schemas drive fast-json-stringify serialization; they drop/coerce rather than validate (for example, enum membership is not enforced), so "Response schema validates every record" overstates the guarantee. Malformed percent-encoding also is not guaranteed to produce 400 with the default querystring parser. An implementer following the notes will either ship the wrong behavior or discover it only if they happen to add the unknown-field test, which the shown red test omits.
+The plan states unknown query fields receive 400 and relies on "Fastify query schema has additionalProperties:false". Fastify's documented default Ajv configuration uses `removeAdditional: true` (and `coerceTypes: 'array'`), under which `additionalProperties:false` silently _removes_ unknown properties instead of failing validation, so `/v1/projects?foo=1` would return 200 with all records. Likewise, Fastify response schemas drive fast-json-stringify serialization; they drop/coerce rather than validate (for example, enum membership is not enforced), so "Response schema validates every record" overstates the guarantee. Malformed percent-encoding also is not guaranteed to produce 400 with the default querystring parser. An implementer following the notes will either ship the wrong behavior or discover it only if they happen to add the unknown-field test, which the shown red test omits.
 
 **Required change:** Configure `ajv.customOptions.removeAdditional = false` (or reject unknown keys explicitly) for the retrieval app, decide how malformed encoding is detected (custom `querystringParser` that throws on decode failure), and validate the fixture records once at load with the shared schema instead of relying on response serialization. Keep repeated `name` rejected under the chosen coercion setting.
 
