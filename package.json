@@ -40,7 +40,9 @@
     "lint:markdown": "node scripts/lint-markdown.mjs",
     "lint:typescript": "eslint . --no-warn-ignored --max-warnings=0",
     "format:write": "node scripts/format-check.mjs --write",
-    "quality:check": "node scripts/quality-check.mjs"
+    "quality:check": "node scripts/quality-check.mjs",
+    "verify:sealed-evidence": "node scripts/sealed-evidence.mjs",
+    "test:evidence": "node --test tests/scripts/evidence-archive.test.mjs"
   },
   "devDependencies": {
     "@kburson/ai-task-manager": "file:vendors/kburson-ai-task-manager-0.1.0.tgz",

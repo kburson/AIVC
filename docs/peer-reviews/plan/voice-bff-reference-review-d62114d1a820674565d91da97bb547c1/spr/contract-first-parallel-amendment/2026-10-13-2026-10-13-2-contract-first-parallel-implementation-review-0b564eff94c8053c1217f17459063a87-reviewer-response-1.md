@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/spr/contract-first-parallel-amendment/2026-10-13-2026-10-13-2-contract-first-parallel-implementation-review-0b564eff94c8053c1217f17459063a87-reviewer-response-1.md) and its exact bytes remain available in the [evidence archive](../../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `f113ca029b39e8111d4efd342934d789ab19a3cc4cc7912f1631011c9bce5454`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-0b564eff94c8053c1217f17459063a87"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-0b564eff94c8053c1217f17459063a87'
+role: 'reviewer'
 turn: 1
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md"
-artifact_commit: "4c717024140ad3d7a26cb421a1177f7a212afbea"
-artifact_blob: "3d9899cc7f4dd23f7fd4f43235b46858223c27c9"
-artifact_digest: "sha256:c2cb78209723ab4dd496fe355c9be7493f35e1bab0232d8c140dad4aa4667a06"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md'
+artifact_commit: '4c717024140ad3d7a26cb421a1177f7a212afbea'
+artifact_blob: '3d9899cc7f4dd23f7fd4f43235b46858223c27c9'
+artifact_digest: 'sha256:c2cb78209723ab4dd496fe355c9be7493f35e1bab0232d8c140dad4aa4667a06'
 agent:
-  host: "codex"
-  provider: "openai"
-  model_id: "gpt-6-astra"
-  model_display: "gpt-6-astra"
-  session_fingerprint: "sha256:c718e87794011fa18ed4cdaa7d455401049ab1466b0df6b863c5d99886b48238"
-  identity_source: "declared"
-started_at: "2026-10-13T14:44:34.242Z"
-submitted_at: "2026-10-13T14:49:10.925Z"
-finding_ids: ["R1-F001","R1-F002","R1-F003"]
+  host: 'codex'
+  provider: 'openai'
+  model_id: 'gpt-6-astra'
+  model_display: 'gpt-6-astra'
+  session_fingerprint: 'sha256:c718e87794011fa18ed4cdaa7d455401049ab1466b0df6b863c5d99886b48238'
+  identity_source: 'declared'
+started_at: '2026-10-13T14:44:34.242Z'
+submitted_at: '2026-10-13T14:49:10.925Z'
+finding_ids: ['R1-F001', 'R1-F002', 'R1-F003']
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
@@ -43,7 +47,6 @@ Independent assessment and acceptance evidence:
 - Whole stories: CONTRACT and CAPTURE-MODULE have full independent completion scope. #7 cannot finish before same-owner wiring. #3 is implemented with remaining lifecycle gates rather than fabricated parallel work. Exclusive files/manifests and later serialized Conversation/controller changes preserve ownership.
 - Evidence: #6 controlled transport proves client agreement only; #5 real runTurn plus Fastify HTTP proves producer behavior; #11 restores joined Next/Fastify browser acceptance without turn interception. Patched MicVAD lifecycle tests, actual asset smoke and real provider/microphone/search/echo/live incremental SSE/PCM remain distinct and assigned. All fifteen cases retain owners and explicit failure/unverified outcomes.
 - Estimate: extraction redistributes scope with a disclosed allowance; no mock test implies live acceptance or a one-day full-scope promise.
-
 
 ## Findings
 

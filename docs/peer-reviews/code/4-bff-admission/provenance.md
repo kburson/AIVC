@@ -1,6 +1,10 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/code/4-bff-admission/provenance.md) and its exact bytes remain available in the [evidence archive](../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `af1a06b7e7994380ac0276a4b632df1e6fe72cecdf63c0f16d492fd5163ab2b2`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Issue 4 BFF admission review provenance
 
-This publishes the independent task review for issue #4 and draft PR #18: https://github.com/kburson/AIVC/pull/18. review.md is an exact copy of the original reviewer artifact.
+This publishes the independent task review for issue #4 and draft PR #18: <https://github.com/kburson/AIVC/pull/18>. review.md is an exact copy of the original reviewer artifact.
 
 - Reviewed source base: 6c64bfefc3db5bc19929e774aa8c7e3def282c19.
 - Reviewed source head: f5b82e11ec89ee31104205b20ae2f042937c3405.

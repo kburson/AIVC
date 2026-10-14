@@ -19,13 +19,13 @@ For #13, canonical Test receipt01M4VCZ75RDMF6SB51W0K0AX7H and the integration re
 
 ## Active story PRs
 
-| Story | Branch         | PR                                             | Publication status                                                                                                          |
-| ----- | -------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Story | Branch         | PR                                             | Publication status                                                                                                                                                                                            |
+| ----- | -------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | #4    | codex/4-draft  | [#18](https://github.com/kburson/AIVC/pull/18) | Source and independent Astra review/provenance committed; fresh documentation-head Test passed; merged at 1dcc07010e718665ff560c0d0f46b1ffc9621a0b; CLOSED/Done after canonical Review and Full-Auto approval |
-| #5    | codex/5-draft  | [#22](https://github.com/kburson/AIVC/pull/22) | Accepted planning references and owned-scope activation document; whole #4 is Done; implementation waits for the reviewed native-wave runtime fix and lawful entry   |
-| #6    | codex/6-draft  | [#16](https://github.com/kburson/AIVC/pull/16) | Typed client and distinct Astra review/provenance published at 6673039ec9ac7b2e44f990a7396548c973cbbd9c; exact-head Test passed; missing slow-lane declaration is being repaired before Review         |
-| #7    | codex/7-draft  | [#24](https://github.com/kburson/AIVC/pull/24) | Accepted planning references and owned-scope activation document; whole #4 is Done; implementation waits for whole #5 Done                 |
-| #14   | codex/14-draft | [#21](https://github.com/kburson/AIVC/pull/21) | Capture source and scoped verification/provenance committed; canonical Test passed; distinct review pending                 |
+| #5    | codex/5-draft  | [#22](https://github.com/kburson/AIVC/pull/22) | Accepted planning references and owned-scope activation document; whole #4 is Done; implementation waits for the reviewed native-wave runtime fix and lawful entry                                            |
+| #6    | codex/6-draft  | [#16](https://github.com/kburson/AIVC/pull/16) | Typed client and distinct Astra review/provenance published at 6673039ec9ac7b2e44f990a7396548c973cbbd9c; exact-head Test passed; missing slow-lane declaration is being repaired before Review                |
+| #7    | codex/7-draft  | [#24](https://github.com/kburson/AIVC/pull/24) | Accepted planning references and owned-scope activation document; whole #4 is Done; implementation waits for whole #5 Done                                                                                    |
+| #14   | codex/14-draft | [#21](https://github.com/kburson/AIVC/pull/21) | Capture source and scoped verification/provenance committed; canonical Test passed; distinct review pending                                                                                                   |
 
 Epic integration [PR #17](https://github.com/kburson/AIVC/pull/17) targets trunk. Separate tutorial design #15 uses codex/15-tutorial-design and [PR #23](https://github.com/kburson/AIVC/pull/23) into trunk; the existing specification and SAR loop are published, with written-spec owner approval still pending.
 

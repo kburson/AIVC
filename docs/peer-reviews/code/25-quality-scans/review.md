@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/code/25-quality-scans/review.md) and its exact bytes remain available in the [evidence archive](../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `e8fc13754ee14a93fc50ba0aecff603e280f485ca9da32d839e63f72aa9ae5d7`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Repository quality tooling code review
 
 Tracked story: [AIVC #25](https://github.com/kburson/AIVC/issues/25).

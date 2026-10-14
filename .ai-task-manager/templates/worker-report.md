@@ -9,7 +9,7 @@ Replace every `<…>` with concrete values. Use `none` for fields that genuinely
 ## Worker Report
 
 - **status:** <done | partial | blocked>
-- **bound_issue:** #<N>
+- **bound_issue:** #`<N>`
 
 ### files_changed
 
@@ -32,8 +32,8 @@ Replace every `<…>` with concrete values. Use `none` for fields that genuinely
 ### verification_run
 
 - Command: `<exact command>`
-- Exit: <code>
-- Outcome: <one line>
+- Exit: `<code>`
+- Outcome: `<one line>`
 
 (Required for `done` and `partial`. For `blocked`, set all three to `n/a`.)
 

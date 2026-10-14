@@ -2,6 +2,8 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as prettier from 'prettier';
+import { verifyEvidenceArchive } from './sealed-evidence.mjs';
+export { verifyEvidenceArchive } from './sealed-evidence.mjs';
 
 const workspace = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const excludedDirectories = new Set([
@@ -51,8 +53,10 @@ export function enumerateOwnedFiles(root = workspace) {
 }
 
 export function isProtectedDocument(path) {
-  return /^(?:docs\/peer-reviews\/|docs\/superpowers\/(?:specs|plans)\/)/.test(
-    path,
+  return (
+    /^(?:docs\/peer-reviews\/|docs\/superpowers\/(?:specs|plans)\/)/.test(
+      path,
+    ) || /^docs\/quality-evidence\/.*\.json$/.test(path)
   );
 }
 
@@ -63,6 +67,7 @@ export async function checkFormatting({
   log = console.log,
 } = {}) {
   root = resolve(root);
+  if (root === workspace) verifyEvidenceArchive({ root });
   const inventory = enumerateOwnedFiles(root);
   const selected = paths?.length
     ? paths.map((path) =>

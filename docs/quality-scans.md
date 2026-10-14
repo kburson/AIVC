@@ -45,3 +45,17 @@ Run the Markdown and formatting checks before submitting or finalizing
 review documents. Once sealed, fix findings through the review protocol or a
 governed new revision. Never modify terminal reviewer responses or manifests
 in place just to turn a scan green.
+
+## Formatting corrections in PR #26
+
+The owner's preservation instruction is implemented through an additive
+[original-byte archive and labeled formatting views](quality-evidence/README.md).
+All 70 original review/spec/plan/receipt records retain their exact pre-correction
+bytes. Current Markdown views pass the existing strict rules and link to the
+originals; their formatting does not create new review acceptance.
+
+`npm run verify:sealed-evidence` checks the archive against an independently
+pinned historical Git commit and rejects symlinks in archive or view paths.
+`npm run test:evidence` exercises preservation and tamper refusal. Prettier CI
+runs the preservation check before scanning, and the test job runs these tests.
+Typechecking remains an independent, failing gate until the owning PRs fix it.

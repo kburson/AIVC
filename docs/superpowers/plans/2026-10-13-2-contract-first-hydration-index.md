@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/superpowers/plans/2026-10-13-2-contract-first-hydration-index.md) and its exact bytes remain available in the [evidence archive](../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `fea027696afdad014664e7b4b042aae09cb28f6a5fe46f6eb211f1fc17ca76a4`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Contract-first Hydration Index for Epic #2
 
 This separate document is a canonical hydration representation of the accepted plan and contract-first amendment. **It is not the XPR-reviewed artifact**, does not alter accepted behavior, ranks, estimates, pins, ownership or evidence gates, and grants no implementation/Plan/wave/lifecycle authority. Root independently validates this index's full mapping before making it an active Source-plan/Implementation-plan reference or approving new issues.
@@ -17,19 +21,19 @@ The immutable base plan is `docs/superpowers/plans/2026-10-12-2-voice-bff-refere
 
 Plan Task numbers are extractor selectors, not issue IDs. Original Task1–9 numbers/titles/intents remain. New Task10 is CONTRACT and new Task11 is CAPTURE-MODULE; no numeric issue IDs are invented. Root hydrates real IDs then uses each exact heading below as Source-plan-section. Each issue's active Source-plan/Implementation-plan must consistently reference this index; the accepted amendment remains separately pinned technical authority. Scope/AC/VC hydration copies complete accepted obligations rather than interpreting these short mapping descriptions as reduced acceptance.
 
-| Plan task | Existing or named child | Accepted scope allocation |
-|---|---|---|
-| 1 | #3 | Delivered workspace/Fastify, unchanged |
-| 2 | #4 | BFF admission/server boundary after public extraction |
-| 3 | #5 | Claude producer/tools/HTTP path after shared SSE extraction |
-| 4 | #6 | Complete typed browser consumer; joined actual HTTP browser acceptance moves Task9 |
-| 5 | #7 | Complete Deepgram provider/endpoints and same-owner wiring |
-| 6 | #8 | Full PCM/playback/speech queue and wiring |
-| 7 | #9 | Capture UI integration consuming Task11 module |
-| 8 | #10 | Full interruption and race behavior |
-| 9 | #11 | Whole-system/live/tutorial plus joined typed browser acceptance |
-| 10 | CONTRACT, issue unassigned | Complete frozen public agreement foundation |
-| 11 | CAPTURE-MODULE, issue unassigned | Complete capture library/patch/assets |
+| Plan task | Existing or named child          | Accepted scope allocation                                                          |
+| --------- | -------------------------------- | ---------------------------------------------------------------------------------- |
+| 1         | #3                               | Delivered workspace/Fastify, unchanged                                             |
+| 2         | #4                               | BFF admission/server boundary after public extraction                              |
+| 3         | #5                               | Claude producer/tools/HTTP path after shared SSE extraction                        |
+| 4         | #6                               | Complete typed browser consumer; joined actual HTTP browser acceptance moves Task9 |
+| 5         | #7                               | Complete Deepgram provider/endpoints and same-owner wiring                         |
+| 6         | #8                               | Full PCM/playback/speech queue and wiring                                          |
+| 7         | #9                               | Capture UI integration consuming Task11 module                                     |
+| 8         | #10                              | Full interruption and race behavior                                                |
+| 9         | #11                              | Whole-system/live/tutorial plus joined typed browser acceptance                    |
+| 10        | CONTRACT, issue unassigned       | Complete frozen public agreement foundation                                        |
+| 11        | CAPTURE-MODULE, issue unassigned | Complete capture library/patch/assets                                              |
 
 ## Canonical tasks
 

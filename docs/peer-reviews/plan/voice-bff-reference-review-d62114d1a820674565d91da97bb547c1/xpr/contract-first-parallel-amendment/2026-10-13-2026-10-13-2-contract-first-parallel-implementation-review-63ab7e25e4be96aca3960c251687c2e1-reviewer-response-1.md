@@ -1,31 +1,47 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/xpr/contract-first-parallel-amendment/2026-10-13-2026-10-13-2-contract-first-parallel-implementation-review-63ab7e25e4be96aca3960c251687c2e1-reviewer-response-1.md) and its exact bytes remain available in the [evidence archive](../../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `fe4a8b83433a297e418adf6f38e24327a14a86a2d6c9cee822b132d3cab48aa5`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-63ab7e25e4be96aca3960c251687c2e1"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-63ab7e25e4be96aca3960c251687c2e1'
+role: 'reviewer'
 turn: 1
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md"
-artifact_commit: "296464be0a09f6ec618e9a0bda5e8bc6fcd244d6"
-artifact_blob: "b5f2c93df98694879d113015f942888fce7e6b93"
-artifact_digest: "sha256:7cdca02756f96887770879722c7870882a3197c01dd4ad24f5ca2c3d7da9d67a"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md'
+artifact_commit: '296464be0a09f6ec618e9a0bda5e8bc6fcd244d6'
+artifact_blob: 'b5f2c93df98694879d113015f942888fce7e6b93'
+artifact_digest: 'sha256:7cdca02756f96887770879722c7870882a3197c01dd4ad24f5ca2c3d7da9d67a'
 agent:
-  host: "claude-code"
-  provider: "anthropic"
-  model_id: "claude-opus-5-5"
-  model_display: "claude-opus-5-5"
-  session_fingerprint: "sha256:23119381b70d64136c4c45e973ea19e455920e76871611c41d8b1754cd6a8d01"
-  identity_source: "runtime"
-started_at: "2026-10-13T14:57:46.652Z"
-submitted_at: "2026-10-13T15:01:24.040Z"
-finding_ids: ["R1-F001","R1-F002","R1-F003","R1-F004","R1-F005","R1-F006","R1-F007","R1-F008","R1-F009","R1-F010"]
+  host: 'claude-code'
+  provider: 'anthropic'
+  model_id: 'claude-opus-5-5'
+  model_display: 'claude-opus-5-5'
+  session_fingerprint: 'sha256:23119381b70d64136c4c45e973ea19e455920e76871611c41d8b1754cd6a8d01'
+  identity_source: 'runtime'
+started_at: '2026-10-13T14:57:46.652Z'
+submitted_at: '2026-10-13T15:01:24.040Z'
+finding_ids:
+  [
+    'R1-F001',
+    'R1-F002',
+    'R1-F003',
+    'R1-F004',
+    'R1-F005',
+    'R1-F006',
+    'R1-F007',
+    'R1-F008',
+    'R1-F009',
+    'R1-F010',
+  ]
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
@@ -56,6 +72,7 @@ The freeze digest recipe is also not deterministic, and the capture module's ges
 Location: amendment lines 141, 261 and 345 (fixture contents and producer conformance) and line 19 (Review Focus 1).
 
 **What the plan says.**
+
 - `wireEvents` is described only as: accepted seq 0, three answer deltas, an exact Atlas `tool.completed`, and a final complete text.
 - It does not say where `stage`, `tool.started` or `sources` events go, or whether they appear at all.
 - It does not say where `tool.completed` sits relative to the preamble delta and the separator.
@@ -63,6 +80,7 @@ Location: amendment lines 141, 261 and 345 (fixture contents and producer confor
 - #5's producer test only asserts that the "emitted delta sequence equals wireDeltaFixture", plus seq and final text.
 
 **Failure scenario.**
+
 1. #6 is built and tested only against the fixture ordering. For example: accepted → delta → tool.completed → delta → delta → completed, with no stage or tool.started events.
 2. #5's real runTurn emits accepted → stage:researching → delta → tool.started → stage:retrieving → tool.completed → stage:answering → '\n\n' → delta → sources → completed{usage}.
 3. Both tracks pass their own gates, because the delta sequences are equal.
@@ -75,12 +93,14 @@ Location: amendment lines 141, 261 and 345 (fixture contents and producer confor
 Location: amendment lines 125, 133 and 294 (codec semantics), line 354 (#6 decode-failure handling) and base Task 2 line 283 (stable code list).
 
 **What the plan says.**
+
 - `decodeSse` returns `AsyncIterable<TurnEvent>`.
 - The plan requires that "EOF before terminal produces a disconnected client condition, never synthetic complete".
 - It requires that malformed payload, sequence, terminal or post-terminal input "reject".
 - It requires that "Final unterminated frame is decoded and validated".
 
 **What is missing.** An async iterable can only end or throw. The plan never says:
+
 - what is thrown,
 - whether disconnect and malformed are distinguishable (error class, `code` or `name`), or
 - which stable reason code #6 shows for each.
@@ -90,6 +110,7 @@ Neither the base stable server/client code list nor the new CaptureReason union 
 **How the unterminated-frame rule makes it worse.** A connection cut mid-JSON in the last frame (`data: {"schemaVer` then EOF) will be classified as malformed (JSON parse failure), not as a disconnect. A cut after a complete `data:` line but before the blank line will be accepted as an event.
 
 **Failure scenarios.**
+
 - CONTRACT implements a generic `Error('bad frame')`, and #6 maps every decode error to one generic message. The visible-reason requirement for network close versus protocol violation is then untestable.
 - Or #6 pattern-matches on message strings that CONTRACT later changes. Under the freeze rule that change is "incompatible" but no test detects it.
 - A truncated stream ending inside a `turn.failed` frame is reported as a protocol violation instead of a disconnect.
@@ -99,15 +120,18 @@ Neither the base stable server/client code list nor the new CaptureReason union 
 Location: amendment line 327, plus lines 309–324 (#6 deletes contract-probe.tsx and replaces page.tsx).
 
 **What the plan says.** Two sentences conflict:
+
 1. "Hashing excludes the doc's own digest field to avoid a circular self-hash." This implies docs/contracts/voice-bff-v1.md is hashed, minus one field.
 2. "Contracts source/fixture files are the hashed inputs, sorted paths plus bytes." This implies the doc is not hashed at all.
 
 **What is unspecified.**
+
 - The exact file list: are the four shared modules, the fixture helper, the conformance tests and the doc each in or out? The temporary contract-probe.tsx and starter page.tsx must be out, because #6 deletes or replaces them.
 - How each path and its bytes are framed (separator or length prefix, path encoding).
 - Whether the output is one digest or one digest per file.
 
 **Failure scenario.**
+
 1. The root, #6 and #5 each compute "the" digest with different file sets or framing.
 2. A consumer's review evidence records a mismatching value, or matches by coincidence of a shared-but-wrong recipe.
 3. As a result, the incompatible-change detection that the freeze rule (lines 416–417) depends on is not reliable.
@@ -116,11 +140,12 @@ Location: amendment line 327, plus lines 309–324 (#6 deletes contract-probe.ts
 
 Location: amendment line 362 (CaptureSession constructor and `createContext`), line 366 (overlong discard/restart) and base Task 7 line 605.
 
-**Background.** Base Task 7 requires the Start click to create and resume both AudioContexts *synchronously* before permission or VAD initialization. A context created or resumed after an `await` can start out of the user gesture and remain suspended.
+**Background.** Base Task 7 requires the Start click to create and resume both AudioContexts _synchronously_ before permission or VAD initialization. A context created or resumed after an `await` can start out of the user gesture and remain suspended.
 
 **The gap.** In the new design, CaptureSession (frozen in CAPTURE-MODULE) owns `start(): Promise<void>` and calls the injected `createContext`. The plan says #9 "later supplies/resumes its caller-owned context in the synchronous gesture through createContext". But the module's own criteria never require that `start()` calls `createContext()` (and `resume()`) synchronously before its first await. Nor do they say whether overlong discard/restart reuses the existing capture context or calls `createContext` again outside any gesture.
 
 **Failure scenario.**
+
 1. CAPTURE-MODULE implements `async start(){ await this.acquire…; const ctx = deps.createContext(); … }`.
 2. Its node-level tests pass.
 3. #9's real-browser gesture acceptance fails with a suspended capture context.
