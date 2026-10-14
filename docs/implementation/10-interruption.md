@@ -10,7 +10,7 @@ Empty-context recovery waits for pending suspension and resumes before schedulin
 
 ## Verification and boundaries
 
-The implementation was driven by rendered red failures for missing reversible suspension, confirmation abort and newer-candidate ownership. A separate playback regression exposed successful recovery from a context that never reached running. Distinct preliminary Astra inspection then identified the never-settling resume gap; the focused regression failed before the transition-owned deadline fix. Final review and canonical Test remain separately recorded in their original reports/receipts.
+The implementation was driven by rendered red failures for missing reversible suspension, confirmation abort and newer-candidate ownership. A separate playback regression exposed successful recovery from a context that never reached running. Distinct preliminary Astra inspection then identified the never-settling resume gap; the focused regression failed before the transition-owned deadline fix. The [distinct native review](../peer-reviews/code/10-interruption/round-1.md) passed exact source `e0ed8a8` with no actionable findings; its3497 original bytes and digest are retained separately. Canonical exact-head Test remains a separate gate.
 
 The targeted set passes 39 tests: 27 interruption cases, seven playback cases and five rapid-interruption route cases. The rapid test drives the real Interruption/controller into actual route admission: both canceled model jobs hold their slots, the third confirmed question receives Busy, and deliberate post-settlement recovery works. Separate model/STT/retrieval/TTS cases prove abort propagation and lease retention through cancellation-ignoring transport settlement, with no replay. Signals request cancellation; they cannot force a remote service or an adapter that ignores the signal to stop immediately.
 
@@ -26,4 +26,4 @@ Delivered capture requests mono microphone input with echo cancellation, noise s
 
 ## Delivery boundary
 
-Author session is the existing genuine Sol6.1/high story #10 agent in its isolated `codex/10-draft` checkout. [Draft PR36](https://github.com/kburson/AIVC/pull/36) targets `codex/2-draft`; feature PR17 remains draft. Root owns registered Review, Full-Auto approval, sanctioned expected-head cloud merge and Close after exact-source verification. This implementation record does not claim those future events.
+Author session is the existing genuine Sol6.1/high story #10 agent in its isolated `codex/10-draft` checkout. [Draft PR36](https://github.com/kburson/AIVC/pull/36) targets `codex/2-draft`; feature PR17 remains draft. Root owns registered Review, Full-Auto approval, sanctioned expected-head cloud merge and Close after exact-source verification. Independent review passed the exact implementation source; this implementation record does not claim the remaining future lifecycle or merge events.
