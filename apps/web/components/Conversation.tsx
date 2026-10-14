@@ -156,7 +156,8 @@ export default function Conversation({
         });
         output.current = { playback, queue, token };
       } else {
-        output.current.token = token;
+        // Unlocking capture may share an already playing typed answer.
+        if (token) output.current.token = token;
         void output.current.playback.resume().catch(() => {
           if (token)
             controller.setSpeech(token, 'failed', 'SPEECH_RESUME_FAILED');
@@ -187,10 +188,11 @@ export default function Conversation({
         : 'Conversation stopped.',
     );
     if (notify && mounted.current) setCaptureState('stopped');
-    if (teardown.current) return teardown.current;
-    if (!run && !output.current) return Promise.resolve();
+    const earlier = teardown.current;
+    if (!run && !output.current) return earlier ?? Promise.resolve();
     if (notify && mounted.current) setStopping(true);
     const resources = [
+      earlier ?? Promise.resolve(),
       run?.session.stop() ?? Promise.resolve(),
       releaseOutput(),
     ];
@@ -200,8 +202,10 @@ export default function Conversation({
           setCaptureReason('CAPTURE_CLEANUP_FAILED');
       })
       .finally(() => {
-        if (teardown.current === operation) teardown.current = null;
-        if (mounted.current) setStopping(false);
+        if (teardown.current === operation) {
+          teardown.current = null;
+          if (mounted.current) setStopping(false);
+        }
       });
     teardown.current = operation;
     return operation;
@@ -272,7 +276,11 @@ export default function Conversation({
         capture.current = null;
         run.candidate = null;
         if (mounted.current) setCaptureState('stopped');
-        if (!formerOutput && output.current === startedOutput) {
+        if (
+          !formerOutput &&
+          output.current === startedOutput &&
+          !startedOutput?.token
+        ) {
           try {
             await releaseOutput();
           } catch {

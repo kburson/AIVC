@@ -563,3 +563,88 @@ it('Stop during a spoken automatic answer releases capture, scheduled speech and
   gate.resolve();
   await act(settle);
 });
+function enableSpeech() {
+  vi.stubGlobal('fetch', async (input: RequestInfo | URL) => {
+    const path =
+      typeof input === 'string'
+        ? input
+        : input instanceof URL
+          ? input.href
+          : input.url;
+    return path.includes('capabilities')
+      ? new Response(
+          JSON.stringify({ ...mockCapabilities, speechAvailable: true }),
+        )
+      : speechResponse(pcm(0.5));
+  });
+}
+it('starting capture preserves the typed playback owner so output mute stops its scheduled audio without muting capture', async () => {
+  enableSpeech();
+  render(createElement(Conversation, { transport }));
+  await ready();
+  await typed('Typed speech owner');
+  await waitFor(() => expect(contexts[0].sources.length).toBeGreaterThan(0));
+  startCapture();
+  await waitFor(() => expect(acquisition).toHaveBeenCalledTimes(1));
+  await act(settle);
+  fireEvent.click(screen.getByLabelText('Mute output'));
+  await act(settle);
+  expect(contexts[0].sources.every((source) => source.stopped)).toBe(true);
+  expect(tracks[0].readyState).toBe('live');
+  expect(calls).toHaveLength(1);
+});
+it('capture permission failure preserves output adopted by a typed answer while initialization was pending', async () => {
+  enableSpeech();
+  const gate = deferred<void>();
+  gates.permission = gate.promise;
+  render(createElement(Conversation, { transport }));
+  await ready();
+  startCapture();
+  await waitFor(() => expect(acquisition).toHaveBeenCalledTimes(1));
+  await typed('Typed answer during permission');
+  await waitFor(() => expect(contexts[0].sources.length).toBeGreaterThan(0));
+  await act(async () => {
+    gate.reject(
+      Object.assign(new Error('Denied'), { name: 'NotAllowedError' }),
+    );
+    await settle();
+  });
+  expect(contexts[0].closed).toBe(false);
+  expect(contexts[0].sources.every((source) => !source.stopped)).toBe(true);
+  expect(contexts[1].closed).toBe(true);
+  expect(screen.getByRole('alert').textContent).toContain(
+    'permission was denied',
+  );
+  fireEvent.click(screen.getByLabelText('Mute output'));
+  await act(settle);
+  expect(contexts[0].sources.every((source) => source.stopped)).toBe(true);
+});
+it.each(['Stop', 'unmount'] as const)(
+  '%s releases a newly typed playback context and timer even while earlier capture teardown is pending',
+  async (operation) => {
+    enableSpeech();
+    const gate = deferred<void>();
+    gates.permission = gate.promise;
+    const cleared = vi.spyOn(globalThis, 'clearInterval');
+    const view = render(createElement(Conversation, { transport }));
+    await ready();
+    startCapture();
+    await waitFor(() => expect(acquisition).toHaveBeenCalledTimes(1));
+    stop();
+    await typed('Typed answer during teardown');
+    await waitFor(() => expect(contexts[2].sources.length).toBeGreaterThan(0));
+    const before = cleared.mock.calls.length;
+    if (operation === 'Stop') stop();
+    else view.unmount();
+    await act(async () => {
+      gate.resolve();
+      await settle();
+    });
+    expect(contexts[2].closed).toBe(true);
+    expect(contexts[2].close).toHaveBeenCalledTimes(1);
+    expect(cleared.mock.calls.length).toBeGreaterThan(before);
+    expect(contexts.every((context) => context.closed)).toBe(true);
+    expect(tracks[0].stop).toHaveBeenCalledTimes(1);
+    cleared.mockRestore();
+  },
+);
