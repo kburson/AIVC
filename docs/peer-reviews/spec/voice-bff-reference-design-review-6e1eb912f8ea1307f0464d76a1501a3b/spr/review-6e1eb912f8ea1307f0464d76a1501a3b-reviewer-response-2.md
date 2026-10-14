@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/spec/voice-bff-reference-design-review-6e1eb912f8ea1307f0464d76a1501a3b/spr/review-6e1eb912f8ea1307f0464d76a1501a3b-reviewer-response-2.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `df1836ab835c6f4370887300737f015a4be89c239df655ba3d9821fbfae91a88`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-6e1eb912f8ea1307f0464d76a1501a3b"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-6e1eb912f8ea1307f0464d76a1501a3b'
+role: 'reviewer'
 turn: 2
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/specs/2026-10-12-voice-bff-reference-design.md"
-artifact_commit: "bd238bbc7e19787926bbef49ab226fb1dddbfa9e"
-artifact_blob: "fcde53a12d5e49cb1b02a957a18d7d6f2fe660f3"
-artifact_digest: "sha256:44e70b02d0cac27217b805f387bdb6d8677a5f79ce136c33f2ebf4fd51d5422a"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/specs/2026-10-12-voice-bff-reference-design.md'
+artifact_commit: 'bd238bbc7e19787926bbef49ab226fb1dddbfa9e'
+artifact_blob: 'fcde53a12d5e49cb1b02a957a18d7d6f2fe660f3'
+artifact_digest: 'sha256:44e70b02d0cac27217b805f387bdb6d8677a5f79ce136c33f2ebf4fd51d5422a'
 agent:
-  host: "codex"
-  provider: "openai"
-  model_id: "gpt-6-astra"
-  model_display: "gpt-6-astra"
-  session_fingerprint: "sha256:149b59c624fd6215473bf95928954a60b2586e1521d46cacc426b9be0c817525"
-  identity_source: "declared"
-started_at: "2026-10-13T02:51:31.320Z"
-submitted_at: "2026-10-13T03:08:34.070Z"
+  host: 'codex'
+  provider: 'openai'
+  model_id: 'gpt-6-astra'
+  model_display: 'gpt-6-astra'
+  session_fingerprint: 'sha256:149b59c624fd6215473bf95928954a60b2586e1521d46cacc426b9be0c817525'
+  identity_source: 'declared'
+started_at: '2026-10-13T02:51:31.320Z'
+submitted_at: '2026-10-13T03:08:34.070Z'
 finding_ids: []
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 

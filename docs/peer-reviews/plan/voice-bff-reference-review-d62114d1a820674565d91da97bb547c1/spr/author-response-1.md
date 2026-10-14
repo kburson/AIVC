@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/spr/author-response-1.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `ea32971b0334ef1e04daa3d8c4d5c7c71b3694903ce6272c0577dcc9853b0f40`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:f81da1894a46ceb20866070833b4e99ef536ef633542b418783d29e6a981dbd8" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-d62114d1a820674565d91da97bb547c1"
-role: "author"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-d62114d1a820674565d91da97bb547c1'
+role: 'author'
 turn: 1
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md"
-artifact_commit: "f0a4971adf76da1db1b4d4efd626faf4842089a3"
-artifact_blob: "e2b2bf28e5287e4416e676409002d7745c1f48f6"
-artifact_digest: "sha256:810b1f1a18964fa185fe2e92b358cab9d2a259d5b43fbbc56ab03577c91483f1"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md'
+artifact_commit: 'f0a4971adf76da1db1b4d4efd626faf4842089a3'
+artifact_blob: 'e2b2bf28e5287e4416e676409002d7745c1f48f6'
+artifact_digest: 'sha256:810b1f1a18964fa185fe2e92b358cab9d2a259d5b43fbbc56ab03577c91483f1'
 agent:
-  host: "codex"
-  provider: "openai"
-  model_id: "gpt-6.1-sol"
-  model_display: "gpt-6.1-sol"
-  session_fingerprint: "sha256:48daf6ba8b2a5f061e5b9a3cf267a2f0de1f0f3a80cf29b2774ae19f87408a30"
-  identity_source: "runtime"
-started_at: "2026-10-13T05:21:22.349Z"
-submitted_at: "2026-10-13T05:36:04.537Z"
+  host: 'codex'
+  provider: 'openai'
+  model_id: 'gpt-6.1-sol'
+  model_display: 'gpt-6.1-sol'
+  session_fingerprint: 'sha256:48daf6ba8b2a5f061e5b9a3cf267a2f0de1f0f3a80cf29b2774ae19f87408a30'
+  identity_source: 'runtime'
+started_at: '2026-10-13T05:21:22.349Z'
+submitted_at: '2026-10-13T05:36:04.537Z'
 finding_ids: []
-answered_finding_ids: ["R1-F001","R1-F002","R1-F003"]
+answered_finding_ids: ['R1-F001', 'R1-F002', 'R1-F003']
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 

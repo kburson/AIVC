@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/xpr/node26-parallel-amendment/2026-10-13-2026-10-13-2-node26-parallel-execution-amendment-review-5ef82914582f28301f7a3be322541e48-reviewer-response-1.md) and its exact bytes remain available in the [evidence archive](../../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `6fbf26696417f098a2736e6e8227f20edee6ea5e0d8432e7571c1b73d3462f9b`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-5ef82914582f28301f7a3be322541e48"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-5ef82914582f28301f7a3be322541e48'
+role: 'reviewer'
 turn: 1
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-13-2-node26-parallel-execution-amendment.md"
-artifact_commit: "b7d49407b2464325d6c9d11c4d624c4089aea206"
-artifact_blob: "2f8ec3614a1ea4fea4e2904a984ac0589f474d81"
-artifact_digest: "sha256:180474128b9d15289f06d0279961812020e3faa8025cb6edbf008566d494a04a"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-13-2-node26-parallel-execution-amendment.md'
+artifact_commit: 'b7d49407b2464325d6c9d11c4d624c4089aea206'
+artifact_blob: '2f8ec3614a1ea4fea4e2904a984ac0589f474d81'
+artifact_digest: 'sha256:180474128b9d15289f06d0279961812020e3faa8025cb6edbf008566d494a04a'
 agent:
-  host: "claude-code"
-  provider: "anthropic"
-  model_id: "claude-opus-5-5"
-  model_display: "claude-opus-5-5"
-  session_fingerprint: "sha256:5026c80f4b8d4366c9625e2fb11e874d7bccaa40e091d301b8f544292e2a025c"
-  identity_source: "runtime"
-started_at: "2026-10-13T12:12:08.787Z"
-submitted_at: "2026-10-13T12:14:43.660Z"
+  host: 'claude-code'
+  provider: 'anthropic'
+  model_id: 'claude-opus-5-5'
+  model_display: 'claude-opus-5-5'
+  session_fingerprint: 'sha256:5026c80f4b8d4366c9625e2fb11e874d7bccaa40e091d301b8f544292e2a025c'
+  identity_source: 'runtime'
+started_at: '2026-10-13T12:12:08.787Z'
+submitted_at: '2026-10-13T12:14:43.660Z'
 finding_ids: []
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
@@ -52,7 +56,7 @@ All four are small, local edits.
    - The gap: if Task 3's implementer writes Task 5's `run-turn`/runtime/mock wiring, that commit must be bound to either Task 3's or Task 5's child. The amendment doesn't say which.
      - Bound to Task 3's child, Task 5's acceptance depends on code committed outside its own scoped trail.
      - Bound to Task 5's child, a different session commits under a child it is not bound to, which strains the "genuine task bindings" rule in item 5.
-   - It is also inconsistent with item 3. There, after Task 6 integrates, the *same* Task 7 implementer completes the Conversation wiring. That pattern serializes access to shared files without moving the work to a different owner.
+   - It is also inconsistent with item 3. There, after Task 6 integrates, the _same_ Task 7 implementer completes the Conversation wiring. That pattern serializes access to shared files without moving the work to a different owner.
    - Smaller related gap: the amendment doesn't say where `SpeechAdapter` is declared while Tasks 3 and 5 run concurrently. The natural home is `apps/web/server/providers/contracts.ts`, which Task 3 creates. The Task 5 mock speech adapter belongs in Task 3's `mock.ts`.
    - Failure scenario: Task 5's isolated worktree declares `SpeechAdapter` locally (or edits `providers/contracts.ts`) while Task 3 creates that same file. That collides with "No two agents edit the same file concurrently." Alternatively, Task 5 cannot compile `deepgram.ts` against the shared interface until Task 3 lands.
 

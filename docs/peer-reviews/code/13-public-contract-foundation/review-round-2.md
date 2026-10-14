@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/code/13-public-contract-foundation/review-round-2.md) and its exact bytes remain available in the [evidence archive](../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `5197e8c2b4aa7deeaa08dc33b7434e4fb8941c7131dcf2243d82dc3ba113d249`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Task 10 scoped re-review — round 1
 
 Source: 948c00ed535935a580cd5db84855d3e39fc71a3d.

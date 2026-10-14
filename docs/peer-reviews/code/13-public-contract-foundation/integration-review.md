@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/code/13-public-contract-foundation/integration-review.md) and its exact bytes remain available in the [evidence archive](../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `94eab887ee81ec5fe6d7980beca98fea5528e3053915389d3f04b5e2381f6a9a`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Task 10 integration provenance review — AIVC #13
 
 Reviewer: requested Astra 6 / high; genuine session 01a13677-7abf-7dc0-a581-45f3b6823b88 retained. Narrow read-only review; the orchestrator retained #13 binding, so no competing reviewer binding or lifecycle mutation was attempted.

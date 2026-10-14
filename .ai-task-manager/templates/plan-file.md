@@ -1,4 +1,4 @@
-# <title>
+# `<title>`
 
 ## Scope
 
@@ -17,8 +17,8 @@
 
 - Priority: <P0|P1|P2|P3>
 - Size: <XS|S|M|L|XL>
-- Estimate: <N hours>
-- Labels: <label1>, <label2>
+- Estimate: `<N hours>`
+- Labels: `<label1>`, `<label2>`
 
 ## Story Intent
 
@@ -34,7 +34,7 @@ placeholders so an untouched scaffold remains a draft at Plan approval.
 
 ## Implementation Tasks
 
-### Task 1: <task title>
+### Task 1: `<task title>`
 
 #### Story Intent
 
@@ -45,7 +45,7 @@ placeholders so an untouched scaffold remains a draft at Plan approval.
 
 #### Files
 
-<task scope and implementation notes>
+`<task scope and implementation notes>`
 
 **Verification Commands:**
 

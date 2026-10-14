@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/spr/review-manifest.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `0d363c260aa938a0d160d331fcfe91a5117d234b8f3451960bc3fa0de62e91cd`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:e53bf4d9991ae94a699fede1d62fd90324e45923de951babcb8d9ad237900bd9" -->
 
 # Review manifest
@@ -167,9 +171,7 @@ Mode: `normal`
   },
   "record_id": "review-d62114d1a820674565d91da97bb547c1",
   "recoveries": [],
-  "residual_risk": [
-    "human-authority-unavailable"
-  ],
+  "residual_risk": ["human-authority-unavailable"],
   "review_id": "review-d62114d1a820674565d91da97bb547c1",
   "runtime": {
     "adapter_version": "1.0.0",
@@ -211,11 +213,7 @@ Mode: `normal`
       },
       "commit": "859174f5c5db919072807bba2ef017f5a7755cd1",
       "decision": "revisions-requested",
-      "finding_ids": [
-        "R1-F001",
-        "R1-F002",
-        "R1-F003"
-      ],
+      "finding_ids": ["R1-F001", "R1-F002", "R1-F003"],
       "reviewer_response": {
         "digest": "sha256:fa7e356e7ceac50871365e9c07b6b4d6d428bc06043a07afe6988221d82c5957",
         "path": "docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/spr/reviewer-response-1.md"
@@ -235,10 +233,7 @@ Mode: `normal`
       },
       "commit": "0118b29685cf8998235885d2d172da27673ed67f",
       "decision": "revisions-requested",
-      "finding_ids": [
-        "R2-F001",
-        "R2-F002"
-      ],
+      "finding_ids": ["R2-F001", "R2-F002"],
       "reviewer_response": {
         "digest": "sha256:c55bd9e74f4300b4d586f338f6b78bd31e1328df9eafc8e56a2a3ee6ea19b809",
         "path": "docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/spr/reviewer-response-2.md"
