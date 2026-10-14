@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "source": "synthetic-project-catalog",
+  "records": [
+    {
+      "id": "atlas",
+      "name": "Atlas",
+      "status": "active",
+      "ownerTeam": "North",
+      "openItems": 3,
+      "summary": "Synthetic active project owned by North with three open items."
+    },
+    {
+      "id": "beacon",
+      "name": "Beacon",
+      "status": "paused",
+      "ownerTeam": "West",
+      "openItems": 1,
+      "summary": "Synthetic paused project owned by West with one open item."
+    },
+    {
+      "id": "cedar",
+      "name": "Cedar",
+      "status": "complete",
+      "ownerTeam": "South",
+      "openItems": 0,
+      "summary": "Synthetic completed project owned by South with no open items."
+    }
+  ]
+}
