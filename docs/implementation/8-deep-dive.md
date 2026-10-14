@@ -1,6 +1,6 @@
 # Story #8 deep-dive analysis
 
-### Analysis
+## Analysis
 
 The same genuine Codex Sol6.1/high author session 01a13b27-de31-7650-8d6f-5379251f5a97 resumed the recorded codex/8-draft worktree and normally fast-forwarded to integrated feature3fdca44916a173e3b897d8fb7ad184c202806407 after root verified strictDone6/7. Fresh Explain returned ready and registered Plan entry is visible. npmci reproduced Node26.8.1/npm12.0.2; baseline npmtest43 passed. No live acoustic/provider acceptance is claimed.
 
@@ -20,7 +20,7 @@ TurnController keeps a completed generation current for queue drain. Cancel old 
 
 Run declared voice/slow/typecheck/fullunit/lint/format checks and impacted controller/UI/typed-browser tests; inspect ledger max and eventually played duration assertions. Existing root VC already declares test:slow before canonicalTest. Post exact test-file/verbatim-name lists through registered comment. Root owns distinct Astra review, Review/approval/exact-head cloudmerge/Close. Offline controlled audio tests are simulation, never actual microphone/provider/acoustic acceptance.
 
-### Dependency Map
+## Dependency Map
 
 Depends on: #6 (strictDone typed browser/controller), #7 (strictDone complete speech endpoint/provider); #13 frozen public fixture consumed unchanged.
 Blocks: #9 full capture wiring, #10 full interruption integration, #11 whole-system/live evidence.
