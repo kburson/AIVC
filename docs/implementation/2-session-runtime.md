@@ -27,3 +27,11 @@ Finish the whole authorized wave through review, exact-head verification, merged
 ## Native source recovery checkpoint
 
 The proposed #2012 grammar correction has focused55 checks reported green, but final quality runs, source commit, immutable package and independent review are pending. Native hooks project the parent session ID into the separate source agent thread and refuse writes/tests despite its valid #2012 binding. The author is registered paused. [Exact preserved proposal and recovery details](../runtime/2012-pending-source/checkpoint.md) distinguish the working proposal from an accepted runtime. No replacement package or ready grant is claimed.
+
+## Standalone source author completed
+
+The owner authorized the two standalone AITM chats and their coordination. The Sol6.1/high author session01a138e5-7d07-7671-883d-e4ef5d43f917 completed validated source b5528ee33b517202aa5091d5271404e1ae79c795 and pushed publication headba55a86ccb6e605b819c4d4006237ad46126e644 to PR2013. Its actual root-session context permits source operations; the previous subagent claim was released normally. The author reported final55 focused tests,127 affected tests,961 fast files, lint and format passing, with normal Stop and occupancy discharge. The final repair additionally protects neutral deployment operations.
+
+Standalone Astra6/high reviewer session01a138f7-8083-7d31-9344-a35863d2499e is reviewing the exact source and package. Root copied the local tarball into .scratch/runtime/2012-b5528ee33/ and independently verified size3005649, SHA2565d00afbead05bb23fc824f85709d4ee91a0a4e7cdf89397e82c3f4f3c7d46626, SHA512SRI and nine modules against Git and the tarball. It is staged only: independent review and installation/admission are pending. No ready native grant is claimed.
+
+The preserved proposal at checkpoint39c18e0 remains historical; its raw verification draft is not the final source attestation. AIVC resumed through the registered verb with original generation39179cee-5b3f-444c-8b8c-b4499ff99018 unchanged. Finish #5 then #7 under lawful entry and their whole-story dependencies; stop before #8 after whole wave4 delivery and Done.
