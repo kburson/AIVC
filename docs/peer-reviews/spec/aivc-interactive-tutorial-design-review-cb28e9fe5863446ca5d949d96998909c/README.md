@@ -6,15 +6,19 @@ Artifact: [tutorial design specification](../../../superpowers/specs/2026-10-13-
 
 Group ID: `cb28e9fe5863446ca5d949d96998909c`. This groups native SAR and any future SPR/XPR collateral for this artifact; it is not a sealed two-party protocol review ID.
 
-## SAR
+## SAR — loop complete
 
-- Owner requested Astra 6; exact requested selection was Codex `gpt-6-astra`, `medium` effort.
-- [Review request and evidence boundary](sar/review-request.md).
-- [Complete Astra SAR report](sar/astra-sar-report.md).
-- Outcome: revisions needed. Required changes and optional suggestions are retained in the report.
-- Reviewed source revision: `858559d527668ac7fed7310c14d16e914a2dd744`.
-- Reviewed artifact SHA-256: `b6ac0743e9346dc0074361413a451ec4e5920a31da87ec2a3963fdb577c53214`; the coordinator confirmed the same hash after receiving the report.
-- One native review-only pass was completed. The specification remained unchanged. No SPR/XPR, sealed consensus, written-spec owner approval, or application verification is claimed.
-- Native launch accepted the requested model/effort. Provider-certified per-turn model/effort attestation is unavailable; the report preserves that limitation.
+Requested selection: Codex `gpt-6-astra`, `medium`. The same native Astra context reviewed both rounds. Native launch accepted the requested selection; no provider-certified per-turn model/effort attestation is claimed.
 
-Future stages must reuse this group with literal `spr/` or `xpr/` path-template segments, preserving their independent genuine protocol identities and historical bytes. SAR findings require revision and re-review before approval; this index does not adjudicate or mark findings resolved.
+| Stage | Evidence | Outcome |
+|---|---|---|
+| Initial authority | [Original request](sar/review-request.md) | Original one-pass stopping condition, superseded by owner clarification |
+| Round 1 | [Astra report](sar/astra-sar-report.md) | Revisions needed: two required and four optional findings |
+| Loop clarification | [Owner authority](sar/review-loop-authority.md) | Continue review/revise until nothing remains to revise |
+| Author revision | [Dispositions](sar/author-response-round-1.md) | Concrete changes for all six findings, revision `4a4824f2cf57bd2cd693927103076afaee2d242d` |
+| Round 2 | [Astra re-review](sar/astra-sar-report-round-2.md) | No further specification revisions; all six findings closed and no new required/optional changes |
+| Final collation | [Loop summary](sar/sar-loop-summary.md) | Same artifact digest confirmed; ready for owner review |
+
+Final reviewed specification SHA-256: `9b3f489fcfa836f0f3d11f3545694949e22f0d66e611cd34260b0bff3a24f0aa`. The specification remained unchanged after round 2. Historical reports and their reviewed revisions/hashes are preserved.
+
+This is a completed native SAR loop, not owner approval, application validation, or sealed SPR/XPR consensus. Future two-party stages reuse this group with literal `spr/` or `xpr/` path-template segments and their genuine independent protocol identities, preserving all historical bytes.
