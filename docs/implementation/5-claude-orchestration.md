@@ -75,3 +75,7 @@ The branch now preserves the latest accepted feature parent `aeabcb9b148486870eb
 The updated lockfile required a fresh pinned `npm ci`, which completed and applied the existing VAD patch without authoring manifest, pin, contract, application-source, or test changes. The current admitted runtime reports `rank-wave-source-unverified`; authorization grammar correction #2012 is being fixed and reviewed separately. Earlier stale-graph observations above are historical preparation checkpoints, not the current runtime diagnosis.
 
 Implementation is still unstarted in Ready for Planning. Native READY confirmation, registered Plan entry, and all subsequent approval and whole-story gates remain required. This document update and draft PR publication create no grant or live-provider evidence.
+
+## Active execution checkpoint
+
+Actual native admission is now READY. Registered Plan entry, narrative deep dive, truthful Full-Auto Plan approval and Develop entry completed before authored application source. Implementation is in progress; the older refusal/setup checkpoints are retained as history. Root still owns independent review, exact-head lifecycle verification, cloud merge and Close. Source delivery remains whole-story only.

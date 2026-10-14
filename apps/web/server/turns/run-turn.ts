@@ -17,7 +17,8 @@ export async function* runTurn(
   let seq = 0,
     text = '',
     attempts = 0,
-    searchRemaining = 2;
+    searchRemaining = 2,
+    searchKnown = true;
   const usage: Usage = { inputTokens: 0, outputTokens: 0, searchUses: 0 };
   const event = <K extends keyof EventPayloads>(
     type: K,
@@ -110,7 +111,11 @@ export async function* runTurn(
         return;
       } else {
         searchRemaining = used === null ? 0 : searchRemaining - used;
-        usage.searchUses = (usage.searchUses ?? 0) + (used ?? 0);
+        if (used === null) {
+          searchKnown = false;
+          delete usage.searchUses;
+        } else if (searchKnown)
+          usage.searchUses = (usage.searchUses ?? 0) + used;
       }
       messages.push({ role: 'assistant', content: native.content });
       if (native.stop_reason === 'end_turn') {
@@ -196,6 +201,19 @@ export async function* runTurn(
     yield delta('\n\n[Answer truncated: model round limit reached.]');
     yield completed('truncated');
   } catch (error) {
+    if (
+      !signal.aborted &&
+      error instanceof AppError &&
+      ['SEARCH_LIMIT', 'SEARCH_COMPATIBILITY'].includes(error.code)
+    ) {
+      yield delta(
+        error.code === 'SEARCH_LIMIT'
+          ? '\n\n[Answer truncated: hosted search limit reached.]'
+          : '\n\n[Answer truncated: hosted search continuation is incompatible.]',
+      );
+      yield completed('truncated');
+      return;
+    }
     const failure =
       signal.aborted && !(signal.reason instanceof AppError)
         ? new AppError(
