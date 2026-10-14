@@ -1,0 +1,209 @@
+{
+  "commands": [
+    {
+      "args": [
+        "run",
+        "lint"
+      ],
+      "classification": "lint-full",
+      "command": "npm",
+      "completedAt": "2026-10-14T11:25:09.112Z",
+      "durationMs": 3930,
+      "exitCode": 0,
+      "kind": "lint",
+      "providerId": "node",
+      "reusedFrom": "01M4X2HGGSF0TMPJ2XD9ABA59M",
+      "startedAt": "2026-10-14T11:25:05.182Z"
+    },
+    {
+      "args": [
+        "run",
+        "format:check"
+      ],
+      "classification": "format-full",
+      "command": "npm",
+      "completedAt": "2026-10-14T11:25:12.089Z",
+      "durationMs": 2956,
+      "exitCode": 0,
+      "kind": "format",
+      "providerId": "node",
+      "reusedFrom": "01M4X2HGGSF0TMPJ2XD9ABA59M",
+      "startedAt": "2026-10-14T11:25:09.133Z"
+    },
+    {
+      "args": [
+        "run",
+        "test:unit"
+      ],
+      "classification": "test-unit",
+      "command": "npm",
+      "completedAt": "2026-10-14T11:26:13.545Z",
+      "durationMs": 2608,
+      "exitCode": 0,
+      "kind": "test",
+      "providerId": "node",
+      "startedAt": "2026-10-14T11:26:10.937Z"
+    },
+    {
+      "args": [
+        "run",
+        "test:integration"
+      ],
+      "classification": "test-integration",
+      "command": "npm",
+      "completedAt": "2026-10-14T11:26:23.994Z",
+      "durationMs": 10449,
+      "exitCode": 0,
+      "kind": "test",
+      "providerId": "node",
+      "startedAt": "2026-10-14T11:26:13.545Z"
+    },
+    {
+      "args": [
+        "run",
+        "test:slow"
+      ],
+      "classification": "test-slow",
+      "command": "npm",
+      "completedAt": "2026-10-14T11:26:24.960Z",
+      "durationMs": 965,
+      "exitCode": 0,
+      "kind": "test",
+      "providerId": "node",
+      "startedAt": "2026-10-14T11:26:23.995Z"
+    },
+    {
+      "args": [
+        "vitest",
+        "run",
+        "tests/contracts/search-budget.test.ts",
+        "tests/contracts/sse.test.ts"
+      ],
+      "classification": "test-targeted-1",
+      "command": "npx",
+      "completedAt": "2026-10-14T11:26:26.232Z",
+      "durationMs": 1272,
+      "exitCode": 0,
+      "kind": "test",
+      "providerId": "node",
+      "startedAt": "2026-10-14T11:26:24.960Z"
+    },
+    {
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "classification": "test-targeted-2",
+      "command": "npm",
+      "completedAt": "2026-10-14T11:26:29.391Z",
+      "durationMs": 3159,
+      "exitCode": 0,
+      "kind": "test",
+      "providerId": "node",
+      "startedAt": "2026-10-14T11:26:26.232Z"
+    },
+    {
+      "args": [
+        "log",
+        "--oneline",
+        "-1"
+      ],
+      "classification": "test-targeted-3",
+      "command": "git",
+      "completedAt": "2026-10-14T11:26:29.410Z",
+      "durationMs": 19,
+      "exitCode": 0,
+      "kind": "test",
+      "providerId": "node",
+      "startedAt": "2026-10-14T11:26:29.391Z"
+    }
+  ],
+  "commitSha": "0efbe6a73ae0e63e12f2bc03c41fb907b15ec831",
+  "completedAt": "2026-10-14T11:26:29.410Z",
+  "environment": {
+    "configHashes": {
+      ".markdownlint-cli2.jsonc": "sha256:bb0034d3413e209ca3a8ed048d27b0fa8dc42112a509efdcc475f9d7684875cb",
+      ".prettierrc.json": "sha256:32dcd743a0ffca59a737c87abcfcc3f57a0cede5cedb6a8b1b68d32a3b6d4506",
+      "eslint.config.mjs": "sha256:2887a9da7a06ebaeed71f93e50b419895c0aff55911b87707e628d70c5840edf",
+      "package.json": "sha256:df0c1a562960358b144714239d26d27567115c1674f7412ca991c5183dc3e131",
+      "scripts/run-tests.mjs": "sha256:9454b37ed9f5365b277bf2ea73502e683f577533482d936cac6c31ebffe39a74"
+    },
+    "lockfileHash": "sha256:9e7b66a8358e9b27f8f049e0da3e5b98330eb9f398fe5e2dbc6b7ca09e751797",
+    "node": "v26.8.1",
+    "platform": "darwin-arm64",
+    "sandbox": {
+      "clean": true,
+      "identity": "/Users/kpburson/.codex/worktrees/voice-bff-story-5/AIVC/.ai-task-manager/runtime/test-sandboxes/.task-test-5-0efbe6a7-59039-3ddf9b4d",
+      "kind": "worktree"
+    }
+  },
+  "executionContext": {
+    "boundIssue": 5,
+    "branch": "HEAD",
+    "worktreePath": "/Users/kpburson/.codex/worktrees/voice-bff-story-5/AIVC/.ai-task-manager/runtime/test-sandboxes/.task-test-5-0efbe6a7-59039-3ddf9b4d"
+  },
+  "issue": 5,
+  "provider": {
+    "id": "node",
+    "requiredClassifications": [
+      "lint-full",
+      "format-full",
+      "test-unit",
+      "test-integration",
+      "test-slow"
+    ],
+    "setup": {
+      "args": [],
+      "name": "npm-ci"
+    }
+  },
+  "receiptId": "01M4X2KW122KZAGYQCAE1TJDAZ",
+  "schema": "aitm.verification-receipt/v1",
+  "stage": "test",
+  "startedAt": "2026-10-14T11:25:05.182Z",
+  "supersedes": null,
+  "verificationCommands": [
+    [
+      "git",
+      "log",
+      "--oneline",
+      "-1"
+    ],
+    [
+      "npm",
+      "run",
+      "format:check"
+    ],
+    [
+      "npm",
+      "run",
+      "lint"
+    ],
+    [
+      "npm",
+      "run",
+      "test:integration"
+    ],
+    [
+      "npm",
+      "run",
+      "test:slow"
+    ],
+    [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    [
+      "npm",
+      "test"
+    ],
+    [
+      "npx",
+      "vitest",
+      "run",
+      "tests/contracts/search-budget.test.ts",
+      "tests/contracts/sse.test.ts"
+    ]
+  ]
+}

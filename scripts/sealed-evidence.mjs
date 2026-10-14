@@ -27,6 +27,10 @@ export const integrationEvidenceCommit =
   '39c18e086ea832fc3214431575a1161742f374d6';
 export const integrationArchivePath =
   'docs/quality-evidence/2026-10-14-25-integration-originals.json';
+export const tutorialEvidenceCommit =
+  '89fc7a6125cd4b2be6f0f338dea928bd81bcea45';
+export const tutorialArchivePath =
+  'docs/quality-evidence/2026-10-14-25-tutorial-originals.json';
 function verifySnapshot(
   root,
   expectedSourceCommit,
@@ -133,6 +137,14 @@ export function verifyEvidenceArchive({
       integrationEvidenceCommit,
       integrationArchivePath,
       /^docs\/peer-reviews\/code\/14-capture-module\/.+\.md$/,
+    ) +
+    verifySnapshot(
+      root,
+      tutorialEvidenceCommit,
+      tutorialArchivePath,
+      new RegExp(
+        '^docs/(?:peer-reviews/spec/aivc-interactive-tutorial-design-review-cb28e9fe5863446ca5d949d96998909c/.+[.]md|superpowers/specs/2026-10-13-15-aivc-interactive-tutorial-design[.]md)$',
+      ),
     )
   );
 }
