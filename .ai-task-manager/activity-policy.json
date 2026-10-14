@@ -26,5 +26,9 @@
     "cargo test",
     "go test"
   ],
-  "buildCommands": ["npm run build", "tsc", "cargo build", "go build"]
+  "buildCommands": ["npm run build", "tsc", "cargo build", "go build"],
+  "configGlobsExtra": [
+    ".scratch/gh/2-successor-wave-prepare.json",
+    ".scratch/gh/2-successor-wave-record.json"
+  ]
 }
