@@ -20,6 +20,6 @@ The original human authorization for rank4 stories #4/#5/#6/#7/#14 remains the i
 
 ## Delivery and stop boundary
 
-#4 and #6 are merged and governed Done. #14 PR #21 merged at 2026-10-14T02:28:26Z, accepted head 4f80d9d1fc6ddf0660977b78816bef9613577d5b, merge 372f5a7f8d6fff945ef5269874e5d56d03524d74; governed Close remains in progress. #5 awaits native admission; #7 also awaits whole #5 Done.
+#4 and #6 are merged and governed Done. #14 PR #21 merged at 2026-10-14T02:28:26Z, accepted head 4f80d9d1fc6ddf0660977b78816bef9613577d5b, merge 372f5a7f8d6fff945ef5269874e5d56d03524d74; governed Close completed at2026-10-14T02:34:17Z and real reviewer occupancy is discharged. #5 awaits native admission; #7 also awaits whole #5 Done.
 
 Finish the whole authorized wave through review, exact-head verification, merged cloud delivery and governed Done, then pause before #8 and publish a fresh-chat handoff. The delivery ledger, live issue records and PR metadata retain exact provenance. This checkpoint does not replace current Tier-1 guidance or Explain authority.
