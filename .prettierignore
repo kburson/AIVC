@@ -1,8 +1,9 @@
 node_modules/
 **/.next/
 **/dist/
-apps/web/public/vendor/
-docs/peer-reviews/
+**/build/
+**/coverage/
+**/public/vendor/
 .superpowers/
 .scratch/
 .tmp/

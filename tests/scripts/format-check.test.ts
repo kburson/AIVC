@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, it } from 'vitest';
 import { enumerateOwnedFiles } from '../../scripts/format-check.mjs';
-it('checks existing owned files and excludes missing future paths and sealed evidence', () => {
+it('checks all first-party files including sealed evidence and excludes generated files', () => {
   mkdirSync('.scratch', { recursive: true });
   const root = mkdtempSync(join(process.cwd(), '.scratch/format-'));
   try {
@@ -19,7 +19,10 @@ it('checks existing owned files and excludes missing future paths and sealed evi
     );
     mkdirSync(join(root, 'apps/web/public/vendor'), { recursive: true });
     writeFileSync(join(root, 'apps/web/public/vendor/asset.js'), 'copied');
-    expect(enumerateOwnedFiles(root)).toEqual(['apps/web/app/page.tsx']);
+    expect(enumerateOwnedFiles(root)).toEqual([
+      'apps/web/app/page.tsx',
+      'docs/peer-reviews/spec/sealed/evidence.json',
+    ]);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
