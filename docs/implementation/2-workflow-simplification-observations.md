@@ -37,6 +37,12 @@ repairs remains approval deferred where already recorded.
 - The original AC referenced full `npm run test:slow` before the canonical Test phase, while the stamper reserves that full lane for Test. The public issue-body operation made VC2 the accepted targeted rapid-interruption file and retained the complete slow suite as VC9. Scope, AC text/citations, rank, refinement semantics and full Test floor stayed intact; mutation read-back passed at body version72.
 - Distinct preliminary Astra review identified a never-settling recovery gap despite the initial green interruption/playback/capture suites. The author reproduced the missing pre-end speech-status failure in a red test, then added the existing two-second resume limit as a transition-owned deadline. New candidate/Stop tests check retirement of the obsolete deadline. The final distinct review passed corrected source `e0ed8a8`, independently checking204 targeted tests,12 browser cases and seven extra controlled Chromium probes. Canonical exact-head Test remains a separate gate.
 
+## Story #11 additional observations
+
+- The public deep-dive mirror help places `--from-comment <id>` before the issue number. Supplying the issue first made the early parser treat the numeric comment ID as the target and return `bind-mismatch`; the genuine issue binding was unchanged. The documented argument order is the supported retry, without a new helper or framework change.
+- The same genuine story session can be normally paused during dependency waits and resumed for released work. Its actual binding generation, branch and clean feature fast-forward were preserved; preparation did not authorize Plan or implementation before predecessor completion.
+- The root credential file is not automatically loaded by the two-process launcher because Next runs in `apps/web`. Live setup must explicitly supply server-only process environment. Configuration names, model metadata and actual provider observations stay separate from credentials and from each other.
+
 ## Controls with demonstrated delivery value
 
 Independent #8 review found concrete playback and recovery defects that the author
