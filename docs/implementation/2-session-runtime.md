@@ -23,3 +23,7 @@ The original human authorization for rank4 stories #4/#5/#6/#7/#14 remains the i
 #4 and #6 are merged and governed Done. #14 PR #21 merged at 2026-10-14T02:28:26Z, accepted head 4f80d9d1fc6ddf0660977b78816bef9613577d5b, merge 372f5a7f8d6fff945ef5269874e5d56d03524d74; governed Close completed at2026-10-14T02:34:17Z and real reviewer occupancy is discharged. #5 awaits native admission; #7 also awaits whole #5 Done.
 
 Finish the whole authorized wave through review, exact-head verification, merged cloud delivery and governed Done, then pause before #8 and publish a fresh-chat handoff. The delivery ledger, live issue records and PR metadata retain exact provenance. This checkpoint does not replace current Tier-1 guidance or Explain authority.
+
+## Native source recovery checkpoint
+
+The proposed #2012 grammar correction has focused55 checks reported green, but final quality runs, source commit, immutable package and independent review are pending. Native hooks project the parent session ID into the separate source agent thread and refuse writes/tests despite its valid #2012 binding. The author is registered paused. [Exact preserved proposal and recovery details](../runtime/2012-pending-source/checkpoint.md) distinguish the working proposal from an accepted runtime. No replacement package or ready grant is claimed.
