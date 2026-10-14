@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/superpowers/specs/2026-10-12-voice-bff-reference-design.md) and its exact bytes remain available in the [evidence archive](../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `71bd4797829eb70ce08f744404535487b746430dbf78b2883d01859c1c4d37cc`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Conversational voice BFF reference architecture
 
 Date: October 12, 2026.
@@ -39,11 +43,11 @@ This is two local application processes in one npm workspace: the Next.js applic
 
 Alternatives considered:
 
-| Option | Tradeoff | Decision |
-|---|---|---|
-| A. Next.js BFF plus a small retrieval service | Demonstrates aggregation while retaining one browser-facing backend | Selected baseline |
-| B. Next.js alone with local fixture lookup | Fewer processes, but hides the independent service boundary | Useful simplification only if explicitly selected later |
-| C. Separate live voice gateway with persistent WebSockets | Enables continuous server-side transcription, but adds connection/session lifecycle work | Follow-up after the baseline works |
+| Option                                                    | Tradeoff                                                                                 | Decision                                                |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| A. Next.js BFF plus a small retrieval service             | Demonstrates aggregation while retaining one browser-facing backend                      | Selected baseline                                       |
+| B. Next.js alone with local fixture lookup                | Fewer processes, but hides the independent service boundary                              | Useful simplification only if explicitly selected later |
+| C. Separate live voice gateway with persistent WebSockets | Enables continuous server-side transcription, but adds connection/session lifecycle work | Follow-up after the baseline works                      |
 
 ## One day scope
 
@@ -143,11 +147,11 @@ Fastify runs on loopback port 3001 by default. It exposes:
 
 The response contains `schemaVersion`, `source` and `records`. Source is `synthetic-project-catalog`, not a real enterprise system. Each record has `id`, `name`, `status`, `ownerTeam`, `openItems` and `summary`.
 
-| ID | Name | Status | Owner team | Open items |
-|---|---|---|---|---:|
-| atlas | Atlas | active | North | 3 |
-| beacon | Beacon | paused | West | 1 |
-| cedar | Cedar | complete | South | 0 |
+| ID     | Name   | Status   | Owner team | Open items |
+| ------ | ------ | -------- | ---------- | ---------: |
+| atlas  | Atlas  | active   | North      |          3 |
+| beacon | Beacon | paused   | West       |          1 |
+| cedar  | Cedar  | complete | South      |          0 |
 
 Implement exact deterministic retrieval with Fastify schemas and an in-memory fixture file. No database or data writes are needed. The BFF calls a configured retrieval origin, not a URL chosen by the model. It must not silently substitute fixtures in the BFF when this service is unavailable; that would conceal the communication boundary being taught.
 
@@ -179,17 +183,17 @@ For audio input, Deepgram performs server-side prerecorded transcription. Empty/
 
 The response is a fetch-readable SSE stream, consumed from the POST response. Do not use native EventSource for this POST. Suggested normalized events:
 
-| Event | Payload purpose |
-|---|---|
-| `turn.accepted` | Turn ID and current mode |
-| `transcript.final` | Recognized question for optional display |
-| `stage` | Transcribing, researching, retrieving or answering |
-| `tool.started` | Tool name and safe summary |
-| `tool.completed` | Validated project data or available source metadata |
-| `answer.delta` | Append-only answer text |
-| `sources` | Actual source references/citations |
-| `turn.completed` | Final text, status and available usage |
-| `turn.failed` | Stable error code and concise message |
+| Event              | Payload purpose                                     |
+| ------------------ | --------------------------------------------------- |
+| `turn.accepted`    | Turn ID and current mode                            |
+| `transcript.final` | Recognized question for optional display            |
+| `stage`            | Transcribing, researching, retrieving or answering  |
+| `tool.started`     | Tool name and safe summary                          |
+| `tool.completed`   | Validated project data or available source metadata |
+| `answer.delta`     | Append-only answer text                             |
+| `sources`          | Actual source references/citations                  |
+| `turn.completed`   | Final text, status and available usage              |
+| `turn.failed`      | Stable error code and concise message               |
 
 All events include `schemaVersion`, `turnId` and a sequence number. Parse incremental UTF-8 and SSE framing across arbitrary network chunk boundaries. A network read is not necessarily one complete event. Set appropriate no-cache headers and test that local Node hosting delivers events incrementally. [Next.js Route Handlers](https://nextjs.org/docs/app/api-reference/file-conventions/route).
 

@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/xpr/2026-10-13-2026-10-12-2-voice-bff-reference-review-32a4e2abdf4ea9f798620982b5f63e8a-reviewer-response-2.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `7661e55b1ebd889ce4c35e5f4bfe2fb796ed0549a55847f02a48237fd86f136a`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-32a4e2abdf4ea9f798620982b5f63e8a"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-32a4e2abdf4ea9f798620982b5f63e8a'
+role: 'reviewer'
 turn: 2
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md"
-artifact_commit: "8efbdd19f03609f8429237c9be4b218f2ebcf427"
-artifact_blob: "6c9c69f7fa6f4c1f0f3ebfce426cd9c121373b95"
-artifact_digest: "sha256:276b5337f8d7b5597f15d872e7c13f74bdc93b9cb78b5a981792181a9f08b837"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md'
+artifact_commit: '8efbdd19f03609f8429237c9be4b218f2ebcf427'
+artifact_blob: '6c9c69f7fa6f4c1f0f3ebfce426cd9c121373b95'
+artifact_digest: 'sha256:276b5337f8d7b5597f15d872e7c13f74bdc93b9cb78b5a981792181a9f08b837'
 agent:
-  host: "claude-code"
-  provider: "anthropic"
-  model_id: "claude-opus-5-5"
-  model_display: "claude-opus-5-5"
-  session_fingerprint: "sha256:54bb4b51f8ef2cf4bc224815244edf83497147eeef35a62104d8cd8661463384"
-  identity_source: "runtime"
-started_at: "2026-10-13T05:51:08.220Z"
-submitted_at: "2026-10-13T06:12:12.442Z"
-finding_ids: ["R2-F001"]
+  host: 'claude-code'
+  provider: 'anthropic'
+  model_id: 'claude-opus-5-5'
+  model_display: 'claude-opus-5-5'
+  session_fingerprint: 'sha256:54bb4b51f8ef2cf4bc224815244edf83497147eeef35a62104d8cd8661463384'
+  identity_source: 'runtime'
+started_at: '2026-10-13T05:51:08.220Z'
+submitted_at: '2026-10-13T06:12:12.442Z'
+finding_ids: ['R2-F001']
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
@@ -35,16 +39,16 @@ Revisions requested for one new, narrow defect introduced by the R1-F002 correct
 
 Scope of this pass: I reread the revised artifact at the recorded commit/blob (766 lines). I checked every revised region (Tasks 1–9, interfaces, verification matrix) against the turn-1 findings and the author response, and rechecked cross-task consistency of the new contracts (`ensureRunning`/`resetAfterCancel`, `deadlineRemainingMs`, `readBuildInfo`, `parseProjectQuery`, `acquireStream`/`stopStream`, launcher modes). I did not run Git, edit the artifact, install dependencies, execute code or call providers. External web access was unavailable in this session. Where the author cites primary sources (pinned Next server BUILD_ID handling, Fastify validation docs, pinned VAD hooks, Vitest environment guide), I evaluated the plan's use of them for internal consistency; I did not independently re-fetch them. Authority assurance is unavailable as recorded by the protocol.
 
-**Turn-1 finding verification**
+### Turn-1 finding verification
 
-| Finding | Status | Evidence in revised plan |
-|---|---|---|
-| R1-F001 playback context left suspended | Resolved | Task 6 interface adds `ensureRunning`/`resetAfterCancel` (line 509). The watchdog step resets the empty context after teardown, serializes suspend/resume and turns a hung or rejected resume into visible `SPEECH_RESUME_FAILED` even with zero outstanding audio (line 547). Task 8 stops old sources before the reset, defers to a newer tentative owner and never restores canceled audio (lines 636–657). Tests cover suspend before/after confirmation, the Working/no-audio path, post-watchdog recovery, newer-candidate replacement, rejected resume and browser Beacon audio scheduling (line 661). The queue-side `ensureRunning` before first admission also covers paths where `commitCandidate` does not reset. |
-| R1-F002 production launch/build ID | Resolved, but see R2-F001 | Root `start --production` and `build:clean` scripts (lines 151–152, 213–214), `readBuildInfo` from `.next/BUILD_ID` exposed through capabilities (lines 276, 324), dev evidence rejected (line 689), README/docs verifier ownership (lines 690–691). |
-| R1-F003 multi-round text join | Resolved | Exact delta-concatenation invariant and conditional `\n\n` separator delta (line 370), with preamble/tool and multi-citation integration test (line 371). |
-| R1-F004 Fastify validation | Resolved | `removeAdditional:false`, `coerceTypes:false` and a strict `parseProjectQuery` with a malformed-query sentinel that the strict schema rejects (lines 205–212). Unknown-field and malformed-encoding 400 assertions were added to the shown test (lines 193–194). Fixture validation is done at load with pinned Ajv, and serialization is no longer described as validation. |
-| R1-F005 stream reacquisition | Resolved | `getStream`/`resumeStream` call the adapter-owned `acquireStream`, and `pauseStream` maps to `stopStream`. Every returned stream is recorded, a WeakSet makes stopping idempotent, and late obsolete-epoch acquisitions are stopped (lines 571, 586, 592). Mute/unmute and overlong-restart tests were added (line 605). |
-| R1-F006 Playwright browsers | Resolved | `test:browser:install` script (line 153), Task 4 runs it before the first browser suite (line 440), and CI runs `--with-deps chromium` before tests, enforced by the docs verifier (line 695). |
+| Finding                                 | Status                    | Evidence in revised plan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| --------------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1-F001 playback context left suspended | Resolved                  | Task 6 interface adds `ensureRunning`/`resetAfterCancel` (line 509). The watchdog step resets the empty context after teardown, serializes suspend/resume and turns a hung or rejected resume into visible `SPEECH_RESUME_FAILED` even with zero outstanding audio (line 547). Task 8 stops old sources before the reset, defers to a newer tentative owner and never restores canceled audio (lines 636–657). Tests cover suspend before/after confirmation, the Working/no-audio path, post-watchdog recovery, newer-candidate replacement, rejected resume and browser Beacon audio scheduling (line 661). The queue-side `ensureRunning` before first admission also covers paths where `commitCandidate` does not reset. |
+| R1-F002 production launch/build ID      | Resolved, but see R2-F001 | Root `start --production` and `build:clean` scripts (lines 151–152, 213–214), `readBuildInfo` from `.next/BUILD_ID` exposed through capabilities (lines 276, 324), dev evidence rejected (line 689), README/docs verifier ownership (lines 690–691).                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| R1-F003 multi-round text join           | Resolved                  | Exact delta-concatenation invariant and conditional `\n\n` separator delta (line 370), with preamble/tool and multi-citation integration test (line 371).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| R1-F004 Fastify validation              | Resolved                  | `removeAdditional:false`, `coerceTypes:false` and a strict `parseProjectQuery` with a malformed-query sentinel that the strict schema rejects (lines 205–212). Unknown-field and malformed-encoding 400 assertions were added to the shown test (lines 193–194). Fixture validation is done at load with pinned Ajv, and serialization is no longer described as validation.                                                                                                                                                                                                                                                                                                                                                  |
+| R1-F005 stream reacquisition            | Resolved                  | `getStream`/`resumeStream` call the adapter-owned `acquireStream`, and `pauseStream` maps to `stopStream`. Every returned stream is recorded, a WeakSet makes stopping idempotent, and late obsolete-epoch acquisitions are stopped (lines 571, 586, 592). Mute/unmute and overlong-restart tests were added (line 605).                                                                                                                                                                                                                                                                                                                                                                                                      |
+| R1-F006 Playwright browsers             | Resolved                  | `test:browser:install` script (line 153), Task 4 runs it before the first browser suite (line 440), and CI runs `--with-deps chromium` before tests, enforced by the docs verifier (line 695).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 Optional suggestions 1–6 were adopted consistently: the custom-tool batch overflow truncates without partial results (line 372), the wrapper is tested through the fixture-package route only (line 222), SDK timeouts are derived from config and remaining deadline (lines 474, 482), the Vitest environment is set per file (line 173), and body reading is now under the turn deadline (lines 247, 299–322). The `retainPairs` copy change is described in the author response. I did not re-locate its code line, and it is not material to the decision.
 

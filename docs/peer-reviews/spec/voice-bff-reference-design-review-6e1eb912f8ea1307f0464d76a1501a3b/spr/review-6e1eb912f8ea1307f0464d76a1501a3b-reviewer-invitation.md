@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/spec/voice-bff-reference-design-review-6e1eb912f8ea1307f0464d76a1501a3b/spr/review-6e1eb912f8ea1307f0464d76a1501a3b-reviewer-invitation.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `3231dc5fbab6371ebb27d2e9f2452a569c4f80baaa1bcb68356e962f7a791f06`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:064952674640611160aff00e947b64de060d4a4cfe7139019eb0f24ee264aa25" -->
 <!-- ai-peer-review-invitation data="ewogICJhcnRpZmFjdCI6ICIvVXNlcnMva3BidXJzb24vcHJvamVjdHMvQUlWQy9kb2NzL3N1cGVycG93ZXJzL3NwZWNzLzIwMjYtMTAtMTItdm9pY2UtYmZmLXJlZmVyZW5jZS1kZXNpZ24ubWQiLAogICJyZXNwb25zZSI6ICIvVXNlcnMva3BidXJzb24vcHJvamVjdHMvQUlWQy9kb2NzL3BlZXItcmV2aWV3cy9zcGVjLzIwMjYtMTAtMTMtMjAyNi0xMC0xMi12b2ljZS1iZmYtcmVmZXJlbmNlLWRlc2lnbi1yZXZpZXctNmUxZWI5MTJmOGVhMTMwN2YwNDY0ZDc2YTE1MDFhM2IvcmV2aWV3LTZlMWViOTEyZjhlYTEzMDdmMDQ2NGQ3NmExNTAxYTNiLXJldmlld2VyLXJlc3BvbnNlLTEubWQiLAogICJyZXZpZXdfaWQiOiAicmV2aWV3LTZlMWViOTEyZjhlYTEzMDdmMDQ2NGQ3NmExNTAxYTNiIiwKICAic2NoZW1hIjogImFpLXBlZXItcmV2aWV3Lmludml0YXRpb24tcm91dGluZy92MSIsCiAgIndvcmtzcGFjZSI6ICIvVXNlcnMva3BidXJzb24vcHJvamVjdHMvQUlWQy8uc2NyYXRjaC9wZWVyLXJldmlldy9yZXZpZXctNmUxZWI5MTJmOGVhMTMwN2YwNDY0ZDc2YTE1MDFhM2IiCn0K" -->
 

@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/spr/contract-first-parallel-amendment/2026-10-13-2026-10-13-2-contract-first-parallel-implementation-review-0b564eff94c8053c1217f17459063a87-reviewer-response-2.md) and its exact bytes remain available in the [evidence archive](../../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `ce8be46ec3a0f179da92a7448c02f3c6061fd7dbcfd4805fb97d6dd57198a3b6`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-0b564eff94c8053c1217f17459063a87"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-0b564eff94c8053c1217f17459063a87'
+role: 'reviewer'
 turn: 2
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md"
-artifact_commit: "9167074d1afd9d70e0f2bb4486b57e3ef462db6c"
-artifact_blob: "b5f2c93df98694879d113015f942888fce7e6b93"
-artifact_digest: "sha256:7cdca02756f96887770879722c7870882a3197c01dd4ad24f5ca2c3d7da9d67a"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md'
+artifact_commit: '9167074d1afd9d70e0f2bb4486b57e3ef462db6c'
+artifact_blob: 'b5f2c93df98694879d113015f942888fce7e6b93'
+artifact_digest: 'sha256:7cdca02756f96887770879722c7870882a3197c01dd4ad24f5ca2c3d7da9d67a'
 agent:
-  host: "codex"
-  provider: "openai"
-  model_id: "gpt-6-astra"
-  model_display: "gpt-6-astra"
-  session_fingerprint: "sha256:c718e87794011fa18ed4cdaa7d455401049ab1466b0df6b863c5d99886b48238"
-  identity_source: "declared"
-started_at: "2026-10-13T14:44:34.242Z"
-submitted_at: "2026-10-13T14:55:00.840Z"
+  host: 'codex'
+  provider: 'openai'
+  model_id: 'gpt-6-astra'
+  model_display: 'gpt-6-astra'
+  session_fingerprint: 'sha256:c718e87794011fa18ed4cdaa7d455401049ab1466b0df6b863c5d99886b48238'
+  identity_source: 'declared'
+started_at: '2026-10-13T14:44:34.242Z'
+submitted_at: '2026-10-13T14:55:00.840Z'
 finding_ids: []
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 

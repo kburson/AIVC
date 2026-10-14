@@ -1,15 +1,19 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/README.md) and its exact bytes remain available in the [evidence archive](../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `44350b5d25dc5bb7b634888ca4753dd2a97658285570a3b15084644876ea9f51`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Voice BFF implementation-plan review
 
-Epic: https://github.com/kburson/AIVC/issues/2
+Epic: <https://github.com/kburson/AIVC/issues/2>
 
 Plan: [implementation plan](../../../superpowers/plans/2026-10-12-2-voice-bff-reference.md).
 Accepted specification: [design](../../../superpowers/specs/2026-10-12-voice-bff-reference-design.md).
 
-| Stage | Participants | Result | Authority |
-|---|---|---|---|
-| SAR | Not performed | No SAR acceptance claimed | Not applicable |
-| SPR | Sol 6.1/high author; Astra 6/high reviewer | Accepted/finalized after three rounds and two revisions | [SPR manifest](spr/review-manifest.md) |
-| XPR | Same Sol 6.1/high author; Claude Opus 5.5/high reviewer, same recorded session across resumes | Accepted/finalized after three rounds and two revisions | [XPR manifest](xpr/2026-10-13-2026-10-12-2-voice-bff-reference-review-32a4e2abdf4ea9f798620982b5f63e8a-review-manifest.md) |
+| Stage | Participants                                                                                  | Result                                                  | Authority                                                                                                                  |
+| ----- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| SAR   | Not performed                                                                                 | No SAR acceptance claimed                               | Not applicable                                                                                                             |
+| SPR   | Sol 6.1/high author; Astra 6/high reviewer                                                    | Accepted/finalized after three rounds and two revisions | [SPR manifest](spr/review-manifest.md)                                                                                     |
+| XPR   | Same Sol 6.1/high author; Claude Opus 5.5/high reviewer, same recorded session across resumes | Accepted/finalized after three rounds and two revisions | [XPR manifest](xpr/2026-10-13-2026-10-12-2-voice-bff-reference-review-32a4e2abdf4ea9f798620982b5f63e8a-review-manifest.md) |
 
 SPR review ID: `review-d62114d1a820674565d91da97bb547c1`; accepted predecessor revision `0118b29685cf8998235885d2d172da27673ed67f`.
 XPR review ID: `review-32a4e2abdf4ea9f798620982b5f63e8a`; accepted current revision `cb82f730f63ba0e0bd4480f7bc76ca09d286af83`, SHA-256 `5dc37eb3c25f59d056756b45582a584ea321ac3a881041992b073b5a3656523e`.

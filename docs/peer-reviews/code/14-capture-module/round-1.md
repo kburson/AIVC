@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/39c18e086ea832fc3214431575a1161742f374d6/docs/peer-reviews/code/14-capture-module/round-1.md) and its exact bytes remain available in the [integration evidence archive](../../../quality-evidence/2026-10-14-25-integration-originals.json).
+> Original SHA-256: `e4dba238a1dc4a71376ed091fb3435971c14f2df94097be3294d251944a080fe`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Independent capture module review, round 1
 
 - Issue: [#14](https://github.com/kburson/AIVC/issues/14); pull request: [#21](https://github.com/kburson/AIVC/pull/21).
@@ -36,13 +40,22 @@ A fresh reviewer run exercised the actual createVad adapter and patched MicVAD w
 Observed:
 
 ```json
-{"outcomes":["fulfilled","fulfilled"],"statuses":[],"trackStops":1,"contextCloses":1,"releaseCalls":1}
+{
+  "outcomes": ["fulfilled", "fulfilled"],
+  "statuses": [],
+  "trackStops": 1,
+  "contextCloses": 1,
+  "releaseCalls": 1
+}
 ```
 
 The outcomes are start and Stop respectively. Both fulfilled; cleanup failure was hidden. A separate direct actual MicVAD instance used deferred getStream and a rejecting pauseStream:
 
 ```json
-[{"status":"rejected","error":"late pause failed"},{"status":"fulfilled"}]
+[
+  { "status": "rejected", "error": "late pause failed" },
+  { "status": "fulfilled" }
+]
 ```
 
 Those outcomes are start and destroy. Destroy fulfilled despite the cleanup rejection. The executable standalone reproduction is preserved in [round-1-reproduction.md](round-1-reproduction.md).

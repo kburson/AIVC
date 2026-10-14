@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/xpr/contract-first-parallel-amendment/2026-10-13-2026-10-13-2-contract-first-parallel-implementation-review-63ab7e25e4be96aca3960c251687c2e1-reviewer-response-3.md) and its exact bytes remain available in the [evidence archive](../../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `3f1b6f0a51f3eb2c1e34c3360604310f21d4341b50d18ccdf93185a657abb880`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-63ab7e25e4be96aca3960c251687c2e1"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-63ab7e25e4be96aca3960c251687c2e1'
+role: 'reviewer'
 turn: 3
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md"
-artifact_commit: "6eda972a9df1bcbe1f8f650e9506c709026b02d8"
-artifact_blob: "b4cfea8693d3390862e80b3d72451fcc7eda4129"
-artifact_digest: "sha256:c1cbb39604da9627d9ef3b401e42fcef2f8f0cef1bd04ad18af46ca807fb720e"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md'
+artifact_commit: '6eda972a9df1bcbe1f8f650e9506c709026b02d8'
+artifact_blob: 'b4cfea8693d3390862e80b3d72451fcc7eda4129'
+artifact_digest: 'sha256:c1cbb39604da9627d9ef3b401e42fcef2f8f0cef1bd04ad18af46ca807fb720e'
 agent:
-  host: "claude-code"
-  provider: "anthropic"
-  model_id: "claude-opus-5-5"
-  model_display: "claude-opus-5-5"
-  session_fingerprint: "sha256:23119381b70d64136c4c45e973ea19e455920e76871611c41d8b1754cd6a8d01"
-  identity_source: "runtime"
-started_at: "2026-10-13T14:57:46.652Z"
-submitted_at: "2026-10-13T15:13:42.495Z"
+  host: 'claude-code'
+  provider: 'anthropic'
+  model_id: 'claude-opus-5-5'
+  model_display: 'claude-opus-5-5'
+  session_fingerprint: 'sha256:23119381b70d64136c4c45e973ea19e455920e76871611c41d8b1754cd6a8d01'
+  identity_source: 'runtime'
+started_at: '2026-10-13T14:57:46.652Z'
+submitted_at: '2026-10-13T15:13:42.495Z'
 finding_ids: []
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
@@ -41,7 +45,7 @@ This is my third-turn XPR review of the revised amendment.
 **Verification of round-2 dispositions:**
 
 - **R2-F001: resolved.**
-  - Line 289 now defines tool.started as meaning that a *validated* lookup is being dispatched.
+  - Line 289 now defines tool.started as meaning that a _validated_ lookup is being dispatched.
   - Invalid, unknown or extra-property arguments count toward the four-attempt cap. They return a native `is_error:true` tool_result, make zero retrieval calls, and emit no public tool event. This matches spec case 1 and base Task 3 line 352.
   - Retrieval that is unavailable or malformed after dispatch has exactly one outcome: a single terminal turn.failed RETRIEVAL_UNAVAILABLE with retryable:false. There is no fabricated catalog, continuing native error or fixture fallback. This fits spec case 7's distinct visible state and the base plan's "fails visibly".
   - The rule that no tool, answer or source event may arrive while a dispatch is pending still allows a terminal of any code. So deadline and disconnect failures during a lookup remain grammatical.

@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md) and its exact bytes remain available in the [evidence archive](../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `5dc37eb3c25f59d056756b45582a584ea321ac3a881041992b073b5a3656523e`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Conversational Voice BFF Reference Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. Implementation requires the owner's Plan approval and the applicable AITM pickup workflow; this document does not grant either.
@@ -76,17 +80,17 @@ Resolved metadata discrepancy: the accepted spec has **15** numbered verificatio
 - Refinement snapshot: XL/8 hours is a **provisional one-day timebox budget**, not a fixed delivery promise. The current authoritative issue field remains root-owned until the governed estimate/forecast update.
 - Dependency order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9. Task 5's provider adapter can be developed after Task 2, but final integration follows typed-path validation. Do not fan out tasks that mutate the same shared contracts.
 
-| Task | Expected effort | Range | Principal risk |
-|---|---:|---:|---|
-| 1 Retrieval/workspace | 3 h | 2-5 h | Toolchain, strict validation and production launch |
-| 2 Transport/admission | 4 h | 3-6 h | Stream/body/cancellation ownership |
-| 3 Claude/tools/search | 5.5 h | 4-8 h | Native content/pause/search and exact streamed text joining |
-| 4 Typed UI/history | 3.5 h | 2-5 h | Stale events and atomic history |
-| 5 Deepgram/voice HTTP | 3 h | 2-4 h | SDK stream/error/cancellation behavior |
-| 6 PCM/speech queue | 5 h | 3-7 h | Audio clock accounting and segmentation |
-| 7 Capture/VAD | 5 h | 4-8 h | WASM/assets, permission lifecycle and maintained lifecycle patch |
-| 8 Interruption | 5 h | 4-8 h | Async suspend/resume races, next-answer recovery, echo |
-| 9 Evidence/tutorial | 7 h | 5-10 h | Live account support and device timing |
+| Task                  | Expected effort |  Range | Principal risk                                                   |
+| --------------------- | --------------: | -----: | ---------------------------------------------------------------- |
+| 1 Retrieval/workspace |             3 h |  2-5 h | Toolchain, strict validation and production launch               |
+| 2 Transport/admission |             4 h |  3-6 h | Stream/body/cancellation ownership                               |
+| 3 Claude/tools/search |           5.5 h |  4-8 h | Native content/pause/search and exact streamed text joining      |
+| 4 Typed UI/history    |           3.5 h |  2-5 h | Stale events and atomic history                                  |
+| 5 Deepgram/voice HTTP |             3 h |  2-4 h | SDK stream/error/cancellation behavior                           |
+| 6 PCM/speech queue    |             5 h |  3-7 h | Audio clock accounting and segmentation                          |
+| 7 Capture/VAD         |             5 h |  4-8 h | WASM/assets, permission lifecycle and maintained lifecycle patch |
+| 8 Interruption        |             5 h |  4-8 h | Async suspend/resume races, next-answer recovery, echo           |
+| 9 Evidence/tutorial   |             7 h | 5-10 h | Live account support and device timing                           |
 
 Effort signals are human-hour planning inputs, not model-token or wall-clock guarantees. Tasks 2/3/6/8 have high coupling and failure impact (paid calls, provider native blocks, PCM accounting, concurrency races); Tasks 1/4/5/7 have medium coupling; Task 9 has high external uncertainty. All nine tasks require new tests because this is a new application; no existing application tests are expected to be removed. Each interface owner supplies additive contract tests before downstream work, and a failed provider/browser compatibility check may require revisiting its owning task. These signals and the per-task ranges above supply the root's genuine Plan-estimation input after governed decomposition.
 
@@ -107,17 +111,17 @@ At eight elapsed implementation hours, report which requirements and verifiers r
 
 All paths below are repository-relative. New source files use TypeScript; root scripts remain `.mjs` because the existing root is CommonJS. Keep the existing AITM dependency, hooks and sealed review collateral intact.
 
-| Boundary | Owning files | Responsibility |
-|---|---|---|
-| Workspace | `package.json`, `.nvmrc`, `.npmrc`, `tsconfig.base.json`, `vitest.config.ts`, `playwright.config.ts`, `eslint.config.mjs`, `.prettierignore`, `.prettierrc.json`, `.gitignore` | Pins, two-process commands, offline checks |
-| Retrieval | `apps/retrieval/src/projects/catalog.ts`, `apps/retrieval/src/projects/schema.ts`, `apps/retrieval/src/http/app.ts`, `apps/retrieval/src/index.ts`, `apps/retrieval/fixtures/projects.json` | Exact synthetic lookup, Fastify validation |
-| Contracts | `apps/web/shared/contracts.ts`, `apps/web/shared/validation.ts`, `apps/web/shared/sse.ts`, `apps/web/shared/history.ts` | Normalized event/request/history schemas |
-| HTTP | `apps/web/server/http/{admission,body,errors,sse-response}.ts`, `apps/web/app/api/{turn,speech,capabilities}/route.ts` | Pre-body admission, bounded input, Node adapters |
-| Server lifecycle | `apps/web/server/{config,capabilities,runtime,build-info}.ts`, `apps/web/server/turns/{leases,deadline,run-turn}.ts` | Configuration, process singleton, held slots, abort/deadline |
-| Providers/tools | `apps/web/server/providers/{contracts,claude,deepgram,mock}.ts`, `apps/web/server/tools/{lookup-projects,retrieval-client}.ts` | Native provider blocks, validated tool dispatch, real/mocked modes |
-| Client text | `apps/web/client/{turn-controller,turn-stream,history}.ts`, `apps/web/components/{Conversation,Answer,ProjectCard,Details,Capabilities}.tsx` | Generation ownership, safe rendering, optional diagnostics |
-| Client speech | `apps/web/client/voice/{pcm,playback,speech-text,speech-queue,wav,vad-adapter,capture-session,interruption}.ts` | PCM ledger, queue admission, capture and two-phase interruption |
-| Evidence | `scripts/{dev,run-tests,verify-live,verify-docs,copy-vad-assets}.mjs`, `scripts/task-tracker/verify-epic-trail.mjs`, `docs/{specification,architecture,tutorial,live-validation}.md`, `docs/evidence/live-validation.json` | Reproducible execution and honest acceptance records |
+| Boundary         | Owning files                                                                                                                                                                                                               | Responsibility                                                     |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Workspace        | `package.json`, `.nvmrc`, `.npmrc`, `tsconfig.base.json`, `vitest.config.ts`, `playwright.config.ts`, `eslint.config.mjs`, `.prettierignore`, `.prettierrc.json`, `.gitignore`                                             | Pins, two-process commands, offline checks                         |
+| Retrieval        | `apps/retrieval/src/projects/catalog.ts`, `apps/retrieval/src/projects/schema.ts`, `apps/retrieval/src/http/app.ts`, `apps/retrieval/src/index.ts`, `apps/retrieval/fixtures/projects.json`                                | Exact synthetic lookup, Fastify validation                         |
+| Contracts        | `apps/web/shared/contracts.ts`, `apps/web/shared/validation.ts`, `apps/web/shared/sse.ts`, `apps/web/shared/history.ts`                                                                                                    | Normalized event/request/history schemas                           |
+| HTTP             | `apps/web/server/http/{admission,body,errors,sse-response}.ts`, `apps/web/app/api/{turn,speech,capabilities}/route.ts`                                                                                                     | Pre-body admission, bounded input, Node adapters                   |
+| Server lifecycle | `apps/web/server/{config,capabilities,runtime,build-info}.ts`, `apps/web/server/turns/{leases,deadline,run-turn}.ts`                                                                                                       | Configuration, process singleton, held slots, abort/deadline       |
+| Providers/tools  | `apps/web/server/providers/{contracts,claude,deepgram,mock}.ts`, `apps/web/server/tools/{lookup-projects,retrieval-client}.ts`                                                                                             | Native provider blocks, validated tool dispatch, real/mocked modes |
+| Client text      | `apps/web/client/{turn-controller,turn-stream,history}.ts`, `apps/web/components/{Conversation,Answer,ProjectCard,Details,Capabilities}.tsx`                                                                               | Generation ownership, safe rendering, optional diagnostics         |
+| Client speech    | `apps/web/client/voice/{pcm,playback,speech-text,speech-queue,wav,vad-adapter,capture-session,interruption}.ts`                                                                                                            | PCM ledger, queue admission, capture and two-phase interruption    |
+| Evidence         | `scripts/{dev,run-tests,verify-live,verify-docs,copy-vad-assets}.mjs`, `scripts/task-tracker/verify-epic-trail.mjs`, `docs/{specification,architecture,tutorial,live-validation}.md`, `docs/evidence/live-validation.json` | Reproducible execution and honest acceptance records               |
 
 Test groups: `tests/contracts/`, `tests/integration/`, `tests/voice/`, `tests/ui/`, `tests/slow/`, `tests/browser/`, `tests/scripts/`. The explicit Vitest configuration excludes sealed peer-review directories, `node_modules`, `.scratch`, `.tmp` and Playwright specs. Browser tests use Mock/Simulation servers; live evidence is separately produced and checked.
 
@@ -181,26 +185,69 @@ it('looks up exact synthetic records without fuzzy matching', async () => {
   const app = createRetrievalApp();
   try {
     const all = await app.inject('/v1/projects');
-    expect(all.json()).toEqual({ schemaVersion: 1, source: 'synthetic-project-catalog', records: [
-      { id: 'atlas', name: 'Atlas', status: 'active', ownerTeam: 'North', openItems: 3, summary: 'Synthetic active project owned by North with three open items.' },
-      { id: 'beacon', name: 'Beacon', status: 'paused', ownerTeam: 'West', openItems: 1, summary: 'Synthetic paused project owned by West with one open item.' },
-      { id: 'cedar', name: 'Cedar', status: 'complete', ownerTeam: 'South', openItems: 0, summary: 'Synthetic completed project owned by South with no open items.' }
-    ] });
-    expect((await app.inject('/v1/projects?name=aTlAs')).json().records).toHaveLength(1);
-    expect((await app.inject('/v1/projects?name=Atl')).json().records).toEqual([]);
+    expect(all.json()).toEqual({
+      schemaVersion: 1,
+      source: 'synthetic-project-catalog',
+      records: [
+        {
+          id: 'atlas',
+          name: 'Atlas',
+          status: 'active',
+          ownerTeam: 'North',
+          openItems: 3,
+          summary:
+            'Synthetic active project owned by North with three open items.',
+        },
+        {
+          id: 'beacon',
+          name: 'Beacon',
+          status: 'paused',
+          ownerTeam: 'West',
+          openItems: 1,
+          summary: 'Synthetic paused project owned by West with one open item.',
+        },
+        {
+          id: 'cedar',
+          name: 'Cedar',
+          status: 'complete',
+          ownerTeam: 'South',
+          openItems: 0,
+          summary:
+            'Synthetic completed project owned by South with no open items.',
+        },
+      ],
+    });
+    expect(
+      (await app.inject('/v1/projects?name=aTlAs')).json().records,
+    ).toHaveLength(1);
+    expect((await app.inject('/v1/projects?name=Atl')).json().records).toEqual(
+      [],
+    );
     expect((await app.inject('/v1/projects?name=')).statusCode).toBe(400);
-    expect((await app.inject('/v1/projects?name=Atlas&name=Beacon')).statusCode).toBe(400);
+    expect(
+      (await app.inject('/v1/projects?name=Atlas&name=Beacon')).statusCode,
+    ).toBe(400);
     expect((await app.inject('/v1/projects?foo=1')).statusCode).toBe(400);
-    expect((await app.inject('/v1/projects?name=%E0%A4%A')).statusCode).toBe(400);
+    expect((await app.inject('/v1/projects?name=%E0%A4%A')).statusCode).toBe(
+      400,
+    );
     expect((await app.inject('/health')).json()).toEqual({ status: 'ok' });
-  } finally { await app.close(); }
+  } finally {
+    await app.close();
+  }
 });
 ```
 
 ```ts
 export function lookupProjects(name?: string): ProjectCatalog {
-  return { schemaVersion: 1, source: 'synthetic-project-catalog', records:
-    name === undefined ? [...records] : records.filter(r => r.name.toLowerCase() === name.toLowerCase()) };
+  return {
+    schemaVersion: 1,
+    source: 'synthetic-project-catalog',
+    records:
+      name === undefined
+        ? [...records]
+        : records.filter((r) => r.name.toLowerCase() === name.toLowerCase()),
+  };
 }
 // app.ts: Fastify({ajv:{customOptions:{removeAdditional:false,coerceTypes:false}},
 // routerOptions:{querystringParser:parseProjectQuery}}).
@@ -249,34 +296,69 @@ Create `apps/web/shared/contracts.ts`, `apps/web/shared/validation.ts`, `apps/we
 - [ ] Add contracts with discriminated payloads; clients cannot send tools, sources or system prompts. Define `ServerConfig` in config.ts as `{ mode:'live'|'mock'; allowedOrigins:ReadonlySet<string>; allowedHosts:ReadonlySet<string>; anthropicKey:string|null; claudeModel:string|null; deepgramKey:string|null; sttModel:string|null; ttsModel:string|null; retrievalBaseUrl:string; searchEnabled:boolean; searchToolVersion:'web_search_20250305'; speechCharsPerSecond:number; segmentChars:number; turnTimeoutMs:number; retrievalTimeoutMs:number; speechTimeoutMs:number }`. These signatures are the authority for subsequent tasks.
 
 ```ts
-export type HistoryMessage = { role: 'user'|'assistant'; content: string };
-export type TurnInput = { turnId: string; history: HistoryMessage[] } &
-  ({ kind: 'text'; text: string } | { kind: 'audio'; wav: Uint8Array });
+export type HistoryMessage = { role: 'user' | 'assistant'; content: string };
+export type TurnInput = { turnId: string; history: HistoryMessage[] } & (
+  { kind: 'text'; text: string } | { kind: 'audio'; wav: Uint8Array }
+);
 export type SpeechInput = { turnId: string; segmentId: string; text: string };
 export type Source = { title: string; url: string; citedText?: string };
-export type Usage = { inputTokens?: number; outputTokens?: number; searchUses?: number };
-export type AppErrorFields = { code: string; message: string; turnId: string|null; retryable: boolean };
-export type TurnStatus = 'complete'|'interrupted'|'failed'|'truncated'|'no-speech';
+export type Usage = {
+  inputTokens?: number;
+  outputTokens?: number;
+  searchUses?: number;
+};
+export type AppErrorFields = {
+  code: string;
+  message: string;
+  turnId: string | null;
+  retryable: boolean;
+};
+export type TurnStatus =
+  'complete' | 'interrupted' | 'failed' | 'truncated' | 'no-speech';
 export type EventPayloads = {
-  'turn.accepted': { mode: 'live'|'mock' };
+  'turn.accepted': { mode: 'live' | 'mock' };
   'transcript.final': { text: string };
-  stage: { stage: 'transcribing'|'researching'|'retrieving'|'answering' };
+  stage: { stage: 'transcribing' | 'researching' | 'retrieving' | 'answering' };
   'tool.started': { name: 'lookup_projects'; summary: string };
   'tool.completed': { result: ProjectCatalog };
   'answer.delta': { text: string };
   sources: { sources: Source[] };
-  'turn.completed': { text: string; status: 'complete'|'truncated'|'no-speech'; usage?: Usage };
+  'turn.completed': {
+    text: string;
+    status: 'complete' | 'truncated' | 'no-speech';
+    usage?: Usage;
+  };
   'turn.failed': AppErrorFields;
 };
-export type TurnEvent = { [K in keyof EventPayloads]: {
-  schemaVersion: 1; turnId: string; seq: number; type: K; data: EventPayloads[K]
-} }[keyof EventPayloads];
+export type TurnEvent = {
+  [K in keyof EventPayloads]: {
+    schemaVersion: 1;
+    turnId: string;
+    seq: number;
+    type: K;
+    data: EventPayloads[K];
+  };
+}[keyof EventPayloads];
 export type Capabilities = {
-  schemaVersion: 1; mode: 'live'|'mock'; model: string|null; sttModel: string|null; ttsModel: string|null;
-  build: { mode:'production'|'development'; buildId:string|null };
-  turnsAvailable: boolean; speechAvailable: boolean;
-  search: { state: 'disabled'|'unavailable'|'configured'|'verified'; reason: string|null; accountValidation: 'pending'|'verified'|'unavailable' };
-  speech: { segmentChars: number; backlogChars: 2400; highWaterSeconds: 10; lowWaterSeconds: 2 };
+  schemaVersion: 1;
+  mode: 'live' | 'mock';
+  model: string | null;
+  sttModel: string | null;
+  ttsModel: string | null;
+  build: { mode: 'production' | 'development'; buildId: string | null };
+  turnsAvailable: boolean;
+  speechAvailable: boolean;
+  search: {
+    state: 'disabled' | 'unavailable' | 'configured' | 'verified';
+    reason: string | null;
+    accountValidation: 'pending' | 'verified' | 'unavailable';
+  };
+  speech: {
+    segmentChars: number;
+    backlogChars: 2400;
+    highWaterSeconds: 10;
+    lowWaterSeconds: 2;
+  };
 };
 ```
 
@@ -286,8 +368,13 @@ export type Capabilities = {
 
 ```ts
 it('rejects a simple multipart request without reading its body', () => {
-  const headers = new Headers({ origin: 'http://localhost:9999', host: 'localhost:3000' });
-  expect(() => assertAdmission(headers, config, true)).toThrowError('ORIGIN_NOT_ALLOWED');
+  const headers = new Headers({
+    origin: 'http://localhost:9999',
+    host: 'localhost:3000',
+  });
+  expect(() => assertAdmission(headers, config, true)).toThrowError(
+    'ORIGIN_NOT_ALLOWED',
+  );
 });
 ```
 
@@ -297,31 +384,56 @@ Add `tests/contracts/config.test.ts` exporting no production fixtures; construct
 - [ ] Write input tests for UUID, both/neither audio and text, duplicate form fields, extra fields, 2,000/2,001 characters, 2 MiB/excess chunked body, malformed/truncated RIFF, wrong format/channel/rate/bits, invalid chunk lengths/alignment, empty/30-second/excess duration and alternating history pairs. Read the transport body through a reader and count received bytes; cancel reader once the cap is exceeded, then parse a bounded synthetic Request/FormData. Do not call unbounded `request.formData()` on the original body.
 
 ```ts
-export async function readBoundedBody(req: Request, cap: number, signal:AbortSignal): Promise<Uint8Array> {
+export async function readBoundedBody(
+  req: Request,
+  cap: number,
+  signal: AbortSignal,
+): Promise<Uint8Array> {
   const reader = req.body?.getReader();
   if (!reader) return new Uint8Array();
-  const chunks: Uint8Array[] = []; let total = 0;
-  const onAbort=()=>{ void reader.cancel(signal.reason).catch(()=>{}); };
-  signal.addEventListener('abort',onAbort,{once:true});
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  const onAbort = () => {
+    void reader.cancel(signal.reason).catch(() => {});
+  };
+  signal.addEventListener('abort', onAbort, { once: true });
   try {
     signal.throwIfAborted();
     while (true) {
-      const { done, value } = await reader.read(); signal.throwIfAborted(); if (done) break;
+      const { done, value } = await reader.read();
+      signal.throwIfAborted();
+      if (done) break;
       total += value.byteLength;
-      if (total > cap) { await reader.cancel(); throw new AppError(413, 'BODY_TOO_LARGE', 'Request exceeds 2 MiB.', null, false); }
+      if (total > cap) {
+        await reader.cancel();
+        throw new AppError(
+          413,
+          'BODY_TOO_LARGE',
+          'Request exceeds 2 MiB.',
+          null,
+          false,
+        );
+      }
       chunks.push(value);
     }
-  } finally { signal.removeEventListener('abort',onAbort); reader.releaseLock(); }
-  const out = new Uint8Array(total); let at = 0;
-  for (const chunk of chunks) { out.set(chunk, at); at += chunk.length; }
+  } finally {
+    signal.removeEventListener('abort', onAbort);
+    reader.releaseLock();
+  }
+  const out = new Uint8Array(total);
+  let at = 0;
+  for (const chunk of chunks) {
+    out.set(chunk, at);
+    at += chunk.length;
+  }
   return out;
 }
 ```
 
-- [ ] Implement schema validation and WAV walking with bounds-checked RIFF chunks, exactly one usable `fmt ` and `data`, PCM format 1/channel1/16000Hz/16bits/blockAlign2/byteRate32000, consistent declared lengths and sample count <=480,000. Unknown valid ancillary chunks can be skipped with padding; invalid/duplicate data/format chunks fail. Empty PCM maps to no-speech without model work. Count history characters as JS string lengths consistently on both sides; reject nonstring roles/content, incomplete pairs and >8/16,000 input, rather than trusting the browser's trimming.
+- [ ] Implement schema validation and WAV walking with bounds-checked RIFF chunks, exactly one usable `fmt` and `data`, PCM format 1/channel1/16000Hz/16bits/blockAlign2/byteRate32000, consistent declared lengths and sample count <=480,000. Unknown valid ancillary chunks can be skipped with padding; invalid/duplicate data/format chunks fail. Empty PCM maps to no-speech without model work. Count history characters as JS string lengths consistently on both sides; reject nonstring roles/content, incomplete pairs and >8/16,000 input, rather than trusting the browser's trimming.
 - [ ] Add concurrency/deadline tests: acquire two leases, reject third before work; caller aborts first but its deferred upstream work remains unsettled and slot unavailable; release only after settlement, idempotently. Composite signal joins request abort and deadline; timeout-facing result returns 504 before stream or a failed event after stream, while `settled` owns the held lease until work actually settles. For streaming work, settlement means the producer and its admitted upstream operations finish or cancellation is confirmed, not merely that headers/first bytes arrived. Consume all background errors, including errors after a deadline-facing response ended. Test provider code that ignores cancellation; do not use `Promise.race` settlement alone as evidence of upstream cancellation. Test stalled body reading: deadline cancels reader and returns TURN_DEADLINE/504 with turnId null and zero provider/lease calls; a valid body preserves the same remaining deadline for providers.
 - [ ] Write the sanitized environment example with empty key/model values (documented unavailable until the operator fills them), all six required names, `AIVC_MODE=live`, the six exact defaults in Global Constraints and 60000/5000/20000 deadline settings. The example deliberately contains no credentials; blank providers produce unavailable capabilities, never live-success labels. Add a config test asserting those documented defaults parse and keys are absent.
-- [ ] Implement `readBuildInfo(webRoot:string):Promise<{mode:'production'|'development';buildId:string|null}>` in build-info.ts. Under next start/NODE_ENV production read webRoot/.next/BUILD_ID and expose this nonsecret production ID in capabilities/collapsed diagnostics. Missing/invalid ID is null and cannot pass live verification. Under next dev report development/null. Never assume App Router __NEXT_DATA__. This serves the actually tested production ID; Task 9 records it as provenance, while later verification relies on stable source/patch/module digests rather than comparing a mutable local build ID. Add controlled filesystem tests for a production ID, missing file and development mode.
+- [ ] Implement `readBuildInfo(webRoot:string):Promise<{mode:'production'|'development';buildId:string|null}>` in build-info.ts. Under next start/NODE_ENV production read webRoot/.next/BUILD_ID and expose this nonsecret production ID in capabilities/collapsed diagnostics. Missing/invalid ID is null and cannot pass live verification. Under next dev report development/null. Never assume App Router **NEXT_DATA**. This serves the actually tested production ID; Task 9 records it as provenance, while later verification relies on stable source/patch/module digests rather than comparing a mutable local build ID. Add controlled filesystem tests for a production ID, missing file and development mode.
 - [ ] Implement Host-only capabilities route with `export const runtime='nodejs'`, response no-store and sanitized capability labels/limits. Missing Deepgram disables speech/audio input but preserves configured Claude typed input; missing Claude disables turns and explains why; mock mode requires explicit `AIVC_MODE=mock`, never silently falls back. `AIVC_MODE=live` is default. Document configurable `TURN_TIMEOUT_MS`, `RETRIEVAL_TIMEOUT_MS`, `SPEECH_TIMEOUT_MS` with 60000/5000/20000 defaults.
 - [ ] Run boundary and slow tests/typecheck, inspect diff for any secret/default-live claim and commit the task under the actual bound child.
 
@@ -354,13 +466,45 @@ Create `apps/web/server/providers/contracts.ts`, `apps/web/server/providers/clau
 ```ts
 it('preserves custom tool identity and HTTP retrieval provenance', async () => {
   const model = new ScriptedModel([
-    nativeRound({ stop: 'tool_use', tool: { id:'tool-atlas-1', name:'lookup_projects', input:{name:'Atlas'} } }),
-    nativeRound({ stop: 'end_turn', text:'Atlas is active, owned by North, with 3 open items.' })
+    nativeRound({
+      stop: 'tool_use',
+      tool: {
+        id: 'tool-atlas-1',
+        name: 'lookup_projects',
+        input: { name: 'Atlas' },
+      },
+    }),
+    nativeRound({
+      stop: 'end_turn',
+      text: 'Atlas is active, owned by North, with 3 open items.',
+    }),
   ]);
-  const events = await collect(runTurn({ turnId: crypto.randomUUID(), history: [], kind:'text', text:'What is the status of Atlas?' }, deps(model, retrievalUrl), new AbortController().signal));
-  expect(model.inputs[1].messages.at(-1)?.content).toContainEqual(expect.objectContaining({ type:'tool_result', tool_use_id:'tool-atlas-1', is_error:false }));
-  expect(events.find(e=>e.type==='tool.completed')?.data).toEqual({ result: atlasCatalog });
-  expect(events.at(-1)).toMatchObject({ type:'turn.completed', data:{ status:'complete' } });
+  const events = await collect(
+    runTurn(
+      {
+        turnId: crypto.randomUUID(),
+        history: [],
+        kind: 'text',
+        text: 'What is the status of Atlas?',
+      },
+      deps(model, retrievalUrl),
+      new AbortController().signal,
+    ),
+  );
+  expect(model.inputs[1].messages.at(-1)?.content).toContainEqual(
+    expect.objectContaining({
+      type: 'tool_result',
+      tool_use_id: 'tool-atlas-1',
+      is_error: false,
+    }),
+  );
+  expect(events.find((e) => e.type === 'tool.completed')?.data).toEqual({
+    result: atlasCatalog,
+  });
+  expect(events.at(-1)).toMatchObject({
+    type: 'turn.completed',
+    data: { status: 'complete' },
+  });
 });
 ```
 
@@ -374,9 +518,16 @@ it('preserves custom tool identity and HTTP retrieval provenance', async () => {
 ```ts
 let searchRemaining = 2;
 // After each final round, validate usage/event accounting before another call.
-searchRemaining = round.searchUses === null ? 0 : Math.max(0, searchRemaining - round.searchUses);
+searchRemaining =
+  round.searchUses === null
+    ? 0
+    : Math.max(0, searchRemaining - round.searchUses);
 // Only include hosted search when enabled AND searchRemaining > 0:
-const searchTool = { type:'web_search_20250305' as const, name:'web_search', max_uses:searchRemaining };
+const searchTool = {
+  type: 'web_search_20250305' as const,
+  name: 'web_search',
+  max_uses: searchRemaining,
+};
 // Exhaustion omits that tool; never send a guessed zero-use definition.
 // Prior assistant content is retained unchanged in messages regardless of omission.
 ```
@@ -416,12 +567,20 @@ Create `apps/web/client/turn-controller.ts`, `apps/web/client/turn-stream.ts`, `
 - [ ] Implement history as pairs; only a still-current `complete` terminal event commits recognized user and final display text atomically. Drop whole oldest pairs until <=4 pairs and <=16,000 chars; omit an oversized newest pair and visibly announce context omission. Refresh clears in-memory store.
 
 ```ts
-function retainPairs(input: ReadonlyArray<readonly [HistoryMessage, HistoryMessage]>) {
-  const pairs: Array<[HistoryMessage,HistoryMessage]> = input.map(p=>[{...p[0]},{...p[1]}]);
-  const size = (p: [HistoryMessage,HistoryMessage]) => p[0].content.length+p[1].content.length;
-  if (pairs.length && size(pairs[pairs.length-1]) > 16000) return { pairs:pairs.slice(0,-1), omitted:true };
-  while (pairs.length > 4 || pairs.reduce((n,p)=>n+size(p),0)>16000) pairs.shift();
-  return { pairs, omitted:false };
+function retainPairs(
+  input: ReadonlyArray<readonly [HistoryMessage, HistoryMessage]>,
+) {
+  const pairs: Array<[HistoryMessage, HistoryMessage]> = input.map((p) => [
+    { ...p[0] },
+    { ...p[1] },
+  ]);
+  const size = (p: [HistoryMessage, HistoryMessage]) =>
+    p[0].content.length + p[1].content.length;
+  if (pairs.length && size(pairs[pairs.length - 1]) > 16000)
+    return { pairs: pairs.slice(0, -1), omitted: true };
+  while (pairs.length > 4 || pairs.reduce((n, p) => n + size(p), 0) > 16000)
+    pairs.shift();
+  return { pairs, omitted: false };
 }
 ```
 
@@ -430,8 +589,12 @@ function retainPairs(input: ReadonlyArray<readonly [HistoryMessage, HistoryMessa
 
 ```ts
 export function safeUrl(value: string): string | null {
-  try { const u=new URL(value); return u.protocol==='https:'||u.protocol==='http:' ? u.href : null; }
-  catch { return null; }
+  try {
+    const u = new URL(value);
+    return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : null;
+  } catch {
+    return null;
+  }
 }
 // Anchor: safeUrl(href) ? <a href={url} target="_blank" rel="noopener noreferrer">children</a> : <span>children</span>.
 // Source cards apply the same parser. Do not enable rehype-raw.
@@ -469,15 +632,38 @@ Create `apps/web/server/providers/deepgram.ts`, `apps/web/app/api/speech/route.t
 - [ ] Implement pinned SDK with explicit apiKey and `maxRetries:0`; call STT with WAV Blob and configured model, validate `results.channels[0].alternatives[0].transcript`, trim empty speech without Claude work. Use documented raw response inspection for TTS and content type check; do not use arrayBuffer/blob on the complete synthesis response.
 
 ```ts
-const client = new DeepgramClient({ apiKey: config.deepgramKey, maxRetries:0, fetch:fetchImpl });
-const { data, rawResponse } = await client.speak.v1.audio.generate({
-  text: input.text, model: config.ttsModel, encoding:'linear16', sample_rate:24000, container:'none'
-}, { abortSignal:signal, maxRetries:0, timeoutInSeconds:Math.max(0.001,Math.min(config.speechTimeoutMs,deadlineRemainingMs(signal))/1000) }).withRawResponse();
+const client = new DeepgramClient({
+  apiKey: config.deepgramKey,
+  maxRetries: 0,
+  fetch: fetchImpl,
+});
+const { data, rawResponse } = await client.speak.v1.audio
+  .generate(
+    {
+      text: input.text,
+      model: config.ttsModel,
+      encoding: 'linear16',
+      sample_rate: 24000,
+      container: 'none',
+    },
+    {
+      abortSignal: signal,
+      maxRetries: 0,
+      timeoutInSeconds: Math.max(
+        0.001,
+        Math.min(config.speechTimeoutMs, deadlineRemainingMs(signal)) / 1000,
+      ),
+    },
+  )
+  .withRawResponse();
 const contentType = rawResponse.headers.get('content-type') ?? '';
 if (!isExpectedPcmMime(contentType)) throw speechError;
 const stream = data.stream();
 if (!stream) throw speechError;
-return { stream, format:{ encoding:'pcm_s16le', sampleRate:24000, channels:1 } };
+return {
+  stream,
+  format: { encoding: 'pcm_s16le', sampleRate: 24000, channels: 1 },
+};
 ```
 
 `isExpectedPcmMime(value:string):boolean` is a pure helper in deepgram.ts: parse the exact case-insensitive media type `audio/l16`, reject malformed or duplicate parameter names, and reject any supplied `rate` other than `24000` or `channels` other than `1`. Absent rate/channels use the fixed requested contract; real PCM format is separately verified live. Never accept a mere prefix such as audio/l16evil. Controlled-fetch tests include contradictory rate/channel metadata, duplicate rate, malformed type, JSON and the documented valid type. `speechError` is `new AppError(502,'SPEECH_FAILED','Speech provider returned invalid audio.',input.turnId,false)`. Header inspection must use the actual `rawResponse` type from the pinned SDK; compile and test it, without coercing an incompatible header object. Import deadlineRemainingMs from Task 2. Test nondefault configured timeouts and smaller remaining turn deadlines in SDK options; fixed 20/60-second SDK values must not undercut configured bounds. Check error responses are JSON before audio starts. STT uses `listen.v1.media.transcribeFile(new Blob([wav],{type:'audio/wav'}),{model:config.sttModel},{abortSignal:signal,maxRetries:0,timeoutInSeconds:Math.max(0.001,Math.min(config.turnTimeoutMs,deadlineRemainingMs(signal))/1000)})` under the shared turn deadline.
@@ -513,9 +699,12 @@ Create `apps/web/client/voice/pcm.ts`, `apps/web/client/voice/playback.ts`, `app
 
 ```ts
 it('keeps a half sample across chunks and uses signed little endian', () => {
-  const d=new PcmDecoder();
+  const d = new PcmDecoder();
   expect([...d.push(Uint8Array.of(0))]).toEqual([]);
-  expect([...d.push(Uint8Array.of(128,255,127))]).toEqual([-1,32767/32768]);
+  expect([...d.push(Uint8Array.of(128, 255, 127))]).toEqual([
+    -1,
+    32767 / 32768,
+  ]);
   d.finish();
 });
 ```
@@ -523,9 +712,11 @@ it('keeps a half sample across chunks and uses signed little endian', () => {
 - [ ] Implement decoder with one pending byte, `DataView.getInt16(offset,true)/32768`, invalid dangling byte error. Playback retains all source handles and exact start/end times, schedules `start(max(context.currentTime+smallLead,nextEnd))`, and sums generated-but-unplayed PCM once. Pending PCM ledger entries transfer to scheduled entries; they are not removed from the outstanding total by scheduling. Completed sources prune only when actual audio-clock progress passes their ends.
 
 ```ts
-const scheduledRemaining = sources.reduce((sum,s) =>
-  sum + Math.max(0,s.end-Math.max(context.currentTime,s.start)), 0);
-const outstanding = scheduledRemaining + unscheduledSamples/24000;
+const scheduledRemaining = sources.reduce(
+  (sum, s) => sum + Math.max(0, s.end - Math.max(context.currentTime, s.start)),
+  0,
+);
+const outstanding = scheduledRemaining + unscheduledSamples / 24000;
 // Before adding samples, check outstanding + samples.length/24000 <=10.
 // Keep source handles until ended/cancel; stop every source for canceled token.
 ```
@@ -575,8 +766,12 @@ Create `apps/web/client/voice/wav.ts`, `apps/web/client/voice/vad-adapter.ts`, `
 - [ ] Write WAV tests for clipped normalized floats, extrema/little endian/header sizes/sample rate and 30-second cap. Encoder writes RIFF44 bytes+sampleCount*2 with mono PCM16/16000 and clips [-1,1]. Reject empty/excess samples on client with a visible nonfatal status, rather than sending garbage.
 
 ```ts
-const clipped=Math.max(-1,Math.min(1,sample));
-view.setInt16(44+i*2,clipped<0?Math.round(clipped*32768):Math.round(clipped*32767),true);
+const clipped = Math.max(-1, Math.min(1, sample));
+view.setInt16(
+  44 + i * 2,
+  clipped < 0 ? Math.round(clipped * 32768) : Math.round(clipped * 32767),
+  true,
+);
 // Header: RIFF length 36+2*n; WAVE/fmt(16)/PCM1/channels1/rate16000/
 // byteRate32000/blockAlign2/bits16/data length2*n.
 ```
@@ -588,15 +783,24 @@ view.setInt16(44+i*2,clipped<0?Math.round(clipped*32768):Math.round(clipped*3276
 - [ ] Implement adapter with the public API of the explicitly patched pinned package and caller-owned capture context. The adapter supplies immutable capture tokens to application callbacks: increment utteranceId at each raw start, snapshot epoch/intentVersion, then attach the same token to that utterance's real-start/misfire/end callbacks before any asynchronous work. Export `CaptureSession.invalidateIntent():void` to increment intentVersion and invalidate pending capture on typed submit/Stop/microphone mute/overlong discard. Session epoch changes on capture restart. Late callbacks carry their old snapshot and cannot acquire a new token. Use `startOnLoad:false`, `model:'v5'`, `processorType:'AudioWorklet'`, `redemptionMs:800`, `preSpeechPadMs:800`, `minSpeechMs:400`, initial thresholds .3/.25. Use pinned getStream for initial acquisition, pauseStream for the current paused stream and resumeStream for an initialized paused instance. Both acquisition hooks call adapter-owned acquireStream; never return a stopped fixed stream. Acquire explicit mono/echoCancellation/noiseSuppression/autoGainControl constraints, record every returned stream before use and stop/reject late results from an obsolete epoch. stopStream tracks stopped MediaStreamTracks in a WeakSet so pause, Stop and patched destroy stop each owned track once. Stop stops all recorded streams including failed/late acquisitions. `onSpeechRealStart` confirms during speech, never wait until `onSpeechEnd`.
 
 ```ts
-const vad=await MicVAD.new({ audioContext:captureContext, startOnLoad:false,
-  model:'v5',processorType:'AudioWorklet',baseAssetPath:'/vad/',onnxWASMBasePath:'/vad/ort/',
-  redemptionMs:800,preSpeechPadMs:800,minSpeechMs:400,
-  getStream:acquireStream,pauseStream:stopStream,resumeStream:async()=>acquireStream(),
-  onSpeechStart:()=>callbacks.rawStart(beginCapture()),
-  onSpeechRealStart:()=>callbacks.confirmedStart(currentCapture()),
-  onVADMisfire:()=>callbacks.misfire(currentCapture()),
-  onSpeechEnd:audio=>callbacks.end(currentCapture(),audio),
-  onFrameProcessed:(_probs,frame)=>callbacks.frame(frame)
+const vad = await MicVAD.new({
+  audioContext: captureContext,
+  startOnLoad: false,
+  model: 'v5',
+  processorType: 'AudioWorklet',
+  baseAssetPath: '/vad/',
+  onnxWASMBasePath: '/vad/ort/',
+  redemptionMs: 800,
+  preSpeechPadMs: 800,
+  minSpeechMs: 400,
+  getStream: acquireStream,
+  pauseStream: stopStream,
+  resumeStream: async () => acquireStream(),
+  onSpeechStart: () => callbacks.rawStart(beginCapture()),
+  onSpeechRealStart: () => callbacks.confirmedStart(currentCapture()),
+  onVADMisfire: () => callbacks.misfire(currentCapture()),
+  onSpeechEnd: (audio) => callbacks.end(currentCapture(), audio),
+  onFrameProcessed: (_probs, frame) => callbacks.frame(frame),
 });
 ```
 
@@ -639,19 +843,25 @@ Create `apps/web/client/voice/interruption.ts`, `tests/voice/interruption.test.t
 
 ```ts
 function commitCandidate(candidate: Candidate) {
-  if (candidate.phase!=='tentative'||!captureIsCurrent(candidate.capture)) return;
-  candidate.phase='confirmed';
-  const old=candidate.answerToken;
+  if (candidate.phase !== 'tentative' || !captureIsCurrent(candidate.capture))
+    return;
+  candidate.phase = 'confirmed';
+  const old = candidate.answerToken;
   if (old && controller.current(old)) {
     controller.cancelCurrent('interrupted');
-    queue.cancel(old,'interrupted');
+    queue.cancel(old, 'interrupted');
     playback.cancel(old);
     void playback.resetAfterCancel().catch(showSpeechResumeFailure);
   }
 }
 function admitEnd(candidate: Candidate, capture: CaptureToken): boolean {
-  if (candidate.phase!=='confirmed'||candidate.capture!==capture||!captureIsCurrent(capture)) return false;
-  candidate.phase='consumed'; // Consume BEFORE beginning the new answer generation.
+  if (
+    candidate.phase !== 'confirmed' ||
+    candidate.capture !== capture ||
+    !captureIsCurrent(capture)
+  )
+    return false;
+  candidate.phase = 'consumed'; // Consume BEFORE beginning the new answer generation.
   return true;
 }
 ```
@@ -720,41 +930,41 @@ node scripts/task-tracker/verify-epic-trail.mjs
 
 These are planned checks, not completed results. Cases reference the accepted spec's actual numbering.
 
-| Spec case | Owner | Automated evidence | Required live/observed evidence |
-|---|---|---|---|
-| 1 Typed lookup/IDs/invalid args | 3 | `typed-turn.test.ts` | Actual Claude Atlas custom tool/result |
-| 2 Exact fixtures/missing/malformed | 1 | `retrieval.test.ts` | Local service observable in trace |
-| 3 Split SSE/UTF-8/PCM | 3,6 | `sse.test.ts`, `pcm.test.ts` | Incremental SSE and actual TTS bytes |
-| 4 Stale turn exclusion | 4,8 | controller/interruption tests | Beacon confirmed interruption |
-| 5 Automatic VAD end | 7 | capture/WAV/browser tests | Real mic L1 without transcript action |
-| 6 Speech before model complete | 6 | fast queue/browser assertion | Correlated first-text/TTS/model-finish marks |
-| 7 Distinct failures/text survives | 3,4,5 | UI/provider/error integration | Observed live limits recorded if encountered |
-| 8 Strict Mode/Stop/unmount | 7,8 | capture/UI/browser lifecycle | L8 tracks/audio/requests stopped |
-| 9 Origin/Host/pre-body | 2,5 | admission/speech endpoint spies | Local HTTP checks use explicit valid headers |
-| 10 Backpressure/oversize/stall | 6 | PCM ledger/queue/watchdog | L4 real voice segment durations/backlog |
-| 11 Shared search/pause budget | 3 | search-budget tests/fallback | L6 omitted-tool unchanged-block continuation including pause |
-| 12 Misfire/confirmation/latency | 8 | slow lookup/late result/race tests | L3 callback/confirmation/acoustic method |
-| 13 Search states/no replay | 3 | support/rejection/capability tests | Account success or explicit unavailable + search-off lookup |
-| 14 Whole completed history | 4 | history tests incl oversize pair | L2 follow-up, complete text survives speech stop |
-| 15 Real concurrency/safe links | 2,4,8 | lease/rapid interruption/link tests | Deliberate Busy recovery; no automatic retries |
+| Spec case                          | Owner | Automated evidence                  | Required live/observed evidence                              |
+| ---------------------------------- | ----- | ----------------------------------- | ------------------------------------------------------------ |
+| 1 Typed lookup/IDs/invalid args    | 3     | `typed-turn.test.ts`                | Actual Claude Atlas custom tool/result                       |
+| 2 Exact fixtures/missing/malformed | 1     | `retrieval.test.ts`                 | Local service observable in trace                            |
+| 3 Split SSE/UTF-8/PCM              | 3,6   | `sse.test.ts`, `pcm.test.ts`        | Incremental SSE and actual TTS bytes                         |
+| 4 Stale turn exclusion             | 4,8   | controller/interruption tests       | Beacon confirmed interruption                                |
+| 5 Automatic VAD end                | 7     | capture/WAV/browser tests           | Real mic L1 without transcript action                        |
+| 6 Speech before model complete     | 6     | fast queue/browser assertion        | Correlated first-text/TTS/model-finish marks                 |
+| 7 Distinct failures/text survives  | 3,4,5 | UI/provider/error integration       | Observed live limits recorded if encountered                 |
+| 8 Strict Mode/Stop/unmount         | 7,8   | capture/UI/browser lifecycle        | L8 tracks/audio/requests stopped                             |
+| 9 Origin/Host/pre-body             | 2,5   | admission/speech endpoint spies     | Local HTTP checks use explicit valid headers                 |
+| 10 Backpressure/oversize/stall     | 6     | PCM ledger/queue/watchdog           | L4 real voice segment durations/backlog                      |
+| 11 Shared search/pause budget      | 3     | search-budget tests/fallback        | L6 omitted-tool unchanged-block continuation including pause |
+| 12 Misfire/confirmation/latency    | 8     | slow lookup/late result/race tests  | L3 callback/confirmation/acoustic method                     |
+| 13 Search states/no replay         | 3     | support/rejection/capability tests  | Account success or explicit unavailable + search-off lookup  |
+| 14 Whole completed history         | 4     | history tests incl oversize pair    | L2 follow-up, complete text survives speech stop             |
+| 15 Real concurrency/safe links     | 2,4,8 | lease/rapid interruption/link tests | Deliberate Busy recovery; no automatic retries               |
 
 ## Verification command ownership and honest completion
 
-| Epic VC | Command | Delivered by | Actual purpose and completion rule |
-|---|---|---|---|
-| 1 | `npm run test:integration` | 1 runner,3/5 suites | Real local Fastify HTTP plus scripted provider integration; no live-provider claim |
-| 2 | `npm run test:contracts` | 1 runner,2/3/4/5/7 suites | Admission/body/WAV/history/search/schema/SSE/provider boundary tests |
-| 3 | `npm run test:voice` | 1 runner,6/7/8 suites | Deterministic PCM/queue/VAD-controller/interruption checks |
-| 4 | `npm run test:browser` | 4 config,4/7/8 suites | Desktop Chromium mock lifecycle/render/stream/audio behaviors; labels mock |
-| 5 | `npm run typecheck` | 1 | Both workspace source and tests typecheck; no server modules in client imports |
-| 6 | `npm run build` | 1 | Both pinned apps compile, VAD assets regenerate, no provider call during build |
-| 7 | `npm run verify:live` | 9 | Read-only complete current actual live evidence; fail/unverified stays nonzero |
-| 8 | `npm run verify:docs` | 9 | Real code links/setup/commands/spec provenance and limitations |
-| 9 | `npm test` | 1/4/9 | UI/script unit tests, explicit nonempty selection |
-| 10 | `npm run test:slow` | 1/2/3/6/8 | Bounded offline deadline/settlement/watchdog/disconnect tests |
-| 11 | `npm run lint` | 1 | Explicit ESLint apps/tests/scripts, zero warnings |
-| 12 | `npm run format:check` | 1/9 | Current owned source/docs; sealed history excluded from rewriting |
-| 13 | `node scripts/task-tracker/verify-epic-trail.mjs` | 1 wrapper,9 final run | Genuine package verifier, active root issue binding and actual integrated child commits |
+| Epic VC | Command                                           | Delivered by              | Actual purpose and completion rule                                                      |
+| ------- | ------------------------------------------------- | ------------------------- | --------------------------------------------------------------------------------------- |
+| 1       | `npm run test:integration`                        | 1 runner,3/5 suites       | Real local Fastify HTTP plus scripted provider integration; no live-provider claim      |
+| 2       | `npm run test:contracts`                          | 1 runner,2/3/4/5/7 suites | Admission/body/WAV/history/search/schema/SSE/provider boundary tests                    |
+| 3       | `npm run test:voice`                              | 1 runner,6/7/8 suites     | Deterministic PCM/queue/VAD-controller/interruption checks                              |
+| 4       | `npm run test:browser`                            | 4 config,4/7/8 suites     | Desktop Chromium mock lifecycle/render/stream/audio behaviors; labels mock              |
+| 5       | `npm run typecheck`                               | 1                         | Both workspace source and tests typecheck; no server modules in client imports          |
+| 6       | `npm run build`                                   | 1                         | Both pinned apps compile, VAD assets regenerate, no provider call during build          |
+| 7       | `npm run verify:live`                             | 9                         | Read-only complete current actual live evidence; fail/unverified stays nonzero          |
+| 8       | `npm run verify:docs`                             | 9                         | Real code links/setup/commands/spec provenance and limitations                          |
+| 9       | `npm test`                                        | 1/4/9                     | UI/script unit tests, explicit nonempty selection                                       |
+| 10      | `npm run test:slow`                               | 1/2/3/6/8                 | Bounded offline deadline/settlement/watchdog/disconnect tests                           |
+| 11      | `npm run lint`                                    | 1                         | Explicit ESLint apps/tests/scripts, zero warnings                                       |
+| 12      | `npm run format:check`                            | 1/9                       | Current owned source/docs; sealed history excluded from rewriting                       |
+| 13      | `node scripts/task-tracker/verify-epic-trail.mjs` | 1 wrapper,9 final run     | Genuine package verifier, active root issue binding and actual integrated child commits |
 
 All root commands are defined by implementation Tasks 1 and 9; no absent script is waived or disguised as a pass. Final epic verifier needs the governed children created after plan review and their commits integrated, and fails without them. The task owner records execution results at Test; unchecked planning checkboxes are not evidence. No reviewer acceptance, live-provider success or production assurance is claimed in this draft.
 

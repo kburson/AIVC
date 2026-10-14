@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/39c18e086ea832fc3214431575a1161742f374d6/docs/peer-reviews/code/14-capture-module/round-2.md) and its exact bytes remain available in the [integration evidence archive](../../../quality-evidence/2026-10-14-25-integration-originals.json).
+> Original SHA-256: `c80947f6354abba5ce42a9eff1ca1d1562a6585e5392dbef3ebdeeb398657bb0`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Independent capture module review, round 2
 
 **Specification: PASS. Code quality: Approved.** No remaining critical, important or minor findings at source `69a25678acd864f5a5db1c84dad52825b5b30d1a`. R1 is resolved.
@@ -27,13 +31,22 @@ The change introduces no new dependency between initialization and disposal prom
 The reviewer executed the original round-1 reproduction code block unchanged against the repaired modules. The actual adapter/session result was:
 
 ```json
-{"outcomes":["fulfilled","rejected"],"statuses":["CAPTURE_CLEANUP_FAILED","CAPTURE_CLEANUP_FAILED"],"trackStops":1,"contextCloses":1,"releaseCalls":1}
+{
+  "outcomes": ["fulfilled", "rejected"],
+  "statuses": ["CAPTURE_CLEANUP_FAILED", "CAPTURE_CLEANUP_FAILED"],
+  "trackStops": 1,
+  "contextCloses": 1,
+  "releaseCalls": 1
+}
 ```
 
 The direct actual MicVAD result was:
 
 ```json
-[{"status":"rejected","error":"late pause failed"},{"status":"rejected","error":"MicVAD cleanup failed"}]
+[
+  { "status": "rejected", "error": "late pause failed" },
+  { "status": "rejected", "error": "MicVAD cleanup failed" }
+]
 ```
 
 Stop and destroy now reject rather than conceal failure. Existing duplicate status propagation at shutdown and final Stop is explicit; the contract requires visible cleanup failure, not an exact status-callback count.

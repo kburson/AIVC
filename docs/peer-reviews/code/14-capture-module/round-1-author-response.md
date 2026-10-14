@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/39c18e086ea832fc3214431575a1161742f374d6/docs/peer-reviews/code/14-capture-module/round-1-author-response.md) and its exact bytes remain available in the [integration evidence archive](../../../quality-evidence/2026-10-14-25-integration-originals.json).
+> Original SHA-256: `ad8c5f3b646dccf6252939b30b2972700b5ebf10eaf99b1e5b544ca8002b6cca`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Round 1 author response: late cleanup outcomes
 
 [R1](round-1.md#important-finding-r1-preserve-late-cleanup-failure-outcomes) is reproduced and repaired within the accepted issue #14 scope. This is the author's response; independent re-review and integration remain pending.
@@ -22,13 +26,22 @@ The minimal outcome-retention changes made all seven pass. Three additional char
 The published [round-1 reproduction](round-1-reproduction.md) was executed unchanged from its code block against the repaired actual modules. Observed:
 
 ```json
-{"outcomes":["fulfilled","rejected"],"statuses":["CAPTURE_CLEANUP_FAILED","CAPTURE_CLEANUP_FAILED"],"trackStops":1,"contextCloses":1,"releaseCalls":1}
+{
+  "outcomes": ["fulfilled", "rejected"],
+  "statuses": ["CAPTURE_CLEANUP_FAILED", "CAPTURE_CLEANUP_FAILED"],
+  "trackStops": 1,
+  "contextCloses": 1,
+  "releaseCalls": 1
+}
 ```
 
 These are start and Stop outcomes. The existing status propagation reports cleanup failure at shutdown and final Stop. The separate actual MicVAD outcomes are:
 
 ```json
-[{"status":"rejected","error":"late pause failed"},{"status":"rejected","error":"MicVAD cleanup failed"}]
+[
+  { "status": "rejected", "error": "late pause failed" },
+  { "status": "rejected", "error": "MicVAD cleanup failed" }
+]
 ```
 
 These are start and destroy. Repeated destroy retains the rejection without another release. Controlled browser-node/model/ORT factories exercise the actual pinned module; no physical microphone or real model inference is claimed.
