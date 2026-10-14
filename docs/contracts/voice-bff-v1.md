@@ -64,7 +64,7 @@ decodeSse incrementally handles arbitrary UTF-8 byte splits, LF/CRLF, comments, 
 - INVALID_STREAM: malformed terminated JSON, valid JSON with invalid schema/order/sequence at terminated or unterminated EOF, mismatched event label, concurrent/unpaired lookup, mixed UUID, duplicate acceptance, post-terminal events or terminal text mismatch.
 - A syntactically complete unterminated terminal is accepted. A complete unterminated nonterminal is yielded and then disconnects. Caller AbortError is preserved, including if iterator cleanup fails. No automatic reconnect or paid replay is authorized.
 
-#6 maps disconnect to Connection ended before the answer completed. and invalid protocol to The server sent an invalid response.; it preserves partial visible text, excludes history and permits deliberate new-question recovery.
+\#6 maps disconnect to Connection ended before the answer completed. and invalid protocol to The server sent an invalid response.; it preserves partial visible text, excludes history and permits deliberate new-question recovery.
 
 ## Errors and normative simulation
 

@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/xpr/node26-parallel-amendment/2026-10-13-2026-10-13-2-node26-parallel-execution-amendment-review-5ef82914582f28301f7a3be322541e48-author-response-1.md) and its exact bytes remain available in the [evidence archive](../../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `924301b0f65b4533f8528a5c4101a0afd04198e9482bb649b088aa36e0db2d0a`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:f81da1894a46ceb20866070833b4e99ef536ef633542b418783d29e6a981dbd8" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-5ef82914582f28301f7a3be322541e48"
-role: "author"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-5ef82914582f28301f7a3be322541e48'
+role: 'author'
 turn: 1
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-13-2-node26-parallel-execution-amendment.md"
-artifact_commit: "b7d49407b2464325d6c9d11c4d624c4089aea206"
-artifact_blob: "2f8ec3614a1ea4fea4e2904a984ac0589f474d81"
-artifact_digest: "sha256:180474128b9d15289f06d0279961812020e3faa8025cb6edbf008566d494a04a"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-13-2-node26-parallel-execution-amendment.md'
+artifact_commit: 'b7d49407b2464325d6c9d11c4d624c4089aea206'
+artifact_blob: '2f8ec3614a1ea4fea4e2904a984ac0589f474d81'
+artifact_digest: 'sha256:180474128b9d15289f06d0279961812020e3faa8025cb6edbf008566d494a04a'
 agent:
-  host: "codex"
-  provider: "openai"
-  model_id: "gpt-6.1-sol"
-  model_display: "gpt-6.1-sol"
-  session_fingerprint: "sha256:48daf6ba8b2a5f061e5b9a3cf267a2f0de1f0f3a80cf29b2774ae19f87408a30"
-  identity_source: "runtime"
-started_at: "2026-10-13T12:11:14.297Z"
-submitted_at: "2026-10-13T12:22:39.633Z"
+  host: 'codex'
+  provider: 'openai'
+  model_id: 'gpt-6.1-sol'
+  model_display: 'gpt-6.1-sol'
+  session_fingerprint: 'sha256:48daf6ba8b2a5f061e5b9a3cf267a2f0de1f0f3a80cf29b2774ae19f87408a30'
+  identity_source: 'runtime'
+started_at: '2026-10-13T12:11:14.297Z'
+submitted_at: '2026-10-13T12:22:39.633Z'
 finding_ids: []
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 

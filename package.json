@@ -29,7 +29,7 @@
     "test:voice": "node scripts/run-tests.mjs voice",
     "test:browser": "playwright test",
     "test:slow": "node scripts/run-tests.mjs slow",
-    "lint": "eslint apps tests scripts --max-warnings=0",
+    "lint": "npm run lint:typescript && npm run lint:markdown",
     "format:check": "node scripts/format-check.mjs",
     "verify:live": "node scripts/verify-live.mjs",
     "verify:docs": "node scripts/verify-docs.mjs",
@@ -37,7 +37,13 @@
     "verify:toolchain": "node scripts/verify-toolchain.mjs",
     "preinstall": "node scripts/verify-toolchain.mjs",
     "test:unit": "node scripts/run-tests.mjs unit",
-    "postinstall": "patch-package --error-on-fail"
+    "postinstall": "patch-package --error-on-fail",
+    "lint:markdown": "node scripts/lint-markdown.mjs",
+    "lint:typescript": "eslint . --no-warn-ignored --max-warnings=0",
+    "format:write": "node scripts/format-check.mjs --write",
+    "quality:check": "node scripts/quality-check.mjs",
+    "verify:sealed-evidence": "node scripts/sealed-evidence.mjs",
+    "test:evidence": "node --test tests/scripts/evidence-archive.test.mjs"
   },
   "devDependencies": {
     "@kburson/ai-task-manager": "file:vendors/kburson-ai-task-manager-0.1.0.tgz",
@@ -48,11 +54,14 @@
     "@types/react-dom": "19.3.0",
     "eslint": "9.39.1",
     "eslint-config-next": "16.4.0",
+    "eslint-config-prettier": "10.1.8",
     "jsdom": "26.1.0",
+    "markdownlint-cli2": "0.23.3",
     "patch-package": "8.0.1",
     "prettier": "3.9.10",
     "tsx": "4.20.6",
     "typescript": "5.9.3",
+    "typescript-eslint": "8.71.2",
     "vitest": "4.0.18"
   },
   "private": true,

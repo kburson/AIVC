@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/superpowers/plans/2026-10-13-2-node26-parallel-execution-amendment.md) and its exact bytes remain available in the [evidence archive](../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `0d478dc1a1a114b63c7ebd2bf151fa7e0e5b17ed33f4410c81a06ddc098cd939`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Epic 2 execution amendment: Node 26 and parallel ownership
 
 Date: October 13, 2026. Status: submitted for focused peer review; no application implementation is authorized by this draft alone.
@@ -34,17 +38,17 @@ npm ci
 
 Task numbers are those in the accepted base plan; the hydrated child mapping is fixed below. Entry prerequisites mean predecessor deliveries reviewed and integrated on the governing branch. A task's independent work cannot claim full completion before its separately listed wiring prerequisites and all declared checks pass.
 
-| Task / child | Entry prerequisites | Additional wiring/completion prerequisites |
-|---|---|---|
-| 1 / #3 Workspace and retrieval | None | Full Task 1 deliverable and checks |
-| 2 / #4 Shared admission/contracts | Task 1 | Full Task 2 interfaces and checks |
-| 3 / #5 Claude orchestration | Task 2 | Full typed server-path integration/tests |
-| 4 / #6 Typed UI/history | Task 3 | Full typed browser/history checks |
-| 5 / #7 Deepgram adapter/voice HTTP | Task 2 for independent phase | Task 3 integrated before shared-file/audio-turn wiring; full Task 5 checks |
-| 6 / #8 Speech playback | Tasks 4 and 5 | Full speech/UI integration and checks |
-| 7 / #9 Capture/VAD | Task 2 for independent phase | Tasks 4 and 6 integrated before Conversation/controller/browser wiring; full Task 7 checks |
-| 8 / #10 Interruption | Tasks 6 and 7 fully integrated | Full interruption/browser checks |
-| 9 / #11 Evidence/tutorial | Tasks 1–8 fully integrated | Whole-branch checks, actual live evidence, documentation and epic trail |
+| Task / child                       | Entry prerequisites            | Additional wiring/completion prerequisites                                                 |
+| ---------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------ |
+| 1 / #3 Workspace and retrieval     | None                           | Full Task 1 deliverable and checks                                                         |
+| 2 / #4 Shared admission/contracts  | Task 1                         | Full Task 2 interfaces and checks                                                          |
+| 3 / #5 Claude orchestration        | Task 2                         | Full typed server-path integration/tests                                                   |
+| 4 / #6 Typed UI/history            | Task 3                         | Full typed browser/history checks                                                          |
+| 5 / #7 Deepgram adapter/voice HTTP | Task 2 for independent phase   | Task 3 integrated before shared-file/audio-turn wiring; full Task 5 checks                 |
+| 6 / #8 Speech playback             | Tasks 4 and 5                  | Full speech/UI integration and checks                                                      |
+| 7 / #9 Capture/VAD                 | Task 2 for independent phase   | Tasks 4 and 6 integrated before Conversation/controller/browser wiring; full Task 7 checks |
+| 8 / #10 Interruption               | Tasks 6 and 7 fully integrated | Full interruption/browser checks                                                           |
+| 9 / #11 Evidence/tutorial          | Tasks 1–8 fully integrated     | Whole-branch checks, actual live evidence, documentation and epic trail                    |
 
 For this schedule, the base-plan phrase “typed-path validation” before final Task 5 integration means Task 3's typed server/tool/retrieval tests; it does not require Task 4's UI to finish before server wiring. Thus Task 4 can proceed on client files while Task 5's same implementer completes server wiring after Task 3. Task 6 deliberately waits for both full Task 4 and Task 5, avoiding premature Conversation or speech-endpoint use.
 
