@@ -61,6 +61,9 @@ export function isProtectedDocument(path) {
   );
 }
 
+/**
+ * @param {{ root?: string, paths?: string[], write?: boolean, log?: (message: string) => void }} [options]
+ */
 export async function checkFormatting({
   root = workspace,
   paths,
