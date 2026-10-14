@@ -1,0 +1,196 @@
+diff --git a/node_modules/@ricky0123/vad-web/dist/real-time-vad.js b/node_modules/@ricky0123/vad-web/dist/real-time-vad.js
+index 3c23e2ab6fd7f30feb628ab97f1c5d8f1c554785..05dfffd011909970e09f4e3ce437a26fdba7c221 100644
+--- a/node_modules/@ricky0123/vad-web/dist/real-time-vad.js
++++ b/node_modules/@ricky0123/vad-web/dist/real-time-vad.js
+@@ -195,10 +195,22 @@ class MicVAD {
+             };
+         };
+         this.setErrored = (error) => {
++            if (this.initializationState === "destroyed") return;
+             this.initializationState = "errored";
+             this.errored = error;
+         };
+-        this.start = async () => {
++        this._startPromise = null;
++        this._destroyPromise = null;
++        this._frames = new Set();
++        this._stoppedStreams = new WeakSet();
++        this.stopStreamOnce = (stream) => {
++            if (!stream || this._stoppedStreams.has(stream)) return Promise.resolve();
++            this._stoppedStreams.add(stream);
++            try { return Promise.resolve(this.options.pauseStream(stream)); }
++            catch (error) { return Promise.reject(error); }
++        };
++        this._start = async () => {
++            if (this.initializationState === "destroyed") return;
+             switch (this.initializationState) {
+                 case "uninitialized": {
+                     logging_1.log.debug("initializing micVAD");
+@@ -216,6 +228,10 @@ class MicVAD {
+                         }
+                         throw error;
+                     }
++                    if (this.initializationState === "destroyed") {
++                        await this.stopStreamOnce(this._stream);
++                        return;
++                    }
+                     if (this.options.audioContext) {
+                         console.log("using custom audio context");
+                         this._audioContext = this.options.audioContext;
+@@ -251,9 +267,11 @@ class MicVAD {
+                             `Unsupported audio processor adapter type: ${this._audioProcessorAdapterType}`);
+                         }
+                     }
++                    if (this.initializationState === "destroyed") return;
+                     this._mediaStreamAudioSourceNode = new MediaStreamAudioSourceNode(this._audioContext, {
+                         mediaStream: this._stream,
+                     });
++                    if (this.initializationState === "destroyed") return;
+                     this._mediaStreamAudioSourceNode.connect(this._vadNode);
+                     logging_1.log.debug("started micVAD");
+                     this.listening = true;
+@@ -268,13 +286,18 @@ class MicVAD {
+                     if (this.listening) {
+                         return;
+                     }
+-                    this.listening = true;
+-                    this.frameProcessor.resume();
+                     const { stream, audioContext, vadNode } = this.getAudioInstances();
+                     this._stream = await this.options.resumeStream(stream);
++                    if (this.initializationState === "destroyed") {
++                        await this.stopStreamOnce(this._stream);
++                        return;
++                    }
+                     const mediaStreamAudioSourceNode = new MediaStreamAudioSourceNode(audioContext, { mediaStream: this._stream });
+                     this._mediaStreamAudioSourceNode = mediaStreamAudioSourceNode;
++                    if (this.initializationState === "destroyed") return;
+                     mediaStreamAudioSourceNode.connect(vadNode);
++                    this.listening = true;
++                    this.frameProcessor.resume();
+                     break;
+                 }
+                 case "destroyed": {
+@@ -291,38 +314,74 @@ class MicVAD {
+                 }
+             }
+         };
++        this.start = () => {
++            if (this.initializationState === "destroyed") return Promise.resolve();
++            if (this._startPromise) return this._startPromise;
++            const pending = this._start().finally(() => { this._startPromise = null; });
++            this._startPromise = pending;
++            return pending;
++        };
+         this.pause = async () => {
+             if (!this.listening) {
+                 return;
+             }
+             this.listening = false;
+             const { stream, mediaStreamAudioSourceNode } = this.getAudioInstances();
+-            await this.options.pauseStream(stream);
++            await this.stopStreamOnce(stream);
+             mediaStreamAudioSourceNode.disconnect();
+             this.frameProcessor.pause(this.handleFrameProcessorEvent);
+         };
+-        this.destroy = async () => {
+-            logging_1.log.debug("destroy called");
++        this.destroy = () => {
++            if (this._destroyPromise) return this._destroyPromise;
+             this.initializationState = "destroyed";
+-            const { vadNode } = this.getAudioInstances();
+-            if (vadNode instanceof AudioWorkletNode) {
+-                vadNode.port.postMessage(messages_1.Message.SpeechStop);
+-            }
+-            if (this.listening) {
+-                await this.pause();
+-            }
+-            await this.model.release();
+-            if (this.ownsAudioContext) {
+-                await this._audioContext?.close();
+-            }
++            this.listening = false;
++            const errors = [];
++            const stopped = Promise.resolve(this.stopStreamOnce(this._stream)).catch(error => { errors.push(error); });
++            const starting = this._startPromise;
++            this._destroyPromise = (async () => {
++                const attempt = async (fn) => { try { await fn(); } catch (error) { errors.push(error); } };
++                try {
++                    if (starting) await Promise.allSettled([starting]);
++                    await stopped;
++                    await attempt(() => this.stopStreamOnce(this._stream));
++                    await Promise.allSettled(Array.from(this._frames));
++                    await attempt(() => this.frameProcessor.pause(() => {}));
++                    const node = this._vadNode;
++                    if (node) {
++                        if ("port" in node) {
++                            node.port.onmessage = null;
++                            await attempt(() => node.port.postMessage(messages_1.Message.SpeechStop));
++                        } else {
++                            node.onaudioprocess = null;
++                        }
++                        await attempt(() => node.disconnect());
++                    }
++                    if (this._mediaStreamAudioSourceNode)
++                        await attempt(() => this._mediaStreamAudioSourceNode.disconnect());
++                } finally {
++                    await attempt(() => this.model.release());
++                    if (this.ownsAudioContext && this._audioContext)
++                        await attempt(() => this._audioContext.close());
++                }
++                this._stream = null;
++                this._vadNode = null;
++                this._mediaStreamAudioSourceNode = null;
++                if (errors.length) throw new AggregateError(errors, "MicVAD cleanup failed");
++            })();
++            return this._destroyPromise;
+         };
+         this.setOptions = (update) => {
+             this.frameProcessor.setOptions(update);
+         };
+-        this.processFrame = async (frame) => {
+-            await this.frameProcessor.process(frame, this.handleFrameProcessorEvent);
++        this.processFrame = (frame) => {
++            if (this.initializationState === "destroyed" || !this.listening) return Promise.resolve();
++            const pending = this.frameProcessor.process(frame, this.handleFrameProcessorEvent);
++            this._frames.add(pending);
++            void pending.finally(() => this._frames.delete(pending)).catch(() => {});
++            return pending;
+         };
+         this.handleFrameProcessorEvent = (ev) => {
++            if (this.initializationState === "destroyed") return;
+             switch (ev.msg) {
+                 case messages_1.Message.FrameProcessed:
+                     void this.options.onFrameProcessed(ev.probs, ev.frame);
+@@ -381,11 +440,13 @@ class MicVAD {
+             }
+             catch (e) {
+                 console.error("Error starting micVad", e);
++                try { await micVad.destroy(); } catch (cleanupError) { throw new AggregateError([e, cleanupError], "MicVAD startup and cleanup failed"); }
+                 throw e;
+             }
+         }
+         return micVad;
+     }
+ }
++MicVAD.lifecyclePatchRevision = "aivc-vad-lifecycle-v1";
+ exports.MicVAD = MicVAD;
+ //# sourceMappingURL=real-time-vad.js.map
+\ No newline at end of file
+diff --git a/node_modules/@ricky0123/vad-web/dist/real-time-vad.d.ts b/node_modules/@ricky0123/vad-web/dist/real-time-vad.d.ts
+index 4a09cf441519e3f5366eacdeaebf682309bf587a..97ec3f408602bd1e0d478c0671f3fd7bb788843b 100644
+--- a/node_modules/@ricky0123/vad-web/dist/real-time-vad.d.ts
++++ b/node_modules/@ricky0123/vad-web/dist/real-time-vad.d.ts
+@@ -39,6 +39,13 @@ export interface RealTimeVADOptions extends FrameProcessorOptions, RealTimeVADCa
+ export declare const ort: typeof ortInstance;
+ export declare const getDefaultRealTimeVADOptions: (model: "v5" | "v6" | "legacy") => RealTimeVADOptions;
+ export declare class MicVAD {
++    static readonly lifecyclePatchRevision: "aivc-vad-lifecycle-v1";
++    private _startPromise;
++    private _destroyPromise;
++    private _frames;
++    private _stoppedStreams;
++    private stopStreamOnce;
++    private _start;
+     options: RealTimeVADOptions;
+     private readonly frameProcessor;
+     private readonly model;
