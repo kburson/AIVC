@@ -1,6 +1,6 @@
 # #5 Claude orchestration
 
-Implementation has not started. Story review is pending. This draft collateral records the accepted scope and planned checks; it does not approve Plan, Develop, or a rank wave.
+Implementation is in progress after registered Plan approval and Develop entry. Story review is pending. This draft collateral records the accepted scope and planned checks; it does not approve Plan, Develop, or a rank wave.
 
 ## Governing authority
 
