@@ -77,3 +77,52 @@ it('calls native resume synchronously when no earlier operation is pending so ty
   await resumed;
   await p.dispose();
 });
+
+it('empty-context recovery waits for pending suspension and returns running before the next generation', async () => {
+  const clock = new AudioClock();
+  let release!: () => void;
+  clock.suspendGate = new Promise<void>((r) => {
+    release = r;
+  });
+  const replacement = new AudioClock();
+  replacement.state = 'suspended';
+  const playback = new Playback(
+    clock.context(),
+    () => true,
+    Promise.resolve(),
+    () => replacement.context(),
+  );
+  const pending = playback.suspend();
+  await settle();
+  let recovered = false;
+  const reset = playback.resetAfterCancel().then(() => {
+    recovered = true;
+  });
+  await settle();
+  expect(recovered).toBe(false);
+  release();
+  await pending;
+  await reset;
+  expect(playback.isRunning()).toBe(true);
+  await playback.dispose();
+});
+it('empty-context replacement resumes and rejects a native resume that never reaches running', async () => {
+  const clock = new AudioClock();
+  clock.state = 'suspended';
+  clock.resumeGate = new Promise(() => {});
+  const replacement = new AudioClock();
+  replacement.state = 'suspended';
+  replacement.resume = async () => {};
+  const playback = new Playback(
+    clock.context(),
+    () => true,
+    Promise.resolve(),
+    () => replacement.context(),
+  );
+  void playback.resume();
+  await settle();
+  await expect(playback.resetAfterCancel()).rejects.toThrow(
+    'SPEECH_RESUME_FAILED',
+  );
+  await playback.dispose();
+});

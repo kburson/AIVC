@@ -8,10 +8,11 @@ import type { Capabilities as CapabilityContract } from '../shared/contracts';
 import { validateCapabilities } from '../shared/validation';
 import { Playback } from '../client/voice/playback';
 import { SpeechQueue } from '../client/voice/speech-queue';
+import { Interruption } from '../client/voice/interruption';
+import { encodeWav } from '../client/voice/wav';
 import {
   CaptureSession,
   type CaptureReason,
-  type CaptureToken,
 } from '../client/voice/capture-session';
 import {
   acquireMicrophoneStream,
@@ -24,8 +25,7 @@ import { Details } from './Details';
 import { Capabilities } from './Capabilities';
 type CaptureRun = {
   session: CaptureSession;
-  candidate: { token: CaptureToken; confirmed: boolean } | null;
-  consumed: WeakSet<CaptureToken>;
+  interruption: Interruption;
   operation: number;
 };
 const captureReasons: Record<CaptureReason, string> = {
@@ -71,6 +71,9 @@ export default function Conversation({
   const [captureReason, setCaptureReason] = useState<CaptureReason | null>(
     null,
   );
+  const [speechRecoveryFailure, setSpeechRecoveryFailure] = useState<
+    string | null
+  >(null);
   const [muted, setMuted] = useState(false);
   const [micMuted, setMicMuted] = useState(false);
   const [captureState, setCaptureState] = useState<
@@ -151,8 +154,11 @@ export default function Conversation({
           playback,
           segmentChars: capability.speech.segmentChars,
           isCurrent: (t) => controller.current(t),
-          onStatus: (t, state, reason) =>
-            controller.setSpeech(t, state, reason),
+          onStatus: (t, state, reason) => {
+            if (state === 'failed')
+              capture.current?.interruption.outputStopped(t);
+            controller.setSpeech(t, state, reason);
+          },
         });
         output.current = { playback, queue, token };
       } else {
@@ -179,8 +185,8 @@ export default function Conversation({
     const run = capture.current;
     capture.current = null;
     if (run) {
-      run.candidate = null;
       run.session.invalidateIntent();
+      run.interruption.cancel();
     }
     controller.cancelCurrent(
       notify
@@ -214,14 +220,32 @@ export default function Conversation({
     if (!capsRef.current?.turnsAvailable || teardown.current || capture.current)
       return;
     setCaptureReason(null);
+    setSpeechRecoveryFailure(null);
     setFormError(null);
     setCaptureState('starting');
     const formerOutput = output.current;
     prepareOutput(null, true);
     const startedOutput = output.current;
     const run: CaptureRun = {
-      candidate: null,
-      consumed: new WeakSet(),
+      interruption: new Interruption({
+        controller,
+        answerToken: () => {
+          const view = controller.getSnapshot().at(-1);
+          return view && controller.current(view) ? view : null;
+        },
+        output: () => output.current,
+        captureIsCurrent: (token) => run.session.isCurrent(token),
+        isActive: () => capture.current === run,
+        onEnd: (_token, samples) => {
+          void runTurn({ wav: encodeWav(samples) });
+        },
+        showSpeechResumeFailure: () => {
+          if (mounted.current)
+            setSpeechRecoveryFailure(
+              'Speech could not resume after interruption. Answer text is retained. Try a new question.',
+            );
+        },
+      }),
       operation: 0,
       session: new CaptureSession({
         createContext: () => new AudioContext(),
@@ -230,27 +254,23 @@ export default function Conversation({
         onVadEvent: (event) => {
           if (capture.current !== run) return;
           if (event.type === 'rawStart')
-            run.candidate = { token: event.capture, confirmed: false };
-          else if (run.candidate?.token === event.capture) {
-            if (event.type === 'confirmedStart') run.candidate.confirmed = true;
-            else run.candidate = null;
-          }
+            run.interruption.rawStart(event.capture);
+          else if (event.type === 'confirmedStart')
+            run.interruption.confirmedStart(event.capture);
+          else run.interruption.misfire(event.capture);
         },
         onUtterance: (token, wav) => {
           if (
             capture.current !== run ||
             microphoneMuted.current ||
-            !run.session.isCurrent(token) ||
-            run.candidate?.token !== token ||
-            !run.candidate.confirmed ||
-            run.consumed.has(token)
+            !run.interruption.admitEnd(token)
           )
             return;
-          run.consumed.add(token);
-          run.candidate = null;
           void runTurn({ wav });
         },
         onStatus: (reason) => {
+          if (capture.current === run && reason === 'CAPTURE_OVERLONG')
+            run.interruption.cancel();
           if (
             mounted.current &&
             (capture.current === run || reason === 'CAPTURE_CLEANUP_FAILED')
@@ -274,7 +294,7 @@ export default function Conversation({
       .catch(async () => {
         if (capture.current !== run || run.operation !== 0) return;
         capture.current = null;
-        run.candidate = null;
+        run.interruption.cancel();
         if (mounted.current) setCaptureState('stopped');
         if (
           !formerOutput &&
@@ -295,8 +315,8 @@ export default function Conversation({
     const run = capture.current;
     if (!run) return;
     const operation = ++run.operation;
-    run.candidate = null;
     run.session.invalidateIntent();
+    run.interruption.cancel();
     if (next) setCaptureState('muted');
     else setCaptureState('starting');
     try {
@@ -331,6 +351,7 @@ export default function Conversation({
   ): Promise<void> {
     const capability = capsRef.current;
     if (!capability?.turnsAvailable) return;
+    setSpeechRecoveryFailure(null);
     if (output.current?.token)
       output.current.queue.cancel(output.current.token, 'TURN_INTERRUPTED');
     const token = controller.begin(),
@@ -419,7 +440,7 @@ export default function Conversation({
     }
     if (!capsRef.current?.turnsAvailable) return;
     capture.current?.session.invalidateIntent();
-    if (capture.current) capture.current.candidate = null;
+    capture.current?.interruption.cancel();
     const text = question;
     setQuestion('');
     setFormError(null);
@@ -428,8 +449,10 @@ export default function Conversation({
   function muteOutput(next: boolean): void {
     outputMuted.current = next;
     setMuted(next);
-    if (next && output.current?.token)
+    if (next && output.current?.token) {
+      capture.current?.interruption.outputStopped(output.current.token);
       output.current.queue.cancel(output.current.token, 'OUTPUT_MUTED');
+    }
     if (current)
       controller.setSpeech(
         current,
@@ -519,6 +542,7 @@ export default function Conversation({
         {status}
       </p>
       {formError && <p role="alert">{formError}</p>}
+      {speechRecoveryFailure && <p role="alert">{speechRecoveryFailure}</p>}
       {captureReason && (
         <p role={captureReason === 'CAPTURE_OVERLONG' ? undefined : 'alert'}>
           {captureReasons[captureReason]}

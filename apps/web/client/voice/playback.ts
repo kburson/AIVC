@@ -12,6 +12,7 @@ export class Playback {
   private disposed = false;
   private pendingOperations = 1;
   private operationEpoch = 0;
+  private suspension: Promise<void> | null = null;
   constructor(
     private context: AudioContext,
     private isCurrent: (token: TurnToken) => boolean,
@@ -86,7 +87,14 @@ export class Playback {
   }
   suspend(): Promise<void> {
     const context = this.context;
-    return this.serialize(() => context.suspend());
+    const operation = this.serialize(() => context.suspend());
+    this.suspension = operation;
+    void operation
+      .finally(() => {
+        if (this.suspension === operation) this.suspension = null;
+      })
+      .catch(() => {});
+    return operation;
   }
   resume(): Promise<void> {
     if (this.disposed) return Promise.resolve();
@@ -120,7 +128,9 @@ export class Playback {
   }
   async resetAfterCancel(): Promise<void> {
     if (this.disposed) return;
-    if (!this.isRunning() && this.createContext) {
+    await this.suspension?.catch(() => {});
+    if (this.disposed) return;
+    if (!this.isRunning() && this.createContext && this.pendingOperations > 0) {
       // A failed native resume may never settle. Replace the empty context;
       // late operations can affect only the closed former context.
       const former = this.context;
@@ -130,10 +140,14 @@ export class Playback {
       this.pendingOperations = 0;
       this.operations = Promise.resolve();
       void former.close().catch(() => {});
+      await this.resume();
+      if (!this.isRunning()) throw new Error('SPEECH_RESUME_FAILED');
       return;
     }
     await this.operations.catch(() => {});
     await this.resume();
+    if (!this.disposed && !this.isRunning())
+      throw new Error('SPEECH_RESUME_FAILED');
   }
   async dispose(): Promise<void> {
     if (this.disposed) return;

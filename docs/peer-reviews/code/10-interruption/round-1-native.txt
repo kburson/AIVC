@@ -1,0 +1,23 @@
+**Story #10: Spec PASS; Quality PASS for the allocated scope. No remaining actionable findings.**
+
+Reviewed exact source `e0ed8a809f723b87c5cb12da17256db88bca0e13` against base `49939084ad0ad5fccbfa1541a800e29c499430c2`, including the complete production, test, browser-harness, and documentation diff.
+
+Reviewer: requested Astra6/high seat, genuine native SID `01a13c7c-c4a4-7760-8b80-278687d46e54`, distinct from author `01a13b97-1dd5-7041-8488-0628dfb40e53`.
+
+The preliminary review identified an unbounded recovery wait when native resume never settles before another answer exists. The final source adds a two-second deadline owned by the recovery transition. Independent tests and Chromium probes confirm visible failure before utterance end, with obsolete deadlines suppressed after a new candidate or Stop.
+
+The implementation preserves confirmed capture ownership while canceling the old answer, admits one valid end, handles the synchronous CaptureSession misfire boundary, and shares consumption between sample-end and original-WAV submission paths. Cancellation, recovery, history, and mute behavior retain the required generation guards. Delivered #14 modules, frozen contracts, dependency pins, and patches are unchanged. The browser bundle is isolated under tests, built in memory, and not imported by production.
+
+Independent verification on the reviewed SHA:
+
+- `node --version; npm --version` — **26.8.1 / 12.0.2**.
+- `npx vitest run tests/voice tests/slow tests/ui tests/contracts/turn-controller.test.ts tests/contracts/leases.test.ts` — **204 tests passed across 19 files**: 136 voice, 27 slow, 18 UI, and 23 controller/lease tests. Includes story #9’s 19 capture tests, sample/WAV consumption, stale callbacks/history, and actual route admission covering canceled-but-unsettled capacity and all four upstream abort paths.
+- `PLAYWRIGHT_LAST_RUN_OUTPUT_FILE=.tmp/playwright-last-run.json npm run test:browser` — **12 tests passed**, including actual pinned VAD/ORT loading and native Beacon audio scheduling after interruption. One synthetic local sample measured approximately **0.2 ms callback-to-suspension** and **0.2 ms confirmation-to-abort**.
+- Additional Chromium probes through `node --import tsx --input-type=module` passed seven controlled scenarios: no-active-answer duplicate end; superseded delayed misfire; rejected, non-running, and never-settling recovery; and obsolete timeout suppression after new candidate or Stop.
+- Repeated all three original story #9 Chromium ownership probes. Output mute still stops typed playback; permission failure preserves adopted typed output; repeated Stop closes newly allocated output during pending capture teardown.
+
+The initial standalone probe setup required correcting how its test helper was bundled; the successful probes used an in-memory esbuild harness. This did not require product changes.
+
+Declined to judge: #11 physical microphone, speaker/headset echo, acoustic latency, and live-provider acceptance. Controlled VAD, synthetic PCM, and scripted transports do not establish those behaviors. I did not independently rerun build, typecheck, lint, format, or full contracts/integration suites; those remain author-reported verification.
+
+No tracked files or lifecycle state changed. The checkout remains clean at the reviewed SHA. Review-owned browser/server processes are stopped, and ports 3000/3001 have no listeners. This assessment supports proceeding through the required registered delivery gates.
