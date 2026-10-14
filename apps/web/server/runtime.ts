@@ -1,3 +1,8 @@
+import { ClaudeAdapter } from './providers/claude';
+import { MockAdapter } from './providers/mock';
+import type { ModelAdapter, TurnDeps } from './providers/contracts';
+import { createRetrievalClient } from './tools/retrieval-client';
+import { AppError } from './http/errors';
 import { basename, resolve } from 'node:path';
 import type { Capabilities } from '../shared/contracts';
 import { loadConfig } from './config';
@@ -32,9 +37,53 @@ export function getRuntime(): ServerRuntime {
     capabilities: createCapabilities(config, build),
     adapters: {},
     leasePools: getLeasePools(),
-    // Metadata is read only after Host admission; SDK adapter construction belongs to subsequent deliveries.
+    // Metadata is read only after Host admission; provider adapters are constructed after turn admission.
     get buildInfo() {
       return (buildInfo ??= readBuildInfo(webRoot));
     },
   });
+}
+
+export function getTurnDeps(runtime: ServerRuntime): TurnDeps {
+  if (!runtime.capabilities.turnsAvailable)
+    throw new AppError(
+      502,
+      'MODEL_FAILED',
+      'Claude turns are not configured.',
+      null,
+      false,
+    );
+  if (!runtime.adapters.model)
+    runtime.adapters.model =
+      runtime.config.mode === 'mock'
+        ? new MockAdapter()
+        : new ClaudeAdapter({
+            apiKey: runtime.config.anthropicKey!,
+            model: runtime.config.claudeModel!,
+            capabilities: runtime.capabilities,
+            searchEnabled: runtime.config.searchEnabled,
+          });
+  if (!runtime.adapters.lookup)
+    runtime.adapters.lookup = createRetrievalClient(
+      runtime.config.retrievalBaseUrl,
+    );
+  const transcribe = runtime.adapters.transcribe as
+    TurnDeps['transcribe'] | undefined;
+  return {
+    model: runtime.adapters.model as ModelAdapter,
+    lookup: runtime.adapters.lookup as TurnDeps['lookup'],
+    transcribe:
+      transcribe ??
+      (async () => {
+        throw new AppError(
+          502,
+          'STT_FAILED',
+          'Transcription is not configured.',
+          null,
+          false,
+        );
+      }),
+    mode: runtime.config.mode,
+    capabilities: runtime.capabilities,
+  };
 }

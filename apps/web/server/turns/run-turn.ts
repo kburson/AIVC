@@ -19,6 +19,7 @@ export async function* runTurn(
     attempts = 0,
     searchRemaining = 2,
     searchKnown = true;
+  const toolIds = new Set<string>();
   const usage: Usage = { inputTokens: 0, outputTokens: 0, searchUses: 0 };
   const event = <K extends keyof EventPayloads>(
     type: K,
@@ -66,7 +67,10 @@ export async function* runTurn(
           searchRemaining,
           searchEnabled:
             searchRemaining > 0 &&
-            ['configured', 'verified'].includes(deps.capabilities.search.state),
+            (['configured', 'verified'].includes(
+              deps.capabilities.search.state,
+            ) ||
+              deps.capabilities.search.accountValidation === 'pending'),
           maxTokens: 1024,
         },
         signal,
@@ -153,6 +157,19 @@ export async function* runTurn(
             input.turnId,
             false,
           );
+        const batchIds = new Set<string>();
+        for (const tool of tools) {
+          if (!tool.id || batchIds.has(tool.id) || toolIds.has(tool.id))
+            throw new AppError(
+              502,
+              'MODEL_FAILED',
+              'Provider supplied an ambiguous tool identifier.',
+              input.turnId,
+              false,
+            );
+          batchIds.add(tool.id);
+        }
+        for (const id of batchIds) toolIds.add(id);
         if (tools.length > 4 - attempts) {
           yield delta('\n\n[Answer truncated: custom tool limit reached.]');
           yield completed('truncated');

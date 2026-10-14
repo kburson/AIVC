@@ -546,3 +546,80 @@ it('pre-aborted SDK request makes no model or metadata HTTP call', async () => {
   expect(t.modelCalls()).toBe(0);
   expect(t.requests).toHaveLength(0);
 });
+
+it('initial pending capability is resolved before enabling hosted search on the first admitted turn', async () => {
+  const t = transport([
+    nativeRound({
+      text: 'Answer',
+      blocks: [search(), result()],
+      nativeSearch: 1,
+    }).message,
+  ]);
+  const c = caps();
+  const d = deps(sdk(t, c), 'http://127.0.0.1:1');
+  d.capabilities = c;
+  const out = await collect(
+    runTurn(
+      {
+        kind: 'text',
+        turnId: crypto.randomUUID(),
+        history: [],
+        text: 'Research',
+      },
+      d,
+      new AbortController().signal,
+    ),
+  );
+  expect(t.requests[0].tools).toContainEqual({
+    type: 'web_search_20250305',
+    name: 'web_search',
+    max_uses: 2,
+  });
+  expect(out.at(-1)).toMatchObject({
+    type: 'turn.completed',
+    data: { status: 'complete' },
+  });
+});
+
+it('concurrent rounds wait for their own confirmed model support before any Messages call', async () => {
+  let release!: () => void;
+  const gate = new Promise<void>((r) => {
+    release = r;
+  });
+  const t = transport(
+    [
+      nativeRound({ text: 'One' }).message,
+      nativeRound({ text: 'Two' }).message,
+    ],
+    false,
+  );
+  let checks = 0;
+  const fetcher: typeof fetch = async (url, init) => {
+    if (String(url).includes('/models/')) {
+      checks++;
+      await gate;
+    }
+    return t.fake(url, init);
+  };
+  const adapter = new ClaudeAdapter({
+    apiKey: 'offline-test-key',
+    model: 'offline',
+    capabilities: caps(),
+    searchEnabled: true,
+    fetch: fetcher,
+  });
+  const calls = [
+    collect(adapter.runRound(modelInput(), new AbortController().signal)),
+    collect(adapter.runRound(modelInput(), new AbortController().signal)),
+  ];
+  await new Promise<void>((r) => setImmediate(r));
+  expect(t.requests).toHaveLength(0);
+  release();
+  await Promise.all(calls);
+  expect(checks).toBeGreaterThan(0);
+  expect(
+    t.requests.every((r) =>
+      r.tools.every((tool) => tool.name !== 'web_search'),
+    ),
+  ).toBe(true);
+});

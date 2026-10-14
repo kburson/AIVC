@@ -4,7 +4,7 @@
 
 The initial callable skeleton failed all 15 behavioral assertions; the real producer implementation then passed all 15 tests in `tests/integration/typed-turn.test.ts`. This proves real Fastify HTTP retrieval, exact native tool results, normalized producer codec/fixture conformance, budgets, native pause continuation, visible stop failures, and literal text/citation handling. Usage in the fixture is scripted simulation, not paid-provider evidence.
 
-`npm run typecheck` currently fails in the inherited `tests/scripts/quality-scans.test.ts` at lines 85, 100, 106, 111 and 117: the imported formatter options type does not declare `paths`. No #5 file was named in this typecheck output. The upstream owner was notified; this is an unresolved failure, not a passing receipt.
+`npm run typecheck` currently fails in the inherited `tests/scripts/quality-scans.test.ts` at lines 85, 100, 106, 111 and 117: the imported formatter options type does not declare `paths`. No #5 file was named in this typecheck output. This was reported to the epic orchestrator; this is an unresolved failure, not a passing receipt.
 
 Whole #5 SDK/search, endpoint/settlement, full verification, independent review, merge and Close remain pending. The cloud draft PR does not claim completion.
 
@@ -15,3 +15,11 @@ Official Anthropic SDK 0.133.0 is exercised through controlled offline HTTP resp
 The combined producer/search/SSE/quality-tool tests pass: 87 tests in four files. `npm run typecheck` now passes both workspaces. Root authorized `scripts/format-check.d.mts` as an exclusive narrow #5 integration bridge: the runtime already accepts paths, while allowJs inferred an options type that omitted it. The declaration reflects inspected exported APIs, preserves the evidence-verifier reexport, and changes no #25 behavior, tests, exclusions or pins. Cost if wrong: declaration/runtime drift. Independent review must check this ruling.
 
 Endpoint, cancellation settlement, complete lanes and independent review remain pending.
+
+## Endpoint and settlement checkpoint
+
+The actual typed turn endpoint now wires admitted counted parsing, lazy provider construction, turn leases and incremental SSE. Nine endpoint/settlement tests pass, including real Fastify HTTP with the production Mock adapter, first delta before delayed native settlement, request abort, reader cancel, and deadline failure. The ignored-upstream tests retain occupied slots until the producer settles, reject concurrent admission while those slots remain held, and allow recovery afterward. No runTurn stub or provider replay is used.
+
+The full integration build initially found TypeScript errors in the new slow-test environment and deferred-gate helper types. Those test types were corrected without exclusions or suppression. Typecheck and lint now pass. The focused producer/search/disconnect tests pass 58 assertions. New failing tests caught duplicate native tool identifiers dispatching HTTP twice, first-turn pending capability suppressing confirmed search, and concurrent metadata checks admitting Messages before support confirmation. All three now pass after the corresponding producer/adapter repairs.
+
+Full available lanes, browser regression, clean production verification, independent review and cloud merge remain pending at this checkpoint.

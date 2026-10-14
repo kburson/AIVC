@@ -95,7 +95,6 @@ export class ClaudeAdapter implements ModelAdapter {
       return;
     }
     if (this.checked) return;
-    this.checked = true;
     try {
       const model = await this.client.models.retrieve(
         this.options.model,
@@ -105,6 +104,8 @@ export class ClaudeAdapter implements ModelAdapter {
           timeout: Math.max(1, Math.min(60000, deadlineRemainingMs(signal))),
         },
       );
+      if (this.checked) return;
+      this.checked = true;
       if (model.capabilities?.server_tools?.web_search?.supported === true)
         this.options.capabilities.search = {
           state: 'configured',
@@ -117,7 +118,10 @@ export class ClaudeAdapter implements ModelAdapter {
         );
     } catch {
       if (signal.aborted) throw signal.reason;
-      this.unavailable('Hosted search model support could not be verified.');
+      if (!this.checked) {
+        this.checked = true;
+        this.unavailable('Hosted search model support could not be verified.');
+      }
     }
   }
   async *runRound(

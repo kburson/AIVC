@@ -222,3 +222,114 @@ it('retains several citation snapshots and joins text blocks without separators 
   expect(out.at(-1)).toMatchObject({ data: { text: 'OneTwo' } });
   expect(out.filter((e) => e.type === 'sources')).toHaveLength(2);
 });
+
+it('validates malformed actual HTTP retrieval responses and emits no catalog fallback', async () => {
+  const app = createRetrievalApp();
+  app.addHook('onSend', async () =>
+    JSON.stringify({
+      schemaVersion: 1,
+      source: 'synthetic-project-catalog',
+      records: [],
+      unexpected: true,
+    }),
+  );
+  const url = await app.listen({ host: '127.0.0.1', port: 0 });
+  cleanup.push(() => app.close());
+  const model = new ScriptedModel([
+    round({ stop: 'tool_use', tools: [tool()] }),
+  ]);
+  const out = await collect(
+    runTurn(input(), deps(model, url), new AbortController().signal),
+  );
+  assertTurnSequence(out);
+  expect(out.at(-1)).toMatchObject({
+    type: 'turn.failed',
+    data: { code: 'RETRIEVAL_UNAVAILABLE' },
+  });
+  expect(out.some((e) => e.type === 'tool.completed')).toBe(false);
+  expect(model.inputs).toHaveLength(1);
+});
+it('tool names cannot select a different origin or inject extra query fields', async () => {
+  const app = createRetrievalApp();
+  const seen: string[] = [];
+  app.addHook('onRequest', async (req) => {
+    seen.push(req.raw.url ?? '');
+  });
+  const url = await app.listen({ host: '127.0.0.1', port: 0 });
+  cleanup.push(() => app.close());
+  const lookup = createRetrievalClient(url);
+  const catalog = await lookup(
+    'Atlas&name=Boreal',
+    new AbortController().signal,
+  );
+  expect(seen).toEqual(['/v1/projects?name=Atlas%26name%3DBoreal']);
+  expect(catalog.records).toEqual([]);
+  expect(() => createRetrievalClient('https://evil.test')).toThrow('loopback');
+});
+it('refuses ambiguous duplicate native tool IDs before any retrieval dispatch', async () => {
+  const model = new ScriptedModel([
+    round({ stop: 'tool_use', tools: [tool('same'), tool('same')] }),
+  ]);
+  const d = deps(model, await service());
+  let calls = 0;
+  d.lookup = async () => {
+    calls++;
+    return atlasCatalog;
+  };
+  const out = await collect(runTurn(input(), d, new AbortController().signal));
+  expect(calls).toBe(0);
+  expect(out.at(-1)).toMatchObject({
+    type: 'turn.failed',
+    data: { code: 'MODEL_FAILED' },
+  });
+});
+it('empty transcription makes no model call and yields history-ineligible no-speech', async () => {
+  const model = new ScriptedModel([]);
+  const d = deps(model, 'http://127.0.0.1:1');
+  let transcribed = 0;
+  d.transcribe = async () => {
+    transcribed++;
+    return '  ';
+  };
+  const out = await collect(
+    runTurn(
+      {
+        kind: 'audio',
+        wav: new Uint8Array(),
+        turnId: crypto.randomUUID(),
+        history: [],
+      },
+      d,
+      new AbortController().signal,
+    ),
+  );
+  assertTurnSequence(out);
+  expect(out.at(-1)).toMatchObject({ data: { status: 'no-speech', text: '' } });
+  expect(model.inputs).toHaveLength(0);
+  expect(transcribed).toBe(1);
+});
+it('transcription seam emits one transcript before model work with exact native question', async () => {
+  const model = new ScriptedModel([round({ text: 'Answer' })]);
+  const d = deps(model, 'http://127.0.0.1:1');
+  d.transcribe = async () => 'Spoken question';
+  const out = await collect(
+    runTurn(
+      {
+        kind: 'audio',
+        wav: new Uint8Array(),
+        turnId: crypto.randomUUID(),
+        history: [],
+      },
+      d,
+      new AbortController().signal,
+    ),
+  );
+  assertTurnSequence(out);
+  expect(out.filter((e) => e.type === 'transcript.final')).toEqual([
+    expect.objectContaining({ data: { text: 'Spoken question' } }),
+  ]);
+  expect(model.inputs[0].messages.at(-1)).toEqual({
+    role: 'user',
+    content: 'Spoken question',
+  });
+});
