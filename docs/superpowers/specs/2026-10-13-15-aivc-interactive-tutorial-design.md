@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/89fc7a6125cd4b2be6f0f338dea928bd81bcea45/docs/superpowers/specs/2026-10-13-15-aivc-interactive-tutorial-design.md) and its exact bytes remain available in the [tutorial evidence archive](../../quality-evidence/2026-10-14-25-tutorial-originals.json).
+> Original SHA-256: `21003d5aa659a206c04fe8508423376eff4a45658afd4e0b4f2b00522d0303b9`. Review acceptance and protocol hashes apply to those original bytes.
+
 # AIVC interactive tutorial design
 
 Date: October 13, 2026.
@@ -80,7 +84,6 @@ flowchart TB
 
 The reference client calls its BFF; the BFF orchestrates Claude, Deepgram, and the domain API as separate dependencies. The Fastify domain service owns synthetic project lookup. It is not a gateway through which all provider calls must pass. Node.js is the runtime, Fastify and Next.js provide server framework capabilities, React provides the UI model, and TypeScript expresses contracts.
 
-
 ### Monorepo integration contract
 
 The reference workspaces are planned by epic #2; their accepted integration is a prerequisite for tutorial workspace wiring. Register apps/tutorial and packages/tutorial-* in the same root npm workspace/lockfile. Use the reference application's exact React, Next.js, TypeScript and shared runtime/type pins unless a separately reviewed compatibility exception is accepted. New tutorial dependencies are exact-pinned and do not silently upgrade reference direct dependencies.
@@ -97,7 +100,7 @@ A module exposes Overview, How it works, Code, Decisions, and Try it. Learners c
 
 Use stable module and concept IDs. Persist local progress by course edition and module ID in browser storage. Separate viewed, exercise attempted, self-confirmed completion, and live lab verification; viewing an animation is not proof of technical mastery. Changing paths preserves progress. New course editions identify changed modules and let learners revisit them. Offer explicit export/import and reset of progress using a versioned JSON contract. Keep API keys, tutor transcripts, and sensitive lab payloads out of progress exports.
 
-Progress is scoped to the tutorial browser origin, not shared automatically between localhost, 127.0.0.1 or ports. Setup/start commands open the canonical http://localhost:3002 URL (or its explicitly configured canonical custom-port origin, validated against the allowlist). An admitted alternate origin displays a per-origin progress notice and a link to the canonical URL; export/import supports an intentional move. Changing audience/learning paths within the same origin preserves progress.
+Progress is scoped to the tutorial browser origin, not shared automatically between localhost, 127.0.0.1 or ports. Setup/start commands open the canonical <http://localhost:3002> URL (or its explicitly configured canonical custom-port origin, validated against the allowlist). An admitted alternate origin displays a per-origin progress notice and a link to the canonical URL; export/import supports an intentional move. Changing audience/learning paths within the same origin preserves progress.
 
 A typical lesson follows: watch the interaction, inspect a boundary, predict a result, run a simulation, ask the tutor, examine the decision matrix, and optionally perform a lab. Short chapters make a substantial course navigable; the first edition is project-focused rather than an exhaustive replacement for vendor documentation.
 
@@ -105,16 +108,16 @@ Each lesson manifest defines its ID/edition, outcomes, audience/depth tags, prer
 
 ## Curriculum
 
-| Module | Core concepts and depth | Simulation / optional lab |
-|---|---|---|
-| 1. Architecture in motion | Follow a typed or spoken question; separate UI, orchestration, domain ownership, and external capabilities | Assemble the Atlas request path; inspect its live local HTTP boundaries |
-| 2. React | JSX/components, props/state, rendering and reconciliation, hooks/effects, refs, cleanup, asynchronous ownership; browser capture/playback in context | Cause a stale response and inspect generation handling; make a small UI/state change |
-| 3. Next.js | App Router, layouts, server/client components, hydration, Route Handlers, Node runtime, server-only configuration, BFF normalization and streaming | Trace transport validation into server modules; inspect capabilities and a typed turn |
-| 4. Node.js and Fastify | Runtime/event loop and async I/O, routing, request lifecycle, plugins/encapsulation, schemas, serialization, domain service separation, HTTP tests | Validate a lookup; explore missing/invalid inputs; extend a synthetic record in a lab branch |
-| 5. Anthropic API | API credentials/model configuration, Messages/context, streaming events, tool schemas/IDs/results, continuation, stop reasons, usage and budgets | Act as the tool dispatcher; inspect raw HTTP, then the SDK and AIVC adapter |
-| 6. Deepgram API | Prerecorded transcription versus live STT, synthesis, WAV versus raw PCM, sample rate/channels, SDK streaming, playback/backpressure | Transcribe a provided sample; synthesize short text; connect byte output to browser playback |
-| 7. Reliability | Deadlines, errors, cancellation propagation, tentative/confirmed interruption, stale callbacks, history, concurrency, latency observations | Interrupt the timeline; inject unavailable-domain, slow-provider, and failed-speech outcomes |
-| 8. Delivery and alternatives | TypeScript contracts/runtime validation, npm workspaces, environment config, test boundaries, builds/CI, provenance, evolving architecture | Reproduce an offline check and compare a changed boundary with its existing contract |
+| Module                       | Core concepts and depth                                                                                                                              | Simulation / optional lab                                                                    |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| 1. Architecture in motion    | Follow a typed or spoken question; separate UI, orchestration, domain ownership, and external capabilities                                           | Assemble the Atlas request path; inspect its live local HTTP boundaries                      |
+| 2. React                     | JSX/components, props/state, rendering and reconciliation, hooks/effects, refs, cleanup, asynchronous ownership; browser capture/playback in context | Cause a stale response and inspect generation handling; make a small UI/state change         |
+| 3. Next.js                   | App Router, layouts, server/client components, hydration, Route Handlers, Node runtime, server-only configuration, BFF normalization and streaming   | Trace transport validation into server modules; inspect capabilities and a typed turn        |
+| 4. Node.js and Fastify       | Runtime/event loop and async I/O, routing, request lifecycle, plugins/encapsulation, schemas, serialization, domain service separation, HTTP tests   | Validate a lookup; explore missing/invalid inputs; extend a synthetic record in a lab branch |
+| 5. Anthropic API             | API credentials/model configuration, Messages/context, streaming events, tool schemas/IDs/results, continuation, stop reasons, usage and budgets     | Act as the tool dispatcher; inspect raw HTTP, then the SDK and AIVC adapter                  |
+| 6. Deepgram API              | Prerecorded transcription versus live STT, synthesis, WAV versus raw PCM, sample rate/channels, SDK streaming, playback/backpressure                 | Transcribe a provided sample; synthesize short text; connect byte output to browser playback |
+| 7. Reliability               | Deadlines, errors, cancellation propagation, tentative/confirmed interruption, stale callbacks, history, concurrency, latency observations           | Interrupt the timeline; inject unavailable-domain, slow-provider, and failed-speech outcomes |
+| 8. Delivery and alternatives | TypeScript contracts/runtime validation, npm workspaces, environment config, test boundaries, builds/CI, provenance, evolving architecture           | Reproduce an offline check and compare a changed boundary with its existing contract         |
 
 Postman orientation and HTTP/SSE/audio refreshers are cross-referenced supporting units. Familiar JavaScript syntax is not re-taught as a prerequisite. Each module includes product consequences, implementation evidence, architectural rationale, and a link to the appropriate official documentation.
 
@@ -122,16 +125,16 @@ Postman orientation and HTTP/SSE/audio refreshers are cross-referenced supportin
 
 Each matrix records the requirement, candidate choices, criteria, selected choice, benefits, liabilities, evidence, and conditions that would change the decision. Separate historical documented reasons, constraints inferred from implementation, and new tutorial analysis. Avoid invented benchmark results or numerical scores presented as measured evidence. If weighted scoring is later added, expose the owner-selected weights and assumptions.
 
-| Boundary / choice | Criteria that support the AIVC choice | Alternatives and conditions favoring them |
-|---|---|---|
-| React client | Interactive state, composable UI, browser resource lifecycle, reference learning goal, integration with Next.js | Vue/Svelte or simpler browser code where team skills, UI scope, or delivery constraints differ |
-| Next.js BFF | Same-origin browser API, server-owned secrets, React integration, thin transport handlers, normalized provider/domain responses | Standalone Fastify/Express BFF for independently deployed clients; Next.js-only domain logic when a separate domain boundary adds insufficient value |
-| Node.js runtime + TypeScript | Shared language/contracts, asynchronous network work, SDK availability, reproducible build/typecheck | Other runtimes/languages for existing domain expertise, CPU-heavy workloads, operational standards, or established services |
-| Fastify domain API | Explicit HTTP/domain ownership, schema validation/serialization, plugin boundaries, independent tests | Express for ecosystem/team conventions; in-process lookup for a smaller demo; an existing domain service for real enterprise data |
-| Anthropic adapter | Accepted first provider; streaming Messages and custom tools demonstrate explicit orchestration | Another provider adapter when capabilities, cost, quality, portability, or account availability justify it |
-| Deepgram adapter | Accepted dedicated speech provider; transcription/synthesis boundaries and media contracts are concrete teaching examples | Other hosted/on-device speech engines when language, privacy, offline, latency, cost, or deployment requirements differ |
-| Completed-utterance HTTP + SSE | Small baseline, inspectable contracts, incremental answer text, bounded lifecycle | Continuous STT/WebSockets/WebRTC when measured conversational latency justifies persistent connection/session complexity |
-| GitHub and local revision sources | Actual project evidence, reproducibility, source-linked explanations, clone-based learning | A broader indexed corpus when corpus size and measured retrieval quality justify additional infrastructure |
+| Boundary / choice                 | Criteria that support the AIVC choice                                                                                           | Alternatives and conditions favoring them                                                                                                            |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| React client                      | Interactive state, composable UI, browser resource lifecycle, reference learning goal, integration with Next.js                 | Vue/Svelte or simpler browser code where team skills, UI scope, or delivery constraints differ                                                       |
+| Next.js BFF                       | Same-origin browser API, server-owned secrets, React integration, thin transport handlers, normalized provider/domain responses | Standalone Fastify/Express BFF for independently deployed clients; Next.js-only domain logic when a separate domain boundary adds insufficient value |
+| Node.js runtime + TypeScript      | Shared language/contracts, asynchronous network work, SDK availability, reproducible build/typecheck                            | Other runtimes/languages for existing domain expertise, CPU-heavy workloads, operational standards, or established services                          |
+| Fastify domain API                | Explicit HTTP/domain ownership, schema validation/serialization, plugin boundaries, independent tests                           | Express for ecosystem/team conventions; in-process lookup for a smaller demo; an existing domain service for real enterprise data                    |
+| Anthropic adapter                 | Accepted first provider; streaming Messages and custom tools demonstrate explicit orchestration                                 | Another provider adapter when capabilities, cost, quality, portability, or account availability justify it                                           |
+| Deepgram adapter                  | Accepted dedicated speech provider; transcription/synthesis boundaries and media contracts are concrete teaching examples       | Other hosted/on-device speech engines when language, privacy, offline, latency, cost, or deployment requirements differ                              |
+| Completed-utterance HTTP + SSE    | Small baseline, inspectable contracts, incremental answer text, bounded lifecycle                                               | Continuous STT/WebSockets/WebRTC when measured conversational latency justifies persistent connection/session complexity                             |
+| GitHub and local revision sources | Actual project evidence, reproducibility, source-linked explanations, clone-based learning                                      | A broader indexed corpus when corpus size and measured retrieval quality justify additional infrastructure                                           |
 
 A separate comparison explains conceptual layer necessity versus technology choice: the reference could preserve domain/orchestration boundaries using other frameworks. The tutorial demonstrates the selected implementation while teaching when its additional process or framework is unnecessary.
 
@@ -144,7 +147,6 @@ A tutor request identifies the question, course edition, module/concept, selecte
 Every evidence chunk records path, revision, line/section range, hash and origin. AIVC behavior claims require AIVC evidence; framework explanations may cite official references. Answers distinguish documented intent, implemented behavior, simulation and inference, offer cross-references, and report missing evidence directly. Treat source comments/documents as untrusted data that cannot change policy, obtain secrets, execute commands or broaden approved retrieval. Render safe Markdown and validated links rather than raw HTML or provider reasoning.
 
 Tutor tools perform bounded read-only retrieval. They cannot execute labs, mutate repositories, send messages, run shell commands, trigger paid lab requests or clear runtime data. Keep conversation in browser memory by default with explicit clear controls and no automatic export. Missing keys, source/network gaps, provider errors/rate limits, exhausted context and invalid citations produce distinct actionable statuses while leaving lessons/simulations usable. Cancel obsolete answers and block late callbacks. Never automatically replay paid calls after an ambiguous failure or disconnect.
-
 
 ### Citation validity and tutor evaluation
 
@@ -166,22 +168,21 @@ The unpaid status GET requires Host only, performs no source/provider request, a
 
 This protects browser-origin admission, not local processes that can deliberately supply headers. CORS response-reading restrictions alone do not establish it. Test JSON and cross-origin safelisted form/multipart/text requests, demonstrating rejection before body/source/cache/GitHub/provider work. Valid origins and explicitly configured ports remain usable.
 
-
 ### Baseline server-surface inventory
 
 All baseline privileged operations use explicit Next.js Route Handlers called by Client Components. There are no tutorial Server Actions. React Server Components and GET/HEAD page rendering may embed only publication-approved edition content and sanitized public readiness; they cannot read/render selected, private, compared or working-copy source or initiate refresh, retrieval, clearing or provider work. Such data reaches the browser only through the admitted POST surfaces below.
 
-| Surface | Responsibility | Admission |
-|---|---|---|
-| GET/HEAD course pages and GET /api/tutorial/status | Public edition shell/content and sanitized readiness only | Configured Host; page/layout and status handler validate before server work |
-| Framework-static published assets | Immutable approved course media/fonts/public excerpts; no runtime/private data or side effects | Public assets only; this static pipeline is not a source/private/status API |
-| POST /api/tutorial/tutor | Bounded evidence retrieval and paid model answer | Configured matching Origin + Host before body/source/provider work |
-| POST /api/tutorial/source | Display edition/exploration/comparison source from frozen approved snapshots | Matching Origin + Host before body, file/cache or source access |
-| POST /api/tutorial/source/refresh | Explicit retrieve/verify exact selected SHA through configured GitHub | Matching Origin + Host before body/cache/network work |
-| POST /api/tutorial/source/working-copy | Capture approved local bytes/hashes for an explicit working-copy generation | Matching Origin + Host before body/files/cache |
-| POST /api/tutorial/runtime/status | Selected revision, private retrieval/cache state and observation metadata | Matching Origin + Host before body/runtime access |
-| POST /api/tutorial/runtime/clear | Explicitly clear selected caches/observations; preserve keys and bundled material | Matching Origin + Host before body/mutation |
-| Local credential entry | Edit ignored environment/header files in a local editor; Postman Local Vault entry in that client | No tutorial HTTP key-entry/storage endpoint |
+| Surface                                            | Responsibility                                                                                    | Admission                                                                   |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| GET/HEAD course pages and GET /api/tutorial/status | Public edition shell/content and sanitized readiness only                                         | Configured Host; page/layout and status handler validate before server work |
+| Framework-static published assets                  | Immutable approved course media/fonts/public excerpts; no runtime/private data or side effects    | Public assets only; this static pipeline is not a source/private/status API |
+| POST /api/tutorial/tutor                           | Bounded evidence retrieval and paid model answer                                                  | Configured matching Origin + Host before body/source/provider work          |
+| POST /api/tutorial/source                          | Display edition/exploration/comparison source from frozen approved snapshots                      | Matching Origin + Host before body, file/cache or source access             |
+| POST /api/tutorial/source/refresh                  | Explicit retrieve/verify exact selected SHA through configured GitHub                             | Matching Origin + Host before body/cache/network work                       |
+| POST /api/tutorial/source/working-copy             | Capture approved local bytes/hashes for an explicit working-copy generation                       | Matching Origin + Host before body/files/cache                              |
+| POST /api/tutorial/runtime/status                  | Selected revision, private retrieval/cache state and observation metadata                         | Matching Origin + Host before body/runtime access                           |
+| POST /api/tutorial/runtime/clear                   | Explicitly clear selected caches/observations; preserve keys and bundled material                 | Matching Origin + Host before body/mutation                                 |
+| Local credential entry                             | Edit ignored environment/header files in a local editor; Postman Local Vault entry in that client | No tutorial HTTP key-entry/storage endpoint                                 |
 
 Each listed POST accepts bounded JSON, validates its closed operation/IDs after caller admission, and exposes only its named responsibility. The source/refresh operations share the same curated root, repository and revision restrictions as tutor retrieval. No endpoint accepts arbitrary paths, commands, destinations or credential values.
 
@@ -193,17 +194,16 @@ Ordinary learning and tutoring use the course edition's pinned source snapshot, 
 
 Local Git and GitHub are retrieval backends, separate from the selected learning experience. Local committed mode reads approved tracked paths from the selected commit's Git objects, not working-tree bytes labeled with HEAD. Resolve the physical repository root and enforce containment/approved paths. GitHub mode reads configured `kburson/AIVC` or an explicitly configured fork; resolve selected refs once to a full SHA and use commit-specific blob links with validated line anchors.
 
-| Source experience | Authority and displayed behavior |
-|---|---|
-| Course edition — default | Use its bundled pinned snapshot. An explicit refresh verifies/retrieves only that same SHA. Local/remote advancement does not replace it. |
+| Source experience                  | Authority and displayed behavior                                                                                                                                                                                                                |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Course edition — default           | Use its bundled pinned snapshot. An explicit refresh verifies/retrieves only that same SHA. Local/remote advancement does not replace it.                                                                                                       |
 | Explore another committed revision | Learner explicitly selects local HEAD or a GitHub ref; resolve/freeze its SHA. Show an exploration banner, edition SHA and selected SHA. Answers describe the selected revision; unchanged edition examples remain labeled as edition material. |
-| Compare revisions | Explicitly compare the edition with another resolved revision. Label each source and describe differences. |
-| Working-copy exploration | Explicit opt-in to curated local modifications. Show captured path/content hashes and base commit as uncommitted evidence; use local links rather than claiming GitHub contains these bytes. |
+| Compare revisions                  | Explicitly compare the edition with another resolved revision. Label each source and describe differences.                                                                                                                                      |
+| Working-copy exploration           | Explicit opt-in to curated local modifications. Show captured path/content hashes and base commit as uncommitted evidence; use local links rather than claiming GitHub contains these bytes.                                                    |
 
 With edition A and HEAD B, default lessons/tutoring still use A. Selecting B explicitly enters exploration or comparison. Freeze identity for each request: ref/HEAD changes cannot alter committed bytes midway. Working-copy mode captures/hashes approved bytes once with physical containment/symlink checks; subsequent edits create a new context generation. Dirty mapped files stay excluded from committed evidence.
 
 Changing edition, repository, selected SHA, comparison pair or working-copy generation cancels the active answer, resets tutor conversation and invalidates stale callbacks. Context identity includes those selections/hashes. Earlier answers may remain in a separately labeled history view but are not automatically sent into the new context. Missing source at a chosen revision is unavailable/planned, never invented.
-
 
 Server-side committed retrieval uses an audited Git-object library or fixed read-only plumbing invoked through argument arrays, never a shell or model-supplied command. Validate learner refs against the supported Git-ref grammar, reject option-like/control-character input, place raw ref arguments after the command's documented option terminator, resolve once to an exact full object ID, and use only that validated ID for subsequent object reads. Paths come from the curated manifest. Do not invoke hooks, fsmonitor, textconv, external diff/filter programs or other repository-configured executables; use safe object operations with audited configuration/environment isolation. Tests with hostile refs and executable repository/global configuration prove no command injection or configured-program execution. Working-copy capture uses direct contained file reads rather than porcelain commands that can trigger programs.
 
@@ -237,7 +237,6 @@ The tutorial origin :3002 differs from reference BFF :3000. Run browser labs in 
 
 Learners explicitly initiate live actions with visible provider/account settings and billing implications. Simulations never quietly make live calls. Show actual provider usage; future cost calculations require current pricing and labeled assumptions. Readiness distinguishes configuration from verified functionality. Local lab observations record revision, scenario, timestamp, environment and pass/failure without secrets/raw personal audio by default, following the runtime-data policy above.
 
-
 ## Publication approval and redistribution
 
 The course owner grants publication approval against a retained per-item checklist: authorship/source, exact content hash, source URL and retrieval date, licence/terms version or permission evidence, whether repository redistribution/modification is permitted, required attribution/share-alike conditions, and the rendered attribution location. This applies to snippets, third-party documentation excerpts, images/sample audio and narration. Authored explanatory summaries with links are the default for vendor documentation. Verbatim third-party material is bundled only when recorded terms/permission support that use and its obligations are fulfilled; otherwise link or write an original summary. Hashing or citation does not itself grant redistribution rights.
@@ -248,12 +247,12 @@ For synthesized narration, retain the provider, model/voice, generation date, ap
 
 Deliver four importable JSON collections, sanitized shared local/provider environment templates, instructions, safe sample payloads/audio and request-to-module/source mappings. Export key/token values empty; learners provide credentials through the local-only API-client mechanisms below. Provide equivalent credential-safe curl requests.
 
-| Collection | Initial requests | Learning objective |
-|---|---|---|
-| Fastify domain | `GET /health`, `GET /v1/projects`, Atlas lookup, no-match and malformed queries | Domain contract, deterministic data, validation, statuses and serialization |
-| Next.js BFF | `GET /api/capabilities`, multipart typed/WAV `POST /api/turn`, `POST /api/speech`, admission/input failures | Transport versus orchestration, normalized SSE, binary speech and visible failures |
-| Anthropic | Basic/streaming `POST /v1/messages`, custom tool declaration and deliberate tool-result continuation | HTTP versus SDK, supplied context, tool IDs/blocks, usage and stop reasons |
-| Deepgram | Prerecorded `POST /v1/listen`, `POST /v1/speak` with supported contrasting media settings | Auth, media formats, transcription structure, sample rate and binary inspection |
+| Collection     | Initial requests                                                                                            | Learning objective                                                                 |
+| -------------- | ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Fastify domain | `GET /health`, `GET /v1/projects`, Atlas lookup, no-match and malformed queries                             | Domain contract, deterministic data, validation, statuses and serialization        |
+| Next.js BFF    | `GET /api/capabilities`, multipart typed/WAV `POST /api/turn`, `POST /api/speech`, admission/input failures | Transport versus orchestration, normalized SSE, binary speech and visible failures |
+| Anthropic      | Basic/streaming `POST /v1/messages`, custom tool declaration and deliberate tool-result continuation        | HTTP versus SDK, supplied context, tool IDs/blocks, usage and stop reasons         |
+| Deepgram       | Prerecorded `POST /v1/listen`, `POST /v1/speak` with supported contrasting media settings                   | Auth, media formats, transcription structure, sample rate and binary inspection    |
 
 Use configurable tested model/voice IDs and documented API versions/settings. Validate provider headers/auth at publication; never assume universal model availability. Anthropic requests a tool; the learner performs the local lookup and sends its correlated result, mirroring BFF ownership.
 
@@ -262,7 +261,6 @@ Each request has purpose, prerequisites, headers/body, expected schema/status, s
 Publish against the edition's authoritative BFF contract. The current turn requires `turnId`, JSON-encoded `history` and exactly one of `text`/`audio`; text is at most 2,000 characters. WAV is mono signed PCM16 at 16 kHz, at most 30 seconds, within the measured 2 MiB body cap. History is at most four complete pairs/eight messages and 16,000 characters. Speech requires `{ turnId, segmentId, text }` within advertised `min(120, floor(6 * SPEECH_CHARS_PER_SECOND))`, initially 84 characters at 14 characters/second. New editions derive examples from their pinned contract/capabilities rather than copied assumptions. Validate sample headers and file selection after import into a second clone; export no author-machine absolute paths. Direct Deepgram examples may show broader formats, explicitly distinguished from narrower BFF acceptance.
 
 Inspect SSE/binary behavior in the documented Postman version. Pair with browser/CLI checks for stream timing and PCM playback; HTTP inspection does not prove microphone, playback or interruption. The BFF returns raw mono PCM16 at 24 kHz without a WAV header, requiring format-aware decoding or documented conversion for playback.
-
 
 ### Learner API-client credentials and supported transport
 
@@ -278,14 +276,14 @@ For BFF labs, verify on the recorded desktop Postman client that the actual outg
 
 Prominently state that learners clone AIVC and supply their own keys; the repository supplies none. Provider usage may be billed; consumer subscriptions are not configured API credentials. Document pinned toolchain/dependencies, sanitized environment copying, local key entry, source experience/revision, tutorial and optional service start, Postman import, runtime-data clearing and troubleshooting.
 
-| Capability | Prerequisites |
-|---|---|
-| Bundled lessons/narration/simulations/progress | Installed repository/toolchain; no provider keys |
-| GitHub refresh/comparison | Network; token when access/limits require it |
-| Contextual tutor | Anthropic key, available configured model, usable lesson/source evidence |
-| Fastify local labs | Reference domain service running |
-| Live typed reference turn | Reference BFF/domain services and Anthropic configuration |
-| Direct/live speech and voice labs | Deepgram key/model settings; microphone permission for browser capture |
+| Capability                                     | Prerequisites                                                            |
+| ---------------------------------------------- | ------------------------------------------------------------------------ |
+| Bundled lessons/narration/simulations/progress | Installed repository/toolchain; no provider keys                         |
+| GitHub refresh/comparison                      | Network; token when access/limits require it                             |
+| Contextual tutor                               | Anthropic key, available configured model, usable lesson/source evidence |
+| Fastify local labs                             | Reference domain service running                                         |
+| Live typed reference turn                      | Reference BFF/domain services and Anthropic configuration                |
+| Direct/live speech and voice labs              | Deepgram key/model settings; microphone permission for browser capture   |
 
 Namespace tutorial configuration, including admission variables above and model/key/source repository/ref/token/cache settings. The plan chooses remaining exact names/validation. Account reuse is deliberate; no hidden dependence on reference secrets. Application keys stay in ignored server-local files; direct-provider lab keys stay in the local API-client stores described above. Credential entry is via a local editor or Postman Local Vault, never a tutorial web form. Explain external transmission of questions/retrieved excerpts to the tutor and audio/text to enabled speech providers. Private-fork retrieval and live features are learner-selected.
 
@@ -297,11 +295,11 @@ Cold offline acceptance begins after documented toolchain/dependency installatio
 
 Start with Ask about Atlas and typed input before audio mechanics: authored overview/narration/captions, synchronized diagram, actual/planned source references, prediction/simulation, BFF/domain matrix, Fastify Postman example, and optional contextual-tutor/typed-BFF labs. Deepgram sample-media lessons can precede completed voice reference code, with accurate evidence labels.
 
-| Checkpoint | Completion scope |
-|---|---|
-| CP1 — Atlas guided/simulation | Cold-offline no-key lesson, assets, edition source labels, prediction/simulation, decision matrix, cross-references and accurate readiness. This is neither connected-provider verification nor the complete course. |
-| CP2 — Atlas connected | CP1, offline tutor/source/admission checks, genuine source-cited tutor exchange and observed Fastify/typed-BFF/Anthropic labs with recorded revisions/accounts/models. Missing keys/source leave live cases unverified. |
-| CP3 — Complete first edition | All eight modules/three paths, four validated collections, multimedia/accessibility/source/progress checks, and actual recorded live demonstrations for the curriculum's tutor/provider/voice labs, including Deepgram and browser voice/interruption. Unavailable required live cases prevent this completion claim. Optional spoken-tutor extensions remain outside the baseline. |
+| Checkpoint                    | Completion scope                                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CP1 — Atlas guided/simulation | Cold-offline no-key lesson, assets, edition source labels, prediction/simulation, decision matrix, cross-references and accurate readiness. This is neither connected-provider verification nor the complete course.                                                                                                                                                                |
+| CP2 — Atlas connected         | CP1, offline tutor/source/admission checks, genuine source-cited tutor exchange and observed Fastify/typed-BFF/Anthropic labs with recorded revisions/accounts/models. Missing keys/source leave live cases unverified.                                                                                                                                                             |
+| CP3 — Complete first edition  | All eight modules/three paths, four validated collections, multimedia/accessibility/source/progress checks, and actual recorded live demonstrations for the curriculum's tutor/provider/voice labs, including Deepgram and browser voice/interruption. Unavailable required live cases prevent this completion claim. Optional spoken-tutor extensions remain outside the baseline. |
 
 CP2 depends on implemented reference typed-turn/domain capabilities at the edition's pinned revision; CP3 additionally depends on the reference transcription, synthesis, capture, playback and interruption capabilities at that revision. Planned/simulated material can precede those dependencies, but cannot pass their connected/live checkpoints.
 

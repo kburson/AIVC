@@ -193,3 +193,32 @@ it('scans literal Markdown filenames and refuses inline rule suppression', async
     expect(readFileSync(join(root, path), 'utf8')).toBe(before);
   }
 });
+
+it('ESLint rejects undefined JavaScript names across authored service and tooling files', async () => {
+  const { ESLint } = await import('eslint');
+  const paths = [
+    'services/provider/client.js',
+    'packages/shared/index.mjs',
+    'scripts/helper.cjs',
+    'tests/fixture.js',
+    'root.config.js',
+  ];
+  const root = fixture(
+    Object.fromEntries(
+      paths.map((path) => [path, 'console.log(missingValue);\n']),
+    ),
+  );
+  const eslint = new ESLint({
+    cwd: root,
+    overrideConfigFile: join(process.cwd(), 'eslint.config.mjs'),
+  });
+  for (const result of await eslint.lintFiles(paths)) {
+    expect(
+      result.messages.some((message) => message.ruleId === 'no-undef'),
+    ).toBe(true);
+  }
+  for (const path of paths)
+    writeFileSync(join(root, path), 'console.log(process.version);\n');
+  for (const result of await eslint.lintFiles(paths))
+    expect(result.errorCount).toBe(0);
+});

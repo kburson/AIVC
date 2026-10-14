@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/89fc7a6125cd4b2be6f0f338dea928bd81bcea45/docs/peer-reviews/spec/aivc-interactive-tutorial-design-review-cb28e9fe5863446ca5d949d96998909c/xpr/2026-10-14-2026-10-13-15-aivc-interactive-tutorial-design-review-f90cbcd8ed4a948d618a58f5eca85979-reviewer-response-2.md) and its exact bytes remain available in the [tutorial evidence archive](../../../../quality-evidence/2026-10-14-25-tutorial-originals.json).
+> Original SHA-256: `573a0ccc716a72d48200df7c327a65e385f8d155a160195ac5e9546ec73ed5ee`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-f90cbcd8ed4a948d618a58f5eca85979"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-f90cbcd8ed4a948d618a58f5eca85979'
+role: 'reviewer'
 turn: 2
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/specs/2026-10-13-15-aivc-interactive-tutorial-design.md"
-artifact_commit: "71c5072fedc3253fb3348abccba111f2185d38dc"
-artifact_blob: "b7ca45d0d3dd6f4d6525c2cdb7e9203aa549de54"
-artifact_digest: "sha256:df44844b8a23be5e6d0fcbde706ef98b5be6ce743247d69346db91282780014b"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/specs/2026-10-13-15-aivc-interactive-tutorial-design.md'
+artifact_commit: '71c5072fedc3253fb3348abccba111f2185d38dc'
+artifact_blob: 'b7ca45d0d3dd6f4d6525c2cdb7e9203aa549de54'
+artifact_digest: 'sha256:df44844b8a23be5e6d0fcbde706ef98b5be6ce743247d69346db91282780014b'
 agent:
-  host: "claude-code"
-  provider: "anthropic"
-  model_id: "claude-opus-5-5"
-  model_display: "claude-opus-5-5"
-  session_fingerprint: "sha256:fc521f6ffe85276cea58c1beafe1060a10186a4a591f3ece4488abc358b95afe"
-  identity_source: "runtime"
-started_at: "2026-10-14T00:20:24.666Z"
-submitted_at: "2026-10-14T00:33:10.886Z"
-finding_ids: ["R2-F001","R2-F002"]
+  host: 'claude-code'
+  provider: 'anthropic'
+  model_id: 'claude-opus-5-5'
+  model_display: 'claude-opus-5-5'
+  session_fingerprint: 'sha256:fc521f6ffe85276cea58c1beafe1060a10186a4a591f3ece4488abc358b95afe'
+  identity_source: 'runtime'
+started_at: '2026-10-14T00:20:24.666Z'
+submitted_at: '2026-10-14T00:33:10.886Z'
+finding_ids: ['R2-F001', 'R2-F002']
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
@@ -46,6 +50,7 @@ Verification of R1 dispositions:
   - credential entry, which has no HTTP surface.
 
   It states that private, selected, compared and working-copy source reaches the browser only through Origin+Host-admitted JSON POSTs and never through GET/HEAD/RSC rendering. It prohibits tutorial Server Actions, requires in-handler enforcement rather than middleware-only enforcement, and says the framework's Server Action origin matching is not a substitute for the allowlist. It also tests the attacker-Host/matching-Origin (DNS-rebinding) case. Acceptance item 15 enforces this. The private-status requirement is consistently routed through `POST /api/tutorial/runtime/status`.
+
 - **R1-F002 — resolved.** The "Monorepo integration contract" defines:
   - a shared workspace/lockfile;
   - exact reference framework/type pins unless a reviewed exception exists;
@@ -55,6 +60,7 @@ Verification of R1 dispositions:
   - preservation of verifier digest/ancestry rules.
 
   Acceptance item 17 covers it.
+
 - **R1-F003 — resolved.** Citation validity is defined against supplied-context chunk IDs and the frozen path/revision/range/hash. An invalid citation is removed and the answer is visibly marked unverified, with no silent repair or paid replay. A versioned per-edition evaluation set is required, with an all-cases-pass gate for CP2/CP3 recorded per edition/model/prompt/retrieval configuration, and configuration changes invalidate it. Acceptance item 6 reflects this.
 - **R1-F004 — resolved.** The new "Publication approval and redistribution" section adds:
   - owner-granted approval against a per-item checklist (hash, URL, retrieval date, terms, redistribution, attribution and its rendered location);
@@ -63,6 +69,7 @@ Verification of R1 dispositions:
   - output-terms evidence for synthesized narration.
 
   Acceptance item 18 covers it.
+
 - **R1-F005 — resolved.** The specification now provides:
   - Postman desktop Local Vault with unresolved `{{vault:…}}` references;
   - an explicit statement that masking is insufficient;

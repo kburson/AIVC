@@ -1,31 +1,48 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/89fc7a6125cd4b2be6f0f338dea928bd81bcea45/docs/peer-reviews/spec/aivc-interactive-tutorial-design-review-cb28e9fe5863446ca5d949d96998909c/xpr/2026-10-14-2026-10-13-15-aivc-interactive-tutorial-design-review-f90cbcd8ed4a948d618a58f5eca85979-reviewer-response-1.md) and its exact bytes remain available in the [tutorial evidence archive](../../../../quality-evidence/2026-10-14-25-tutorial-originals.json).
+> Original SHA-256: `54e209707897a06ec8032ff08c1ed8cbb21773e504b2acc2a5548b03e94d05eb`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-f90cbcd8ed4a948d618a58f5eca85979"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-f90cbcd8ed4a948d618a58f5eca85979'
+role: 'reviewer'
 turn: 1
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/specs/2026-10-13-15-aivc-interactive-tutorial-design.md"
-artifact_commit: "e84554dab3007a47e2317c02650b3d9ef0e8bf75"
-artifact_blob: "93e8d002f75338d8bff53b391b3aabb1c1d45689"
-artifact_digest: "sha256:9b3f489fcfa836f0f3d11f3545694949e22f0d66e611cd34260b0bff3a24f0aa"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/specs/2026-10-13-15-aivc-interactive-tutorial-design.md'
+artifact_commit: 'e84554dab3007a47e2317c02650b3d9ef0e8bf75'
+artifact_blob: '93e8d002f75338d8bff53b391b3aabb1c1d45689'
+artifact_digest: 'sha256:9b3f489fcfa836f0f3d11f3545694949e22f0d66e611cd34260b0bff3a24f0aa'
 agent:
-  host: "claude-code"
-  provider: "anthropic"
-  model_id: "claude-opus-5-5"
-  model_display: "claude-opus-5-5"
-  session_fingerprint: "sha256:fc521f6ffe85276cea58c1beafe1060a10186a4a591f3ece4488abc358b95afe"
-  identity_source: "runtime"
-started_at: "2026-10-14T00:20:24.666Z"
-submitted_at: "2026-10-14T00:24:16.796Z"
-finding_ids: ["R1-F001","R1-F002","R1-F003","R1-F004","R1-F005","R1-F006","R1-F007","R1-F008","R1-F009","R1-F010","R1-F011"]
+  host: 'claude-code'
+  provider: 'anthropic'
+  model_id: 'claude-opus-5-5'
+  model_display: 'claude-opus-5-5'
+  session_fingerprint: 'sha256:fc521f6ffe85276cea58c1beafe1060a10186a4a591f3ece4488abc358b95afe'
+  identity_source: 'runtime'
+started_at: '2026-10-14T00:20:24.666Z'
+submitted_at: '2026-10-14T00:24:16.796Z'
+finding_ids:
+  [
+    'R1-F001',
+    'R1-F002',
+    'R1-F003',
+    'R1-F004',
+    'R1-F005',
+    'R1-F006',
+    'R1-F007',
+    'R1-F008',
+    'R1-F009',
+    'R1-F010',
+    'R1-F011',
+  ]
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
