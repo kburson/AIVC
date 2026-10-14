@@ -13,7 +13,8 @@ Install with `npm ci` under the Node/npm toolchain in `.nvmrc` and `package.json
 
 The inventory excludes dependencies, vendored payloads, Git internals, build
 outputs, coverage and machine-local scratch/cache directories. It includes
-`.ts`, `.tsx`, `.mts`, `.cts` and authored declaration files. Generated
+`.ts`, `.tsx`, `.mts`, `.cts` and authored declaration files. Copied VAD/ORT dependency assets under `apps/web/public/vad` are also excluded
+from scans and explicit formatting writes. Ordinary public source remains included. Generated
 `next-env.d.ts` and the generated dependency lockfile are excluded from formatting.
 Web-only React/Next rules apply to `apps/web`; common TypeScript rules apply
 at every level. Typechecking remains available separately through `npm run typecheck`.

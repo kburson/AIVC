@@ -9,3 +9,4 @@ node_modules/
 .tmp/
 vendors/
 package-lock.json
+apps/web/public/vad/

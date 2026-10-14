@@ -33,6 +33,7 @@ export function enumerateOwnedFiles(root = workspace) {
         if (
           excludedDirectories.has(entry.name) ||
           path === '.claude/worktrees' ||
+          path === 'apps/web/public/vad' ||
           /(?:^|\/)public\/vendor$/.test(path)
         )
           continue;

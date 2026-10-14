@@ -35,3 +35,24 @@ closed with no remaining substantive tooling findings. Read-only probes verified
 all 70 originals and confirmed refusal of source downgrade, production source
 override, symlinked view ancestors, archive ancestors and archive files. The
 reviewer confirmed no TypeScript diff and made no filesystem changes.
+
+## Approved integration refresh
+
+The owner approved PR #26 for integration into `codex/2-draft`, retaining the
+known TypeScript errors. Base advancement required merging the base into the
+PR branch and resolving package manifest, lockfile and delivery-ledger conflicts.
+Both script/dependency sets and the base's newer story statuses were retained.
+The four incoming capture review originals were archived separately at pinned
+base `39c18e086ea832fc3214431575a1161742f374d6`; the first 70-record archive
+remains unchanged, and all 74 originals verify.
+
+Independent re-review found a generated-asset inventory gap: copied VAD/ORT
+assets would fail Prettier after dev/build. A failing regression reproduced it.
+The formatter and ignore policy now exclude only `apps/web/public/vad`, matching
+ESLint. The test keeps ordinary public source included and refuses explicit
+formatting writes to generated assets. After generating the ten real pinned
+assets, the complete quality scan and all 42 unit/UI tests passed; the Node
+suite has eight preservation tests and one generated-asset regression.
+
+Capture TypeScript matches the incoming base. The scanner TypeScript remains
+unchanged, and its same five TS2353 errors remain visible in typecheck.

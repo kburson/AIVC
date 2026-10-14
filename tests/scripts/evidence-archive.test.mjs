@@ -193,3 +193,21 @@ it('rejects archive aliases and symlinked archive ancestors', () => {
     /symlink/,
   );
 });
+
+it('excludes generated VAD dependency assets from scans and refuses formatting them', async () => {
+  const { root } = fixture();
+  const generated = 'apps/web/public/vad/ort/ort-wasm.mjs';
+  mkdirSync(dirname(join(root, generated)), { recursive: true });
+  writeFileSync(join(root, generated), 'const minified={asset:true};');
+  writeFileSync(
+    join(root, 'apps/web/public/owned.ts'),
+    'export const owned = true;\n',
+  );
+  const files = formatting.enumerateOwnedFiles(root);
+  assert.ok(files.includes('apps/web/public/owned.ts'));
+  assert.ok(!files.includes(generated));
+  await assert.rejects(
+    () => formatting.checkFormatting({ root, paths: [generated], write: true }),
+    /inventory/,
+  );
+});
