@@ -1,4 +1,5 @@
 <!-- ai-task-manager:codex-superpowers:start -->
+
 ## AI Task Manager: Codex Superpowers Bootstrap
 
 AITM added this this workspace AGENTS.md block to approximate Claude Code Superpowers startup behavior in Codex.
@@ -33,3 +34,11 @@ Test → Review: agent self-report REVIEW_COMPLETE (no CLI verb).
 For user-requested Codex fanout reviews, read `.codex/peer-review-orchestration.md` alongside the installed `peer-review` skill. Use native launch and supervision with the sealed ai-peer-review protocol. The established native workflow uses explicit manual protocol transport and authentic MCP handoff waits; `automatic-required` checks the separate package-managed resident transport and is not a prerequisite for ordinary Codex agent spawning. Preserve genuine distinct session identities, requested per-run model/effort selections, tracked issue binding, and all author/reviewer boundaries.
 
 All SAR/SPR/XPR collateral for one artifact must share `docs/peer-reviews/<kind>/<artifact-slug>-<group-review-id>/{sar|spr|xpr}/`. For the voice BFF reference design, use `docs/peer-reviews/spec/voice-bff-reference-design-review-6e1eb912f8ea1307f0464d76a1501a3b/`. Follow the explicit per-run path-template instructions in `.codex/peer-review-orchestration.md`; preserve sealed historical bytes when relocating terminal evidence.
+
+## Cloud story delivery
+
+The owner requires every active story to have a pushed, fetchable branch and an open draft PR from the start of its authored work. Keep each branch and PR current with its specification, accepted plan, review reports, and selected verification/provenance collateral. Commit documentation checkpoints while implementation is dependency-gated; a draft PR does not authorize a lifecycle transition.
+
+Epic #2 child PRs target `codex/2-draft`; the feature integration PR targets `trunk`. A separate solo story uses its recorded base. Push normally and preserve existing remote history. Exclude credentials, machine-local bindings, and raw secret-bearing logs.
+
+Before Done, verify the story PR is actually merged into its target and its accepted source is reachable there. Keep registered AITM Test, Review, approval, and Close gates. Historical local delivery and later cloud backfill must retain distinct dates and provenance; do not manufacture a package-managed provider-action envelope or delivery receipt. Use the sanctioned GitHub integration with an exact expected head SHA for an owner-authorized cloud merge.
