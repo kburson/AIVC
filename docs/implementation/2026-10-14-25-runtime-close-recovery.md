@@ -95,7 +95,7 @@ and ten sealed-evidence behavioral tests pass after the runtime install.
 ## Existing worktree propagation
 
 The five extant AIVC worktrees now have the reviewed runtime installed: primary,
-#27, #25, epic #2 and #7. Every checkout passed all 917 source-file hash/length
+stories #27 and #25, epic #2 and story #7. Every checkout passed all 917 source-file hash/length
 comparisons. Provider settings, install manifests, project preferences and skill
 stubs retain their before-install SHA256 values; branch heads and tracked work
 are unchanged. The primary checkout's existing untracked `apps/` directory was
