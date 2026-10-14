@@ -20,3 +20,4 @@ test-results/
 apps/web/public/vendor/
 **/next-env.d.ts
 apps/web/public/vad/
+.env
