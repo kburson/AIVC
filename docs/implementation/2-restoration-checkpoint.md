@@ -19,8 +19,8 @@ artifacts remain unchanged. A cloud merge alone does not satisfy strict Done.
 
 ## Worktree disappearance and bounded recovery
 
-The initial worktree inventory included the recorded #3, #4, #5, #6, #7, #8,
-#13 and #14 checkouts. During bootstrap those registrations and checkout
+The initial worktree inventory included the recorded checkouts for
+stories #3, #4, #5, #6, #7, #8, #13 and #14. During bootstrap those registrations and checkout
 directories disappeared. Their local branches and fetched cloud history remain
 present. This chat did not remove them. The cause has not been established.
 
