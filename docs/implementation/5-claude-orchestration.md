@@ -67,3 +67,11 @@ A normal preserving merge now includes accepted feature parent `372f5a7f8d6fff94
 Pinned `npm ci` completed with Node 26.8.1 and npm 12.0.2, and the accepted postinstall applied the @ricky0123/vad-web 0.0.31 patch through patch-package 8.0.1. No manifests, dependency pins, frozen contracts, or implementation sources were edited. The installed Next 16.4.0 route-handler and server/client-boundary guides were read for the future server endpoint implementation.
 
 Implementation remains unstarted in Ready for Planning. Native admission is still refused as `rank-wave-graph-stale`; the runtime authorization grammar correction is under separate governed review. This setup checkpoint is not Plan approval, source-entry authority, an application verifier result, or live-provider evidence.
+
+## Quality baseline preparation checkpoint
+
+The branch now preserves the latest accepted feature parent `aeabcb9b148486870ebcf685675f02cef8c939e5`, including owner-approved #25 quality tooling and document formatting views. Original accepted specification, plan, and sealed review bytes remain authoritative in their immutable Git commits and the upstream original-byte archives. The server and shared TypeScript modules are unchanged from the earlier integrated baseline.
+
+The updated lockfile required a fresh pinned `npm ci`, which completed and applied the existing VAD patch without authoring manifest, pin, contract, application-source, or test changes. The current admitted runtime reports `rank-wave-source-unverified`; authorization grammar correction #2012 is being fixed and reviewed separately. Earlier stale-graph observations above are historical preparation checkpoints, not the current runtime diagnosis.
+
+Implementation is still unstarted in Ready for Planning. Native READY confirmation, registered Plan entry, and all subsequent approval and whole-story gates remain required. This document update and draft PR publication create no grant or live-provider evidence.
