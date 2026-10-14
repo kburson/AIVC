@@ -59,3 +59,11 @@ The inspected APIs establish the following implementation boundaries:
 The first admitted implementation checkpoint will establish the scripted native-message helper and real HTTP producer test, observe the expected failure, and implement only the server-owned orchestration needed to pass. Further checks cover argument-error continuation, round/tool/search budgets, exact text joining, provider capability behavior, and request cancellation with deferred upstream settlement. Pinned setup has now completed with Node 26.8.1 and npm 12.0.2 without changing manifests. Installed SDK 0.133.0 confirms Models.retrieve, capabilities.server_tools.web_search.supported, incremental MessageStream events, finalMessage, citation deltas, native server-tool blocks, and final search usage. The retrieval client can consume the frozen validateProjectCatalog export. These are local type inspections, not live-provider calls or acceptance evidence.
 
 All earlier ownership and whole-story review gates continue to apply. The user stop boundary remains completion of rank 4, then pause before #8.
+
+## Capture baseline setup checkpoint
+
+A normal preserving merge now includes accepted feature parent `372f5a7f8d6fff945ef5269874e5d56d03524d74`, retaining original accepted planning and sealed review history. The integrated #6 client and #14 capture delivery remain upstream-owned inputs; #5 authored no changes to them.
+
+Pinned `npm ci` completed with Node 26.8.1 and npm 12.0.2, and the accepted postinstall applied the @ricky0123/vad-web 0.0.31 patch through patch-package 8.0.1. No manifests, dependency pins, frozen contracts, or implementation sources were edited. The installed Next 16.4.0 route-handler and server/client-boundary guides were read for the future server endpoint implementation.
+
+Implementation remains unstarted in Ready for Planning. Native admission is still refused as `rank-wave-graph-stale`; the runtime authorization grammar correction is under separate governed review. This setup checkpoint is not Plan approval, source-entry authority, an application verifier result, or live-provider evidence.
