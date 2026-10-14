@@ -88,6 +88,7 @@ export default function Conversation({
           context,
           (t) => controller.current(t),
           unlocked,
+          () => new AudioContext(),
         );
         const queue = new SpeechQueue({
           playback,
@@ -185,7 +186,14 @@ export default function Conversation({
         output.current?.queue.cancel(token, 'TURN_FAILED');
         if (error instanceof Error && error.name === 'AbortError')
           controller.cancelCurrent('Request interrupted.');
-        else controller.fail(token, error);
+        else {
+          controller.fail(token, error);
+          controller.setSpeech(
+            token,
+            'failed',
+            'Answer failed. Speech stopped; answer text is retained.',
+          );
+        }
       }
     }
   }

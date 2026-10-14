@@ -10,13 +10,18 @@ export class Playback {
   private sources: Scheduled[] = [];
   private operations: Promise<void> = Promise.resolve();
   private disposed = false;
+  private pendingOperations = 1;
+  private operationEpoch = 0;
   constructor(
     private context: AudioContext,
     private isCurrent: (token: TurnToken) => boolean,
     initialResume: Promise<void> = Promise.resolve(),
+    private createContext?: () => AudioContext,
   ) {
-    this.operations = initialResume;
-    void initialResume.catch(() => {});
+    this.operations = initialResume.finally(() => {
+      if (this.operationEpoch === 0) this.pendingOperations--;
+    });
+    void this.operations.catch(() => {});
   }
   private prune(): void {
     this.sources = this.sources.filter((entry) => {
@@ -60,20 +65,36 @@ export class Playback {
   isRunning(): boolean {
     return !this.disposed && this.context.state === 'running';
   }
+  private track(operation: Promise<void>, epoch: number): Promise<void> {
+    this.pendingOperations++;
+    const tracked = operation.finally(() => {
+      if (this.operationEpoch === epoch) this.pendingOperations--;
+    });
+    this.operations = tracked;
+    return tracked;
+  }
   private serialize(action: () => Promise<void>): Promise<void> {
-    const next = this.operations
-      .catch(() => {})
-      .then(async () => {
-        if (!this.disposed) await action();
-      });
-    this.operations = next;
-    return next;
+    const epoch = this.operationEpoch;
+    return this.track(
+      this.operations
+        .catch(() => {})
+        .then(async () => {
+          if (!this.disposed && this.operationEpoch === epoch) await action();
+        }),
+      epoch,
+    );
   }
   suspend(): Promise<void> {
-    return this.serialize(() => this.context.suspend());
+    const context = this.context;
+    return this.serialize(() => context.suspend());
   }
   resume(): Promise<void> {
-    return this.serialize(() => this.context.resume());
+    if (this.disposed) return Promise.resolve();
+    // Preserve user activation for an idle reused playback context.
+    if (this.pendingOperations === 0)
+      return this.track(this.context.resume(), this.operationEpoch);
+    const context = this.context;
+    return this.serialize(() => context.resume());
   }
   async ensureRunning(token: TurnToken): Promise<void> {
     if (this.disposed || !this.isCurrent(token))
@@ -98,7 +119,21 @@ export class Playback {
     });
   }
   async resetAfterCancel(): Promise<void> {
+    if (this.disposed) return;
+    if (!this.isRunning() && this.createContext) {
+      // A failed native resume may never settle. Replace the empty context;
+      // late operations can affect only the closed former context.
+      const former = this.context;
+      const replacement = this.createContext();
+      this.context = replacement;
+      this.operationEpoch++;
+      this.pendingOperations = 0;
+      this.operations = Promise.resolve();
+      void former.close().catch(() => {});
+      return;
+    }
     await this.operations.catch(() => {});
+    await this.resume();
   }
   async dispose(): Promise<void> {
     if (this.disposed) return;

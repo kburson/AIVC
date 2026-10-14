@@ -50,3 +50,30 @@ it('rejects stale scheduling and serializes resume after pending suspend', async
   await p.dispose();
   expect(c.closed).toBe(true);
 });
+it('recovers the empty context only after a pending suspension settles', async () => {
+  const c = new AudioClock();
+  const p = new Playback(c.context(), () => true);
+  let release!: () => void;
+  c.suspendGate = new Promise((r) => (release = r));
+  p.enqueue(token, new Float32Array(24));
+  const suspended = p.suspend();
+  p.cancel(token);
+  const recovered = p.resetAfterCancel();
+  await settle();
+  expect(c.resumes).toBe(0);
+  release();
+  await suspended;
+  await recovered;
+  expect(p.isRunning()).toBe(true);
+  expect(p.outstandingSeconds()).toBe(0);
+  await p.dispose();
+});
+it('calls native resume synchronously when no earlier operation is pending so typed gestures unlock reused output', async () => {
+  const c = new AudioClock();
+  const p = new Playback(c.context(), () => true);
+  await settle();
+  const resumed = p.resume();
+  expect(c.resumes).toBe(1);
+  await resumed;
+  await p.dispose();
+});

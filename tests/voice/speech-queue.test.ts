@@ -213,3 +213,79 @@ it('sends only same-origin bounded speech input without automatic retries', asyn
   );
   expect(requests).toBe(1);
 });
+it('stops every already-scheduled source before accepting excess active-response bytes even after clock progress', async () => {
+  let pulls = 0;
+  const clock = new AudioClock();
+  const playback = new Playback(clock.context(), () => true);
+  const reasons: string[] = [];
+  const queue = new SpeechQueue({
+    playback,
+    segmentChars: 84,
+    isCurrent: () => true,
+    onStatus: (_t, _s, r) => {
+      if (r) reasons.push(r);
+    },
+    synthesize: async () =>
+      speechResponse(
+        new ReadableStream({
+          pull(c) {
+            if (pulls++ === 0) c.enqueue(pcm(6));
+            else if (pulls === 2) {
+              clock.currentTime = 5;
+              c.enqueue(pcm(5));
+            } else c.close();
+          },
+        }),
+      ),
+  });
+  queues.push(queue);
+  queue.accept(token, 'Hello. Next');
+  await settle();
+  expect(reasons).toContain('AUDIO_OVERFLOW');
+  expect(clock.sources).toHaveLength(1);
+  expect(clock.sources[0].stopped).toBe(true);
+  expect(playback.outstandingSeconds()).toBe(0);
+});
+it('cancels an invalid metadata body instead of leaving the response stream open', async () => {
+  let canceled = false;
+  const { queue, statuses } = setup(
+    async () =>
+      new Response(
+        new ReadableStream({
+          cancel() {
+            canceled = true;
+          },
+        }),
+        { headers: { 'content-type': 'application/json' } },
+      ),
+  );
+  queue.accept(token, 'Hello. Next');
+  await settle();
+  expect(statuses).toContain('SPEECH_FAILED');
+  expect(canceled).toBe(true);
+});
+it('finishes the already-admitted body after text overflow while rejecting future speech', async () => {
+  let body!: ReadableStreamDefaultController<Uint8Array>;
+  let calls = 0;
+  const { queue, playback, statuses } = setup(async () => {
+    calls++;
+    return speechResponse(
+      new ReadableStream({
+        start(c) {
+          body = c;
+        },
+      }),
+    );
+  });
+  queue.accept(token, 'Hello. Next');
+  await settle();
+  body.enqueue(pcm(1));
+  await settle();
+  queue.accept(token, 'x'.repeat(2400));
+  body.enqueue(pcm(1));
+  body.close();
+  await settle();
+  expect(statuses).toContain('SPEECH_TEXT_OVERFLOW');
+  expect(playback.outstandingSeconds()).toBeCloseTo(2);
+  expect(calls).toBe(1);
+});

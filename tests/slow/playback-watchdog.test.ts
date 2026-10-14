@@ -81,3 +81,49 @@ it('intentional cancellation excludes stalled detection and clears pending speec
   await vi.advanceTimersByTimeAsync(4000);
   expect(reasons).not.toContain('PLAYBACK_STALLED');
 });
+it('resets an empty failed context so a later generation recovers despite an unresolved old resume', async () => {
+  const first = new AudioClock(),
+    second = new AudioClock();
+  first.state = 'suspended';
+  first.resumeGate = new Promise(() => {});
+  let current = token;
+  const reasons: string[] = [];
+  const playback = new Playback(
+    first.context(),
+    (t) => t === current,
+    Promise.resolve(),
+    () => second.context(),
+  );
+  queue = new SpeechQueue({
+    playback,
+    segmentChars: 84,
+    isCurrent: (t) => t === current,
+    synthesize: async () => speechResponse(pcm(0.1)),
+    onStatus: (_t, _s, r) => {
+      if (r) reasons.push(r);
+    },
+    now: () => Date.now(),
+  });
+  queue.accept(token, 'Old. Next');
+  await vi.advanceTimersByTimeAsync(2050);
+  expect(reasons).toContain('SPEECH_RESUME_FAILED');
+  current = { ...token, generation: 2 };
+  queue.accept(current, 'New. Next');
+  await settle();
+  expect(second.sources).toHaveLength(1);
+  expect(first.closed).toBe(true);
+  expect(playback.outstandingSeconds()).toBeGreaterThan(0);
+});
+it('waits for an unexpectedly suspended low-water ledger before admitting another request', async () => {
+  const { clock, playback, reasons } = setup();
+  queue.accept(token, 'First. Second. Tail');
+  await settle();
+  clock.currentTime = 2;
+  clock.state = 'suspended';
+  clock.resumeGate = new Promise(() => {});
+  await vi.advanceTimersByTimeAsync(2050);
+  expect(reasons).not.toContain('SPEECH_RESUME_FAILED');
+  expect(playback.outstandingSeconds()).toBeCloseTo(1.01);
+  await vi.advanceTimersByTimeAsync(1050);
+  expect(reasons).toContain('PLAYBACK_STALLED');
+});

@@ -134,7 +134,7 @@ export class TurnController {
           speech: 'interrupted',
           speechReason: 'Output interrupted.',
         });
-      else if (view.status === 'complete')
+      else if (view.status === 'complete' || view.status === 'truncated')
         this.publish({
           ...view,
           speech: 'interrupted',

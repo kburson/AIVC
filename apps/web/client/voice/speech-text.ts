@@ -114,7 +114,9 @@ export class SpeechText {
       if (text[i] === '.') {
         const prefix = text.slice(0, i + 1);
         if (
-          /(?:^|\s)(?:Dr|Mr|Mrs|Ms|Prof|Sr|Jr|St|vs|etc)\.$/iu.test(prefix) ||
+          /(?:^|[^\p{L}\p{N}_])(?:Dr|Mr|Mrs|Ms|Prof|Sr|Jr|St|vs|etc)\.$/iu.test(
+            prefix,
+          ) ||
           /(?:[A-Za-z]\.){2,}$/u.test(prefix)
         )
           continue;

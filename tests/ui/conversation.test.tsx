@@ -424,3 +424,145 @@ it('keeps future typed answers silent while output is muted even when playback a
     screen.getAllByText('Atlas is active, owned by North, with 3 open items.'),
   ).toHaveLength(2);
 });
+it('Stop after a truncated terminal ends Speaking while retaining literal text and excluding follow-up history', async () => {
+  const { AudioClock, pcm, speechResponse } =
+    await import('../voice/audio-fixture');
+  vi.stubGlobal('AudioContext', AudioClock);
+  vi.stubGlobal('fetch', async (url: string) =>
+    String(url).includes('capabilities')
+      ? new Response(
+          JSON.stringify({ ...mockCapabilities, speechAvailable: true }),
+        )
+      : speechResponse(pcm(3)),
+  );
+  const histories: HistoryMessage[][] = [];
+  const transport: typeof startTurn = async function* (token, _input, history) {
+    histories.push(history);
+    const es = events(token.turnId);
+    yield* es.slice(0, -1);
+    yield {
+      ...es.at(-1)!,
+      data: { text: finalText, status: 'truncated' },
+    } as TurnEvent;
+  };
+  render(<Conversation transport={transport} />);
+  await start('Atlas?');
+  await waitFor(() =>
+    expect(screen.getByRole('status').textContent).toBe('Speaking'),
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Stop' }));
+  expect(screen.getByRole('status').textContent).toBe('Ready');
+  expect(
+    screen.getByText('Atlas is active, owned by North, with 3 open items.'),
+  ).toBeTruthy();
+  await start('Next');
+  await waitFor(() => expect(histories).toHaveLength(2));
+  expect(histories[1]).toEqual([]);
+});
+it('keeps the omitted-word reason visible after later PCM and playback completion', async () => {
+  const { AudioClock, pcm, speechResponse } =
+    await import('../voice/audio-fixture');
+  const clocks: InstanceType<typeof AudioClock>[] = [];
+  vi.stubGlobal(
+    'AudioContext',
+    class extends AudioClock {
+      constructor() {
+        super();
+        clocks.push(this);
+      }
+    },
+  );
+  vi.stubGlobal('fetch', async (url: string) =>
+    String(url).includes('capabilities')
+      ? new Response(
+          JSON.stringify({
+            ...mockCapabilities,
+            speechAvailable: true,
+            speech: { ...mockCapabilities.speech, segmentChars: 10 },
+          }),
+        )
+      : speechResponse(pcm(0.1)),
+  );
+  const text = 'One abcdefghijklmnop next.\n\nLast.';
+  const transport: typeof startTurn = async function* (token) {
+    let delta = 0;
+    for (const e of events(token.turnId)) {
+      if (e.type === 'answer.delta')
+        yield {
+          ...e,
+          data: {
+            text: ['One abcdefghijklmnop next.', '\n\n', 'Last.'][delta++],
+          },
+        };
+      else if (e.type === 'turn.completed')
+        yield { ...e, data: { ...e.data, text } };
+      else yield e;
+    }
+  };
+  render(<Conversation transport={transport} />);
+  await start('Atlas?');
+  await waitFor(() => expect(clocks[0].buffers.length).toBeGreaterThan(0));
+  expect(
+    screen.getByText(
+      (_t, node) =>
+        node?.tagName === 'P' &&
+        !!node.textContent?.includes('SPEECH_TOKEN_TOO_LONG'),
+    ),
+  ).toBeTruthy();
+  clocks[0].currentTime = 20;
+  await waitFor(() =>
+    expect(screen.getByRole('status').textContent).toBe('Ready'),
+  );
+  expect(
+    screen.getByText(
+      (_t, node) =>
+        node?.tagName === 'P' &&
+        !!node.textContent?.includes('SPEECH_TOKEN_TOO_LONG'),
+    ),
+  ).toBeTruthy();
+  expect(screen.getByText('One abcdefghijklmnop next.')).toBeTruthy();
+});
+it('cancels audible partial speech on a failed answer stream and preserves displayed partial text', async () => {
+  const { AudioClock, pcm, speechResponse } =
+    await import('../voice/audio-fixture');
+  const clocks: InstanceType<typeof AudioClock>[] = [];
+  vi.stubGlobal(
+    'AudioContext',
+    class extends AudioClock {
+      constructor() {
+        super();
+        clocks.push(this);
+      }
+    },
+  );
+  vi.stubGlobal('fetch', async (url: string) =>
+    String(url).includes('capabilities')
+      ? new Response(
+          JSON.stringify({ ...mockCapabilities, speechAvailable: true }),
+        )
+      : speechResponse(pcm(3)),
+  );
+  let fail!: () => void;
+  const pending = new Promise<void>((r) => (fail = r));
+  const transport: typeof startTurn = async function* (token) {
+    yield* events(token.turnId).slice(0, -1);
+    await pending;
+    throw new SseDecodeError('STREAM_DISCONNECTED', 'lost');
+  };
+  render(<Conversation transport={transport} />);
+  await start('Atlas?');
+  await waitFor(() => expect(clocks[0].sources.length).toBeGreaterThan(0));
+  fail();
+  await screen.findByText('Connection ended before the answer completed.');
+  expect(clocks[0].sources.every((s) => s.stopped)).toBe(true);
+  expect(
+    screen.getByText(
+      (_t, node) =>
+        node?.tagName === 'P' &&
+        !!node.textContent?.startsWith('Speech: failed'),
+    ),
+  ).toBeTruthy();
+  expect(
+    screen.getByText('Atlas is active, owned by North, with 3 open items.'),
+  ).toBeTruthy();
+});

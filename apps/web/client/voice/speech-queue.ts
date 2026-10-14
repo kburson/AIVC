@@ -41,6 +41,7 @@ type State = {
   resumeAt: number | null;
   stallAt: number | null;
   readyReported: boolean;
+  notice: string | undefined;
 };
 /** Request-level backpressure. Active small bodies are always drained promptly. */
 export class SpeechQueue {
@@ -71,9 +72,10 @@ export class SpeechQueue {
     if (this.state) this.cancel(this.state.token, 'TURN_INTERRUPTED');
     const state: State = {
       token,
-      scanner: new SpeechText(this.options.segmentChars, (reason) =>
-        this.options.onStatus(token, 'failed', reason),
-      ),
+      scanner: new SpeechText(this.options.segmentChars, (reason) => {
+        state.notice = reason;
+        this.options.onStatus(token, 'failed', reason);
+      }),
       pending: [],
       closed: false,
       disabled: false,
@@ -86,6 +88,7 @@ export class SpeechQueue {
       resumeAt: null,
       stallAt: null,
       readyReported: false,
+      notice: undefined,
     };
     this.state = state;
     return state;
@@ -163,7 +166,7 @@ export class SpeechQueue {
       !state.readyReported
     ) {
       state.readyReported = true;
-      this.options.onStatus(state.token, 'ready');
+      this.options.onStatus(state.token, 'ready', state.notice);
     }
     this.pump(state);
   }
@@ -175,7 +178,9 @@ export class SpeechQueue {
       state.busy ||
       this.transportBusy ||
       !state.pending.length ||
-      this.options.playback.outstandingSeconds() > 2
+      this.options.playback.outstandingSeconds() > 2 ||
+      (!this.options.playback.isRunning() &&
+        this.options.playback.outstandingSeconds() > 0)
     )
       return;
     state.busy = true;
@@ -183,6 +188,7 @@ export class SpeechQueue {
   }
   private async run(state: State): Promise<void> {
     const playback = this.options.playback;
+    let ownsTransport = false;
     try {
       state.resumeAt = this.now();
       try {
@@ -205,6 +211,7 @@ export class SpeechQueue {
       const abort = new AbortController();
       state.abort = abort;
       this.transportBusy = true;
+      ownsTransport = true;
       const response = await (this.options.synthesize ?? synthesizeSpeech)(
         {
           turnId: state.token.turnId,
@@ -217,7 +224,10 @@ export class SpeechQueue {
         await response.body?.cancel().catch(() => {});
         return;
       }
-      if (!response.ok) throw new Error('SPEECH_FAILED');
+      if (!response.ok) {
+        await response.body?.cancel().catch(() => {});
+        throw new Error('SPEECH_FAILED');
+      }
       const headers = response.headers;
       if (
         headers.get('content-type')?.split(';')[0].trim().toLowerCase() !==
@@ -226,8 +236,10 @@ export class SpeechQueue {
         headers.get('x-audio-sample-rate') !== '24000' ||
         headers.get('x-audio-channels') !== '1' ||
         !response.body
-      )
+      ) {
+        await response.body?.cancel().catch(() => {});
         throw new Error('INVALID_PCM');
+      }
       const reader = response.body.getReader();
       state.reader = reader;
       const decoder = new PcmDecoder();
@@ -242,7 +254,7 @@ export class SpeechQueue {
           if (samples > 240000) throw new Error('AUDIO_OVERFLOW');
           playback.enqueue(state.token, decoded);
           if (decoded.length && !state.disabled)
-            this.options.onStatus(state.token, 'speaking');
+            this.options.onStatus(state.token, 'speaking', state.notice);
         }
         decoder.finish();
       } finally {
@@ -261,7 +273,7 @@ export class SpeechQueue {
       state.busy = false;
       state.resumeAt = null;
       state.abort = null;
-      this.transportBusy = false;
+      if (ownsTransport) this.transportBusy = false;
       if (this.state) this.pump(this.state);
     }
   }

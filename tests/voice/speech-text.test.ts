@@ -6,6 +6,7 @@ import {
 import { wireDeltaFixture } from '../helpers/wire-contract-fixtures';
 const cases: Array<[string, string[]]> = [
   ['Hello. Next', ['Hello.', 'Next']],
+  ['Ask (Dr. Jones) now. Next.', ['Ask (Dr. Jones) now.', 'Next.']],
   [
     'Dr. Jones met the U.S. team. The value is 3.5.',
     ['Dr. Jones met the U.S. team.', 'The value is 3.5.'],
