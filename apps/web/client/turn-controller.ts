@@ -10,7 +10,7 @@ import { validateTurnEvent } from '../shared/validation';
 import { assertTurnSequence, SseDecodeError } from '../shared/sse';
 export type TurnToken = { generation: number; turnId: string };
 export type SpeechStatus =
-  'unavailable' | 'muted' | 'failed' | 'interrupted' | 'ready';
+  'unavailable' | 'muted' | 'failed' | 'interrupted' | 'ready' | 'speaking';
 export type TurnView = TurnToken & {
   user: string;
   question: string;
