@@ -124,138 +124,173 @@ A separate comparison explains conceptual layer necessity versus technology choi
 
 ## Contextual tutor
 
-The first implementation uses the learner's Anthropic API key and text answers. Optional spoken tutor interaction is an extension using Deepgram; it is not required to consume authored course narration. Tutor endpoints belong to the tutorial server, proposed as `GET /api/tutorial/status` and `POST /api/tutorial/tutor`. Final event schemas and limits belong in the implementation plan, with normalized text, validated citations, completion/failure status, and provider usage when available.
+The first implementation uses the learner's Anthropic API key and text answers. Optional spoken tutor interaction is an extension using Deepgram; it is not required to consume authored course narration. Proposed tutorial endpoints are `GET /api/tutorial/status` and `POST /api/tutorial/tutor`. The plan defines normalized event schemas and concrete limits for body/file size, total context, deadlines, concurrency, output tokens and tool calls, with text, validated citations, completion/failure status and actual provider usage. Analyze tutorial requirements rather than copying reference-app budgets without justification.
 
-The request contains question, course edition, module/concept ID, selected snippet or diagram element ID, audience/depth preference, source mode, and bounded conversation context. Server lookup resolves these IDs against the curated manifest; the browser cannot supply authoritative file contents or arbitrary fetch URLs.
+A tutor request identifies the question, course edition, module/concept, selected snippet/diagram element, audience/depth, explicitly selected source experience and bounded conversation context. The server resolves those IDs against curated manifests and the source-selection contract below. The browser cannot supply authoritative file contents or arbitrary fetch URLs. Prior answers are conversation data, not source authority. Retrieve current-lesson evidence first, then selected source, related concepts and curated official-reference excerpts. Begin with explicit source mappings and bounded lexical lookup; vector infrastructure and a generalized agent framework are not prerequisites.
 
-Retrieval prioritizes current lesson evidence, selected source, prerequisite/related concepts, and curated official-reference excerpts. Start with explicit source mappings and bounded lexical lookup across approved text; a vector database or generalized agent framework is not a baseline requirement. Fetch and parse sources into chunks with path, revision, line/section range, content hash, and origin. Apply file-size, total-context, turn/deadline, concurrency, output-token, and tool-call limits; the plan must choose and test concrete values rather than inherit reference-app budgets without analysis.
+Every evidence chunk records path, revision, line/section range, hash and origin. AIVC behavior claims require AIVC evidence; framework explanations may cite official references. Answers distinguish documented intent, implemented behavior, simulation and inference, offer cross-references, and report missing evidence directly. Treat source comments/documents as untrusted data that cannot change policy, obtain secrets, execute commands or broaden approved retrieval. Render safe Markdown and validated links rather than raw HTML or provider reasoning.
 
-The tutor explains what the evidence supports, cites repository paths and revisions, and distinguishes design intent, implemented behavior, simulation, and inference. It can offer a short answer with links to deeper modules. Missing evidence leads to an explicit gap and relevant source links. An answer about framework behavior can cite official documentation; a claim about AIVC behavior needs AIVC evidence. Source material is untrusted data, including repository comments/documents; it cannot change tutor policy, obtain secrets, execute commands, or broaden approved retrieval scope.
+Tutor tools perform bounded read-only retrieval. They cannot execute labs, mutate repositories, send messages, run shell commands, trigger paid lab requests or clear runtime data. Keep conversation in browser memory by default with explicit clear controls and no automatic export. Missing keys, source/network gaps, provider errors/rate limits, exhausted context and invalid citations produce distinct actionable statuses while leaving lessons/simulations usable. Cancel obsolete answers and block late callbacks. Never automatically replay paid calls after an ambiguous failure or disconnect.
 
-Tutor tools are read-only bounded retrieval. The tutor does not execute labs, mutate repositories, send messages, run shell commands, or trigger paid lab requests. Active lab execution is learner-controlled. Render safe Markdown and validated source links, not raw HTML or provider reasoning. Keep tutor conversation in browser memory by default, with explicit clear controls and no automatic transcript export.
+### Tutorial server admission
 
-Missing tutor credentials, offline GitHub, provider errors/rate limits, context exhaustion, and invalid citations produce distinct actionable status. Preserve the course and authored simulations when tutor access fails. Cancellation prevents obsolete answers from updating the active question. Do not automatically replay paid calls after an ambiguous failure or disconnect.
+The tutorial has its own caller boundary. Define `TUTORIAL_ALLOWED_HOSTS` and `TUTORIAL_ALLOWED_ORIGINS`, initially `localhost:3002,127.0.0.1:3002` and `http://localhost:3002,http://127.0.0.1:3002`. Validate explicit loopback host/port entries at startup. A custom port requires matching explicit configuration; no wildcards, inferred origins, unchecked forwarded headers or silent port changes. Invalid admission configuration fails closed. These settings do not expand the reference BFF allowlist.
+
+Every tutorial server endpoint validates the request Host against its configured list before returning metadata or processing work. The tutor POST additionally requires a well-formed non-null Origin in the tutorial list whose host/port matches the validated request Host. Apply the same stronger Origin/Host admission to every tutorial endpoint that mutates runtime data or retrieves/returns local, private or selected repository source, even if unpaid. Reject missing, malformed, null, disallowed or mismatched values before reading a body, opening files, consulting source caches, contacting GitHub or invoking providers.
+
+The tutor accepts `Content-Type: application/json` only. Caller rejection takes precedence over media/body validation and returns HTTP 403 with stable code `TUTORIAL_ORIGIN_NOT_ALLOWED`, null request identifier and `retryable: false`; the plan defines the final error envelope. After successful admission, unsupported media types return HTTP 415 before body processing or retrieval. Input validation, measured body caps, concurrency and deadlines follow admission. Document explicit Origin/Host requirements for local CLI requests.
+
+The unpaid status GET requires Host only, performs no source/provider request, and returns sanitized readiness flags and public course-edition identifiers. It returns no private repository names/paths, source snippets, filesystem locations, questions or credentials. Public bundled lesson assets contain publication-approved course material only. No source-returning GET endpoint exists in the baseline; a future one must obey the stronger source-access rule. An unpaid endpoint cannot bypass that boundary.
+
+This protects browser-origin admission, not local processes that can deliberately supply headers. CORS response-reading restrictions alone do not establish it. Test JSON and cross-origin safelisted form/multipart/text requests, demonstrating rejection before body/source/cache/GitHub/provider work. Valid origins and explicitly configured ports remain usable.
 
 ## Source provenance and revision handling
 
-Support two source modes:
+Ordinary learning and tutoring use the course edition's pinned source snapshot, even when local HEAD or a remote branch advances. An edition records a full commit SHA, curated file hashes/ranges, official-reference provenance and publication-approved bundled excerpts. Its installed snapshot is usable without runtime refresh. Official-reference excerpts are likewise edition-bound by stored content/hash and publication metadata; mutable URLs alone do not establish the cited bytes.
 
-1. Checked-out revision: curated tracked files resolved from the local repository's HEAD. Resolve the physical repository root on the server, enforce containment, and read approved tracked paths. Keep the revision and hashes visible.
-2. GitHub revision: approved paths from configured `kburson/AIVC` or an explicitly configured fork. Resolve a selected branch/tag to a full commit SHA before fetching; pin that question's retrieval to the resolved SHA. Use commit-specific blob links and validated line anchors.
+Local Git and GitHub are retrieval backends, separate from the selected learning experience. Local committed mode reads approved tracked paths from the selected commit's Git objects, not working-tree bytes labeled with HEAD. Resolve the physical repository root and enforce containment/approved paths. GitHub mode reads configured `kburson/AIVC` or an explicitly configured fork; resolve selected refs once to a full SHA and use commit-specific blob links with validated line anchors.
 
-Course editions pin their reference revision. A learner may explicitly compare with another revision; the interface shows which content differs. Never silently mix snippets from multiple revisions in one ordinary lesson or answer. A comparison answer labels each revision separately. Source not yet present is unavailable/planned, not replaced by a fabricated implementation.
+| Source experience | Authority and displayed behavior |
+|---|---|
+| Course edition — default | Use its bundled pinned snapshot. An explicit refresh verifies/retrieves only that same SHA. Local/remote advancement does not replace it. |
+| Explore another committed revision | Learner explicitly selects local HEAD or a GitHub ref; resolve/freeze its SHA. Show an exploration banner, edition SHA and selected SHA. Answers describe the selected revision; unchanged edition examples remain labeled as edition material. |
+| Compare revisions | Explicitly compare the edition with another resolved revision. Label each source and describe differences. |
+| Working-copy exploration | Explicit opt-in to curated local modifications. Show captured path/content hashes and base commit as uncommitted evidence; use local links rather than claiming GitHub contains these bytes. |
 
-Local lab modifications can be discussed through an explicit working-copy mode that labels modified paths and hashes as uncommitted local evidence; it cannot supply a GitHub link that claims those bytes exist in a commit. Dirty source does not rewrite the course edition. Baseline operation with committed HEAD remains reproducible.
+With edition A and HEAD B, default lessons/tutoring still use A. Selecting B explicitly enters exploration or comparison. Freeze identity for each request: ref/HEAD changes cannot alter committed bytes midway. Working-copy mode captures/hashes approved bytes once with physical containment/symlink checks; subsequent edits create a new context generation. Dirty mapped files stay excluded from committed evidence.
 
-Use a curated manifest rather than indiscriminate repository ingestion. Include application code/contracts, architecture documents, accepted plans, setup/tutorial material, selected tests, and relevant synthetic fixtures. Exclude environment files, credentials, machine-local state, scratch data, logs, unrelated private material, and sealed review dumps by default. Collateral such as binary PDFs/media remains linked with metadata unless a tested extraction adapter is explicitly added; unsupported files cannot be represented as fully read.
+Changing edition, repository, selected SHA, comparison pair or working-copy generation cancels the active answer, resets tutor conversation and invalidates stale callbacks. Context identity includes those selections/hashes. Earlier answers may remain in a separately labeled history view but are not automatically sent into the new context. Missing source at a chosen revision is unavailable/planned, never invented.
 
-Cache approved sources locally by repository + SHA + path + hash; show last retrieval and offline/cache status. Retain the installed course snapshot for offline lessons. GitHub rate-limit/authentication failures keep that snapshot usable. Public-source access may work without a token; document optional token configuration for API limits/private forks with minimal needed read access. Tokens stay server-local and absent from bundles, traces, exports, and manifests.
+If a selected commit is unavailable locally, the learner may explicitly retrieve that exact SHA from configured GitHub when access permits. Otherwise display unavailable source. Preserve authored edition lessons/simulations; questions needing missing evidence report the gap without silently selecting a different revision. An explicit return to Course edition resets context and restores bundled authority. Comparison requires both labeled sources or reports the unavailable side.
+
+Use a curated corpus: relevant application contracts/code, architecture documents, accepted plans, setup/tutorial material, selected tests and synthetic fixtures. Exclude environment files, credentials, scratch/runtime state, logs, unrelated private material and sealed review dumps. Binary PDFs/media remain linked with metadata unless a tested extraction adapter is added; unsupported collateral cannot be claimed as fully read.
+
+Store refreshed approved sources by repository + SHA + path + hash under ignored `.tmp/tutorial/source-cache/`; optional local lab observations belong in ignored `.tmp/tutorial/lab-observations/`. Private-fork/working-copy evidence must never enter committed course assets, bundles, default progress exports or diagnostic logs. Runtime caches/observations are separate from publication manifests and portable progress. Setup/readiness describes retention and exposes explicit clear/delete controls that preserve bundled course assets and keys. Those runtime mutations require tutorial admission and cannot be initiated by the tutor.
+
+Logs contain sanitized operational metadata (request IDs, status, duration, counts), not questions, answer text, source bodies, audio, tokens or private repository/path names. Conversation clearing removes browser-memory conversation; runtime-data clearing removes selected source caches/observations. Local data remains until explicitly cleared; no automatic cloud synchronization. Clearing cannot retract earlier authorized provider transmissions.
+
+Show cache/retrieval status and active revision. Public GitHub access may work without a token; document optional minimal read access for limits/private forks. Tokens remain server-local and absent from bundles, traces, exports and manifests. Authentication/rate-limit failures preserve the edition snapshot without implying successful refresh/comparison.
 
 ## Narration, diagrams, and animations
 
-Use authored narration synchronized with captions and diagram timeline events. Each clip has text transcript, scene/cue IDs, duration metadata, and the course revision it describes. Store scripts and approved assets with clear authorship/license metadata. Reuse one authored scene across audience paths where its facts are the same; provide optional deeper explanations rather than duplicate courses.
+Use authored narration synchronized with captions and diagram events. Each clip has transcript, scene/cue IDs, duration metadata and course revision; scripts/assets record authorship/license. Reuse factually shared scenes across paths with optional deeper explanations. Normal playback serves recorded local clips without provider calls. Optional authoring-time synthesis uses the author's credentials in a controlled later asset workflow; learner Deepgram keys are unnecessary for bundled narration. Sample lab audio is authored or licensed for redistribution.
 
-The normal course serves recorded clips without a provider request on each playback. Optional authoring-time synthesis uses the author's own credentials in a later controlled asset workflow; learners do not need Deepgram merely to listen to bundled narration. Sample audio for transcription labs must be authored or licensed for repository redistribution.
+Provide play/pause, replay, speed, mute, captions, transcript, keyboard navigation, text alternatives and reduced motion; no page-load autoplay speech. Step mode advances events manually. Highlight diagram boundaries and matching code with accessible labels and a readable textual sequence. Use code-native diagrams/animations; captions/text remain useful with sound or motion disabled.
 
-Provide play/pause, replay, speed, mute, captions, transcript, keyboard navigation, text alternatives, and reduced-motion behavior. No autoplay speech on page load. Step mode lets learners advance request/tool/audio events manually. Highlight a diagram boundary and corresponding code together; include accessible labels and a readable textual sequence. Use code-native diagrams and animations for inspectable request/state behavior. Captions and text remain useful with sound or motion disabled.
+Initial desktop browser targets are Chrome and Edge with actual tested versions recorded per release. Verify keyboard-only navigation in both and a documented manual macOS VoiceOver/Chrome pass; additional combinations have their own evidence. Check focus order/visibility/restoration, accessible names, non-color diagram meaning, textual source/sequence alternatives, caption/transcript access and synchronized cues after speed/seek changes. Record failures instead of inferring assistive-technology success from automated checks.
 
-Entertaining scenarios include assembling a valid request, predicting whether a domain lookup is needed, playing the tool dispatcher, observing delayed/stale output, and diagnosing a failed boundary. Simulation speed is an instructional control, not a benchmark. Show simulated timing/output visibly as simulated.
+Entertaining scenarios assemble requests, predict tool use, let the learner act as dispatcher, expose stale output and diagnose failures. Simulated timing/output stays visibly labeled; playback speed is an instructional control, not a benchmark.
 
 ## Simulations and hands-on labs
 
-Simulations run deterministically without GitHub, API keys, microphone permission, or reference services. Scenario fixtures define initial state, learner actions, events, expected decisions, and explanations. Use the same named architectural concepts/contracts as the real project, but keep deterministic fixtures visibly distinct from live traces. Learners can reset/replay and compare prediction with the outcome.
+Simulations are deterministic without GitHub, keys, microphone permission or reference services. Fixtures specify state, actions, events, expected decisions and explanations. Reuse real architectural concepts/contracts, while visibly distinguishing fixtures from live traces. Support reset/replay and prediction comparison.
 
-Optional labs name prerequisites, exact source revision, services/ports, commands, inputs, expected observations, verification, provider usage conditions, cleanup, and links back to decisions. Start with local synthetic retrieval, then direct provider requests, typed BFF aggregation, and browser voice/interruption. Keep code-edit exercises small and have learners use their own branch; do not change the shared reference fixture/schema as an automatic tutorial action.
+Optional labs identify prerequisites, source revision, services/ports, commands, inputs, observations, verification, provider usage, cleanup and related decisions. Start with synthetic retrieval, then direct providers, typed BFF aggregation and browser voice/interruption. Code edits are bounded and use the learner's branch; the tutorial does not automatically modify shared reference fixtures/contracts.
 
-The tutorial origin :3002 is different from the reference BFF origin :3000. Existing paid BFF endpoints require permitted Origin and matching Host before upstream work. Run browser labs in the reference application's own tab. Postman/CLI exercises send the configured reference Origin and matching destination Host. Do not widen the BFF allowlist or disable admission for tutorial convenience. An embedded cross-origin live runner/proxy is a separate future design, not a baseline dependency.
+The tutorial origin :3002 differs from reference BFF :3000. Run browser labs in the reference application's own tab. Postman/CLI supply the configured reference Origin and matching destination Host. Preserve pre-upstream admission; do not widen its allowlist or disable checks for convenience. An embedded cross-origin runner/proxy requires a separate future design.
 
-Live actions are explicitly initiated by the learner and show which provider/account settings are used and that usage may be billed. Simulations never quietly make live calls. Display actual usage when supplied; any future monetary calculation needs current pricing and labeled assumptions. Readiness distinguishes services/configured keys from verified live functionality. Record live lab observations locally with revision, scenario, timestamp, environment and pass/failure details, excluding secrets and raw personal audio by default.
+Learners explicitly initiate live actions with visible provider/account settings and billing implications. Simulations never quietly make live calls. Show actual provider usage; future cost calculations require current pricing and labeled assumptions. Readiness distinguishes configuration from verified functionality. Local lab observations record revision, scenario, timestamp, environment and pass/failure without secrets/raw personal audio by default, following the runtime-data policy above.
 
 ## Postman collections
 
-Deliver four importable collection JSON files, a sanitized shared local environment template, a provider environment template, instructions, safe sample payloads/audio, and request-to-module/source mappings. Exported environment values for all keys/tokens are empty. Learners set their own local values. Include equivalent curl requests so Postman is optional.
+Deliver four importable JSON collections, sanitized shared local/provider environment templates, instructions, safe sample payloads/audio and request-to-module/source mappings. Export key/token values empty; learners set their own local values. Provide equivalent curl requests.
 
 | Collection | Initial requests | Learning objective |
 |---|---|---|
-| Fastify domain | `GET /health`, `GET /v1/projects`, named Atlas lookup, no-match and malformed query cases | Domain contract, deterministic data, validation, statuses and serialized response |
-| Next.js BFF | `GET /api/capabilities`, multipart `POST /api/turn` with typed input and with sample WAV, `POST /api/speech`, invalid admission/input cases | Thin transport versus orchestration, normalized SSE, speech bytes, visible failures |
-| Anthropic | Basic `POST /v1/messages`, streaming request, custom tool declaration, deliberate tool-result continuation | Raw HTTP versus SDK, state supplied per turn, tool IDs/content blocks, usage and stop reasons |
-| Deepgram | Prerecorded `POST /v1/listen` with sample WAV; `POST /v1/speak` with short text and contrasting supported output settings | Auth, media input/output, transcription structure, encoding/sample rate and binary inspection |
+| Fastify domain | `GET /health`, `GET /v1/projects`, Atlas lookup, no-match and malformed queries | Domain contract, deterministic data, validation, statuses and serialization |
+| Next.js BFF | `GET /api/capabilities`, multipart typed/WAV `POST /api/turn`, `POST /api/speech`, admission/input failures | Transport versus orchestration, normalized SSE, binary speech and visible failures |
+| Anthropic | Basic/streaming `POST /v1/messages`, custom tool declaration and deliberate tool-result continuation | HTTP versus SDK, supplied context, tool IDs/blocks, usage and stop reasons |
+| Deepgram | Prerecorded `POST /v1/listen`, `POST /v1/speak` with supported contrasting media settings | Auth, media formats, transcription structure, sample rate and binary inspection |
 
-Provider examples use configurable model/voice IDs from actual tested accounts and the documented API versions/settings. Anthropic request headers and Deepgram authentication follow official documentation at publication time. Avoid hardcoding an assumed universally available model. Anthropic does not directly invoke the local Fastify service: the learner performs the tool call and sends the correctly correlated result, mirroring BFF ownership.
+Use configurable tested model/voice IDs and documented API versions/settings. Validate provider headers/auth at publication; never assume universal model availability. Anthropic requests a tool; the learner performs the local lookup and sends its correlated result, mirroring BFF ownership.
 
-Each request includes purpose, prerequisites, headers/body, expected schema/status, captured synthetic example, troubleshooting, lesson ID, source reference, and whether it incurs provider usage. Local tests assert meaningful schemas/statuses; negative paid-boundary cases prove rejection before provider work using offline instrumentation where needed. Live provider request groups are excluded from default unattended collection runs.
+Each request has purpose, prerequisites, headers/body, expected schema/status, synthetic example, troubleshooting, lesson/source IDs and provider-usage label. Meaningful local schema/status tests cover errors; offline instrumentation proves rejected paid-boundary requests cause zero upstream calls. Exclude live provider groups from default unattended collection runs.
 
-Inspect SSE/binary behavior in the tested Postman version and document its actual capabilities. Pair collections with browser/CLI demonstrations for stream timing and PCM playback; response inspection alone does not prove microphone, speaker, interruption, or continuous audio behavior. The planned BFF returns raw 24 kHz PCM without a WAV header, so a playback exercise must supply format-aware decoding or an explicitly documented conversion rather than treat it as an ordinary WAV file.
+Publish against the edition's authoritative BFF contract. The current turn requires `turnId`, JSON-encoded `history` and exactly one of `text`/`audio`; text is at most 2,000 characters. WAV is mono signed PCM16 at 16 kHz, at most 30 seconds, within the measured 2 MiB body cap. History is at most four complete pairs/eight messages and 16,000 characters. Speech requires `{ turnId, segmentId, text }` within advertised `min(120, floor(6 * SPEECH_CHARS_PER_SECOND))`, initially 84 characters at 14 characters/second. New editions derive examples from their pinned contract/capabilities rather than copied assumptions. Validate sample headers and file selection after import into a second clone; export no author-machine absolute paths. Direct Deepgram examples may show broader formats, explicitly distinguished from narrower BFF acceptance.
+
+Inspect SSE/binary behavior in the documented Postman version. Pair with browser/CLI checks for stream timing and PCM playback; HTTP inspection does not prove microphone, playback or interruption. The BFF returns raw mono PCM16 at 24 kHz without a WAV header, requiring format-aware decoding or documented conversion for playback.
 
 ## Setup and sharing
 
-The setup guide must prominently state: other learners clone AIVC and provide their own API keys; keys are never supplied by the repository. Provider API usage may incur charges, and consumer-app subscriptions do not supply the configured API credentials.
+Prominently state that learners clone AIVC and supply their own keys; the repository supplies none. Provider usage may be billed; consumer subscriptions are not configured API credentials. Document pinned toolchain/dependencies, sanitized environment copying, local key entry, source experience/revision, tutorial and optional service start, Postman import, runtime-data clearing and troubleshooting.
 
-Document toolchain selection, dependency installation, environment-template copying, local key entry, source-mode/revision selection, tutorial start, optional reference-service start, Postman import, and troubleshooting. Include a feature matrix:
-
-| Capability | Required configuration |
+| Capability | Prerequisites |
 |---|---|
-| Bundled lessons, narration, simulations and progress | Installed repository/toolchain; no provider credentials |
-| GitHub refresh/revision comparison | Network access; token when access/limits require it |
-| Contextual tutor | Anthropic API key and configured available model; usable lesson/source evidence |
+| Bundled lessons/narration/simulations/progress | Installed repository/toolchain; no provider keys |
+| GitHub refresh/comparison | Network; token when access/limits require it |
+| Contextual tutor | Anthropic key, available configured model, usable lesson/source evidence |
 | Fastify local labs | Reference domain service running |
-| Live typed reference turn | Reference BFF/domain services and reference Anthropic configuration |
-| Direct/live speech and voice labs | Deepgram API key/model settings; browser microphone permission for capture labs |
+| Live typed reference turn | Reference BFF/domain services and Anthropic configuration |
+| Direct/live speech and voice labs | Deepgram key/model settings; microphone permission for browser capture |
 
-Give tutorial-specific configuration an explicit namespace, including tutorial model/key selection and source repository/ref/token/cache settings. The implementation plan defines exact names and validation. Learners may deliberately reuse their reference API account, but tutorial configuration must not silently depend on unrelated reference secrets. Keep all secrets in ignored server-local environment files. Document the expected external transmission of questions, retrieved code excerpts to the tutor provider, and audio/text to enabled speech APIs. Learners choose whether to enable private-fork retrieval and live features.
+Namespace tutorial configuration, including admission variables above and model/key/source repository/ref/token/cache settings. The plan chooses remaining exact names/validation. Account reuse is deliberate; no hidden dependence on reference secrets. Keys stay in ignored server-local files. Explain external transmission of questions/retrieved excerpts to the tutor and audio/text to enabled speech providers. Private-fork retrieval and live features are learner-selected.
 
-A readiness page reports course/source edition, toolchain check, local services, configuration presence, and verified/unverified live capability without showing credentials. Missing keys disable affected live features and present setup instructions; they leave the authored course usable. Do not claim a configured key or a healthy local endpoint proves live model/speech success.
+Readiness exposes sanitized flags/public edition identifiers as specified above; detailed private source context requires admitted source access. Missing keys show setup guidance while lessons remain usable. Configuration and local health do not prove a live provider pass.
+
+Cold offline acceptance begins after documented toolchain/dependency installation, which may require networking. Empty runtime source caches, remove prior tutorial build output, disable external networking, build the tutorial cleanly and start its local server. Use a fresh browser profile without warmed site/media caches to verify bundled text, fonts, diagrams, narration, captions, source snapshots, simulations and progress. Required build/runtime assets are local; no remote font/media/GitHub fetch is needed. This does not promise a browser-only/PWA restart without the server. Live/tutor features report their unavailable prerequisites accurately.
 
 ## First complete lesson and delivery sequence
 
-The first lesson is Ask about Atlas. Begin with typed input so the architecture can be learned before audio mechanics. Its complete vertical slice includes authored overview and narration, synchronized request diagram, actual or explicitly planned source references, an Atlas simulation, a contextual tutor exchange with citations, a BFF/domain decision matrix, a Fastify Postman request and optional typed BFF/provider lab. Deepgram examples can be introduced independently with sample media while the voice reference code remains incomplete.
+Start with Ask about Atlas and typed input before audio mechanics: authored overview/narration/captions, synchronized diagram, actual/planned source references, prediction/simulation, BFF/domain matrix, Fastify Postman example, and optional contextual-tutor/typed-BFF labs. Deepgram sample-media lessons can precede completed voice reference code, with accurate evidence labels.
 
-Subsequent stages deepen React/Next.js/Fastify and provider mechanics, add the speech journey, then cancellation/failure exercises and delivery/alternative discussions. Framework examples remain tied to real AIVC modules; broader topics link to official learning resources. This sequence is instructional/design guidance, not a reviewed implementation task breakdown, effort estimate, dependency schedule, or permission to implement.
+| Checkpoint | Completion scope |
+|---|---|
+| CP1 — Atlas guided/simulation | Cold-offline no-key lesson, assets, edition source labels, prediction/simulation, decision matrix, cross-references and accurate readiness. This is neither connected-provider verification nor the complete course. |
+| CP2 — Atlas connected | CP1, offline tutor/source/admission checks, genuine source-cited tutor exchange and observed Fastify/typed-BFF/Anthropic labs with recorded revisions/accounts/models. Missing keys/source leave live cases unverified. |
+| CP3 — Complete first edition | All eight modules/three paths, four validated collections, multimedia/accessibility/source/progress checks, and actual recorded live demonstrations for the curriculum's tutor/provider/voice labs, including Deepgram and browser voice/interruption. Unavailable required live cases prevent this completion claim. Optional spoken-tutor extensions remain outside the baseline. |
+
+Learners may complete authored material without opting into labs. Publisher verification is separate: advertised live labs need actual recorded evidence, and missing/failed cases remain nonpassing; simulation cannot replace them. The plan maps each checkpoint to its checks and supplies governed stories, estimates and dependencies. Subsequent stages deepen frameworks/providers, speech, reliability and delivery alternatives; this sequence is instructional guidance, not an approved implementation plan or permission to build.
 
 ## Acceptance and verification
 
-Future implementation must demonstrate:
+Future implementation must demonstrate, attributed to checkpoint and evidence mode:
 
-1. One cloned repository starts the tutorial independently under the pinned toolchain; documented lab commands start the reference services separately.
-2. Without credentials/network, bundled lessons, captions, narration, diagrams, simulations, cross-references and local progress work; live features show accurate readiness.
-3. All three audience paths reach the same stable modules, change depth without losing progress, and provide meaningful concept/source/decision links.
-4. The Atlas lesson completes its guided/simulation/tutor/lab sequence with explicit prerequisites and evidence status.
-5. All eight modules have outcomes, actual/planned evidence labels, technology explanations, decision matrices, simulations or appropriate exercises, and optional labs.
-6. Tutor answers cite validated evidence at the displayed revision, distinguish intent/implementation/inference, and clearly report missing evidence.
-7. Tests cover unknown module IDs, path traversal/symlink escapes, arbitrary URL/repository attempts, malicious instructions in source, invalid citations, mixed revisions, dirty working-copy labels, canceled answers, missing keys and provider failures.
-8. GitHub/cache failures preserve the installed course; branch resolution pins a request's SHA; unsupported collateral is labeled linked-only.
-9. Four Postman collections and sanitized environments import and execute in the documented version, map to lessons/source, preserve required BFF admission, and contain no credential values.
-10. Offline request-contract checks and explicit live smoke tests are separate. Stream/media assertions use appropriate instrumentation/browser/CLI checks rather than inferring playback from HTTP success.
-11. Narration has synchronized captions/transcripts and revision metadata; keyboard, reduced-motion, sound-off and text-only paths remain usable.
-12. Keys and sensitive inputs are absent from browser bundles, citations, logs, progress exports, cached manifests and committed artifacts. Only approved content is sent to provider calls.
-13. Meaningful checks validate content schemas, cross-reference integrity, snippet ranges/hashes, caption/cue consistency, deterministic scenarios, tutor/source boundaries and actual optional lab outcomes.
+1. One clone starts the tutorial independently with the pinned toolchain; lab commands start reference services separately.
+2. Cold offline acceptance includes clean initial build after installation, empty runtime caches, disabled external networking and a fresh browser. Bundled text/assets/narration/captions/diagrams/source snapshots/simulations/progress work; live readiness is accurate.
+3. Three paths share stable modules, preserve progress while changing depth and provide meaningful concept/source/decision links.
+4. CP1/CP2/CP3 have separate evidence; no-key Atlas does not pass connected/live or eight-module completion.
+5. Eight modules cover outcomes, technology mechanics, evidence labels, decision matrices, exercises and optional labs.
+6. Tutor citations validate against displayed source; answers distinguish intent/implementation/inference and report gaps.
+7. Tests cover unknown IDs, traversal/symlink escapes, arbitrary URL/repository attempts, malicious source instructions, invalid citations, cancellation, missing keys and provider failures.
+8. Edition A with HEAD B uses A by default. Explicit exploration/comparison freezes displayed identity; ref changes cannot mix committed bytes and dirty files are excluded. Source/context changes cancel/reset and block late callbacks. Unavailable commits show gaps without implicit fallback.
+9. Four collections/environments import in the recorded version, map to lessons/source, preserve admission, contain no credential values/author paths and apply pinned BFF fields/media/history/speech caps separately from direct providers.
+10. Offline contract checks and live smoke tests stay separate. Instrument/browser/CLI checks establish stream/media behavior, not HTTP success alone.
+11. Record Chrome/Edge versions, keyboard/focus/non-color/text alternatives, actual VoiceOver/Chrome observations, reduced-motion/sound-off behavior and synchronized cues/captions after speed/seek changes.
+12. Keys/sensitive inputs are absent from bundles/citations/diagnostic logs/progress exports/publication manifests/commits. Approved private/working-copy caches and observations stay in ignored storage with working clear controls; conversation and runtime clearing are distinct. Only approved evidence is transmitted to providers.
+13. Meaningful checks validate content schemas, links, source ranges/hashes, caption/cues, deterministic scenarios, tutor/source boundaries and actual lab observations.
+14. Other local/external, missing/null/malformed or mismatched Origin/Host requests return HTTP 403 and `TUTORIAL_ORIGIN_NOT_ALLOWED` before body/file/cache/GitHub/provider access. Exercise JSON plus safelisted form/multipart/text. Valid origins/custom ports work; after admission unsupported media receives HTTP 415 with zero retrieval/provider calls.
+15. Status GET validates Host, performs no source/provider work and returns sanitized public readiness only. Runtime mutation/future source routes use stronger admission; invalid allowlists fail closed and reference BFF settings remain intact.
+16. GitHub/cache failure preserves the edition, unavailable comparison sides are explicit, unsupported collateral is linked-only, committed evidence comes from selected Git objects and working-copy evidence uses captured hashes/local links.
 
-For this design-authoring story, verify the document exists, inspect its references/coverage, run a whitespace diff check, and perform an inline self-review for omissions, contradictions and ambiguity. These are document checks, not application verification. No application implementation, provider call, microphone trial, or new product test is performed by writing this specification.
+For this design story, check document existence/references/coverage and whitespace, and self-review omissions/contradictions/ambiguity. These are document checks, not application, provider, browser or microphone verification. Writing/revising the specification does not implement the product or establish live functionality.
 
 ## Risks and explicit limitations
 
-- The reference application is evolving. Revision-bound editions and planned/implemented labels prevent teaching nonexistent behavior as working code.
-- Three learner paths can multiply content maintenance. Shared concepts/scenes with depth-specific sections limit duplication.
-- Tutorial retrieval can confuse changed local code with published evidence. Commit/hash labels and explicit working-copy mode preserve attribution.
-- Voice assets and labs add media/browser variability. Recorded narration supports the core course; live speech verification records tested conditions and limitations.
-- API account/model availability and Postman streaming behavior vary. Publish the actual tested combination, with manual lab prerequisites and honest unverified states.
-- Tutor answers can overstate conclusions. Bounded retrieval, validated citations, source-status labels and evaluation cases constrain that failure.
-- Public hosting, user accounts, cloud progress synchronization, automatic code execution, a generalized agent platform, an embedding/vector infrastructure, and automatic repository updates are future scope decisions.
+- Evolving reference code requires revision-bound editions and truthful planned/implemented labels.
+- Shared concepts/scenes limit content duplication across learner paths.
+- Edition-default authority, frozen snapshots and explicit comparison/working-copy labels preserve source attribution.
+- Recorded narration supports offline learning; live speech/device variability requires actual recorded conditions and limitations.
+- API accounts/models and Postman streaming behavior vary; publish tested combinations and unverified states honestly.
+- Tutor conclusions need bounded retrieval, validated citations and evaluation cases.
+- Origin admission does not authenticate local processes. Runtime data remains until cleared; authorized transmissions cannot be retracted by local clearing.
+- Public hosting/accounts, cloud progress sync, automatic code execution/repository updates, general agent infrastructure and vector indexing require future scope decisions.
 
 ## Review and workflow
 
-This story tracks specification authoring, owner review, and subsequent design refinements. AITM timing starts only after issue binding; prior discovery is not backfilled as measured issue work. Pause tracked work while awaiting owner review and resume against #15 for requested corrections. Keep unknown active-time measurements explicitly unknown rather than replacing them with invented precision.
+Story #15 tracks design authoring, SAR review/revision, owner review and refinements. AITM timing begins at issue binding; prior discovery is not backfilled. Pause when awaiting the owner; resume for corrections. Preserve unknown active-time measurements as unknown.
 
-After the owner approves this written specification, use the writing-plans skill to prepare the implementation plan and its tracked work decomposition. Written-spec approval is distinct from plan approval and execution-method selection. Keep this artifact's status current and link its exact committed revision from #15.
+The owner clarified that SAR is a review–revise loop until nothing remains to revise. Preserve reports and author dispositions at their artifact digests; continue the same requested Astra session, revise supported findings and re-review. Address optional improvements as well as blockers through changes or evidence-backed dispositions checked by the next pass. A first revisions-needed report is not terminal SAR completion. No-further-revisions SAR evidence remains distinct from owner approval, two-party SPR/XPR acceptance or application validation.
+
+After owner approval of this written spec, invoke writing-plans for implementation planning/decomposition. Spec approval, plan approval and execution selection are distinct. Keep status and issue links current.
 
 ## Primary learning references
 
-Use vendor documentation for framework/API mechanics and repository evidence for AIVC-specific claims. Resolve and record source/version provenance during content publication.
+Vendor documentation supports mechanics; repository evidence supports AIVC-specific claims. Record version/content provenance during course publication.
 
 - [React: Thinking in React](https://react.dev/learn/thinking-in-react) and [managing state](https://react.dev/learn/managing-state).
-- [Next.js: server/client components](https://nextjs.org/docs/app/getting-started/server-and-client-components), [Route Handlers](https://nextjs.org/docs/app/getting-started/route-handlers), and [BFF guidance](https://nextjs.org/docs/app/guides/backend-for-frontend).
-- [Fastify: validation and serialization](https://fastify.dev/docs/latest/Reference/Validation-and-Serialization/).
-- [Anthropic: Messages API](https://platform.claude.com/docs/en/api/messages/create), [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming), and [tool use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools).
-- [Deepgram: prerecorded transcription](https://developers.deepgram.com/docs/pre-recorded-audio), [speech synthesis](https://developers.deepgram.com/reference/text-to-speech/speak-request), and [media output settings](https://developers.deepgram.com/docs/tts-media-output-settings).
-- [Postman: environment variables](https://learning.postman.com/docs/use/send-requests/variables/environment-variables).
+- [Next.js components](https://nextjs.org/docs/app/getting-started/server-and-client-components), [Route Handlers](https://nextjs.org/docs/app/getting-started/route-handlers), [BFF guidance](https://nextjs.org/docs/app/guides/backend-for-frontend).
+- [Fastify validation/serialization](https://fastify.dev/docs/latest/Reference/Validation-and-Serialization/).
+- [Anthropic Messages](https://platform.claude.com/docs/en/api/messages/create), [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming), [tool use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools).
+- [Deepgram transcription](https://developers.deepgram.com/docs/pre-recorded-audio), [synthesis](https://developers.deepgram.com/reference/text-to-speech/speak-request), [media settings](https://developers.deepgram.com/docs/tts-media-output-settings).
+- [Postman environments](https://learning.postman.com/docs/use/send-requests/variables/environment-variables).
+- [MDN CORS/simple requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS#simple_requests).
