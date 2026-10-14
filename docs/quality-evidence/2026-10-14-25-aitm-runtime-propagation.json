@@ -1,0 +1,121 @@
+{
+  "schema": "aivc.aitm-runtime-propagation/v1",
+  "sourceCommit": "9b4f6659aeb416ac174b5113ccfc37cc680279f3",
+  "artifact": "vendors/kburson-ai-task-manager-0.1.0-2007-9b4f6659.tgz",
+  "artifactSha256": "3ae94ca2ee0662b942f5a0619ca0cc7314e5efa11c21ff34cabce5bfe4b7e06d",
+  "worktrees": [
+    {
+      "worktree": "/Users/kpburson/projects/AIVC",
+      "head": "9e400abad3e04fef3f3a3ad1d47db06ba903c833",
+      "branch": "refs/heads/trunk",
+      "status": "?? apps/\n",
+      "files": {
+        ".ai-task-manager/task-tracker.json": "269c2744e6ab4c59b131aeee53188197501e95f99e652d97c81a60f8337880b3",
+        ".ai-task-manager/install-manifest.json": "5b4eca9178b1bb478ccd700ceec386025a5d5454f3856aca449a6b42ed2a2f22",
+        ".codex/hooks.json": "3c991d843320e417b2cca9459a8b73156a970544c881a6c4cc50e9899bcc7b98",
+        ".claude/settings.json": "4417d35aa3879f155b9d1f0c41b9f29e8daf2532ac78e009d7c5d146df52519c",
+        ".grok/hooks/aitm.json": "65297405f8a51ce6eb39cce7fb2072114192e0c104f4e783afdf66d3c00cac81",
+        ".agents/skills/task/SKILL.md": "036a8cadc334c8ade9650f1068e9ef1e336798e065f9dbb5af075e99eb4ced1c"
+      },
+      "installedFileCount": 917,
+      "installedSourceCommit": "9b4f6659aeb416ac174b5113ccfc37cc680279f3",
+      "settingsUnchanged": true,
+      "statusAfter": "?? apps/\n",
+      "headAfter": "9e400abad3e04fef3f3a3ad1d47db06ba903c833"
+    },
+    {
+      "worktree": "/Users/kpburson/.codex/worktrees/aivc-formatter-types-27/AIVC",
+      "head": "6f1d8732275b45694dfe471cf3cab08d4ed3f4da",
+      "branch": "refs/heads/codex/27-draft",
+      "status": "",
+      "files": {
+        ".ai-task-manager/task-tracker.json": "269c2744e6ab4c59b131aeee53188197501e95f99e652d97c81a60f8337880b3",
+        ".ai-task-manager/install-manifest.json": "46cb1c19acf9dea8b86f4e34df982baae8c08d86d86f67f41aee7635a3b946dc",
+        ".codex/hooks.json": "3c991d843320e417b2cca9459a8b73156a970544c881a6c4cc50e9899bcc7b98",
+        ".claude/settings.json": "4417d35aa3879f155b9d1f0c41b9f29e8daf2532ac78e009d7c5d146df52519c",
+        ".grok/hooks/aitm.json": "65297405f8a51ce6eb39cce7fb2072114192e0c104f4e783afdf66d3c00cac81",
+        ".agents/skills/task/SKILL.md": "036a8cadc334c8ade9650f1068e9ef1e336798e065f9dbb5af075e99eb4ced1c"
+      },
+      "installedFileCount": 917,
+      "installedSourceCommit": "9b4f6659aeb416ac174b5113ccfc37cc680279f3",
+      "settingsUnchanged": true,
+      "statusAfter": "",
+      "headAfter": "6f1d8732275b45694dfe471cf3cab08d4ed3f4da"
+    },
+    {
+      "worktree": "/Users/kpburson/.codex/worktrees/aivc-quality-close-25/AIVC",
+      "head": "4d10984b0b28a910c7ae8e386c73fdf981608a3b",
+      "branch": "refs/heads/codex/25-draft",
+      "status": "",
+      "files": {
+        ".ai-task-manager/task-tracker.json": "269c2744e6ab4c59b131aeee53188197501e95f99e652d97c81a60f8337880b3",
+        ".ai-task-manager/install-manifest.json": "46cb1c19acf9dea8b86f4e34df982baae8c08d86d86f67f41aee7635a3b946dc",
+        ".codex/hooks.json": "3c991d843320e417b2cca9459a8b73156a970544c881a6c4cc50e9899bcc7b98",
+        ".claude/settings.json": "4417d35aa3879f155b9d1f0c41b9f29e8daf2532ac78e009d7c5d146df52519c",
+        ".grok/hooks/aitm.json": "65297405f8a51ce6eb39cce7fb2072114192e0c104f4e783afdf66d3c00cac81",
+        ".agents/skills/task/SKILL.md": "036a8cadc334c8ade9650f1068e9ef1e336798e065f9dbb5af075e99eb4ced1c"
+      },
+      "installedFileCount": 917,
+      "installedSourceCommit": "9b4f6659aeb416ac174b5113ccfc37cc680279f3",
+      "settingsUnchanged": true,
+      "statusAfter": "",
+      "headAfter": "4d10984b0b28a910c7ae8e386c73fdf981608a3b"
+    },
+    {
+      "worktree": "/Users/kpburson/.codex/worktrees/voice-bff-epic-2/AIVC",
+      "head": "42d46c4b0ba88a6123341319afe0c5dd4919465b",
+      "branch": "refs/heads/codex/2-draft",
+      "status": "",
+      "files": {
+        ".ai-task-manager/task-tracker.json": "269c2744e6ab4c59b131aeee53188197501e95f99e652d97c81a60f8337880b3",
+        ".ai-task-manager/install-manifest.json": "46cb1c19acf9dea8b86f4e34df982baae8c08d86d86f67f41aee7635a3b946dc",
+        ".codex/hooks.json": "3c991d843320e417b2cca9459a8b73156a970544c881a6c4cc50e9899bcc7b98",
+        ".claude/settings.json": "4417d35aa3879f155b9d1f0c41b9f29e8daf2532ac78e009d7c5d146df52519c",
+        ".grok/hooks/aitm.json": "65297405f8a51ce6eb39cce7fb2072114192e0c104f4e783afdf66d3c00cac81",
+        ".agents/skills/task/SKILL.md": "036a8cadc334c8ade9650f1068e9ef1e336798e065f9dbb5af075e99eb4ced1c"
+      },
+      "installedFileCount": 917,
+      "installedSourceCommit": "9b4f6659aeb416ac174b5113ccfc37cc680279f3",
+      "settingsUnchanged": true,
+      "statusAfter": "",
+      "headAfter": "42d46c4b0ba88a6123341319afe0c5dd4919465b"
+    },
+    {
+      "worktree": "/Users/kpburson/.codex/worktrees/voice-bff-story-7-9356/AIVC",
+      "head": "6b31c95d7543b2bc33ac4d37a7a07f213d9cb559",
+      "branch": "refs/heads/codex/7-draft",
+      "status": "",
+      "files": {
+        ".ai-task-manager/task-tracker.json": "269c2744e6ab4c59b131aeee53188197501e95f99e652d97c81a60f8337880b3",
+        ".ai-task-manager/install-manifest.json": "46cb1c19acf9dea8b86f4e34df982baae8c08d86d86f67f41aee7635a3b946dc",
+        ".codex/hooks.json": "3c991d843320e417b2cca9459a8b73156a970544c881a6c4cc50e9899bcc7b98",
+        ".claude/settings.json": "4417d35aa3879f155b9d1f0c41b9f29e8daf2532ac78e009d7c5d146df52519c",
+        ".grok/hooks/aitm.json": "65297405f8a51ce6eb39cce7fb2072114192e0c104f4e783afdf66d3c00cac81",
+        ".agents/skills/task/SKILL.md": "036a8cadc334c8ade9650f1068e9ef1e336798e065f9dbb5af075e99eb4ced1c"
+      },
+      "installedFileCount": 917,
+      "installedSourceCommit": "9b4f6659aeb416ac174b5113ccfc37cc680279f3",
+      "settingsUnchanged": true,
+      "statusAfter": "",
+      "headAfter": "6b31c95d7543b2bc33ac4d37a7a07f213d9cb559"
+    }
+  ],
+  "method": {
+    "consumer": "npm install --save-dev --save-exact ./vendors/kburson-ai-task-manager-0.1.0-2007-9b4f6659.tgz; npm ci after installer version stamping",
+    "others": "npm install --no-save --package-lock=false <exact consumer vendor artifact>",
+    "settings": "Existing manifest contract and provider settings retained unchanged; SHA256 before/after comparison.",
+    "reproducibility": "Only the consumer branch has the new tracked dependency pin. Other checkouts have verified local runtime adoption; npm ci there restores their existing lockfile until the consumer pin is integrated."
+  },
+  "absentRetainedPaths": [
+    "/Users/kpburson/.codex/worktrees/voice-bff-refine-a/AIVC",
+    "/Users/kpburson/.codex/worktrees/voice-bff-story-5/AIVC",
+    "/Users/kpburson/.codex/worktrees/voice-bff-browser-6/AIVC",
+    "/Users/kpburson/.codex/worktrees/voice-bff-capture-14/AIVC"
+  ],
+  "limits": [
+    "Missing paths are not claimed installed; exact-path restoration has a separate epic-owned repair.",
+    "Epic separately admitted2012 CLI, bindings and native grants were outside all write targets.",
+    "Raw timing journals and sealed original evidence were not modified.",
+    "Installer dry-run was unsupported and its four package skill-version mutations were removed through npm ci before all917 verification."
+  ]
+}

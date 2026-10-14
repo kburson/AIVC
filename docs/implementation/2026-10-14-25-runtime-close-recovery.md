@@ -79,7 +79,11 @@ unchanged. The ordinary installer preserved hooks and project preferences.
 Its install parser accepted but ignored `--dry-run`, so it wrote raw generated
 templates instead of previewing. Those temporary formatting changes were
 restored to their accepted tracked views, and its sidecars were moved into
-owned ignored scratch. No original review or timing evidence was rewritten.
+owned ignored scratch. The installer also stamped version comments in four installed package skill
+files. Independent review caught those post-install differences. Ordinary
+locked `npm ci` restored exact package bytes; all 917 installed files were
+then reverified. No package file was hand-patched. No original review or timing
+evidence was rewritten.
 
 Read-only Doctor confirms the package contract, manifest and provider hooks;
 it reports six existing generated-guidance differences where the repository's
@@ -88,6 +92,24 @@ therefore unhealthy; this checkpoint does not claim a green Doctor result or
 alter its contract. The full consumer quality scan, both workspace typechecks
 and ten sealed-evidence behavioral tests pass after the runtime install.
 
-Draft PR31 carries this consumer change to `codex/2-draft`. Worktree
-propagation, fresh exact-head Test and review, merged delivery and actual
-registered Close remain pending.
+## Existing worktree propagation
+
+The five extant AIVC worktrees now have the reviewed runtime installed: primary,
+#27, #25, epic #2 and #7. Every checkout passed all 917 source-file hash/length
+comparisons. Provider settings, install manifests, project preferences and skill
+stubs retain their before-install SHA256 values; branch heads and tracked work
+are unchanged. The primary checkout's existing untracked `apps/` directory was
+preserved. The detailed inventory and hashes are additive evidence in
+`docs/quality-evidence/2026-10-14-25-aitm-runtime-propagation.json`.
+
+Only #25 has the committed new package/lock pin. The other checkouts received
+ordinary `npm install --no-save --package-lock=false` runtime updates; their
+older lockfiles will restore the older runtime on `npm ci` until they integrate
+the consumer pin. The epic's separately admitted `2012` executable remains
+outside these updates. No native grants or bindings were copied or rewritten.
+The four absent historical peer checkouts have a separate epic-owned exact-path
+restoration obligation; they are not claimed installed. Newly restored paths
+must receive verified runtime adoption before use.
+
+Draft PR31 carries this consumer change to `codex/2-draft`. Fresh exact-head
+Test and review, merged delivery and actual registered Close remain pending.
