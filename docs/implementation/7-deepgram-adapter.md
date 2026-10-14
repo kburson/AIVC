@@ -12,13 +12,13 @@
 - [Spec review collateral](../peer-reviews/spec/voice-bff-reference-design-review-6e1eb912f8ea1307f0464d76a1501a3b/README.md).
 - [Plan review collateral](../peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/README.md), including contract-first amendment SPR/XPR subdirectories.
 
-Normal merges preserve the original story history, accepted planning baseline dbf5e2f46f3503673aef7db58adb6e07f44f368d, delivered product baseline 26d6abb4f489e8a13a87e3a85f613bc2ceba618d, and parent documentation checkpoint 9de2e0fc756f8d978a7c56c827fb3e540f38778c. Sealed historical spec/plan review files are unchanged.
+Normal merges preserve the original story history and the parent preparation baseline aeabcb9b148486870ebcf685675f02cef8c939e5, including merged #4/#6/#14 delivery and approved #25 quality scans. Original sealed spec/plan/review bytes remain in historical Git blobs and the [original-byte archives](../quality-evidence/README.md). Current protected Markdown files are labeled formatting views; their new hashes do not replace original acceptance or protocol evidence.
 
 ## Dependencies and status
 
 Application source entry requires strict integrated whole-story Done on [#4](https://github.com/kburson/AIVC/issues/4) and [#5](https://github.com/kburson/AIVC/issues/5), plus a current registered native rank-4 grant. Shared contracts from [#13](https://github.com/kburson/AIVC/issues/13) are consumed unchanged through those deliveries.
 
-Live checks confirm #4 and #6 Closed/Done; #5 remains Open/Ready for Planning. Story #7 remains Ready for Planning. Fresh Explain reports blocked-by-not-done and refine-exit-wip-budget, with rank-wave-admission-refused and rank-wave-graph-stale on the WIP guard. Documentation publication grants no Plan, Develop, or application source authority. No partial story completion is permitted.
+Live checks confirm #4, #6 and #14 Closed/Done; #5 remains Open/Ready for Planning. Story #7 remains Ready for Planning. Fresh Explain reports blocked-by-not-done and refine-exit-wip-budget, with rank-wave-admission-refused and rank-wave-source-unverified on the WIP guard. Documentation publication grants no Plan, Develop, or application source authority. No partial story completion is permitted.
 
 ## Exact ownership
 
@@ -59,7 +59,7 @@ Functional DoD retains its declared broader tests. This documentation publicatio
 
 ## Installed SDK and delivered seams
 
-Preparation used npm ci in the story worktree and verified the reproducible Node 26.8.1/npm 12.0.2 toolchain. The installed package reports @deepgram/sdk 5.15.0. Manifests and lockfile retain the delivered pins. No release install, global ai-peer-review change, adapter implementation, application test, live request, or credential inspection occurred. npm reported eight audit findings and five blocked dependency install scripts; no repair or script approval was attempted. These setup observations do not establish application verification.
+Preparation used npm ci in the story worktree and verified the reproducible Node 26.8.1/npm 12.0.2 toolchain. The installed package reports @deepgram/sdk 5.15.0. Manifests and lockfile retain the delivered pins. No release install, global ai-peer-review change, adapter implementation, application test, live request, or credential inspection occurred. The refreshed parent lockfile required npm ci; the accepted VAD patch applied successfully. npm reported 16 audit findings and five blocked dependency install scripts; no repair or script approval was attempted. These setup observations do not establish application verification.
 
 The following evidence is static inspection of the installed package, not a compiled or executed adapter. SDK paths are relative to node_modules/@deepgram/sdk/dist/esm/.
 
@@ -80,6 +80,20 @@ Delivered repository seams remain authoritative:
 - [Frozen speech validation](../../apps/web/shared/validation.ts) provides validateSpeech(value, config.segmentChars), preserving UUID, exact fields, nonempty segmentId <=80, and nonempty bounded text. No parallel validator is authored.
 - [Deadline](../../apps/web/server/turns/deadline.ts) provides runWithDeadline and deadlineRemainingMs. result is the timeout-facing promise; settled proves the admitted work actually finished. SDK request options must use max(0.001, min(configuredTimeoutMs, remainingMs)/1000).
 - [Lease pools](../../apps/web/server/turns/leases.ts) hold two slots per turn or speech kind, with idempotent release. Speech capacity releases after upstream/network reader settlement, including cancellation, rather than after synthesis returns headers.
-- [Runtime](../../apps/web/server/runtime.ts) presently has adapters as Record<string, unknown>; [capabilities](../../apps/web/server/capabilities.ts) derives speech availability from mock mode or configured key/model. These are consumed now and transferred for #7 wiring only after whole #5 delivery. No private provider contract is substituted while #5 remains incomplete.
+- [Runtime](../../apps/web/server/runtime.ts) presently has adapters as `Record<string, unknown>`; [capabilities](../../apps/web/server/capabilities.ts) derives speech availability from mock mode or configured key/model. These are consumed now and transferred for #7 wiring only after whole #5 delivery. No private provider contract is substituted while #5 remains incomplete.
 
 The next admitted tests must include after-header abort, late upstream cancellation settlement, nondefault timeout bounds, accepted/malformed STT payloads, genuine empty transcript, and no secret-bearing error/header propagation. Full #5 delivery and native source GO remain prerequisites for that work.
+
+## Current quality and authority checkpoint
+
+The [uniform quality policy](../quality-scans.md) applies to this new collateral. No rule suppression, findings baseline, scan exclusion, protected-artifact formatting write, or TypeScript contract edit is introduced by #7. The current spec/plan links above are formatting views; accepted authority remains attached to these immutable originals:
+
+- [Accepted spec original](https://github.com/kburson/AIVC/blob/bc6e15ecb2f48c9f3b0cc030609fd99a8f17adac/docs/superpowers/specs/2026-10-12-voice-bff-reference-design.md).
+- [Accepted base-plan original](https://github.com/kburson/AIVC/blob/cb82f730f63ba0e0bd4480f7bc76ca09d286af83/docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md).
+- [Accepted Node 26 amendment original](https://github.com/kburson/AIVC/blob/3574e5d35ebaafbf427a68aeac7c66e409b1e4e0/docs/superpowers/plans/2026-10-13-2-node26-parallel-execution-amendment.md).
+- [Accepted contract-first amendment original](https://github.com/kburson/AIVC/blob/6eda972a9df1bcbe1f8f650e9506c709026b02d8/docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md).
+- [Canonical hydration original](https://github.com/kburson/AIVC/blob/e559f6b33010e2902592fde97ed1560281f7f3d3/docs/superpowers/plans/2026-10-13-2-contract-first-hydration-index.md).
+
+Whole #4 and #5 strict Done plus actual native readiness remain required. The admitted runtime still returns blocked-by-not-done and rank-wave-admission-refused with reason rank-wave-source-unverified. This documentation checkpoint creates no source grant, lifecycle transition, replacement claim, new sealed acceptance, or partial completion. Adapter implementation, application tests and code review remain pending.
+
+Selected-document Markdownlint and Prettier validation reported zero findings. The read-only sealed-evidence verifier confirmed all 74 archived originals against historical Git blobs. All 16 local links and five immutable Git blob links resolve; the credential-pattern scan found no matches. These are documentation and preservation checks, not application verification.
