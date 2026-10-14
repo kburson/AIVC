@@ -13,7 +13,12 @@ export type HarnessCall = {
 };
 declare global {
   interface Window {
-    __aivcHarness: { calls: HarnessCall[]; release: () => void };
+    __aivcHarness: {
+      calls: HarnessCall[];
+      release: () => void;
+      abortTimes: number[];
+      speechRequests: string[];
+    };
     captureSimulation: {
       requests: MediaStreamConstraints[];
       stops: number[];
@@ -74,17 +79,33 @@ export async function installSyntheticMicrophone(
 }
 export async function installVoiceHarness(
   page: Page,
-  { holdFirst = true, busyFirst = false } = {},
+  {
+    holdFirst = true,
+    busyFirst = false,
+    speech = false,
+    beaconAfterFirst = false,
+  } = {},
 ) {
   await page.addInitScript(
-    ({ capabilities, events, holdFirst, busyFirst }) => {
+    ({
+      capabilities,
+      events,
+      holdFirst,
+      busyFirst,
+      speech,
+      beaconAfterFirst,
+    }) => {
       const original = window.fetch.bind(window),
         calls: HarnessCall[] = [],
         pending: Array<() => void> = [];
       const capabilitiesURL = new URL('api/capabilities', location.origin).href;
       const turnURL = new URL('api/turn', location.origin).href;
+      const abortTimes: number[] = [],
+        speechRequests: string[] = [];
       window.__aivcHarness = {
         calls,
+        abortTimes,
+        speechRequests,
         release: () => {
           for (const release of pending.splice(0)) release();
         },
@@ -97,6 +118,17 @@ export async function installVoiceHarness(
           return new Response(JSON.stringify(capabilities), {
             headers: { 'content-type': 'application/json' },
           });
+        if (speech && url.pathname === '/api/speech') {
+          speechRequests.push(String(JSON.parse(await request.text()).text));
+          return new Response(new Uint8Array(3 * 24000 * 2), {
+            headers: {
+              'content-type': 'application/octet-stream',
+              'x-audio-encoding': 'pcm_s16le',
+              'x-audio-sample-rate': '24000',
+              'x-audio-channels': '1',
+            },
+          });
+        }
         if (url.href !== turnURL) return original(input, init);
         const form = await request.clone().formData();
         const turnId = String(form.get('turnId')),
@@ -110,7 +142,15 @@ export async function installVoiceHarness(
             }),
             { status: 429, headers: { 'content-type': 'application/json' } },
           );
-        const payloads = events.map((e) => ({ ...e, turnId }));
+        const selected: typeof events =
+          beaconAfterFirst && calls.length > 1
+            ? JSON.parse(
+                JSON.stringify(events)
+                  .replaceAll('Atlas', 'Beacon')
+                  .replaceAll('atlas', 'beacon'),
+              )
+            : events;
+        const payloads = selected.map((e) => ({ ...e, turnId }));
         payloads.splice(3, 0, {
           schemaVersion: 1,
           turnId,
@@ -125,6 +165,30 @@ export async function installVoiceHarness(
             ],
           },
         });
+        if (form.has('audio'))
+          payloads.splice(
+            1,
+            0,
+            {
+              schemaVersion: 1,
+              turnId,
+              seq: 1,
+              type: 'stage',
+              data: { stage: 'transcribing' },
+            },
+            {
+              schemaVersion: 1,
+              turnId,
+              seq: 2,
+              type: 'transcript.final',
+              data: {
+                text:
+                  calls.length > 1 && beaconAfterFirst
+                    ? 'Beacon question'
+                    : 'Atlas question',
+              },
+            },
+          );
         const output = payloads.map((e, seq) => ({ ...e, seq }));
         let ended = false;
         const stream = new ReadableStream<Uint8Array>({
@@ -145,6 +209,7 @@ export async function installVoiceHarness(
             request.signal.addEventListener(
               'abort',
               () => {
+                abortTimes.push(performance.now());
                 if (!ended) {
                   ended = true;
                   controller.error(new DOMException('Aborted', 'AbortError'));
@@ -162,10 +227,12 @@ export async function installVoiceHarness(
       };
     },
     {
-      capabilities: mockCapabilities,
+      capabilities: { ...mockCapabilities, speechAvailable: speech },
       events: wireEvents,
       holdFirst,
       busyFirst,
+      speech,
+      beaconAfterFirst,
     },
   );
 }

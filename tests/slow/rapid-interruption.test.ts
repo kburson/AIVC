@@ -6,6 +6,9 @@ import type { ServerRuntime } from '../../apps/web/server/runtime';
 import { loadConfig } from '../../apps/web/server/config';
 import { createCapabilities } from '../../apps/web/server/capabilities';
 import { LeasePools } from '../../apps/web/server/turns/leases';
+import { Interruption } from '../../apps/web/client/voice/interruption';
+import { TurnController } from '../../apps/web/client/turn-controller';
+import type { CaptureToken } from '../../apps/web/client/voice/capture-session';
 import { encodeWav } from '../../apps/web/client/voice/wav';
 import {
   ScriptedModel,
@@ -88,19 +91,48 @@ it('three confirmed turns reject the third Busy while both canceled model jobs r
       },
   );
   const model = new ScriptedModel([...scripts, round({ text: 'Recovered' })]);
-  setup({ model });
-  const first = new AbortController(),
-    second = new AbortController();
-  const a = await POST(request(first.signal));
+  setup({ model, transcribe: async () => 'Atlas?' });
+  const controller = new TurnController();
+  let capture: CaptureToken | null = null;
+  let pending!: Promise<Response>;
+  const submit = (audio = false) => {
+    const token = controller.begin(),
+      abort = new AbortController();
+    controller.attachAbort(token, abort);
+    return POST(request(abort.signal, audio));
+  };
+  const interruption = new Interruption({
+    controller,
+    answerToken: () => {
+      const token = controller.getSnapshot().at(-1);
+      return token && controller.current(token) ? token : null;
+    },
+    captureIsCurrent: (token) => token === capture,
+    isActive: () => true,
+    output: () => null,
+    onEnd: () => {
+      pending = submit(true);
+    },
+    showSpeechResumeFailure: () => {
+      throw Error('Unexpected output recovery');
+    },
+  });
+  const confirmedQuestion = (id: number) => {
+    capture = Object.freeze({ epoch: 1, utteranceId: id, intentVersion: 0 });
+    interruption.rawStart(capture);
+    interruption.confirmedStart(capture);
+    interruption.end(capture, new Float32Array(1600));
+  };
+  const a = await submit();
   await readUntil(a, 'Early');
-  first.abort();
+  confirmedQuestion(1);
   await a.body!.cancel();
-  const b = await POST(request(second.signal));
+  const b = await pending;
   await readUntil(b, 'Early');
-  second.abort();
+  confirmedQuestion(2);
   await b.body!.cancel();
   expect(model.signals.map((s) => s.aborted)).toEqual([true, true]);
-  const busy = await POST(request(new AbortController().signal));
+  const busy = await pending;
   expect(busy.status).toBe(429);
   expect(await busy.json()).toMatchObject({ error: { code: 'BUSY' } });
   expect(model.inputs).toHaveLength(2);

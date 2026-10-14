@@ -529,3 +529,57 @@ it('an old source-ended callback cannot prune or restart the current generation 
   expect(clock.sources[1].stopped).toBe(false);
   void playback.dispose();
 });
+
+it('a typed new turn between misfire and delayed suspension settlement never resumes canceled old sources', async () => {
+  await speaking();
+  const gate = deferred();
+  contexts[0].suspendGate = gate.promise;
+  const old = await raw();
+  await act(async () => {
+    callbacks.misfire(old);
+    await settle();
+  });
+  await typed('Typed replacement');
+  expect(requests[0].signal.aborted).toBe(true);
+  expect(contexts[0].sources[0].stopped).toBe(true);
+  gate.resolve();
+  await act(settle);
+  await waitFor(() => expect(contexts[0].sources.length).toBe(2));
+  expect(contexts[0].sources[0].stopped).toBe(true);
+  expect(contexts[0].sources[1].stopped).toBe(false);
+  expect(requests).toHaveLength(2);
+});
+
+it('a never-settling native recovery resume reports bounded speech failure before any new answer exists', async () => {
+  await speaking();
+  const token = await raw();
+  contexts[0].resumeGate = new Promise(() => {});
+  await confirm(token);
+  await waitFor(
+    () =>
+      expect(screen.getByRole('alert').textContent).toContain(
+        'Speech could not resume after interruption',
+      ),
+    { timeout: 2500 },
+  );
+  expect(requests).toHaveLength(1);
+  expect(requests[0].signal.aborted).toBe(true);
+  expect(contexts[0].sources.every((source) => source.stopped)).toBe(true);
+});
+
+it.each(['new candidate', 'Stop'] as const)(
+  'a %s retires an obsolete never-settling recovery deadline',
+  async (action) => {
+    await speaking();
+    const token = await raw();
+    contexts[0].resumeGate = new Promise(() => {});
+    await confirm(token);
+    if (action === 'new candidate') await raw(internal(2));
+    else fireEvent.click(screen.getByRole('button', { name: 'Stop' }));
+    await act(async () => {
+      await new Promise<void>((resolve) => setTimeout(resolve, 2100));
+    });
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(contexts[0].sources.every((source) => source.stopped)).toBe(true);
+  },
+);

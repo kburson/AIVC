@@ -30,11 +30,12 @@ export class Interruption {
   private candidate: Candidate | null = null;
   private pause: Pause | null = null;
   private transition = 0;
+  private recoveryTimer: ReturnType<typeof setTimeout> | null = null;
   constructor(private deps: Dependencies) {}
   rawStart(capture: CaptureToken): void {
     if (!this.deps.isActive() || !this.deps.captureIsCurrent(capture)) return;
     if (this.candidate) this.candidate.phase = 'consumed';
-    this.transition++;
+    this.advance();
     const answerToken = this.deps.answerToken();
     const candidate: Candidate = { capture, answerToken, phase: 'tentative' };
     this.candidate = candidate;
@@ -49,7 +50,7 @@ export class Interruption {
       void pause.settled.catch((error) => {
         if (this.owns(pause) && candidate.phase === 'tentative') {
           this.stopRetained(pause);
-          this.report(error, ++this.transition);
+          this.report(error, this.advance());
         }
       });
     }
@@ -65,7 +66,7 @@ export class Interruption {
     )
       return;
     candidate.phase = 'confirmed'; // Canceling the answer must not revoke capture.
-    const version = ++this.transition;
+    const version = this.advance();
     const old = candidate.answerToken;
     if (old && this.deps.controller.current(old)) {
       this.deps.controller.cancelCurrent(
@@ -94,7 +95,7 @@ export class Interruption {
     // Admission is synchronous: CaptureSession clears isCurrent after this observer.
     candidate.phase = 'consumed';
     this.candidate = null;
-    const version = ++this.transition;
+    const version = this.advance();
     if (this.pause) void this.restore(this.pause, version);
   }
   /** Shared consume-once gate for CaptureSession's one already-encoded WAV owner. */
@@ -119,7 +120,7 @@ export class Interruption {
     const candidate = this.candidate;
     if (candidate) candidate.phase = 'consumed';
     this.candidate = null;
-    const version = ++this.transition;
+    const version = this.advance();
     if (this.pause) void this.restore(this.pause, version);
   }
   /** Watchdog/mute may destroy audio while its capture candidate remains valid. */
@@ -137,6 +138,11 @@ export class Interruption {
       this.deps.output() === pause.output
     );
   }
+  private advance(): number {
+    if (this.recoveryTimer !== null) clearTimeout(this.recoveryTimer);
+    this.recoveryTimer = null;
+    return ++this.transition;
+  }
   private report(error: unknown, version: number): void {
     if (this.deps.isActive() && version === this.transition)
       this.deps.showSpeechResumeFailure(error);
@@ -150,6 +156,15 @@ export class Interruption {
     }
   }
   private async recoverEmpty(pause: Pause, version: number): Promise<void> {
+    if (!this.owns(pause) || version !== this.transition) return;
+    // There may be no next answer to own SpeechQueue's existing 2s resume watchdog.
+    // Keep this deadline with the recovery transition, never with the canceled turn.
+    if (this.recoveryTimer !== null) clearTimeout(this.recoveryTimer);
+    const timer = setTimeout(() => {
+      if (this.recoveryTimer === timer) this.recoveryTimer = null;
+      this.report(new Error('SPEECH_RESUME_FAILED'), version);
+    }, 2000);
+    this.recoveryTimer = timer;
     try {
       await pause.settled.catch(() => {});
       // A newer tentative candidate owns suspension until it resolves.
@@ -163,6 +178,9 @@ export class Interruption {
         throw new Error('SPEECH_RESUME_FAILED');
     } catch (error) {
       this.report(error, version);
+    } finally {
+      clearTimeout(timer);
+      if (this.recoveryTimer === timer) this.recoveryTimer = null;
     }
   }
   private async restore(pause: Pause, version: number): Promise<void> {

@@ -1,3 +1,7 @@
+# Story #10 interruption deep dive
+
+## Current authority and sequence
+
 ### Whole-story interruption delivery
 
 Strict Done #8/#9/#14 are merged at feature baseline `49939084ad0ad5fccbfa1541a800e29c499430c2`. Fresh registered sequential rank-7 Explain returned ready before Plan entry. Accepted Task 8, contract-first amendment `6eda972a`, hydration `e559f6b`, base plan `cb82f730`, specification `bc6e15ec` and exact Node26 pins remain authoritative. Estimate remains L/5h/P1/rank7.
