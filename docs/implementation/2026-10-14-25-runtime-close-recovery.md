@@ -42,8 +42,9 @@ still required; the historical report is not a new SAR/SPR/XPR acceptance.
 
 ## Execution sequence
 
-1. Export the exact reviewed Git tree into owned ignored scratch; verify source
-   bytes against that commit and keep the upstream worktree unchanged.
+1. Package the retained clean reviewed Git checkout with ordinary `npm pack`;
+   compare every published file directly to its exact Git blob and keep the
+   upstream source and lifecycle unchanged.
 2. Run focused package regressions and ordinary packaging. Preserve the source,
    package integrity, file hashes, original review bytes and actual commands in
    additive provenance. Give the new vendor tarball a distinct source-qualified
@@ -62,5 +63,31 @@ still required; the historical report is not a new SAR/SPR/XPR acceptance.
    never hand-reset the journal. Only actual registered Close and read-back
    establish Done.
 
-This checkpoint records the authorized sequence; it does not predeclare
-packaging, installation, propagation, delivery or Close success.
+## Consumer installation checkpoint
+
+The distinct vendor archive and lockfile integrity are recorded in
+`docs/quality-evidence/2026-10-14-25-aitm-runtime-provenance.json`. All 917
+published and installed files match their exact reviewed Git blobs. The old
+vendor archive remains unchanged at SHA256
+`f57a2086cd2a74e77a2cb5800ea76d0b48538746b9e7d683818ced2aab93d959`.
+The fresh affected/adjacent regression run passed 85 cases on Node v26.8.1;
+this does not establish Node 24 or upstream cloud CI compatibility.
+
+The existing install intent remains all three providers, stub links, no memory
+seed and repository Codex Superpowers bootstrap. The package contract is
+unchanged. The ordinary installer preserved hooks and project preferences.
+Its install parser accepted but ignored `--dry-run`, so it wrote raw generated
+templates instead of previewing. Those temporary formatting changes were
+restored to their accepted tracked views, and its sidecars were moved into
+owned ignored scratch. No original review or timing evidence was rewritten.
+
+Read-only Doctor confirms the package contract, manifest and provider hooks;
+it reports six existing generated-guidance differences where the repository's
+zero-finding formatted views differ from raw package templates. Doctor is
+therefore unhealthy; this checkpoint does not claim a green Doctor result or
+alter its contract. The full consumer quality scan, both workspace typechecks
+and ten sealed-evidence behavioral tests pass after the runtime install.
+
+Draft PR31 carries this consumer change to `codex/2-draft`. Worktree
+propagation, fresh exact-head Test and review, merged delivery and actual
+registered Close remain pending.
