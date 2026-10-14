@@ -1,11 +1,14 @@
 'use client';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { FormEvent } from 'react';
 import { TurnController, clientReason } from '../client/turn-controller';
 import { HistoryStore } from '../client/history';
 import { startTurn } from '../client/turn-stream';
 import type { Capabilities as CapabilityContract } from '../shared/contracts';
 import { validateCapabilities } from '../shared/validation';
+import { Playback } from '../client/voice/playback';
+import { SpeechQueue } from '../client/voice/speech-queue';
+import type { TurnToken } from '../client/turn-controller';
 import { Answer } from './Answer';
 import { ProjectCard } from './ProjectCard';
 import { Details } from './Details';
@@ -17,6 +20,11 @@ export default function Conversation({
   const [history] = useState(
     () => new HistoryStore((token) => controller.current(token)),
   );
+  const output = useRef<{
+    playback: Playback;
+    queue: SpeechQueue;
+    token: TurnToken | null;
+  } | null>(null);
   const turns = useSyncExternalStore(
     controller.subscribe,
     controller.getSnapshot,
@@ -49,6 +57,9 @@ export default function Conversation({
     })();
     return () => {
       abort.abort();
+      output.current?.queue.dispose();
+      void output.current?.playback.dispose().catch(() => {});
+      output.current = null;
       controller.cancelCurrent('Conversation stopped.');
     };
   }, [controller]);
@@ -61,9 +72,50 @@ export default function Conversation({
         ? 'Busy'
         : current?.status === 'failed'
           ? 'Error'
-          : current?.status === 'working'
-            ? 'Working'
-            : 'Ready';
+          : current?.speech === 'speaking'
+            ? 'Speaking'
+            : current?.status === 'working'
+              ? 'Working'
+              : 'Ready';
+  function prepareOutput(token: TurnToken): void {
+    if (muted || !caps?.speechAvailable) return;
+    try {
+      if (!output.current) {
+        const context = new AudioContext();
+        // Resume directly in the submit gesture, before transport or any await.
+        const unlocked = context.resume();
+        const playback = new Playback(
+          context,
+          (t) => controller.current(t),
+          unlocked,
+          () => new AudioContext(),
+        );
+        const queue = new SpeechQueue({
+          playback,
+          segmentChars: caps.speech.segmentChars,
+          isCurrent: (t) => controller.current(t),
+          onStatus: (t, status, reason) =>
+            controller.setSpeech(t, status, reason),
+        });
+        output.current = { playback, queue, token };
+      } else {
+        output.current.token = token;
+        void output.current.playback
+          .resume()
+          .catch(() =>
+            controller.setSpeech(token, 'failed', 'SPEECH_RESUME_FAILED'),
+          );
+      }
+    } catch {
+      controller.setSpeech(token, 'failed', 'SPEECH_RESUME_FAILED');
+    }
+  }
+  function stopOutput(): void {
+    output.current?.queue.dispose();
+    void output.current?.playback.dispose().catch(() => {});
+    output.current = null;
+    controller.cancelCurrent('Stopped. This turn was not added to context.');
+  }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!question.trim() || question.length > 2000) {
@@ -71,6 +123,8 @@ export default function Conversation({
       return;
     }
     if (!caps?.turnsAvailable) return;
+    if (output.current?.token)
+      output.current.queue.cancel(output.current.token, 'TURN_INTERRUPTED');
     const text = question,
       token = controller.begin(),
       abort = new AbortController();
@@ -78,11 +132,14 @@ export default function Conversation({
     controller.attachAbort(token, abort);
     controller.setSpeech(
       token,
-      muted ? 'muted' : 'unavailable',
+      muted ? 'muted' : caps.speechAvailable ? 'ready' : 'unavailable',
       muted
         ? 'Output muted. Answer text is retained.'
-        : 'Browser playback is pending voice integration.',
+        : caps.speechAvailable
+          ? undefined
+          : 'Speech is unavailable. Answer text is retained.',
     );
+    prepareOutput(token);
     setQuestion('');
     setFormError(null);
     try {
@@ -94,7 +151,25 @@ export default function Conversation({
       )) {
         if (!controller.current(token)) continue;
         controller.apply(token, event);
+        if (event.type === 'answer.delta' && !muted && caps.speechAvailable)
+          output.current?.queue.accept(token, event.data.text);
+        if (event.type === 'turn.failed') {
+          output.current?.queue.cancel(token, 'TURN_FAILED');
+          controller.setSpeech(
+            token,
+            'failed',
+            'Answer failed. Speech stopped; answer text is retained.',
+          );
+        }
         if (event.type === 'turn.completed') {
+          if (
+            !muted &&
+            caps.speechAvailable &&
+            (event.data.status === 'complete' ||
+              event.data.status === 'truncated')
+          )
+            output.current?.queue.flush(token);
+          else output.current?.queue.cancel(token, 'NO_SPEECH');
           const view = controller.getSnapshot().at(-1)!;
           const result = history.complete(
             token,
@@ -108,21 +183,31 @@ export default function Conversation({
       }
     } catch (error) {
       if (controller.current(token)) {
+        output.current?.queue.cancel(token, 'TURN_FAILED');
         if (error instanceof Error && error.name === 'AbortError')
           controller.cancelCurrent('Request interrupted.');
-        else controller.fail(token, error);
+        else {
+          controller.fail(token, error);
+          controller.setSpeech(
+            token,
+            'failed',
+            'Answer failed. Speech stopped; answer text is retained.',
+          );
+        }
       }
     }
   }
   function muteOutput(next: boolean) {
     setMuted(next);
+    if (next && output.current?.token)
+      output.current.queue.cancel(output.current.token, 'OUTPUT_MUTED');
     if (current)
       controller.setSpeech(
         current,
-        next ? 'muted' : 'unavailable',
+        next ? 'muted' : caps?.speechAvailable ? 'ready' : 'unavailable',
         next
           ? 'Output muted. Answer text is retained.'
-          : 'Browser playback is pending voice integration.',
+          : 'Output enabled for the next answer. Answer text is retained.',
       );
   }
   return (
@@ -154,15 +239,7 @@ export default function Conversation({
           <button type="submit" disabled={!caps?.turnsAvailable}>
             Start
           </button>
-          <button
-            type="button"
-            onClick={() =>
-              controller.cancelCurrent(
-                'Stopped. This turn was not added to context.',
-              )
-            }
-            disabled={!current || current.terminal}
-          >
+          <button type="button" onClick={stopOutput} disabled={!current}>
             Stop
           </button>
           <label>

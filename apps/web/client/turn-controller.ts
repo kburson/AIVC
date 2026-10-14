@@ -10,7 +10,7 @@ import { validateTurnEvent } from '../shared/validation';
 import { assertTurnSequence, SseDecodeError } from '../shared/sse';
 export type TurnToken = { generation: number; turnId: string };
 export type SpeechStatus =
-  'unavailable' | 'muted' | 'failed' | 'interrupted' | 'ready';
+  'unavailable' | 'muted' | 'failed' | 'interrupted' | 'ready' | 'speaking';
 export type TurnView = TurnToken & {
   user: string;
   question: string;
@@ -134,7 +134,7 @@ export class TurnController {
           speech: 'interrupted',
           speechReason: 'Output interrupted.',
         });
-      else if (view.status === 'complete')
+      else if (view.status === 'complete' || view.status === 'truncated')
         this.publish({
           ...view,
           speech: 'interrupted',
