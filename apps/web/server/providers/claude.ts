@@ -218,7 +218,10 @@ export class ClaudeAdapter implements ModelAdapter {
           if (
             seen.has(b.tool_use_id) &&
             enabled &&
-            this.options.capabilities.mode === 'live'
+            this.options.capabilities.mode === 'live' &&
+            ['configured', 'verified'].includes(
+              this.options.capabilities.search.state,
+            )
           )
             this.options.capabilities.search = {
               state: 'verified',

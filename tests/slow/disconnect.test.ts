@@ -292,3 +292,51 @@ it('dispatched retrieval failure produces one failed terminal and no substitute 
   expect(out.filter((e) => e.type === 'turn.failed')).toHaveLength(1);
   expect(out.some((e) => e.type === 'tool.completed')).toBe(false);
 });
+
+it.each(['origin', 'host', 'body', 'aborted'] as const)(
+  'cold live runtime rejects %s before Models or Messages HTTP',
+  async (kind) => {
+    const runtime = setup();
+    runtime.config = {
+      ...runtime.config,
+      mode: 'live',
+      anthropicKey: 'offline-test-key',
+      claudeModel: 'offline',
+    };
+    runtime.capabilities = createCapabilities(runtime.config, {
+      mode: 'development',
+      buildId: null,
+    });
+    const original = globalThis.fetch;
+    let upstream = 0;
+    globalThis.fetch = async () => {
+      upstream++;
+      throw Error('Unexpected provider HTTP');
+    };
+    try {
+      const caller = new AbortController();
+      if (kind === 'aborted') caller.abort();
+      const req =
+        kind === 'body'
+          ? new Request('http://localhost:3000/api/turn', {
+              method: 'POST',
+              body: '{}',
+              headers: {
+                host: 'localhost:3000',
+                origin: 'http://localhost:3000',
+                'content-type': 'application/json',
+              },
+            })
+          : request(caller.signal);
+      if (kind === 'origin') req.headers.set('origin', 'http://evil.test');
+      if (kind === 'host') req.headers.set('host', 'evil.test');
+      const res = await POST(req);
+      expect(res.status).toBeGreaterThanOrEqual(400);
+      expect(res.headers.get('content-type')).toContain('application/json');
+      expect(upstream).toBe(0);
+      expect(runtime.adapters).toEqual({});
+    } finally {
+      globalThis.fetch = original;
+    }
+  },
+);

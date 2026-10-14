@@ -623,3 +623,106 @@ it('concurrent rounds wait for their own confirmed model support before any Mess
     ),
   ).toBe(true);
 });
+
+it('pause consuming both hosted uses omits search on the exact unchanged assistant continuation', async () => {
+  const first = nativeRound({
+    stop: 'pause_turn',
+    blocks: [search('a'), result('a'), search('b'), result('b')],
+    nativeSearch: 2,
+  }).message;
+  const t = transport([first, nativeRound({ text: 'Done' }).message]);
+  const c = caps();
+  const d = deps(sdk(t, c), 'http://127.0.0.1:1');
+  d.capabilities = c;
+  const out = await collect(
+    runTurn(
+      {
+        kind: 'text',
+        turnId: crypto.randomUUID(),
+        history: [],
+        text: 'Question',
+      },
+      d,
+      new AbortController().signal,
+    ),
+  );
+  expect(t.requests).toHaveLength(2);
+  expect(t.requests[1].tools.some((t) => t.name === 'web_search')).toBe(false);
+  expect(t.requests[1].messages.at(-1)).toEqual({
+    role: 'assistant',
+    content: first.content,
+  });
+  expect(out.at(-1)).toMatchObject({
+    data: { status: 'complete', usage: { searchUses: 2 } },
+  });
+});
+it('simulated SDK search in mock mode never claims live account verification', async () => {
+  const t = transport([
+    nativeRound({ blocks: [search(), result()], nativeSearch: 1 }).message,
+  ]);
+  const c = caps();
+  c.mode = 'mock';
+  await collect(sdk(t, c).runRound(modelInput(), new AbortController().signal));
+  expect(c.search).toMatchObject({
+    state: 'configured',
+    accountValidation: 'pending',
+  });
+});
+
+it('an in-flight successful search cannot erase a concurrent explicit account rejection', async () => {
+  const rejection = Response.json(
+    {
+      type: 'error',
+      error: {
+        type: 'invalid_request_error',
+        message: 'web_search is not supported',
+      },
+    },
+    { status: 400 },
+  );
+  const t = transport([
+    nativeRound({ text: 'Warm' }).message,
+    rejection,
+    nativeRound({ blocks: [search(), result()], nativeSearch: 1 }).message,
+  ]);
+  let rejectNow!: () => void, finishNow!: () => void;
+  const rejectGate = new Promise<void>((r) => {
+      rejectNow = r;
+    }),
+    finishGate = new Promise<void>((r) => {
+      finishNow = r;
+    });
+  let messages = 0;
+  const fake: typeof fetch = async (url, init) => {
+    if (!String(url).includes('/models/')) {
+      const n = messages++;
+      if (n === 1) await rejectGate;
+      if (n === 2) await finishGate;
+    }
+    return t.fake(url, init);
+  };
+  const c = caps();
+  const adapter = new ClaudeAdapter({
+    apiKey: 'offline-test-key',
+    model: 'offline',
+    capabilities: c,
+    searchEnabled: true,
+    fetch: fake,
+  });
+  await collect(adapter.runRound(modelInput(), new AbortController().signal));
+  const rejecting = collect(
+    adapter.runRound(modelInput(), new AbortController().signal),
+  ).catch((e) => e);
+  const succeeding = collect(
+    adapter.runRound(modelInput(), new AbortController().signal),
+  );
+  await new Promise<void>((r) => setImmediate(r));
+  rejectNow();
+  expect(await rejecting).toMatchObject({ code: 'SEARCH_UNAVAILABLE' });
+  finishNow();
+  await succeeding;
+  expect(c.search).toMatchObject({
+    state: 'unavailable',
+    accountValidation: 'unavailable',
+  });
+});

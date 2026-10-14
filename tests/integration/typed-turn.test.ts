@@ -333,3 +333,45 @@ it('transcription seam emits one transcript before model work with exact native 
     content: 'Spoken question',
   });
 });
+
+it('invalid tool arguments still exhaust the custom execution budget with zero HTTP calls', async () => {
+  const model = new ScriptedModel([
+    round({
+      stop: 'tool_use',
+      tools: [0, 1, 2, 3].map((i) => tool('invalid-' + i, 'unrecognized', {})),
+    }),
+    round({ stop: 'tool_use', tools: [tool('next')] }),
+  ]);
+  const d = deps(model, await service());
+  let calls = 0;
+  d.lookup = async () => {
+    calls++;
+    return atlasCatalog;
+  };
+  const out = await collect(runTurn(input(), d, new AbortController().signal));
+  expect(calls).toBe(0);
+  expect(model.inputs).toHaveLength(2);
+  expect(model.inputs[1].messages.at(-1)?.content).toHaveLength(4);
+  expect(out.at(-1)).toMatchObject({
+    type: 'turn.completed',
+    data: { status: 'truncated' },
+  });
+});
+it('a repeated identifier in a later native round cannot replay retrieval', async () => {
+  const model = new ScriptedModel([
+    round({ stop: 'tool_use', tools: [tool('same')] }),
+    round({ stop: 'tool_use', tools: [tool('same')] }),
+  ]);
+  const d = deps(model, await service());
+  let calls = 0;
+  d.lookup = async () => {
+    calls++;
+    return atlasCatalog;
+  };
+  const out = await collect(runTurn(input(), d, new AbortController().signal));
+  expect(calls).toBe(1);
+  expect(out.at(-1)).toMatchObject({
+    type: 'turn.failed',
+    data: { code: 'MODEL_FAILED' },
+  });
+});
