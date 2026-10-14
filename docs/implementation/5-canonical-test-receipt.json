@@ -1,10 +1,7 @@
 {
   "commands": [
     {
-      "args": [
-        "run",
-        "lint"
-      ],
+      "args": ["run", "lint"],
       "classification": "lint-full",
       "command": "npm",
       "completedAt": "2026-10-14T11:25:09.112Z",
@@ -16,10 +13,7 @@
       "startedAt": "2026-10-14T11:25:05.182Z"
     },
     {
-      "args": [
-        "run",
-        "format:check"
-      ],
+      "args": ["run", "format:check"],
       "classification": "format-full",
       "command": "npm",
       "completedAt": "2026-10-14T11:25:12.089Z",
@@ -31,10 +25,7 @@
       "startedAt": "2026-10-14T11:25:09.133Z"
     },
     {
-      "args": [
-        "run",
-        "test:unit"
-      ],
+      "args": ["run", "test:unit"],
       "classification": "test-unit",
       "command": "npm",
       "completedAt": "2026-10-14T11:26:13.545Z",
@@ -45,10 +36,7 @@
       "startedAt": "2026-10-14T11:26:10.937Z"
     },
     {
-      "args": [
-        "run",
-        "test:integration"
-      ],
+      "args": ["run", "test:integration"],
       "classification": "test-integration",
       "command": "npm",
       "completedAt": "2026-10-14T11:26:23.994Z",
@@ -59,10 +47,7 @@
       "startedAt": "2026-10-14T11:26:13.545Z"
     },
     {
-      "args": [
-        "run",
-        "test:slow"
-      ],
+      "args": ["run", "test:slow"],
       "classification": "test-slow",
       "command": "npm",
       "completedAt": "2026-10-14T11:26:24.960Z",
@@ -89,10 +74,7 @@
       "startedAt": "2026-10-14T11:26:24.960Z"
     },
     {
-      "args": [
-        "run",
-        "typecheck"
-      ],
+      "args": ["run", "typecheck"],
       "classification": "test-targeted-2",
       "command": "npm",
       "completedAt": "2026-10-14T11:26:29.391Z",
@@ -103,11 +85,7 @@
       "startedAt": "2026-10-14T11:26:26.232Z"
     },
     {
-      "args": [
-        "log",
-        "--oneline",
-        "-1"
-      ],
+      "args": ["log", "--oneline", "-1"],
       "classification": "test-targeted-3",
       "command": "git",
       "completedAt": "2026-10-14T11:26:29.410Z",
@@ -163,41 +141,13 @@
   "startedAt": "2026-10-14T11:25:05.182Z",
   "supersedes": null,
   "verificationCommands": [
-    [
-      "git",
-      "log",
-      "--oneline",
-      "-1"
-    ],
-    [
-      "npm",
-      "run",
-      "format:check"
-    ],
-    [
-      "npm",
-      "run",
-      "lint"
-    ],
-    [
-      "npm",
-      "run",
-      "test:integration"
-    ],
-    [
-      "npm",
-      "run",
-      "test:slow"
-    ],
-    [
-      "npm",
-      "run",
-      "typecheck"
-    ],
-    [
-      "npm",
-      "test"
-    ],
+    ["git", "log", "--oneline", "-1"],
+    ["npm", "run", "format:check"],
+    ["npm", "run", "lint"],
+    ["npm", "run", "test:integration"],
+    ["npm", "run", "test:slow"],
+    ["npm", "run", "typecheck"],
+    ["npm", "test"],
     [
       "npx",
       "vitest",
