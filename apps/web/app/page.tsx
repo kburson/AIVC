@@ -1,3 +1,4 @@
+import ContractProbe from '../client/contract-probe';
 export default function Page() {
   return (
     <main
@@ -15,6 +16,7 @@ export default function Page() {
         A browser application and an independent synthetic project catalog
         demonstrate the HTTP retrieval boundary.
       </p>
+      <ContractProbe />
       <section aria-label="Implementation status">
         <h2>Workspace ready</h2>
         <p>
