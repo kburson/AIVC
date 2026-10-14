@@ -18,7 +18,7 @@ Normal merges preserve the original story history and the parent preparation bas
 
 Application source entry requires strict integrated whole-story Done on [#4](https://github.com/kburson/AIVC/issues/4) and [#5](https://github.com/kburson/AIVC/issues/5), plus a current registered native rank-4 grant. Shared contracts from [#13](https://github.com/kburson/AIVC/issues/13) are consumed unchanged through those deliveries.
 
-Live checks confirm #4, #6 and #14 Closed/Done; #5 remains Open/Ready for Planning. Story #7 remains Ready for Planning. Fresh Explain reports blocked-by-not-done and refine-exit-wip-budget, with rank-wave-admission-refused and rank-wave-source-unverified on the WIP guard. Documentation publication grants no Plan, Develop, or application source authority. No partial story completion is permitted.
+Live checks confirm #4, #6 and #14 Closed/Done; #5 is now Open/Develop. Story #7 remains Ready for Planning. Fresh Explain reports blocked-by-not-done and refine-exit-wip-budget, with rank-wave-admission-refused and rank-wave-target-not-ready on the WIP guard. Documentation publication grants no Plan, Develop, or application source authority. No partial story completion is permitted.
 
 ## Exact ownership
 
@@ -94,6 +94,12 @@ The [uniform quality policy](../quality-scans.md) applies to this new collateral
 - [Accepted contract-first amendment original](https://github.com/kburson/AIVC/blob/6eda972a9df1bcbe1f8f650e9506c709026b02d8/docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md).
 - [Canonical hydration original](https://github.com/kburson/AIVC/blob/e559f6b33010e2902592fde97ed1560281f7f3d3/docs/superpowers/plans/2026-10-13-2-contract-first-hydration-index.md).
 
-Whole #4 and #5 strict Done plus actual native readiness remain required. The admitted runtime still returns blocked-by-not-done and rank-wave-admission-refused with reason rank-wave-source-unverified. This documentation checkpoint creates no source grant, lifecycle transition, replacement claim, new sealed acceptance, or partial completion. Adapter implementation, application tests and code review remain pending.
+Whole #4 and #5 strict Done plus actual native readiness remain required. The admitted runtime still returns blocked-by-not-done and rank-wave-admission-refused with reason rank-wave-target-not-ready. This documentation checkpoint creates no source grant, lifecycle transition, replacement claim, new sealed acceptance, or partial completion. Adapter implementation, application tests and code review remain pending.
 
 Selected-document Markdownlint and Prettier validation reported zero findings. The read-only sealed-evidence verifier confirmed all 74 archived originals against historical Git blobs. All 16 local links and five immutable Git blob links resolve; the credential-pattern scan found no matches. These are documentation and preservation checks, not application verification.
+
+## Preparation while #5 develops
+
+The approved native runtime has cleared the earlier source-proof limitation, but fresh #7 Explain still refuses promotion with blocked-by-not-done and rank-wave-target-not-ready. Whole #5 actually merged and Done plus fresh native target readiness remain prerequisites; the #5 author retains sole ownership of active shared provider/runtime/run-turn source.
+
+A heading-free deep-dive draft and 17 concrete future SDK/integration cases are prepared in ignored local scratch. They have not been posted or stamped as a governed deep dive, and no application or test source has been authored. The cases use installed Deepgram 5.15.0 declarations and the frozen wire events stage and transcript.final. They specifically cover header-ready versus body-settled streaming, EOF racing an unresolved upstream cancel promise, absent/accepted versus valid empty transcripts, no SDK retries, and exact text retention after speech failure. Refresh the delivered #5 interface before writing implementation.
