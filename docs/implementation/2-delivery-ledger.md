@@ -21,12 +21,20 @@ For #13, canonical Test receipt01M4VCZ75RDMF6SB51W0K0AX7H and the integration re
 
 | Story | Branch         | PR                                             | Publication status                                                                                                          |
 | ----- | -------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| #4    | codex/4-draft  | [#18](https://github.com/kburson/AIVC/pull/18) | Source and independent Astra review/provenance committed; fresh documentation-head Test passed; Review/approval in progress |
-| #5    | codex/5-draft  | [#22](https://github.com/kburson/AIVC/pull/22) | Accepted planning references and owned-scope activation document; implementation waits for whole #4 Done and lawful entry   |
-| #6    | codex/6-draft  | [#16](https://github.com/kburson/AIVC/pull/16) | Typed client and implementation/test summary committed; distinct review and fresh documentation-head proofs pending         |
-| #7    | codex/7-draft  | [#24](https://github.com/kburson/AIVC/pull/24) | Accepted planning references and owned-scope activation document; implementation waits for whole #4/#5 Done                 |
+| #4    | codex/4-draft  | [#18](https://github.com/kburson/AIVC/pull/18) | Source and independent Astra review/provenance committed; fresh documentation-head Test passed; merged at 1dcc07010e718665ff560c0d0f46b1ffc9621a0b; CLOSED/Done after canonical Review and Full-Auto approval |
+| #5    | codex/5-draft  | [#22](https://github.com/kburson/AIVC/pull/22) | Accepted planning references and owned-scope activation document; whole #4 is Done; implementation waits for the reviewed native-wave runtime fix and lawful entry   |
+| #6    | codex/6-draft  | [#16](https://github.com/kburson/AIVC/pull/16) | Typed client and distinct Astra review/provenance published at 6673039ec9ac7b2e44f990a7396548c973cbbd9c; exact-head Test passed; missing slow-lane declaration is being repaired before Review         |
+| #7    | codex/7-draft  | [#24](https://github.com/kburson/AIVC/pull/24) | Accepted planning references and owned-scope activation document; whole #4 is Done; implementation waits for whole #5 Done                 |
 | #14   | codex/14-draft | [#21](https://github.com/kburson/AIVC/pull/21) | Capture source and scoped verification/provenance committed; canonical Test passed; distinct review pending                 |
 
 Epic integration [PR #17](https://github.com/kburson/AIVC/pull/17) targets trunk. Separate tutorial design #15 uses codex/15-tutorial-design and [PR #23](https://github.com/kburson/AIVC/pull/23) into trunk; the existing specification and SAR loop are published, with written-spec owner approval still pending.
 
 This ledger is a checkpoint, not a claim that pending stories, live provider/microphone acceptance, or epic completion are finished. Per-story PR metadata and governed issue receipts identify subsequent exact revisions.
+
+## Owner stop boundary
+
+The owner requested a pause after wave 4 at 2026-10-14T00:47:01.848Z. Complete whole stories #4, #5, #6, #7 and #14 through independent review, canonical verification, merged cloud delivery and governed Done, then pause epic #2 before any #8 work. Preserve all branches and collateral and publish a fresh-chat handoff. This is a conditional pause boundary, not a claim that wave 4 is complete.
+
+## Owner timing correction for #3
+
+The [canonical timing log](https://github.com/kburson/AIVC/issues/3#issuecomment-6144827227) now reflects the owner supplied interval math. All 70 rows and all 136 hidden markers were preserved. Active time sums to 13,138 seconds (3h38m58s); corrected idle time sums to 10,748 seconds (2h59m08s), including the missing 519-second stop-to-start interval. Together they reconcile to 23,886 seconds (6h38m06s). Agent and orchestration effort on this story both count; session and word-counter changes do not erase intervals. Display precision is one second; native unknown instrumentation and unmeasured phase totals remain unknown. The requested calculation memory was saved separately in the Codex memory update folder.
