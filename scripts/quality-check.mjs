@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const checks = [
   [
-    'TypeScript lint',
+    'JavaScript/TypeScript lint',
     'node_modules/eslint/bin/eslint.js',
     '.',
     '--no-warn-ignored',

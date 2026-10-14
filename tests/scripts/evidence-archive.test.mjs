@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
+  readFileSync,
   mkdirSync,
   mkdtempSync,
   rmSync,
@@ -115,7 +116,7 @@ it('rejects a current view replaced with a symlink', () => {
 });
 
 it('rejects an archive that omits an original from the historical corpus', () => {
-  const { root, archive, archivePath, expectedSourceCommit } = fixture();
+  const { root, archive, archivePath } = fixture();
   const originalPath = archive.documents[0].path;
   writeFileSync(
     join(root, originalPath),
@@ -210,4 +211,49 @@ it('excludes generated VAD dependency assets from scans and refuses formatting t
     () => formatting.checkFormatting({ root, paths: [generated], write: true }),
     /inventory/,
   );
+});
+
+it('rejects tutorial original tampering even when its declared hash is recomputed', () => {
+  const root = mkdtempSync(join(process.cwd(), '.scratch/tutorial-evidence-'));
+  roots.push(root);
+  execFileSync('git', ['clone', '--shared', '--no-checkout', '.', root], {
+    stdio: 'pipe',
+  });
+  mkdirSync(join(root, 'scripts'), { recursive: true });
+  writeFileSync(
+    join(root, 'scripts/sealed-evidence.mjs'),
+    readFileSync('scripts/sealed-evidence.mjs'),
+  );
+  const archivePaths = [
+    'docs/quality-evidence/2026-10-13-25-originals.json',
+    'docs/quality-evidence/2026-10-14-25-integration-originals.json',
+    'docs/quality-evidence/2026-10-14-25-tutorial-originals.json',
+  ];
+  for (const path of archivePaths) {
+    const bytes = readFileSync(path);
+    const archive = JSON.parse(bytes.toString());
+    mkdirSync(dirname(join(root, path)), { recursive: true });
+    writeFileSync(join(root, path), bytes);
+    for (const document of archive.documents) {
+      mkdirSync(dirname(join(root, document.path)), { recursive: true });
+      writeFileSync(join(root, document.path), '# Formatting view\n');
+    }
+  }
+  const verify = () =>
+    execFileSync(
+      process.execPath,
+      [join(root, 'scripts/sealed-evidence.mjs')],
+      { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
+    );
+  assert.match(verify(), new RegExp('Verified 90 original documents'));
+  const path = join(root, archivePaths[2]);
+  const archive = JSON.parse(readFileSync(path, 'utf8'));
+  const forged = Buffer.from('# Forged tutorial review\n');
+  archive.documents[0].base64 = forged.toString('base64');
+  archive.documents[0].byteLength = forged.length;
+  archive.documents[0].sha256 = createHash('sha256')
+    .update(forged)
+    .digest('hex');
+  writeFileSync(path, JSON.stringify(archive));
+  assert.throws(verify, new RegExp('historical Git blob'));
 });

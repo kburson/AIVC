@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/89fc7a6125cd4b2be6f0f338dea928bd81bcea45/docs/peer-reviews/spec/aivc-interactive-tutorial-design-review-cb28e9fe5863446ca5d949d96998909c/sar/sar-loop-summary.md) and its exact bytes remain available in the [tutorial evidence archive](../../../../quality-evidence/2026-10-14-25-tutorial-originals.json).
+> Original SHA-256: `e0dd523e21c3893f80dc1435b8eb2b2406c88db9d5e522752f0578895f7eb5ff`. Review acceptance and protocol hashes apply to those original bytes.
+
 # AIVC tutorial SAR loop — completed
 
 Story: [#15](https://github.com/kburson/AIVC/issues/15).

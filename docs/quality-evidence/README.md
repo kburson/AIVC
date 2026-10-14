@@ -70,3 +70,14 @@ The verifier pins this second source commit independently and checks the complet
 capture-review Markdown corpus at that commit. CI verifies all 74 originals;
 missing or altered integration records also fail. Capture source, vendor patch
 and TypeScript errors remain the owning stories' responsibility.
+
+## Completion refresh for story #25
+
+The completion branch includes tutorial collateral from independently pinned
+source commit `89fc7a6125cd4b2be6f0f338dea928bd81bcea45`. All 16 Markdown
+files in its tutorial review group and accepted tutorial specification are
+preserved in [the tutorial archive](2026-10-14-25-tutorial-originals.json).
+Each published view links to those exact historical bytes. The two earlier
+archives remain unchanged. The verifier checks all 90 originals against Git,
+including complete tutorial corpus coverage; a real Git fixture test rejects
+forged tutorial bytes even when their declared hash is recomputed.
