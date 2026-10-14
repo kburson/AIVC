@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",
-    "@kburson/ai-task-manager": "file:vendors/kburson-ai-task-manager-0.1.0.tgz",
+    "@kburson/ai-task-manager": "file:vendors/kburson-ai-task-manager-0.1.0-2007-9b4f6659.tgz",
     "@playwright/test": "1.64.0",
     "@testing-library/react": "16.3.3",
     "@types/node": "26.6.5",
