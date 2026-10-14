@@ -21,17 +21,20 @@ function requireRegularPath(root, path) {
       throw Error('Missing regular evidence view or archive: ' + path);
   }
 }
-export function verifyEvidenceArchive({
-  root = workspace,
-  expectedSourceCommit = originalEvidenceCommit,
-} = {}) {
-  root = resolve(root);
-  if (root === workspace && expectedSourceCommit !== originalEvidenceCommit)
-    throw Error('Cannot override the required original evidence source commit');
-  requireRegularPath(root, evidenceArchivePath);
-  const archive = JSON.parse(
-    readFileSync(join(root, evidenceArchivePath), 'utf8'),
-  );
+const protectedCorpus =
+  /^(?:docs\/peer-reviews\/|docs\/superpowers\/(?:specs|plans)\/).+\.(?:md|json)$/;
+export const integrationEvidenceCommit =
+  '39c18e086ea832fc3214431575a1161742f374d6';
+export const integrationArchivePath =
+  'docs/quality-evidence/2026-10-14-25-integration-originals.json';
+function verifySnapshot(
+  root,
+  expectedSourceCommit,
+  archivePath,
+  corpusPattern,
+) {
+  requireRegularPath(root, archivePath);
+  const archive = JSON.parse(readFileSync(join(root, archivePath), 'utf8'));
   if (
     archive.schema !== 'aivc.evidence-originals/v1' ||
     !/^[a-f0-9]{40}$/.test(archive.sourceCommit) ||
@@ -55,11 +58,7 @@ export function verifyEvidenceArchive({
       { cwd: root, encoding: 'utf8' },
     )
       .split('\0')
-      .filter((path) =>
-        /^(?:docs\/peer-reviews\/|docs\/superpowers\/(?:specs|plans)\/).+\.(?:md|json)$/.test(
-          path,
-        ),
-      ),
+      .filter((path) => corpusPattern.test(path)),
   );
   if (
     archive.documents.length !== expected.size ||
@@ -113,6 +112,31 @@ export function verifyEvidenceArchive({
   }
   return seen.size;
 }
+export function verifyEvidenceArchive({
+  root = workspace,
+  expectedSourceCommit = originalEvidenceCommit,
+} = {}) {
+  root = resolve(root);
+  if (root === workspace && expectedSourceCommit !== originalEvidenceCommit)
+    throw Error('Cannot override the required original evidence source commit');
+  const count = verifySnapshot(
+    root,
+    expectedSourceCommit,
+    evidenceArchivePath,
+    protectedCorpus,
+  );
+  if (root !== workspace) return count;
+  return (
+    count +
+    verifySnapshot(
+      root,
+      integrationEvidenceCommit,
+      integrationArchivePath,
+      /^docs\/peer-reviews\/code\/14-capture-module\/.+\.md$/,
+    )
+  );
+}
+
 if (
   process.argv[1] &&
   resolve(process.argv[1]) === fileURLToPath(import.meta.url)

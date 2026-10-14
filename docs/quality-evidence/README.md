@@ -56,3 +56,17 @@ git show 0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c:docs/superpowers/specs/2026-10
 The source commit must be available locally; use a full-history checkout.
 The archive provides the same bytes independently through each entry's base64
 payload. Original acceptance hashes continue to identify those original bytes.
+
+## Integration refresh for PR #26
+
+The approved merge into `codex/2-draft` required refreshing the PR with base
+commit `39c18e086ea832fc3214431575a1161742f374d6`. That base introduces four
+capture code-review documents. Their exact bytes are separately preserved in
+[the integration archive](2026-10-14-25-integration-originals.json), with the
+same path, length, hash and base64 records. Their current documents are labeled
+formatting views. The original 70-document archive remains unchanged.
+
+The verifier pins this second source commit independently and checks the complete
+capture-review Markdown corpus at that commit. CI verifies all 74 originals;
+missing or altered integration records also fail. Capture source, vendor patch
+and TypeScript errors remain the owning stories' responsibility.

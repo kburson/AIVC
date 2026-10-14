@@ -19,6 +19,7 @@ export default defineConfig([
     '**/.cache/**',
     '**/.turbo/**',
     '**/public/vendor/**',
+    'apps/web/public/vad/**',
     '**/next-env.d.ts',
   ]),
   { files: ['**/*.{ts,tsx,mts,cts}'], extends: [tseslint.configs.recommended] },
