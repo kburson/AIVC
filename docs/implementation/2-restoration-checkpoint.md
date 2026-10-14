@@ -49,21 +49,29 @@ physical lineage for #4, #5, #6 and #14 at their original recorded paths.
 physical binding verifies. A suffixed replacement does not establish that an
 absent original checkout exists.
 
-Exact-path restoration needs a permitted operation on the original locations.
-The app creation tool chooses a new suffixed directory; the shell guard
-currently refuses the original external paths. Do not hide paths, weaken the
-hook or substitute a fake physical lineage. Once permitted, these ordinary
-existing-branch restorations preserve refs and history:
+Exact-path restoration needs a registered operation on the original locations.
+The owner approved a bounded AITM repair, now tracked as upstream #2014 in an
+isolated source worktree. It reuses authenticated retained history and the
+admission lock, derives the original path and branch from authority, checks the
+exact existing head and safe absence, then verifies the resulting clean
+checkout. It neither renews a grant nor changes lifecycle state. The repair
+must receive distinct Astra 6/high review and exact-source package verification
+before actual recovery. No physical restoration is yet claimed.
 
-```sh
-git worktree add /Users/kpburson/.codex/worktrees/voice-bff-refine-a/AIVC codex/4-draft
-git worktree add /Users/kpburson/.codex/worktrees/voice-bff-story-5/AIVC codex/5-draft
-git worktree add /Users/kpburson/.codex/worktrees/voice-bff-browser-6/AIVC codex/6-draft
-git worktree add /Users/kpburson/.codex/worktrees/voice-bff-capture-14/AIVC codex/14-draft
-```
+The original locations to recover are:
 
-Recheck absence and branch ownership before running each restoration; do not
-reset or overwrite any checkout that has reappeared.
+| Child | Recorded checkout                                            | Preserved branch |
+| ----- | ------------------------------------------------------------ | ---------------- |
+| #4    | `/Users/kpburson/.codex/worktrees/voice-bff-refine-a/AIVC`   | `codex/4-draft`  |
+| #5    | `/Users/kpburson/.codex/worktrees/voice-bff-story-5/AIVC`    | `codex/5-draft`  |
+| #6    | `/Users/kpburson/.codex/worktrees/voice-bff-browser-6/AIVC`  | `codex/6-draft`  |
+| #14   | `/Users/kpburson/.codex/worktrees/voice-bff-capture-14/AIVC` | `codex/14-draft` |
+
+Original native peer transcripts were made available through sanctioned chat
+unarchiving. Their genuine identities now verify; the missing physical paths
+remain a separate obligation. The owner's exact plain-text rank-4 authorization
+also verifies through the native source loader. These observations do not
+constitute the new admission record.
 
 The fresh genuine parent binding requires new native authorization adoption
 through the registered record workflow. Refresh cannot replace the parent.
@@ -79,3 +87,39 @@ succeeds, resume the same #7 author, refresh merged interfaces, complete its
 existing accepted whole-story plan and deep dive, then commission a distinct
 Astra 6/high reviewer. Keep PR24 current and merge it into `codex/2-draft`
 before governed Done. Continue #8, #9, #10 and #11 in dependency order.
+
+## Auxiliary #25 recovery update — October 14, 2026
+
+The owner chat was handed off through the sanctioned app operation into its
+existing `codex/25-draft` worktree. It installed the independently reviewed
+AITM #2007 source `9b4f6659aeb416ac174b5113ccfc37cc680279f3`, preserving the
+separately admitted #2012 runtime. Ordinary installation propagated the exact
+package into all five extant AIVC worktrees; source refs, tracked manifests
+outside #25 and concurrent owner files were preserved. Missing checkouts are
+not counted as propagated.
+
+The consumer checkpoint is pushed at
+`2d13a39c3aef76e9e7ba5af8e63b29622cefc5b9` with draft PR31 targeting
+`codex/2-draft`. Its owner reports zero remaining findings from the distinct
+Astra review, all five cloud CI jobs green and a passing exact-head canonical
+Test covering all nine declared commands. These are consumer verification
+results, not a successful Close or strict Done.
+
+Registered Review exited 3 on `timing-log-sequence`: the interrupted original
+actor has an open interval before handoff, with no departure event or queued
+publication to replay. The current owner's actor rows are canonical. Normal
+SessionStart recovery requires the genuine current session; it cannot be used
+to publish as a different retired actor. No historical endpoint or duration was
+inferred, no row was rewritten and no ownership change was used as a workaround.
+The original pending Close journal and exact-head Test evidence remain intact.
+
+The owner approved a separate bounded upstream timing repair: one registered
+administrative recovery action authenticates current ownership, exact orphan
+source and retired-session/takeover evidence; rejects live actors, conflicts
+and uncertain publications; then appends an idempotent unknown session-end
+record and audit. All previous rows and unknown contribution must remain
+unchanged. Regression tests, distinct Astra review and a verified package must
+precede consumer adoption and renewed Test, Review, approval, cloud merge and
+Close. This timing source repair is separate from #2014 restoration. Until
+actual recovery succeeds, #25 stays paused at its honest blocked boundary and
+PR31 stays draft. PR17 also remains draft.
