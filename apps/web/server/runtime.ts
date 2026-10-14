@@ -1,5 +1,7 @@
 import { ClaudeAdapter } from './providers/claude';
-import { MockAdapter } from './providers/mock';
+import { MockAdapter, createMockSpeechAdapter } from './providers/mock';
+import { createDeepgramAdapter } from './providers/deepgram';
+import type { SpeechAdapter } from './providers/contracts';
 import type { ModelAdapter, TurnDeps } from './providers/contracts';
 import { createRetrievalClient } from './tools/retrieval-client';
 import { AppError } from './http/errors';
@@ -74,16 +76,17 @@ export function getTurnDeps(runtime: ServerRuntime): TurnDeps {
     lookup: runtime.adapters.lookup as TurnDeps['lookup'],
     transcribe:
       transcribe ??
-      (async () => {
-        throw new AppError(
-          502,
-          'STT_FAILED',
-          'Transcription is not configured.',
-          null,
-          false,
-        );
-      }),
+      ((wav, signal) => getSpeechAdapter(runtime).transcribe(wav, signal)),
     mode: runtime.config.mode,
     capabilities: runtime.capabilities,
   };
+}
+
+export function getSpeechAdapter(runtime: ServerRuntime): SpeechAdapter {
+  if (!runtime.adapters.speech)
+    runtime.adapters.speech =
+      runtime.config.mode === 'mock'
+        ? createMockSpeechAdapter()
+        : createDeepgramAdapter(runtime.config);
+  return runtime.adapters.speech as SpeechAdapter;
 }

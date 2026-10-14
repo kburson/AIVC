@@ -91,3 +91,40 @@ export class MockAdapter implements ModelAdapter {
     yield { type: 'round', message: message(content, stop), searchUses: 0 };
   }
 }
+
+// Synthetic speech is deliberately deterministic and never claims provider audio.
+export function createMockSpeechAdapter(): import('./contracts').SpeechAdapter {
+  return {
+    async transcribe(_wav, signal) {
+      signal.throwIfAborted();
+      return 'Hello from mock speech.';
+    },
+    async synthesize(_input, signal) {
+      signal.throwIfAborted();
+      let chunk = 0;
+      return {
+        format: { encoding: 'pcm_s16le', sampleRate: 24000, channels: 1 },
+        stream: new ReadableStream<Uint8Array>({
+          pull(c) {
+            signal.throwIfAborted();
+            if (chunk++ < 2) {
+              const bytes = new Uint8Array(2400);
+              const view = new DataView(bytes.buffer);
+              for (let i = 0; i < 1200; i++)
+                view.setInt16(
+                  i * 2,
+                  Math.round(
+                    Math.sin(
+                      ((i + (chunk - 1) * 1200) * 2 * Math.PI * 440) / 24000,
+                    ) * 2000,
+                  ),
+                  true,
+                );
+              c.enqueue(bytes);
+            } else c.close();
+          },
+        }),
+      };
+    },
+  };
+}
