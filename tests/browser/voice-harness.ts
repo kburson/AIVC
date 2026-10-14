@@ -14,7 +14,63 @@ export type HarnessCall = {
 declare global {
   interface Window {
     __aivcHarness: { calls: HarnessCall[]; release: () => void };
+    captureSimulation: {
+      requests: MediaStreamConstraints[];
+      stops: number[];
+      loadedWorklets: string[];
+      release(): void;
+    };
   }
+}
+/** Real browser/VAD/ORT; only microphone permission and silent test audio are synthetic. */
+export async function installSyntheticMicrophone(
+  page: Page,
+  { hold = false, deny = false } = {},
+) {
+  await page.addInitScript(
+    ({ hold, deny }) => {
+      const state: Window['captureSimulation'] = {
+        requests: [],
+        stops: [],
+        loadedWorklets: [],
+        release() {},
+      };
+      window.captureSimulation = state;
+      const addModule = AudioWorklet.prototype.addModule;
+      AudioWorklet.prototype.addModule = async function (...args) {
+        await addModule.apply(this, args);
+        state.loadedWorklets.push(String(args[0]));
+      };
+      let release!: () => void;
+      const gate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      state.release = release;
+      navigator.mediaDevices.getUserMedia = async (constraints) => {
+        state.requests.push(constraints ?? {});
+        if (deny && state.requests.length === 1)
+          throw new DOMException(
+            'Synthetic permission denial',
+            'NotAllowedError',
+          );
+        if (hold && state.requests.length === 1) await gate;
+        const context = new AudioContext(),
+          destination = context.createMediaStreamDestination();
+        await context.resume();
+        const track = destination.stream.getAudioTracks()[0],
+          stop = track.stop.bind(track),
+          index = state.stops.length;
+        state.stops.push(0);
+        track.stop = () => {
+          state.stops[index]++;
+          stop();
+          void context.close();
+        };
+        return destination.stream;
+      };
+    },
+    { hold, deny },
+  );
 }
 export async function installVoiceHarness(
   page: Page,
