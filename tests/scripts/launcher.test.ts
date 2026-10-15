@@ -35,11 +35,18 @@ it.each([{ args: [] }, { args: ['--production'] }])(
       for (const [i, name] of ['web', 'retrieval'].entries()) {
         expect(b.call.mock.calls[i]).toEqual([
           process.execPath,
-          [
-            expect.stringMatching(/npm(?:-cli)?\.js$/),
-            'run',
-            args.length ? 'start' : 'dev',
-          ],
+          args.length
+            ? name === 'web'
+              ? [
+                  join(root, 'node_modules/next/dist/bin/next'),
+                  'start',
+                  '--hostname',
+                  '127.0.0.1',
+                  '--port',
+                  '3000',
+                ]
+              : ['dist/index.js']
+            : [expect.stringMatching(/npm(?:-cli)?\.js$/), 'run', 'dev'],
           { cwd: join(root, 'apps', name), stdio: 'inherit' },
         ]);
       }

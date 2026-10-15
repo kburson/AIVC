@@ -1,3 +1,4 @@
+import { observe } from '../measurements';
 import type { TurnToken } from '../turn-controller';
 import type { SpeechInput } from '../../shared/contracts';
 import type { Playback } from './playback';
@@ -212,14 +213,17 @@ export class SpeechQueue {
       state.abort = abort;
       this.transportBusy = true;
       ownsTransport = true;
+      const segmentId = String(++state.sequence);
+      observe('tts-request', { turnId: state.token.turnId, segmentId });
       const response = await (this.options.synthesize ?? synthesizeSpeech)(
         {
           turnId: state.token.turnId,
-          segmentId: String(++state.sequence),
+          segmentId,
           text,
         },
         abort.signal,
       );
+      observe('tts-headers', { turnId: state.token.turnId, segmentId });
       if (!this.current(state)) {
         await response.body?.cancel().catch(() => {});
         return;
@@ -249,6 +253,8 @@ export class SpeechQueue {
           const part = await reader.read();
           if (!this.current(state)) return;
           if (part.done) break;
+          if (samples === 0 && part.value.length)
+            observe('tts-first-pcm', { turnId: state.token.turnId, segmentId });
           const decoded = decoder.push(part.value);
           samples += decoded.length;
           if (samples > 240000) throw new Error('AUDIO_OVERFLOW');
@@ -257,6 +263,7 @@ export class SpeechQueue {
             this.options.onStatus(state.token, 'speaking', state.notice);
         }
         decoder.finish();
+        observe('tts-completed', { turnId: state.token.turnId, segmentId });
       } finally {
         await reader.cancel().catch(() => {});
         reader.releaseLock();

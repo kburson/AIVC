@@ -49,11 +49,24 @@ export function launch({
   signals.on('SIGINT', onInt);
   signals.on('SIGTERM', onTerm);
   for (const name of ['web', 'retrieval']) {
-    const child = spawnChild(
-      process.execPath,
-      [npmCli, 'run', production ? 'start' : 'dev'],
-      { cwd: join(root, 'apps', name), stdio: 'inherit' },
-    );
+    // Production owns the server processes themselves. A package-manager shell
+    // can exit on a signal before its server descendant releases the port.
+    const command = production
+      ? name === 'web'
+        ? [
+            join(root, 'node_modules/next/dist/bin/next'),
+            'start',
+            '--hostname',
+            '127.0.0.1',
+            '--port',
+            '3000',
+          ]
+        : ['dist/index.js']
+      : [npmCli, 'run', 'dev'];
+    const child = spawnChild(process.execPath, command, {
+      cwd: join(root, 'apps', name),
+      stdio: 'inherit',
+    });
     children.push(child);
     child.once('error', (error) => {
       console.error('Launcher child error: ' + error.message);

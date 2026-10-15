@@ -81,3 +81,62 @@ speech/device observations. It is evidence from the deliberate run, not a verifi
 generated attestation. Unknown provider counters are omitted. Required failed/
 unverified cases prevent full acceptance; the explicit unavailable-search
 alternative and optional acoustic measurement retain their specific meanings.
+
+## Original acceptance case mapping
+
+These links map every original specification case to executable coverage. Controlled
+coverage establishes its stated boundary only; it does not turn an L1–L8 live
+observation into a pass.
+
+| Original case | Executable coverage and remaining actual observation                                                                                                                                                 |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1             | [Typed tool loop](../tests/integration/typed-turn.test.ts) and [joined HTTP browser](../tests/browser/system.spec.ts); actual Claude lookup remains L1.                                              |
+| 2             | [Retrieval contract](../tests/contracts/retrieval.test.ts) and joined HTTP cards.                                                                                                                    |
+| 3             | [SSE codec](../tests/contracts/sse.test.ts) and [PCM decoder](../tests/voice/pcm.test.ts).                                                                                                           |
+| 4             | [Turn controller](../tests/contracts/turn-controller.test.ts), [interruption](../tests/voice/interruption.test.ts) and [browser interruption](../tests/browser/interruption.spec.ts); physical L3.   |
+| 5             | [Capture ownership](../tests/voice/capture-session.test.ts) and [browser capture](../tests/browser/capture.spec.ts); real microphone L1.                                                             |
+| 6             | [Speech queue](../tests/voice/speech-queue.test.ts); real incremental generation/playback L1.                                                                                                        |
+| 7             | [Conversation failure states](../tests/ui/conversation.test.tsx), [audio turns](../tests/integration/audio-turn.test.ts) and joined retrieval failure; actual provider observations remain separate. |
+| 8             | [Capture cleanup](../tests/voice/capture-module.test.ts), [conversation ownership](../tests/ui/conversation.test.tsx) and browser capture; physical release L8.                                      |
+| 9             | [Admission](../tests/contracts/admission.test.ts), [speech endpoint](../tests/contracts/speech-endpoint.test.ts) and [capabilities](../tests/contracts/config.test.ts).                              |
+| 10            | [Bounded speech queue](../tests/voice/speech-queue.test.ts) and [playback watchdog](../tests/slow/playback-watchdog.test.ts); actual generated voice remains live.                                   |
+| 11            | [Search budget](../tests/contracts/search-budget.test.ts) and typed tool-loop continuations; selected live API/tool/pause compatibility L6.                                                          |
+| 12            | [Reversible interruption](../tests/voice/interruption.test.ts) and browser interruption; physical callback/confirmation timing L3/L4.                                                                |
+| 13            | [Capabilities](../tests/contracts/config.test.ts) and [search budget](../tests/contracts/search-budget.test.ts); actual available or explicit unavailable branch L6.                                 |
+| 14            | [Public history](../tests/contracts/public-history.test.ts), [history store](../tests/contracts/history.test.ts) and [typed browser](../tests/browser/typed.spec.ts).                                |
+| 15            | [Rapid interruption](../tests/slow/rapid-interruption.test.ts), actual joined admission Busy recovery and [safe links](../tests/contracts/links.test.tsx).                                           |
+
+## Reading the bounded browser observations
+
+[User Timing instrumentation](../apps/web/client/measurements.ts) retains at most
+512 `aivc.*` marks, with turn/capture/segment IDs and numeric timing metadata.
+It retains no question text, audio or credentials and cannot own product progress.
+Read these marks after each deliberate sample before the bounded buffer ages out:
+
+```js
+performance
+  .getEntriesByType('mark')
+  .filter((entry) => entry.name.startsWith('aivc.'))
+  .map(({ name, startTime, detail }) => ({ name, startTime, detail }));
+```
+
+`vad-end` joins `turn-created` by captureEpoch/utteranceId/intentVersion. Its
+lastSpeechFrameAt is the last VAD frame classified above the configured negative
+threshold, not an acoustic recording of the last phoneme; its resolution includes
+32ms frame quantization and scheduling. vadEndDelayMs is the observed model-frame
+to end-callback interval. Use that same-clock frame estimate for the documented
+speech-end totals, and retain its measurement limitation. The separate callback
+start time can also be reported without relabeling it acoustic speech end.
+
+`turn-request`, `stage-transcribing`, `transcript.final`, `answer.delta`,
+`tts-request`, `tts-headers`, `tts-first-pcm`, `tts-completed` and
+`playback-first-scheduled` distinguish upload/transcription, model/tool, synthesis
+and browser buffering boundaries. Network-inclusive browser spans are not pure
+server/provider durations. First scheduled output is the scheduling mark time
+plus scheduledAfterMs; it is not proof of acoustic onset. If a provider-only span
+cannot be isolated, retain null and explain the unavailable boundary.
+
+`vad-raw-start` to `playback-suspended` measures callback-to-local-context silence;
+`vad-confirmed-start` to `turn-local-cancel` measures separate local generation/
+abort initiation. Neither mark proves remote provider cessation. `vad-module`
+records the revision checked on the actual imported module after patch validation.

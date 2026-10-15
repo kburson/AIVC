@@ -3,6 +3,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { FormEvent } from 'react';
 import { TurnController, clientReason } from '../client/turn-controller';
 import { HistoryStore } from '../client/history';
+import { observe } from '../client/measurements';
+import type { CaptureToken } from '../client/voice/capture-session';
 import { startTurn } from '../client/turn-stream';
 import type { Capabilities as CapabilityContract } from '../shared/contracts';
 import { validateCapabilities } from '../shared/validation';
@@ -266,7 +268,7 @@ export default function Conversation({
             !run.interruption.admitEnd(token)
           )
             return;
-          void runTurn({ wav });
+          void runTurn({ wav }, false, token);
         },
         onStatus: (reason) => {
           if (capture.current === run && reason === 'CAPTURE_OVERLONG')
@@ -348,6 +350,7 @@ export default function Conversation({
   async function runTurn(
     input: { text?: string; wav?: Blob },
     gesture = false,
+    captureToken?: CaptureToken,
   ): Promise<void> {
     const capability = capsRef.current;
     if (!capability?.turnsAvailable) return;
@@ -356,6 +359,16 @@ export default function Conversation({
       output.current.queue.cancel(output.current.token, 'TURN_INTERRUPTED');
     const token = controller.begin(),
       abort = new AbortController();
+    observe('turn-created', {
+      turnId: token.turnId,
+      ...(captureToken
+        ? {
+            captureEpoch: captureToken.epoch,
+            utteranceId: captureToken.utteranceId,
+            intentVersion: captureToken.intentVersion,
+          }
+        : {}),
+    });
     if (input.text !== undefined) controller.setUser(token, input.text);
     controller.attachAbort(token, abort);
     controller.setSpeech(

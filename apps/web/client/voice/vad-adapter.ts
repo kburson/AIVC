@@ -1,3 +1,4 @@
+import { observe } from '../measurements';
 export type CaptureToken = Readonly<{
   epoch: number;
   utteranceId: number;
@@ -7,7 +8,11 @@ export type VadCallbacks = {
   rawStart(capture: CaptureToken): void;
   confirmedStart(capture: CaptureToken): void;
   misfire(capture: CaptureToken): void;
-  end(capture: CaptureToken, samples: Float32Array): void;
+  end(
+    capture: CaptureToken,
+    samples: Float32Array,
+    timing?: { lastSpeechFrameAt: number; endCallbackAt: number },
+  ): void;
   frame(samples: Float32Array): void;
 };
 export type VadHandle = {
@@ -45,11 +50,13 @@ export async function createVad(
   const { MicVAD } = await import('@ricky0123/vad-web'); // Module entry, never its CDN bundle.
   if (MicVAD.lifecyclePatchRevision !== VAD_LIFECYCLE_REVISION)
     throw Error('Pinned VAD lifecycle patch is not applied.');
+  observe('vad-module', { revision: MicVAD.lifecyclePatchRevision });
   if (!globalThis.location?.origin)
     throw Error('Capture requires a browser origin.');
   const assets = new URL('vad/', globalThis.location.origin);
   const ortAssets = new URL('vad/ort/', globalThis.location.origin);
   const epoch = ++allocationEpoch;
+  let lastSpeechFrameAt = 0;
   let utteranceId = 0,
     capture: CaptureToken | null = null,
     phase: 'tentative' | 'confirmed' | null = null;
@@ -69,6 +76,7 @@ export async function createVad(
     pauseStream: stopStream,
     resumeStream: async () => acquireStream(),
     onSpeechStart: () => {
+      lastSpeechFrameAt = performance.now();
       capture = Object.freeze({
         epoch,
         utteranceId: ++utteranceId,
@@ -95,9 +103,15 @@ export async function createVad(
       const token = capture;
       capture = null;
       phase = null;
-      callbacks.end(token, samples);
+      callbacks.end(token, samples, {
+        lastSpeechFrameAt,
+        endCallbackAt: performance.now(),
+      });
     },
-    onFrameProcessed: (_probs, samples) => callbacks.frame(samples),
+    onFrameProcessed: (probs, samples) => {
+      if (probs.isSpeech >= 0.25) lastSpeechFrameAt = performance.now();
+      callbacks.frame(samples);
+    },
   });
   const pause = vad.pause,
     destroy = vad.destroy;

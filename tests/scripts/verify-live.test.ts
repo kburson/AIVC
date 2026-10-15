@@ -51,6 +51,27 @@ function fixture() {
   const root = mkdtempSync(join(process.cwd(), '.scratch/live-verifier-'));
   roots.push(root);
   git(root, 'init', '-q');
+  const moduleBytes = `class MicVAD {}\nMicVAD.lifecyclePatchRevision = \"${revision}\";\n`;
+  const declarationBytes = 'declare class MicVAD {}\n';
+  const blobHash = (bytes: string) =>
+    createHash('sha1')
+      .update('blob ' + Buffer.byteLength(bytes) + '\0')
+      .update(bytes)
+      .digest('hex');
+  const fixturePatch = ['dist/real-time-vad.js', 'dist/real-time-vad.d.ts']
+    .map(
+      (file, index) =>
+        'diff --git a/node_modules/@ricky0123/vad-web/' +
+        file +
+        ' b/node_modules/@ricky0123/vad-web/' +
+        file +
+        '\nindex ' +
+        '0'.repeat(40) +
+        '..' +
+        blobHash(index ? declarationBytes : moduleBytes) +
+        ' 100644\n',
+    )
+    .join('');
   const files = {
     '.gitignore': 'node_modules/\n',
     '.npmrc': 'engine-strict=true\n',
@@ -59,7 +80,16 @@ function fixture() {
       '{"name":"live-fixture","dependencies":{"@ricky0123/vad-web":"0.0.31"}}\n',
     'apps/example.ts': 'export const answer = 1;\n',
     'scripts/runtime.mjs': 'export const version = 1;\n',
-    [patch]: 'fixture lifecycle patch\n',
+    [patch]: fixturePatch,
+    'package-lock.json': JSON.stringify({
+      packages: {
+        'node_modules/@ricky0123/vad-web': {
+          version: '0.0.31',
+          integrity:
+            'sha512-ePVq8TvB21sdHSxVMZOEIf9JVa7MAYpaIaNXeGgsPOiMCN8xbPCdF2LS5aYj7VRR3ZxzutedgV9ZplV65IA1Fg==',
+        },
+      },
+    }),
   };
   for (const [path, bytes] of Object.entries(files)) put(root, path, bytes);
   commit(root, 'Tested source');
@@ -72,15 +102,15 @@ function fixture() {
       .update(files[path as keyof typeof files])
       .update('\0');
   const sourceDigest = hash.digest('hex');
+  put(root, modulePath, moduleBytes);
   put(
     root,
-    modulePath,
-    `class MicVAD {}\nMicVAD.lifecyclePatchRevision = "${revision}";\n`,
+    'node_modules/@ricky0123/vad-web/dist/real-time-vad.d.ts',
+    declarationBytes,
   );
   json(root, 'node_modules/@ricky0123/vad-web/package.json', {
     name: '@ricky0123/vad-web',
     version: '0.0.31',
-    gitHead: upstream,
     main: 'dist/index.js',
   });
   const providers = {
@@ -113,7 +143,7 @@ function fixture() {
     sourceDigest,
     mode: 'live',
     nodeVersion: process.version,
-    packages: { '@ricky0123/vad-web': '0.0.31' },
+    packages: { '.': { '@ricky0123/vad-web': '0.0.31' } },
     providers,
     browser,
     vadPatch: {
@@ -264,7 +294,7 @@ it.each([
   [
     'package binding',
     (f: ReturnType<typeof fixture>) => {
-      f.report.packages['@ricky0123/vad-web'] = '0.0.30';
+      f.report.packages['.']['@ricky0123/vad-web'] = '0.0.30';
     },
     /package/,
   ],
@@ -416,4 +446,77 @@ it('compares runtime metadata by value independently of JSON property order', ()
     claudeModel: 'claude-sonnet-4-6',
   };
   expect(errors(f)).toBe('');
+});
+it('rejects research rows without actual applicable latency measurements', () => {
+  const f = fixture();
+  const row = f.report.timings.find(
+    (timing) => timing.scenario === 'research',
+  )!;
+  for (const key of Object.keys(row))
+    if (key.endsWith('Ms'))
+      (row as unknown as Record<string, unknown>)[key] = null;
+  f.save();
+  expect(verifyLive({ root: f.root, log: () => {} }).ok).toBe(false);
+});
+it('does not count capitalization variants as distinct Atlas trials', () => {
+  const f = fixture();
+  for (const [index, scenario] of ['Atlas', 'atlas', 'ATLAS'].entries()) {
+    f.report.timings[index].scenario = scenario;
+    f.report.timings[index].sample = 1;
+  }
+  f.save();
+  expect(verifyLive({ root: f.root, log: () => {} }).ok).toBe(false);
+});
+it('rejects nonempty provider-named credentials in runtime observations', () => {
+  const f = fixture();
+  Object.assign(f.observation, {
+    DEEPGRAM_API_KEY: '0123456789abcdef0123456789abcdef01234567',
+  });
+  f.save();
+  expect(verifyLive({ root: f.root, log: () => {} }).ok).toBe(false);
+});
+it('accepts npm package metadata without an invented upstream gitHead field', () => {
+  const f = fixture();
+  const path = 'node_modules/@ricky0123/vad-web/package.json';
+  const metadata = JSON.parse(readFileSync(join(f.root, path), 'utf8'));
+  delete metadata.gitHead;
+  json(f.root, path, metadata);
+  expect(verifyLive({ root: f.root, log: () => {} }).ok).toBe(true);
+});
+it('records actual dependency versions resolved independently by each workspace', async () => {
+  const f = fixture();
+  const rootPackage = JSON.parse(
+    readFileSync(join(f.root, 'package.json'), 'utf8'),
+  );
+  rootPackage.workspaces = ['apps/retrieval'];
+  json(f.root, 'package.json', rootPackage);
+  json(f.root, 'apps/retrieval/package.json', {
+    dependencies: { ajv: '8.17.1' },
+  });
+  json(f.root, 'node_modules/ajv/package.json', {
+    name: 'ajv',
+    version: '6.15.0',
+  });
+  json(f.root, 'apps/retrieval/node_modules/ajv/package.json', {
+    name: 'ajv',
+    version: '8.17.1',
+  });
+  const { installedPackages } = await import('../../scripts/verify-live.mjs');
+  expect(installedPackages(f.root)).toMatchObject({
+    'apps/retrieval': { ajv: '8.17.1' },
+  });
+});
+it('rejects altered installed code despite a retained marker and recomputed report digest', () => {
+  const f = fixture();
+  put(
+    f.root,
+    modulePath,
+    readFileSync(join(f.root, modulePath), 'utf8') +
+      '\n// altered installed code\n',
+  );
+  f.report.vadPatch.appliedModuleDigest = sha(
+    readFileSync(join(f.root, modulePath)),
+  );
+  f.save();
+  expect(verifyLive({ root: f.root, log: () => {} }).ok).toBe(false);
 });

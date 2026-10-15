@@ -184,3 +184,13 @@ it('rejects documented runtime ports and production build source that no longer 
   unlinkSync(join(root, 'apps/web/server/build-info.ts'));
   expect(errors(root)).toMatch(/build-info|build.*source/i);
 });
+it('rejects a provider-key literal assignment while permitting names and blank examples', () => {
+  const root = fixture();
+  edit(
+    root,
+    'README.md',
+    (value) =>
+      value + '\nDEEPGRAM_API_KEY=0123456789abcdef0123456789abcdef01234567\n',
+  );
+  expect(errors(root)).toMatch(/credential/i);
+});

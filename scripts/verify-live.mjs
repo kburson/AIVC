@@ -1,7 +1,8 @@
+import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { lstatSync, readFileSync } from 'node:fs';
-import { dirname, isAbsolute, join, resolve } from 'node:path';
+import { existsSync, lstatSync, readFileSync } from 'node:fs';
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isDeepStrictEqual } from 'node:util';
 
@@ -9,6 +10,8 @@ const workspace = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const patchPath = 'patches/@ricky0123+vad-web+0.0.31.patch';
 const modulePath = 'node_modules/@ricky0123/vad-web/dist/real-time-vad.js';
 const lifecycleRevision = 'aivc-vad-lifecycle-v1';
+const upstreamIntegrity =
+  'sha512-ePVq8TvB21sdHSxVMZOEIf9JVa7MAYpaIaNXeGgsPOiMCN8xbPCdF2LS5aYj7VRR3ZxzutedgV9ZplV65IA1Fg==';
 const upstreamGitHead = 'de9b3ff83fd44cd7a2b3e07e9454e6b6f0bc249d';
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const object = (value) =>
@@ -57,7 +60,7 @@ function json(root, path) {
 function secretFree(value) {
   if (
     typeof value === 'string' &&
-    /sk-ant-[A-Za-z0-9_-]{12,}|(?:Bearer|Token)\s+[A-Za-z0-9_-]{24,}/.test(
+    /sk-ant-[A-Za-z0-9_-]{12,}|(?:Bearer|Token)\s+[A-Za-z0-9_-]{24,}|(?:ANTHROPIC_API_KEY|DEEPGRAM_API_KEY)\s*=\s*[\x22\x27]?[A-Za-z0-9_-]{8,}/.test(
       value,
     )
   )
@@ -66,7 +69,7 @@ function secretFree(value) {
   if (object(value))
     return Object.entries(value).every(
       ([key, item]) =>
-        !/^(?:api_?key|authorization|secret|access_?token)$/i.test(key) &&
+        !/(?:api_?key|authorization|secret|access_?token)$/i.test(key) &&
         secretFree(item),
     );
   return true;
@@ -95,25 +98,56 @@ export function computeSourceDigest(root = workspace, ref = null) {
 }
 export function installedPackages(root = workspace) {
   const manifest = json(root, 'package.json');
-  const declarations = [
-    manifest,
-    ...(manifest.workspaces ?? []).map((path) =>
+  const contexts = [
+    ['.', manifest],
+    ...(manifest.workspaces ?? []).map((path) => [
+      path,
       json(root, path + '/package.json'),
-    ),
+    ]),
   ];
-  const names = new Set(
-    declarations.flatMap((pkg) =>
-      Object.keys({ ...pkg.dependencies, ...pkg.devDependencies }),
-    ),
-  );
   return Object.fromEntries(
-    [...names].sort().map((name) => {
-      if (!/^(?:@[a-z0-9._-]+\/)?[a-z0-9._-]+$/i.test(name))
-        throw Error('Invalid package name');
-      const metadata = json(root, 'node_modules/' + name + '/package.json');
-      if (metadata.name !== name || !text(metadata.version))
-        throw Error('Invalid installed package metadata: ' + name);
-      return [name, metadata.version];
+    contexts.map(([context, declaration]) => {
+      const require = createRequire(join(root, context, 'package.json'));
+      const names = Object.keys({
+        ...declaration.dependencies,
+        ...declaration.devDependencies,
+      }).sort();
+      return [
+        context,
+        Object.fromEntries(
+          names.map((name) => {
+            if (!/^(?:@[a-z0-9._-]+\/)?[a-z0-9._-]+$/i.test(name))
+              throw Error('Invalid package name');
+            let path;
+            try {
+              path = require.resolve(name + '/package.json');
+            } catch {
+              let directory = dirname(require.resolve(name));
+              while (true) {
+                const candidate = join(directory, 'package.json');
+                if (
+                  existsSync(candidate) &&
+                  JSON.parse(readFileSync(candidate, 'utf8')).name === name
+                ) {
+                  path = candidate;
+                  break;
+                }
+                const parent = dirname(directory);
+                if (parent === directory)
+                  throw Error('Package metadata not found: ' + name);
+                directory = parent;
+              }
+            }
+            const metadata = json(
+              root,
+              relative(root, path).split('\\').join('/'),
+            );
+            if (metadata.name !== name || !text(metadata.version))
+              throw Error('Invalid installed package metadata: ' + name);
+            return [name, metadata.version];
+          }),
+        ),
+      ];
     }),
   );
 }
@@ -216,9 +250,47 @@ export function verifyLive({
         root,
         'node_modules/@ricky0123/vad-web/package.json',
       );
-      require(metadata.version === vad.packageVersion &&
-        metadata.gitHead ===
-          upstreamGitHead, 'Installed VAD package/upstream identity differs');
+      require(metadata.version ===
+        vad.packageVersion, 'Installed VAD package version differs');
+      const lock = json(root, 'package-lock.json').packages?.[
+        'node_modules/@ricky0123/vad-web'
+      ];
+      require(lock?.version === '0.0.31' &&
+        lock?.integrity ===
+          upstreamIntegrity, 'Locked VAD distribution differs from accepted upstream integrity');
+      // npm's installed package.json need not include the registry gitHead. The
+      // accepted upstream identity is bound by lock integrity and the actual
+      // patched implementation/declaration postimages, not an invented field.
+      const patch = readFileSync(regular(root, patchPath), 'utf8');
+      const blocks = patch.split('diff --git ').slice(1);
+      require(blocks.length ===
+        2, 'Lifecycle patch must contain exactly its two accepted modules');
+      for (const file of ['dist/real-time-vad.js', 'dist/real-time-vad.d.ts']) {
+        const prefix =
+          'a/node_modules/@ricky0123/vad-web/' +
+          file +
+          ' b/node_modules/@ricky0123/vad-web/' +
+          file;
+        const block = blocks.find((value) => value.split('\n')[0] === prefix);
+        const expected = block
+          ?.split('\n')
+          .find((value) => value.startsWith('index '))
+          ?.slice(6)
+          .split(' ')[0]
+          .split('..')[1];
+        const bytes = readFileSync(
+          regular(root, 'node_modules/@ricky0123/vad-web/' + file),
+        );
+        const actual = createHash('sha1')
+          .update('blob ' + bytes.length + '\0')
+          .update(bytes)
+          .digest('hex');
+        require(typeof expected === 'string' &&
+          /^[a-f0-9]{40}$/.test(expected) &&
+          actual ===
+            expected, 'Installed VAD module differs from actual patch postimage: ' +
+          file);
+      }
     } catch (error) {
       errors.push('Cannot verify patch/installed module: ' + error.message);
     }
@@ -335,7 +407,12 @@ export function verifyLive({
   ];
   const samples = new Set();
   for (const timing of timings) {
-    const key = timing.scenario + ':' + timing.sample;
+    const key =
+      (typeof timing.scenario === 'string'
+        ? timing.scenario.trim().toLowerCase()
+        : '') +
+      ':' +
+      timing.sample;
     require(text(timing.scenario) &&
       Number.isSafeInteger(timing.sample) &&
       timing.sample > 0 &&
@@ -355,9 +432,15 @@ export function verifyLive({
         Number.isFinite(timing.speechEndToTextMs) &&
         Number.isFinite(timing.speechEndToAudioMs),
     ), 'At least three actual Atlas speech/text/audio timing samples are required');
-  require(timings.some((timing) =>
+  const research = timings.filter((timing) =>
     /^research$/i.test(timing.scenario),
-  ), 'Missing public research timing sample');
+  );
+  require(research.length > 0 &&
+    research.every(
+      (timing) =>
+        Number.isFinite(timing.speechEndToTextMs) &&
+        Number.isFinite(timing.speechEndToAudioMs),
+    ), 'Missing actual public research speech/text/audio timing sample');
   const interruption = timings.filter((timing) =>
     /^interruption$/i.test(timing.scenario),
   );

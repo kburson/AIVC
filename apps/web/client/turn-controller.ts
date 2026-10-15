@@ -1,3 +1,4 @@
+import { observe } from './measurements';
 import { AppError } from '../shared/contracts';
 import type {
   ProjectRecord,
@@ -120,6 +121,7 @@ export class TurnController {
   cancelCurrent(reason: string): void {
     if (!this.token) return;
     this.abort?.abort();
+    observe('turn-local-cancel', { turnId: this.token.turnId });
     const view = this.view();
     this.generation++;
     this.token = null;

@@ -59,9 +59,10 @@ export function runAdmittedTurn<T>(
   req: Request,
   config: ServerConfig,
   work: (input: TurnInput, signal: AbortSignal) => Promise<T>,
+  caller: AbortSignal = req.signal,
 ): DeadlineRun<T> {
   assertAdmission(req.headers, config, true);
-  return runWithDeadline(config.turnTimeoutMs, req.signal, async (signal) => {
+  return runWithDeadline(config.turnTimeoutMs, caller, async (signal) => {
     const bytes = await readBoundedBody(req, 2097152, signal);
     const input = await parseTurn(bytes, req.headers.get('content-type') ?? '');
     signal.throwIfAborted();

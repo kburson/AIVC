@@ -34,7 +34,7 @@ export function Capabilities({
       </p>
       <p>
         {value.speechAvailable
-          ? 'Speech service available; browser playback is pending voice integration.'
+          ? 'Speech service configured. Playback requires browser audio permission.'
           : 'Speech unavailable. Answer text stays available.'}
       </p>
     </aside>

@@ -1,3 +1,4 @@
+import { observe } from '../measurements';
 import {
   createVad,
   type CaptureToken,
@@ -283,7 +284,7 @@ export class CaptureSession {
           this.deps.onVadEvent({ type: 'misfire', capture: c.token });
         if (this.current === c) this.current = null;
       },
-      end: (internal, samples) => {
+      end: (internal, samples, timing) => {
         const c = candidate(internal);
         if (!c || run.candidate !== c || c.phase === 'consumed') return;
         run.segmentActive = false;
@@ -297,6 +298,20 @@ export class CaptureSession {
         }
         c.phase = 'consumed'; // Consume before the callback so reentrant duplicate end cannot notify again.
         try {
+          observe('vad-end', {
+            captureEpoch: c.token.epoch,
+            utteranceId: c.token.utteranceId,
+            intentVersion: c.token.intentVersion,
+            ...(timing
+              ? {
+                  lastSpeechFrameAt: timing.lastSpeechFrameAt,
+                  vadEndDelayMs: Math.max(
+                    0,
+                    timing.endCallbackAt - timing.lastSpeechFrameAt,
+                  ),
+                }
+              : {}),
+          });
           this.deps.onUtterance(c.token, encodeWav(samples));
         } catch {
           this.deps.onStatus('CAPTURE_LOAD_FAILED');

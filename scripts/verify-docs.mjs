@@ -145,7 +145,7 @@ export function verifyDocs({ root = workspace, log = console.log } = {}) {
     errors.push('Accepted specification verification: ' + error.message);
   }
   for (const [path, value] of Object.entries(content)) {
-    require(!/sk-ant-[A-Za-z0-9_-]{12,}|(?:Bearer|Token)\s+[A-Za-z0-9_-]{24,}/.test(
+    require(!/sk-ant-[A-Za-z0-9_-]{12,}|(?:Bearer|Token)\s+[A-Za-z0-9_-]{24,}|(?:ANTHROPIC_API_KEY|DEEPGRAM_API_KEY)\s*=\s*[\x22\x27]?[A-Za-z0-9_-]{8,}/.test(
       value,
     ), 'Credential-looking literal in ' + path);
     for (const match of value.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {

@@ -47,6 +47,10 @@ repairs remains approval deferred where already recorded.
 - The exact accepted specification transfer has historical Markdown formatting that fails the authored-file formatter. The transfer is checked against both its authoritative SHA256 and original Git bytes before only `docs/specification.md` is excluded from authored formatting/lint inventory. Regression tests reject changed bytes and aliases; existing archived evidence protections remain intact.
 - Plain Explain requires its documented `--json` output flag. A fresh JSON Explain after declaration corrections reports the expected incomplete Develop acceptance evidence; it does not indicate an unfinished predecessor or authorize stage advancement.
 
+- The final joined actual Next/Fastify browser check exposed a native Node26 Request-clone branding defect absent from pure handler/intercepted browser coverage. The actual failing browser run became passing after the bounded reader accepted the original request with a separate cancellation signal. Can a minimal real HTTP smoke run earlier without delaying complete final acceptance?
+- Preliminary distinct #11 component review found null research rows and case-variant duplicate Atlas trials that could pass the timing verifier, plus provider-named credential literals that escaped sanitized-report/docs checks. Four fake-only regressions were observed failing and passing after focused corrections. These are product/evidence correctness findings, separate from administrative friction.
+- Expanding pinned Ubuntu CI to all offline lanes surfaced production server descendants retaining ports after npm wrapper exit. Local owned-process ancestry showed the wrappers; direct production server ownership passed launcher and actual compiled HTTP shutdown checks. Linux confirmation remains a separate CI observation, with no unowned process mutation.
+
 ## Controls with demonstrated delivery value
 
 Independent #8 review found concrete playback and recovery defects that the author

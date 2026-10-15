@@ -1,3 +1,4 @@
+import { observe } from '../measurements';
 import type { TurnToken } from '../turn-controller';
 type Scheduled = {
   token: TurnToken;
@@ -8,6 +9,7 @@ type Scheduled = {
 /** Dedicated output context. Only its audio clock releases generated PCM budget. */
 export class Playback {
   private sources: Scheduled[] = [];
+  private scheduledTurn: string | null = null;
   private operations: Promise<void> = Promise.resolve();
   private disposed = false;
   private pendingOperations = 1;
@@ -57,6 +59,16 @@ export class Playback {
     };
     try {
       source.start(start);
+      if (this.scheduledTurn !== token.turnId) {
+        this.scheduledTurn = token.turnId;
+        observe('playback-first-scheduled', {
+          turnId: token.turnId,
+          scheduledAfterMs: Math.max(
+            0,
+            (start - this.context.currentTime) * 1000,
+          ),
+        });
+      }
     } catch (error) {
       this.sources = this.sources.filter((s) => s !== entry);
       source.disconnect();
