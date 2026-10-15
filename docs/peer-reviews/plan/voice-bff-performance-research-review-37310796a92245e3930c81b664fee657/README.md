@@ -3,9 +3,9 @@
 Date: October15,2026 (America/Chicago).
 Tracking: [#39](https://github.com/kburson/AIVC/issues/39).
 
-**Outcome: the corrected Fastify-focused plan received native SAR acceptance, then accepted and finalized XPR. No required XPR change remains. Four nonblocking suggestions are retained.** No implementation, architecture migration, k6 build, benchmark, paid application API calibration, procurement or deployment was executed by these reviews. Document review is not owner Plan approval or experiment-spend authorization.
+**Outcome: the corrected Fastify-focused plan received native SAR acceptance, then accepted and finalized XPR. No required XPR change remains. The four nonblocking suggestions at acceptance were subsequently addressed by the owner-directed amendment linked below; that amendment has not been re-reviewed.** No implementation, architecture migration, k6 build, benchmark, paid application API calibration, procurement or deployment was executed by these reviews. Document review is not owner Plan approval or experiment-spend authorization.
 
-Current plan: [2026-10-15-39-voice-bff-performance-research.md](../../../superpowers/plans/2026-10-15-39-voice-bff-performance-research.md).
+Plan artifact (current file; reviewed predecessor identified below): [2026-10-15-39-voice-bff-performance-research.md](../../../superpowers/plans/2026-10-15-39-voice-bff-performance-research.md).
 Reviewed artifact commit: `8109522128c13412f8333d0029d5382011a3feb3`.
 Reviewed artifact SHA-256: `4e9f4e00b671e461e0a66951246441bf29e2ed5a0939fd58bfd4be10f8a6b018`.
 Normal XPR finalization commit: `408e83704e6eec665596cc542e4dbef8259325c0`.
@@ -52,7 +52,7 @@ The manifest records normal commit mode, reviewer-consensus acceptance, complete
 
 The author completed the documented own-review terminal broker reconciliation, authenticated zero-active-review checkpoint, normal stop and offline confirmation, then paused/released only its own AITM claim. Scratch authority/recovery evidence remains local; raw provider handles are not copied here.
 
-## Retained nonblocking observations
+## Nonblocking observations at acceptance — subsequently addressed
 
 The final reviewer requested no required change and retained these optional suggestions, with full reasoning in accepted round2:
 
@@ -61,7 +61,7 @@ The final reviewer requested no required change and retained these optional sugg
 3. R2-F003: list each unfunded secondary calibration cell as unavailable in manifests and report limitations.
 4. R2-F004: bound real model output settings to the supported calibration segment shape and record excess-shape cases without undeclared TTS calls.
 
-These are retained for owner consideration. No artifact edits were made after sealed acceptance, and no new benchmark family/spend approval is inferred from these suggestions.
+All four are now addressed in the separate [owner-amendment disposition](xpr/owner-amendment-2026-10-15.md), which identifies current plan commit `1dcb41e2ba81864c9a3c314dc005abd0cbb273ae` and SHA-256 `2ea5eb429d59683204be1da0e411b34206399f883be2996a71fe4ab956da6f87`. No artifact edits had followed acceptance when the original finalization/index was recorded; the subsequent owner-directed revision is distinct and has no new sealed review acceptance. Original review bytes, campaign scope and spending limits remain unchanged.
 
 ## Planning consequence and coordinator verification
 
