@@ -1,0 +1,51 @@
+{
+  "recordedAt": "2026-10-15T10:59:40.616Z",
+  "sourceDigest": "14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63",
+  "buildId": "2DZ7lAnJs9Ui-zV4QVYF_",
+  "profile": {
+    "cps": 12,
+    "cap": 72,
+    "voice": "aura-2-thalia-en"
+  },
+  "method": "Existing harness normal browser.close from genuinely Listening/live Yeti; then normal SIGINT owned production launcher",
+  "beforeClose": {
+    "path": ".scratch/11-physical-2687b54-active-capture-preclose.json",
+    "bytes": 46041637,
+    "sha256": "b440bfd5f7a7e3248fa8bb6df5d7706b329746cb38dcef0aa35f1b6daff879d7",
+    "status": "Listening",
+    "liveInput": "Yeti Stereo Microphone (b58e:9e84)",
+    "runningContextIds": [13, 14],
+    "observedLifecycleRevision": "aivc-vad-lifecycle-v1",
+    "appTurns": 11,
+    "speechRequests": 60
+  },
+  "afterClose": {
+    "path": ".scratch/11-physical-2687b54-document-close-final.json",
+    "bytes": 46041637,
+    "sha256": "b440bfd5f7a7e3248fa8bb6df5d7706b329746cb38dcef0aa35f1b6daff879d7",
+    "appTurns": 11,
+    "speechRequests": 60,
+    "browserHarnessExit": 0,
+    "productionSigintExit": 130
+  },
+  "processCheck": {
+    "cmd": "ps",
+    "args": ["-p", "82085,82092,82093,91431,91467", "-o", "pid=,ppid=,comm="],
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "portCheck": {
+    "cmd": "lsof",
+    "args": ["-nP", "-iTCP:3000", "-iTCP:3001", "-sTCP:LISTEN"],
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "limitations": [
+    "Document/process closure is not direct observation of React effect cleanup",
+    "No post-close JavaScript query of track readyState or remote provider cessation claim",
+    "Exact-current controlled React tests are separate supplementary evidence",
+    "Final physical hearing report still pending; L4 duration6.60s remains failed and true provider pause unobserved"
+  ]
+}

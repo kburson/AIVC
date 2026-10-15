@@ -2,7 +2,7 @@
 
 Whole-story acceptance remains unverified. This checkpoint supplies the joined
 system, documentation, read-only verifiers, source-qualified partial live evidence
-and measurement implementation for independent review. Current functional subcases are supported by the observer-free physical checkpoint below;
+and measurement implementation for independent review. Current functional subcases are supported by the [14bee/CPS12 checkpoint](#current-source-physical-checkpoint-at-2687b54) below;
 L4 duration tuning is failed and L6 provider pause remains unverified. Full
 acceptance has not passed; no controlled run is a substitute.
 
@@ -720,3 +720,64 @@ durations; no audible inline-value, joined queue/backpressure or current-source
 physical qualification follows. Historical cfa3/cap84 evidence stays unchanged.
 L4 remains failed/incomplete and L6 genuine pause unobserved. Full scope remains
 retained; no Test, Review, approval, merge or Close is authorized by this result.
+
+## Current-source physical checkpoint at 2687b54
+
+The [sanitized current run](../evidence/11-live-physical-2687b54.json) binds tested
+head `2687b5434377f423363be7d279dbcaf12279aa8f` and source
+`14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63`.
+Actual production build `2DZ7lAnJs9Ui-zV4QVYF_` was clean-built at `3e7170f` with
+identical source, then reused across documentation-only commits. Runtime override
+CPS12/cap72 retained Thalia voice, Node26.8.1, every pin and verified installed VAD
+postimages; actual browser-imported lifecycle markers matched. No native provider
+fetch-clone observer was present. Chrome 155 used its native viewport, initially
+1200 × 919 and later 1200 × 1220; no emulation or synthetic microphone was used.
+
+Eleven actual app turns and 60 submitted/completed synthesis bodies retain 750
+unique marks and 5167 native source records. Three Atlas trials returned active,
+North, 3; completed-history follow-up answered North. The first Atlas reply sounded
+uneven to the owner, while the next two and follow-up were clean/best/clean. Two
+unconfirmed Speaking candidates overlapped positive PCM and resumed the same
+answer/context. The owner reported resumed audio with cutoff/unevenness, then
+explicitly said the minor point was not worth iterating over. This is preserved
+without an acoustic cause or blanket clean-audio claim. Working noise preserved
+Atlas; confirmed Beacon cancelled old output and answered paused, West, 1. The owner
+reported those behaviors clean.
+
+Current research produced structured source updates and public usage 10577/329
+tokens/searchUses1. Sources included official Deepgram and third-party
+opentranscription; it was not exclusively official. Exact captured research chunk
+replay matches all 13 submitted speech texts, including model=nova-3. After initial
+confusion with the Claude model, the owner explicitly confirmed all four points and
+that final value heard through speakers, without replay. A smart-formatting hiccup
+remains recorded under the owner’s no-iteration direction. **L4 remains failed:**
+research segment 8 has 316800 bytes/158400 native frames, 6.60 seconds at cap72. The
+other 59 admitted segments did not exceed 6 seconds. No CPS loop or retry followed.
+
+Typed mic-muted Cedar had no STT/new capture and 7 speech requests. Output-muted
+spoken Beacon produced text with 0 synthesis; unmuted Atlas had 5 new requests,
+with no old answer replay. Final native-ended to Stop was 11678.4 ms, with no extra
+turn; the owner confirmed Cedar/Atlas clear through speakers, Beacon silent and
+no app self voice. Stop ended 6 tracks and closed 12 contexts. A separate quiet live
+Yeti capture then closed only the owned browser/document, with no added turn or
+speech; [process proof](../evidence/11-document-teardown-2687b54.json) records
+browser exit 0, owned processes absent, server SIGINT 130 and ports clear. This is
+not direct React effect or remote-provider cessation observation; controlled
+React-unmount tests remain separate. All owned resources are closed.
+
+Atlas scheduled first-audio 5271.6/4070.0/4418.5ms misses the target; these use the
+browser speech-frame proxy, not acoustic timing. STT spans include network/browser
+work. Some parsed SSE text has observer mojibake; genuine latest-article DOM and
+speech texts remain separate, and Turn1 DOM/history-wire equality is not invented.
+
+L6 remains unverified: no current14bee native omitted-tool/prior-block or genuine
+provider-pause proof. The accepted ordinary cfa3 wire observation remains
+historical. Original cfa3/cap84 artifacts and the separate partial10-call screen
+remain unchanged; no automatic coverage of its9 untested changed texts is claimed.
+The mutable live report now uses this genuine current run, with failed/unverified
+gates retained. No Test, Review, approval, merge or Close follows.
+
+The owner explicitly requested a **full PR37 code review by Astra6/high before
+merge** at 11:00:01Z. Root will dispatch the same distinct reviewer against the full
+pushed PR diff, including changed source, tests, docs, evidence and CI against
+`codex/2-draft`. That review is pending; earlier scoped P2 passes do not replace it.

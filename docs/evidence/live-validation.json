@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "gitHead": "eddb4722584cda6137d0e456c87f4a560f90e117",
-  "sourceDigest": "cfa3cca0d676f4e98545aa965c6526f7c098ddbbaca6de6c3784a3b1262707bf",
+  "gitHead": "2687b5434377f423363be7d279dbcaf12279aa8f",
+  "sourceDigest": "14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63",
   "mode": "live",
   "nodeVersion": "v26.8.1",
   "packages": {
@@ -48,7 +48,7 @@
     "modulePath": "node_modules/@ricky0123/vad-web/dist/real-time-vad.js",
     "appliedModuleDigest": "37b55cc57c1463624857ad65a9ceaf9cc073327bc9ed07fd34d0ecbe564eaa2a",
     "observedLifecycleRevision": "aivc-vad-lifecycle-v1",
-    "buildId": "O9qVb3AkQrdBpNGEUkEyB",
+    "buildId": "2DZ7lAnJs9Ui-zV4QVYF_",
     "buildMode": "production"
   },
   "browser": {
@@ -60,63 +60,63 @@
     {
       "id": "L1",
       "status": "pass",
-      "observations": "Current eddb472/cfa3: three actual spoken Atlas trials produced batch STT, correct active/North/3 cards/text and generated voice; owner heard all four Atlas/follow-up replies clear and complete. FIRST-AUDIO TARGET FAILED:6514.8/4419.6/4179.2ms frame-end proxy to scheduled audio; no acoustic/SLA claim. Functional case pass does not make the target pass.",
-      "artifact": "docs/evidence/11-live-baseline-eddb472.json"
+      "observations": "Three actual spoken Atlas status trials produced correct active/North/3 cards/text and TTS. Owner first reply uneven at with3openitems, second clean/third best; minor unevenness accepted without iteration. Scheduled first-audio5271.6/4070.0/4418.5ms misses target; not acoustic.",
+      "artifact": "docs/evidence/11-live-physical-2687b54.json"
     },
     {
       "id": "L2",
       "status": "pass",
-      "observations": "Current bb75dd60 recognized Who owns it? after completed Atlas history and answered North. Completed answer text remains retained after later Stop. Actual provider request-history body was not separately captured; controlled history tests provide offline wire/atomicity coverage.",
-      "artifact": "docs/evidence/11-live-baseline-eddb472.json"
+      "observations": "Who owns it after Atlas history recognized and answered North; owner fourth clean. Retained terminal text/actual cards. Full outgoing request-history body not separately captured; controlled tests supplement, no universal display/history equality claim.",
+      "artifact": "docs/evidence/11-live-physical-2687b54.json"
     },
     {
       "id": "L3",
       "status": "pass",
-      "observations": "Current23286: two unconfirmed Speaking candidates overlap nonquiet native PCM, suspend/resume same context3 at frozen audio clock and preserve same answer/no new turn; owner reports three short sounds and same answer resumed/finished. Third sound correlation unknown. Current7815: Working raw candidate precedes first playback and preserves answer; later confirmed Beacon interruption suspends native playback ~0.4ms after raw and cancels old output ~0.3ms after confirmation. Owner confirmed both behaviors; acoustic timing unavailable.",
-      "artifact": "docs/evidence/11-live-baseline-eddb472.json"
+      "observations": "Two genuine unconfirmed Speaking candidates overlap positive native PCM and preserve same answer/context without extra turn. Native first resume exact same clock; second async state sample+5.805ms, not a drop diagnosis. Owner resumed but cutoff/uneven, later explicitly minor/no iteration. Working candidate before first audio preserved Atlas; confirmed Beacon cancels old generation with native callback timing and owner clean. Functional scope only; independent full review assesses limits.",
+      "artifact": "docs/evidence/11-live-physical-2687b54.json"
     },
     {
       "id": "L4",
       "status": "fail",
-      "observations": "Current multi-sentence answers and all four research points heard; source-excerpt complaint traced to separate Sources list, not dropped answer tail. Offline exact chunk replay matches all11 research TTS requests and1428 native sources ended before Stop. HOWEVER five actual segments6.08/6.40/6.12/6.04/6.20s exceed6s estimate; accepted repeated-duration tuning remains unmet. No CPS/config change or rerun. Inline code omitted by existing normalization; not verbatim speech. Independent audit additionally confirms closed inline-code deletion was a semantic P2; prior normalization wording was not acceptance of that omission.",
-      "artifact": "docs/evidence/11-live-baseline-eddb472.json"
+      "observations": "FAILED duration qualification: current multi-sentence/research voice and all4+model=nova-3 heard, but one of60 admitted segments native158400frames/316800bytes=6.60s at cap72. Minor smart-formatting hiccup retained. No CPS loop/retry/default change; not all normalized words are every visual Sources excerpt.",
+      "artifact": "docs/evidence/11-live-physical-2687b54.json"
     },
     {
       "id": "L5",
       "status": "pass",
-      "observations": "Current typed Cedar02bfe60c with mic-muted/all tracks ended had no STT stage and5 TTS requests; owner heard complete speakers reply. Output-muted spoken Beacon4cfa4733 produced transcript/text and0 TTS; owner confirmed silence. Clearing output mute did not replay Beacon; next deliberate Atlas751bce93 had2 TTS requests. Optional transcript/details actually visible in UI snapshots.",
-      "artifact": "docs/evidence/11-live-baseline-eddb472.json"
+      "observations": "Typed Cedar with micmuteON/outputOFF had no STT or new mic acquisition and7TTS; complete/South/0. Output-muted spoken Beacon had STT/text/pausedWest1 and0TTS. Unmuted Atlas generated5newTTS with no old Cedar/Beacon replay; final owner all worked through speakers.",
+      "artifact": "docs/evidence/11-live-physical-2687b54.json"
     },
     {
       "id": "L6",
       "status": "unverified",
-      "observations": "Current spoken researched177 produced four actual structured sources events/official URLs and public actual searchUses1 (10067/349 tokens). Same-cfa3 ordinary ordered native diagnostic385d accepted exhausted omitted-tool continuation with7 exact prior-block hashes; observer-assisted timing excluded. Genuine provider pause remains unobserved, so required pause continuation unverified; no extra probing.",
-      "artifact": "docs/evidence/11-live-baseline-eddb472.json"
+      "observations": "UNVERIFIED: current actual research public searchUses1/tokens10577/329 and structured sources include official Deepgram plus third-party opentranscription. No current native omitted-tool/prior-block identity or genuine pause proof. Earlier ordinary accepted cfa3 wire artifact remains historical, not rebound.",
+      "artifact": "docs/evidence/11-live-physical-2687b54.json"
     },
     {
       "id": "L7",
       "status": "pass",
-      "observations": "Bounded current headset Bose QC input/default output trials clear with no unintended turns; speaker group actual Yeti input/default USB Audio output, owner confirmed speakers/clear Cedar+Atlas, silent muted Beacon and no self voice. Last native source ended13415.1ms before Stop; no extra turn. Settings48000Hz/16bit/mono/10ms/AEC+NS+AGC true. Not universal speaker-echo mitigation.",
-      "artifact": "docs/evidence/11-live-baseline-eddb472.json"
+      "observations": "Actual Bose headset input/default output and Yeti input/default USB output; owner confirms final speakers cases/no app self voice. Final native-ended→Stop11678.4ms with no extra turn. Minor quality reports retained; research had one unconfirmed raw candidate, cause unknown; no zero-trigger/universal echo claim.",
+      "artifact": "docs/evidence/11-live-physical-2687b54.json"
     },
     {
       "id": "L8",
       "status": "pass",
-      "observations": "Current Stop snapshots:5 actual acquired tracks ended/all8 contexts closed/Ready. Separate released quiet capture restarted actual live Yeti+2 native running contexts then owned browser/document closed exit0; owned Node/Chrome absent, no added turn/speech, server SIGINT130 and ports clear. Direct React cleanup is controlled offline test evidence; process/document closure is not direct React effect observation or remote provider cessation.",
-      "artifact": "docs/evidence/11-live-baseline-eddb472.json"
+      "observations": "Actual final Stop:6tracks ended/all12contexts closed/Ready. Separate final quiet capture liveYeti/newcontexts13/14+marker then owned browser closed exit0, exact processes absent; no added11turn/60speech counts. Server SIGINT130/ports clear. Document/process closure is not direct React cleanup or remote provider cessation; controlled exact-source tests separate.",
+      "artifact": "docs/evidence/11-live-physical-2687b54.json"
     }
   ],
   "timings": [
     {
       "scenario": "Atlas",
       "sample": 1,
-      "vadMs": 799.3,
-      "sttMs": 658.9,
-      "modelToolMs": 3752.2,
-      "ttsMs": 356,
-      "bufferMs": 11.7,
-      "speechEndToTextMs": 5307,
-      "speechEndToAudioMs": 6514.8,
+      "vadMs": 800.3000001907349,
+      "sttMs": 587.4000000953674,
+      "modelToolMs": 2862.4000000953674,
+      "ttsMs": 164.40000009536743,
+      "bufferMs": 13,
+      "speechEndToTextMs": 4389.300000190735,
+      "speechEndToAudioMs": 5271.60000038147,
       "callbackToSilenceMs": null,
       "confirmationToCancelMs": null,
       "acousticOnsetToSilenceMs": null
@@ -124,13 +124,13 @@
     {
       "scenario": "Atlas",
       "sample": 2,
-      "vadMs": 800.9,
-      "sttMs": 648.5,
-      "modelToolMs": 2245.5,
-      "ttsMs": 160.4,
-      "bufferMs": 10.2,
-      "speechEndToTextMs": 3769,
-      "speechEndToAudioMs": 4419.6,
+      "vadMs": 799.7000002861023,
+      "sttMs": 676.8000001907349,
+      "modelToolMs": 886,
+      "ttsMs": 151.30000019073486,
+      "bufferMs": 10.199999809265137,
+      "speechEndToTextMs": 2398.300000190735,
+      "speechEndToAudioMs": 4070,
       "callbackToSilenceMs": null,
       "confirmationToCancelMs": null,
       "acousticOnsetToSilenceMs": null
@@ -138,13 +138,13 @@
     {
       "scenario": "Atlas",
       "sample": 3,
-      "vadMs": 798.4,
-      "sttMs": 916.1,
-      "modelToolMs": 854.6,
-      "ttsMs": 153.1,
-      "bufferMs": 10.4,
-      "speechEndToTextMs": 2602.2,
-      "speechEndToAudioMs": 4179.2,
+      "vadMs": 801.7000002861023,
+      "sttMs": 641.5,
+      "modelToolMs": 2251.199999809265,
+      "ttsMs": 160.59999990463257,
+      "bufferMs": 10.199999809265137,
+      "speechEndToTextMs": 3764.5,
+      "speechEndToAudioMs": 4418.5,
       "callbackToSilenceMs": null,
       "confirmationToCancelMs": null,
       "acousticOnsetToSilenceMs": null
@@ -152,13 +152,13 @@
     {
       "scenario": "follow-up",
       "sample": 1,
-      "vadMs": 798.8,
-      "sttMs": 356.1,
-      "modelToolMs": 995.3,
-      "ttsMs": 110.7,
-      "bufferMs": 10.2,
-      "speechEndToTextMs": 2178.3,
-      "speechEndToAudioMs": 3882.2,
+      "vadMs": 800.1000003814697,
+      "sttMs": 495.6000003814697,
+      "modelToolMs": 1995.5,
+      "ttsMs": 159.40000009536743,
+      "bufferMs": 10.399999618530273,
+      "speechEndToTextMs": 3306.5,
+      "speechEndToAudioMs": 4968,
       "callbackToSilenceMs": null,
       "confirmationToCancelMs": null,
       "acousticOnsetToSilenceMs": null
@@ -166,14 +166,42 @@
     {
       "scenario": "research",
       "sample": 1,
-      "vadMs": 799.2,
-      "sttMs": 813,
-      "modelToolMs": 3696.3,
-      "ttsMs": 210.4,
-      "bufferMs": 10.2,
-      "speechEndToTextMs": 5343.9,
-      "speechEndToAudioMs": 7087.6,
+      "vadMs": 802.8999996185303,
+      "sttMs": 810.7000002861023,
+      "modelToolMs": 4340.599999904633,
+      "ttsMs": 387.19999980926514,
+      "bufferMs": 10.100000381469727,
+      "speechEndToTextMs": 6092.299999713898,
+      "speechEndToAudioMs": 8645.5,
       "callbackToSilenceMs": null,
+      "confirmationToCancelMs": null,
+      "acousticOnsetToSilenceMs": null
+    },
+    {
+      "scenario": "Speaking misfire",
+      "sample": 1,
+      "vadMs": null,
+      "sttMs": null,
+      "modelToolMs": null,
+      "ttsMs": null,
+      "bufferMs": null,
+      "speechEndToTextMs": null,
+      "speechEndToAudioMs": null,
+      "callbackToSilenceMs": 4.400000095367432,
+      "confirmationToCancelMs": null,
+      "acousticOnsetToSilenceMs": null
+    },
+    {
+      "scenario": "Speaking misfire",
+      "sample": 2,
+      "vadMs": null,
+      "sttMs": null,
+      "modelToolMs": null,
+      "ttsMs": null,
+      "bufferMs": null,
+      "speechEndToTextMs": null,
+      "speechEndToAudioMs": null,
+      "callbackToSilenceMs": 13.099999904632568,
       "confirmationToCancelMs": null,
       "acousticOnsetToSilenceMs": null
     },
@@ -187,97 +215,66 @@
       "bufferMs": null,
       "speechEndToTextMs": null,
       "speechEndToAudioMs": null,
-      "callbackToSilenceMs": 0.4,
-      "confirmationToCancelMs": 0.3,
-      "acousticOnsetToSilenceMs": null
-    },
-    {
-      "scenario": "Speaking misfire",
-      "sample": 1,
-      "vadMs": null,
-      "sttMs": null,
-      "modelToolMs": null,
-      "ttsMs": null,
-      "bufferMs": null,
-      "speechEndToTextMs": null,
-      "speechEndToAudioMs": null,
-      "callbackToSilenceMs": 1.7,
-      "confirmationToCancelMs": null,
-      "acousticOnsetToSilenceMs": null
-    },
-    {
-      "scenario": "Speaking misfire",
-      "sample": 2,
-      "vadMs": null,
-      "sttMs": null,
-      "modelToolMs": null,
-      "ttsMs": null,
-      "bufferMs": null,
-      "speechEndToTextMs": null,
-      "speechEndToAudioMs": null,
-      "callbackToSilenceMs": 0.7,
-      "confirmationToCancelMs": null,
+      "callbackToSilenceMs": 0.3000001907348633,
+      "confirmationToCancelMs": 0.3000001907348633,
       "acousticOnsetToSilenceMs": null
     }
   ],
   "usage": [
     {
-      "inputTokens": 3079,
-      "outputTokens": 138
+      "inputTokens": 3077,
+      "outputTokens": 131
     },
     {
-      "inputTokens": 3267,
-      "outputTokens": 121
-    },
-    {
-      "inputTokens": 3429,
+      "inputTokens": 3257,
       "outputTokens": 129
     },
     {
-      "inputTokens": 3593,
-      "outputTokens": 89
+      "inputTokens": 3419,
+      "outputTokens": 119
     },
     {
-      "inputTokens": 3675,
-      "outputTokens": 156
+      "inputTokens": 3571,
+      "outputTokens": 91
     },
     {
-      "inputTokens": 3722,
-      "outputTokens": 165
+      "inputTokens": 3663,
+      "outputTokens": 185
     },
     {
-      "inputTokens": 3806,
-      "outputTokens": 106
+      "inputTokens": 3787,
+      "outputTokens": 195
     },
     {
-      "inputTokens": 10067,
-      "outputTokens": 349,
+      "inputTokens": 3912,
+      "outputTokens": 131
+    },
+    {
+      "inputTokens": 10577,
+      "outputTokens": 329,
       "searchUses": 1
     },
     {
-      "inputTokens": 4121,
-      "outputTokens": 121
+      "inputTokens": 4305,
+      "outputTokens": 140
     },
     {
-      "inputTokens": 2814,
-      "outputTokens": 59
+      "inputTokens": 4215,
+      "outputTokens": 139
     },
     {
-      "inputTokens": 3937,
-      "outputTokens": 100
+      "inputTokens": 4085,
+      "outputTokens": 124
     }
   ],
   "limitations": [
-    "This report retains historical cfa3/cap84 tested provenance after the inline-content scanner correction. It is deliberately stale for new code; no prior physical run is rebound to the corrected source digest.",
-    "Independent physical audit found meaningful inline model=nova-3 was omitted by the cfa3 scanner. Exact old segment replay establishes consistency only, not semantic permission. A captured-sentence TDD correction awaits independent recheck and actual affected qualification.",
-    "Atlas first-audio target around3s missed:6514.8/4419.6/4179.2ms using speech-frame proxy to scheduled native audio, not acoustic latency.",
-    "L4 duration tuning remains failed: five admitted PCM segments exceeded6s estimate despite no cutoff/overflow and maximum observed scheduled outstanding6.3447s.",
-    "L6 genuine provider-pause continuation remains unverified.",
-    "Historical33d9/96ee/ce046 observations retain their original source in separate artifacts and are not relabeled cfa3.",
-    "All speech is eligible normalized answer text, not every visual source excerpt or inline code. The original missing-tail hearing complaint and later clarification both remain.",
-    "Three human short sounds correspond to two observed unconfirmed VAD candidates; third sound correlation unknown.",
-    "No raw private audio, secrets, paid retry, budget increase, source change or lifecycle transition.",
-    "Current report binds the observer-free cfa3 baseline with browser-observed patch marker, fresh applied-module preflight and reused exact clean385d production build. Separate older evidence is preserved, not rewritten.",
-    "L1 functional pass retains failed3s timing target; L4 fail and L6 unverified prevent full acceptance and canonical Test/Review/Close. Independent reviewer must assess every claimed case scope."
+    "L4 remains FAILED:6.60-second native/byte-correlated research segment at cap72. No profile loop/retry/default change.",
+    "L6 UNVERIFIED: current ordinary omitted-tool/prior-block native proof and genuine provider pause absent; cfa3 ordinary wire proof historical only.",
+    "First Atlas unevenness, Speaking resume cutoff/unevenness and research smart-formatting hiccup remain exact owner observations; owner says minor/no further iteration. No acoustic cause or all-clean claim.",
+    "Atlas scheduled first-audio target missed; acoustic timings unavailable.",
+    "Current actual generated texts do not automatically qualify all nine texts uncovered by earlier partial ten-call screen.",
+    "Parsed SSE encoding limitation retained; latest DOM snapshots do not establish full answer/history-wire equality.",
+    "Stop resource closure and document/process teardown differ from direct controlled React unmount and remote-provider cessation.",
+    "Full PR37 code review by same distinct Astra6/high remains pending on pushed checkpoint; no lifecycle or merge approval."
   ]
 }

@@ -5,7 +5,7 @@ provider/browser/physical observations and a real voice finding are recorded in
 the [story status](implementation/11-system-acceptance.md). Offline Mock/Contract Simulation is
 separate and cannot establish real microphone, generated voice, hosted search,
 echo or physical latency acceptance. The [live report](evidence/live-validation.json)
-now binds the exact current muted typed run and links source-qualified historical
+now binds the actual current `14bee`/CPS12 physical run and links source-qualified historical
 observations; it retains failed/unverified acceptance, `npm run verify:live` must remain
 nonzero until every required case is actually satisfied.
 
@@ -236,3 +236,26 @@ L4 stays failed/incomplete, L6 genuine provider pause unobserved, and the read-o
 live report intentionally remains nonpassing. See the
 [implementation checkpoint](implementation/11-system-acceptance.md#reviewed-partial-cps12-synthesis-screen-at-3e7170f)
 for exact selection, provenance and limitations.
+
+## Current physical checkpoint at 2687b54
+
+The [deduplicated current evidence](evidence/11-live-physical-2687b54.json) binds
+source `14bee`, tested ancestor `2687b54` and actual production build `2DZ7…` at CPS12/cap72.
+It preserves 11 actual app turns/60 synthesis bodies, current Bose headset and
+Yeti/USB speaker observations, Working/Speaking/confirmed-interruption boundaries,
+research citations and audible corrected model=nova-3, typed fallback, independent
+mutes, final 11678.4 ms speaker quiet and actual Stop/document-process teardown.
+Exact human reports include uneven/cutoff/hiccup observations and the owner’s
+explicit minor/no-iteration direction; no acoustic cause or all-clean claim.
+
+**L4 remains failed:** one native/byte-correlated research segment measured 6.60 s.
+**L6 remains unverified:** current native ordinary omission/prior-block identity
+and genuine provider pause were not observed. The cfa3 ordinary wire proof stays
+historical. The prior ten-sample screen remains partial, with its nine changed texts
+not automatically qualified by different generated answers. No source/default or
+verifier change, CPS loop, paid retry or lifecycle transition occurred.
+
+The [current implementation checkpoint](implementation/11-system-acceptance.md#current-source-physical-checkpoint-at-2687b54)
+records limits, source/build custody and the owner-requested full PR37 review by
+the same distinct Astra6/high, pending after this evidence is pushed. All owned
+browser/microphone/server resources are closed.
