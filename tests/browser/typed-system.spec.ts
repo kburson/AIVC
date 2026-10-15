@@ -178,3 +178,141 @@ test('actual shared turn admission returns Busy without automatic retry and acce
     await Promise.all([first.close(), second.close(), busy.close()]);
   }
 });
+
+test('newest completed card is first at the timeline start after many actual HTTP turns', async ({
+  page,
+  request,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 1000 });
+  await page.goto('/');
+  await page.getByLabel('Mute output', { exact: true }).check();
+  for (let trial = 1; trial <= 6; trial++) {
+    await page
+      .getByLabel('Question', { exact: true })
+      .fill('Atlas status, trial ' + trial);
+    await page.getByRole('button', { name: 'Start', exact: true }).click();
+    await expect(
+      page.getByRole('article', { name: 'Turn ' + trial, exact: true }),
+    ).toContainText('Atlas is active');
+    await expect(page.getByRole('status')).toHaveText('Ready');
+  }
+  const timeline = page.getByLabel('Conversation timeline');
+  const newest = page.getByRole('article', { name: 'Turn 6', exact: true });
+  await expect(timeline.getByRole('article').first()).toHaveAttribute(
+    'aria-label',
+    'Turn 6',
+  );
+  await expect(
+    newest.getByRole('heading', { name: 'Atlas status, trial 6', exact: true }),
+  ).toBeInViewport();
+  await expect(
+    newest.getByRole('region', { name: 'Atlas project' }),
+  ).toBeInViewport();
+  expect(await timeline.evaluate((element) => element.scrollTop)).toBe(0);
+  expect(
+    await timeline.evaluate(
+      (element) => element.scrollHeight > element.clientHeight,
+    ),
+  ).toBe(true);
+  await timeline.evaluate((element) => {
+    element.scrollTop = element.scrollHeight;
+  });
+  expect(
+    await timeline.evaluate((element) => element.scrollTop),
+  ).toBeGreaterThan(0);
+  const stopBefore = await page
+    .getByRole('button', { name: 'Stop', exact: true })
+    .boundingBox();
+  await page
+    .getByLabel('Question', { exact: true })
+    .fill('Atlas status, newest after older history');
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
+  const next = page.getByRole('article', { name: 'Turn 7', exact: true });
+  await expect(next).toContainText('Atlas is active');
+  await expect(
+    next.getByRole('heading', {
+      name: 'Atlas status, newest after older history',
+      exact: true,
+    }),
+  ).toBeInViewport();
+  expect(await timeline.evaluate((element) => element.scrollTop)).toBe(0);
+  expect(
+    await page.getByRole('button', { name: 'Stop', exact: true }).boundingBox(),
+  ).toEqual(stopBefore);
+  await configure(request, 'hold');
+  await page
+    .getByLabel('Question', { exact: true })
+    .fill('What is the status of Atlas?');
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
+  const held = page.getByRole('article', { name: 'Turn 8', exact: true });
+  await expect(held).toContainText('Let me check Atlas.');
+  expect(await timeline.evaluate((element) => element.scrollTop)).toBe(0);
+  await timeline.evaluate((element) => {
+    element.scrollTop = element.scrollHeight;
+  });
+  await configure(request, 'normal');
+  await expect(page.getByRole('status')).toHaveText('Ready');
+  await expect(held).toContainText('Atlas is active');
+  expect(
+    await timeline.evaluate((element) => element.scrollTop),
+  ).toBeGreaterThan(0);
+});
+
+test('response pane scrolls below stationary controls and grows with the viewport without outer-page overflow', async ({
+  page,
+}, testInfo) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto('/');
+  await page.getByLabel('Mute output', { exact: true }).check();
+  for (let trial = 1; trial <= 4; trial++) {
+    await page
+      .getByLabel('Question', { exact: true })
+      .fill('Atlas status, layout ' + trial);
+    await page.getByRole('button', { name: 'Start', exact: true }).click();
+    await expect(
+      page.getByRole('article', { name: 'Turn ' + trial, exact: true }),
+    ).toContainText('Atlas is active');
+    await expect(page.getByRole('status')).toHaveText('Ready');
+  }
+  const pane = page.getByLabel('Conversation timeline');
+  const controls = page.getByRole('button', { name: 'Stop', exact: true });
+  const before = await controls.boundingBox();
+  await pane.evaluate((element) => {
+    element.scrollTop = element.scrollHeight;
+  });
+  expect(await pane.evaluate((element) => element.scrollTop)).toBeGreaterThan(
+    0,
+  );
+  expect(await controls.boundingBox()).toEqual(before);
+  await expect(controls).toBeInViewport({ ratio: 1 });
+  await expect(
+    page.getByLabel('Mute microphone', { exact: true }),
+  ).toBeInViewport({ ratio: 1 });
+  const shortHeight = await pane.evaluate((element) => element.clientHeight);
+  await page.setViewportSize({ width: 1280, height: 1000 });
+  expect(
+    await pane.evaluate((element) => element.clientHeight),
+  ).toBeGreaterThan(shortHeight + 200);
+  for (const size of [
+    { width: 1280, height: 720 },
+    { width: 390, height: 700 },
+  ]) {
+    await page.setViewportSize(size);
+    await expect(controls).toBeInViewport({ ratio: 1 });
+    await expect(
+      page.getByLabel('Mute output', { exact: true }),
+    ).toBeInViewport({ ratio: 1 });
+    expect(
+      await pane.evaluate((element) => element.clientHeight),
+    ).toBeGreaterThan(80);
+    expect(
+      await page.evaluate(() => ({
+        vertical: document.documentElement.scrollHeight > innerHeight,
+        horizontal: document.documentElement.scrollWidth > innerWidth,
+      })),
+    ).toEqual({ vertical: false, horizontal: false });
+    await page.screenshot({
+      path: testInfo.outputPath('response-pane-' + size.width + '.png'),
+    });
+  }
+});

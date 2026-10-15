@@ -170,5 +170,63 @@ standalone numeric answers, decimals and abbreviations retain their meaning.
 Oversized stable sentences prefer existing clause punctuation before the same
 safe word fallback and unchanged effective cap. No punctuation/words or PCM are
 trimmed, and no public callback, API, pin, deadline, lease or audio budget changed.
-Independent corrected-head review and affected actual listening/L4 qualification
-remain pending. Full L1–L8 acceptance remains unverified.
+The corrected96ee review and affected actual listening/L4 qualification are
+recorded below. Full L1–L8 acceptance remains unverified.
+
+## Corrected segmentation listening and visible-response finding
+
+The same-seat [native segmentation review](../evidence/11-astra-segmentation-pass-96ee.txt)
+passed exact `96ee0a413aa30042f37e2f59e69d13af5e813ed5` offline Spec/Quality:
+108 affected tests and1725 additional in-memory chunk comparisons passed. The
+unchanged response is2541 UTF-8 bytes, SHA256
+`45df7baa2ff43f3d2b81f08b7581f2abeda6eab16e2998fa8521abd79557504f`, native
+message `msg_03981de7adb10efe016ad031f6bc6c819483aae3d84b175c18`.
+
+A fresh verified-module production build `h1uCvpS25XkLc98uYBglh` served that
+source to actual Chrome155.0.8059.40, source digest
+`8a2aaa24caf7a7e14a258dce2178f47a1f1b6fb5dbfe7c9083749291d980d889`.
+The focused typed numbered Atlas/Beacon reply `0529a441` produced three mapped
+speech segments of2.60,3.16 and3.60s at CPS14/cap84, without isolated list
+numbers. All248 native sources ended. The participant reported, “Clear and
+complete, without the earlier cutouts.” This is an affected normal multi-sentence
+listening result, not a promise about every longer independently synthesized reply.
+
+The later actual microphone Atlas turn `0edda763` had an unconfirmed Working
+candidate: raw-start to local suspension0.3ms, native resume, same request and
+answer retained. The participant's Speaking “umm” instead crossed confirmation;
+confirmation to cancel initiation was0.1ms. The following captured turn returned
+no-speech with zero model usage. That is not a successful Speaking misfire trial.
+Typed Cedar while microphone-muted produced completed text and audible speech.
+Three later microphone Beacon attempts completed STT/model text without any TTS
+request. The latest `ada42eb5` had3296 input/74 output tokens and completed15.7s
+before Stop. The participant initially saw no response; their later screenshot
+showed the matching completed Beacon/West/one-item card and transcript. No failed
+provider call or hidden automatic retry was substituted for this visibility finding.
+
+Two distinct causes were identified. The ignored live observer used Playwright's
+default1280×720 emulated viewport, so growing the OS window did not grow page
+content. An owned blank Chrome probe reproduced fixed inner1280×720 at two actual
+window sizes; `viewport:null` instead followed native inner900×613 and1200×763.
+The next observer launch uses that native viewport and read-only UI geometry/mute
+snapshots. No old live page was navigated by the agent for this correction.
+Separately, the app placed newest replies after older turns beneath the controls.
+The owner explicitly requested newest turn first, stationary top controls and an
+independently scrolling response pane filling the remaining viewport.
+
+The bounded UI correction reverses only a display copy, retaining original turn
+numbers and chronological four-pair follow-up history. A further red browser
+case reproduced old-history scroll position hiding a newly prepended turn; the
+pane now resets once per new local turn ID, while later answer deltas preserve
+the reader’s deliberate scroll position. Flex sizing/min-height0
+keeps Stop/mutes above the scrolling pane, with compact existing chrome. Genuine
+red regressions reproduced oldest-first order and absent independent scrolling.
+The initial display/pane correction passed98 unit/UI tests, all17 Chromium browser
+cases and typecheck/lint/format/docs. The additional new-turn-only scroll reset
+passed17 owning conversation tests and typecheck; its strengthened actual-HTTP
+browser case covers new submissions after reading older history and preservation
+of deliberate scroll during a held answer’s later deltas. Real Next/Fastify mock checks cover
+stable control bounds during pane scrolling, viewport-height growth, desktop and
+390×700 narrow sizing, usable response area and no outer-page overflow. These are
+offline UI results. New-source independent review and production qualification
+remain pending; prior live observations retain their actual96ee/33d9 provenance.
+Full L1–L8 acceptance remains unverified.

@@ -55,6 +55,7 @@ export default function Conversation({
     token: TurnToken | null;
   } | null>(null);
   const capture = useRef<CaptureRun | null>(null);
+  const timeline = useRef<HTMLElement | null>(null);
   const teardown = useRef<Promise<void> | null>(null);
   const mounted = useRef(false);
   const capsRef = useRef<CapabilityContract | null>(null);
@@ -117,6 +118,11 @@ export default function Conversation({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [controller]);
   const current = turns.at(-1);
+  const newestFirstTurns = turns.slice().reverse();
+  const currentTurnId = current?.turnId;
+  useEffect(() => {
+    if (currentTurnId && timeline.current) timeline.current.scrollTop = 0;
+  }, [currentTurnId]);
   const status:
     'Ready' | 'Listening' | 'Working' | 'Speaking' | 'Busy' | 'Error' =
     formError ||
@@ -561,9 +567,13 @@ export default function Conversation({
           {captureReasons[captureReason]}
         </p>
       )}
-      <section aria-label="Conversation timeline" className="timeline">
-        {turns.map((turn, i) => (
-          <article key={turn.turnId} aria-label={'Turn ' + (i + 1)}>
+      <section
+        ref={timeline}
+        aria-label="Conversation timeline"
+        className="timeline"
+      >
+        {newestFirstTurns.map((turn, i) => (
+          <article key={turn.turnId} aria-label={'Turn ' + (turns.length - i)}>
             <h2>{turn.question || 'Voice question'}</h2>
             {turn.mode === 'mock' && (
               <p className="simulation">Simulated answer</p>

@@ -566,3 +566,39 @@ it('cancels audible partial speech on a failed answer stream and preserves displ
     screen.getByText('Atlas is active, owned by North, with 3 open items.'),
   ).toBeTruthy();
 });
+
+it('shows newest turns first with original turn numbers while follow-up history retains four chronological pairs', async () => {
+  const histories: HistoryMessage[][] = [];
+  const transport: typeof startTurn = async function* (token, _input, history) {
+    histories.push(history);
+    yield* events(token.turnId);
+  };
+  render(<Conversation transport={transport} />);
+  for (let trial = 1; trial <= 7; trial++) {
+    await start('Question ' + trial);
+    await waitFor(() =>
+      expect(screen.getByRole('status').textContent).toBe('Ready'),
+    );
+  }
+  const articles = screen.getAllByRole('article');
+  expect(
+    articles.map((article) => article.querySelector('h2')?.textContent),
+  ).toEqual([
+    'Question 7',
+    'Question 6',
+    'Question 5',
+    'Question 4',
+    'Question 3',
+    'Question 2',
+    'Question 1',
+  ]);
+  expect(articles.map((article) => article.getAttribute('aria-label'))).toEqual(
+    ['Turn 7', 'Turn 6', 'Turn 5', 'Turn 4', 'Turn 3', 'Turn 2', 'Turn 1'],
+  );
+  expect(histories[6]).toEqual(
+    [3, 4, 5, 6].flatMap((trial) => [
+      { role: 'user', content: 'Question ' + trial },
+      { role: 'assistant', content: finalText },
+    ]),
+  );
+});

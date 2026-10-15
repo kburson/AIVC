@@ -1,0 +1,28 @@
+Scoped review of `96ee0a413aa30042f37e2f59e69d13af5e813ed5` against `33d9cd3ce648f06710c96b011257bde0db795510`; whole-story base `31948e8d40ce11bf36a1ca74cc4363a9643f7757`.
+
+Reviewer: same distinct native Astra6/high seat, SID `01a13c7c-c4a4-7760-8b80-278687d46e54`.
+
+**Scoped offline Spec: PASS. Quality: PASS. No actionable findings.**
+
+The change keeps line-leading numbered markers with their item while preserving inline numeric sentences. Oversized stable text prefers existing clause punctuation, then falls back to word boundaries within the unchanged cap. Source changes are confined to `SpeechText` and its tests. PCM, playback, callbacks, public interfaces, pins, concurrency, and budgets are unchanged.
+
+Independent verification:
+
+- `node node_modules/vitest/vitest.mjs run tests/voice/speech-text.test.ts tests/voice/speech-queue.test.ts tests/voice/pcm.test.ts tests/voice/playback.test.ts tests/slow/playback-watchdog.test.ts tests/voice/interruption.test.ts tests/slow/rapid-interruption.test.ts tests/voice/capture-session.test.ts`: **108 passed, eight files**.
+- An additional in-memory comparison exercised **1,725 chunk/split cases across five caps**, preserving normalized word order against the previous implementation, identical segmentation across chunkings, and nonempty segments within the cap.
+- `npm run verify:docs`: **passed**.
+
+Working-tree and exact-HEAD source digests match:
+
+`8a2aaa24caf7a7e14a258dce2178f47a1f1b6fb5dbfe7c9083749291d980d889`
+
+The recorded diagnostic remains explicitly bound to `33d9cd3`, not this correction. Its internal data consistently records zero scheduled gap at the reported anchor, PCM-byte/frame equality, and 1,168 sources matching ended events. This verifies record consistency, not independent physical observation.
+
+Retained native reports match their documented bytes/hashes:
+
+- Timeout review: **1992 bytes**, `fd9ded3b51f2f60a0f2696559717440c0aebe8878fb90cad9ddae861a2599faf`.
+- Segmentation assessment: **3077 bytes**, `cc0fe22962abc7f791be5a71462bfdbda202f1298a65e6366402c0728ad8855a`.
+
+No paid/provider, browser, or physical-device trials occurred in this review. The change does **not** establish that audible padding/choppiness is resolved or that actual segment-duration tuning is complete. Affected listening/L4 qualification and whole L1–L8 acceptance remain pending.
+
+Checkout is clean at the reviewed SHA. All reviewer commands completed; ports 3000/3001 have no listeners. **All runtime, build, browser, test, and port resources are released to the author.**
