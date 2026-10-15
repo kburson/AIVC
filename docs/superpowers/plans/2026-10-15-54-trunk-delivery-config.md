@@ -80,24 +80,46 @@ Issue54 is a small delivery defect with a known root cause. At baseline b4d5ff90
 
 **Interfaces:** Existing acceptanceProvenance(root = workspace) returns the fixed provenance object or throws on any authority/inventory failure. Existing verifyLive({root,reportPath,log}) retains its public shape. Existing amendedFixture(), put(root,path,bytes), commit(root,message), git(root,...args), amendErrors(root) provide isolated real-history test support. No new public API.
 
-- [ ] **Step 1: Update the isolated fixture to the genuine adopted archive and write failing tests.** Keep fixture reset at the actual accepted54 archive commit, copy current verifier/test/output files, installed module/metadata and genuine optional existing review bytes as before. Never point a fixture at a mutable branch or generate production review authority. Write these assertions using existing helpers:
+- [ ] **Step 1: Bootstrap a committed known-good isolated fixture before each negative.** Reset to the genuine preimplementation accepted54 archive commit; that commit still contains the config preimage. Retain existing isolated clone/reset cleanup, installed module/package fixtures and genuine optional archive copying. Copy the current fixed verifier/test files and exact accepted collateral where required. Never point at a mutable branch or fabricate an assessment. Factor this structural preparation into deliveryFixtureTree(), then install and COMMIT the exact approved good postimage inside that isolated repository before provenance is evaluated:
 
 ```ts
 const configPath = '.ai-task-manager/task-tracker.json';
+const dispositionPath = 'docs/evidence/11-live-acceptance-disposition.json';
+const deliveryBaseline = 'b4d5ff903f4965429a27f409cbd2bcac843fb324';
 const expectedConfigBlob = '4c117bc9ffdd4cfbbaf2d6fa4ad758c4834affa3';
-it('accepts only the reviewed delivery configuration postimage', () => {
-  const root = amendedFixture();
-  const config = JSON.parse(readFileSync(join(root, configPath), 'utf8'));
-  config.fullAutoMerge = { mechanism: 'provider-action', mergeMethod: 'merge' };
-  put(root, configPath, JSON.stringify(config, null, 2) + '\n');
-  expect(git(root, 'hash-object', configPath)).toBe(expectedConfigBlob);
-  commit(root, 'Exact reviewed delivery configuration');
+// At the end of deliveryFixtureTree(), after the existing clone/reset/copy setup:
+const config = JSON.parse(
+  git(root, 'show', deliveryBaseline + ':' + configPath),
+);
+config.fullAutoMerge = { mechanism: 'provider-action', mergeMethod: 'merge' };
+put(root, configPath, JSON.stringify(config, null, 2) + '\n');
+expect(git(root, 'hash-object', configPath)).toBe(expectedConfigBlob);
+commit(root, 'Fixture exact reviewed delivery configuration');
+expect(git(root, 'rev-parse', 'HEAD:' + configPath)).toBe(expectedConfigBlob);
+// Return root only after that real fixture commit; do not edit the real checkout.
+
+function amendedFixture() {
+  const root = deliveryFixtureTree();
+  json(root, dispositionPath, acceptanceProvenance(root));
   expect(() => acceptanceProvenance(root)).not.toThrow();
+  expect(amendErrors(root)).toBe('');
+  return root;
+}
+it('accepts the genuine good candidate before any targeted mutation', () => {
+  const root = deliveryFixtureTree();
+  // This is the separate positive RED witness against the old fixed guard.
+  expect(() => acceptanceProvenance(root)).not.toThrow();
+  json(root, dispositionPath, acceptanceProvenance(root));
+  expect(amendErrors(root)).toBe('');
 });
 it('rejects hidden committed bad config despite restored working bytes', () => {
-  const root = amendedFixture();
+  const root = amendedFixture(); // Both positive checks have passed first.
   const good = readFileSync(join(root, configPath));
   const config = JSON.parse(good.toString());
+  expect(config.fullAutoMerge).toEqual({
+    mechanism: 'provider-action',
+    mergeMethod: 'merge',
+  });
   config.fullAutoMerge.mergeMethod = 'squash';
   put(root, configPath, JSON.stringify(config, null, 2) + '\n');
   commit(root, 'Bad candidate configuration');
@@ -111,15 +133,19 @@ it.each([
   { mechanism: 'provider-action', mergeMethod: 'merge', extra: true },
   null,
 ])('rejects other delivery values %j', (value) => {
-  const root = amendedFixture();
+  const root = amendedFixture(); // Fresh committed good config and disposition.
   const config = JSON.parse(readFileSync(join(root, configPath), 'utf8'));
   config.fullAutoMerge = value;
   put(root, configPath, JSON.stringify(config, null, 2) + '\n');
-  expect(() => acceptanceProvenance(root)).toThrow();
+  expect(() => acceptanceProvenance(root)).toThrow(
+    /(?:delivery configuration|working tree).*task-tracker[.]json/i,
+  );
 });
 ```
 
-Extend the same tests with deleted fullAutoMerge, changed preferences.noPushToOrigin, compact JSON serialization, each anchor removed/changed/executable/symlinked, aliased parent directories, nonancestor archive, committed changed anchor restored on disk, committed runtime addition then git rm --cached plus unlink, unrelated app/package/patch/profile/unknown docs changes. Retain existing real target merge-tree context, hidden candidate tests, strict fixtures, missing disposition and alternate-report cases. Use independent copies/resets so a failed negative does not contaminate the next. Anchor constants come only from the genuine accepted archive, not fixture caller parameters.
+The structural helper preserves real accepted archive ancestry and installs no arbitrary authority. Its final fixture commit includes the exact config postimage in HEAD as well as working bytes; merely writing the working file is insufficient. amendedFixture regenerates the separate disposition from the current fixed verifier, then asserts BOTH acceptanceProvenance and verifyLive positive baseline before returning to EVERY targeted mutation. Thus absent fullAutoMerge cannot cause a TypeError in the hidden-HEAD test or make unrelated negatives vacuously pass. Keep the explicit positive RED witness separate so the old guard's rejection is recorded as failure to accept a genuine good candidate, not as successful negative coverage.
+
+Extend these tests with deleted fullAutoMerge, changed preferences.noPushToOrigin, compact JSON serialization, each anchor removed/changed/executable/symlinked, aliased parent directories, nonancestor archive, committed changed anchor restored on disk, committed runtime addition then git rm --cached plus unlink, unrelated app/package/patch/profile/unknown docs changes. Each starts with amendedFixture's verified good baseline and checks the intended failure class/path: candidate HEAD for hidden committed changes; working tree/config path for bad working config; immutable anchor path/integrity for collateral; ancestry for bad storage; protected path for unrelated product changes. Avoid bare toThrow() where an incidental fixture/bootstrap error could satisfy the assertion. Retain real target merge-tree, default strict, missing disposition and alternate-report cases; assert their specific strict/report-path errors. Reset independently between mutations. The adopted fixed archive supplies authority, never fixture caller strings.
 
 - [ ] **Step 2: Run focused RED before implementation.**
 
@@ -127,7 +153,7 @@ Extend the same tests with deleted fullAutoMerge, changed preferences.noPushToOr
 env AIVC_MODE=mock PLAYWRIGHT_LAST_RUN_OUTPUT_FILE=.tmp/playwright-last-run.json npx --no-install vitest run tests/scripts/verify-live.test.ts
 ```
 
-Expected: the exact reviewed postimage/anchors are rejected by the prior fixed boundary. Record actual failing assertions; existing strict negatives alone do not establish RED. The current planning checkpoint intentionally fails the old amended boundary because new collateral is unadopted; do not label that a new app defect or claim tests pass before implementation.
+Expected: the dedicated genuine-good-candidate test fails its positive acceptanceProvenance assertion because the prior fixed boundary rejects the exact reviewed postimage/anchors. Record that actual rejection and path; do not count negatives failing during bootstrap or TypeError as discriminating RED. After the minimal fix, the explicit positive test and every amendedFixture positive baseline must pass before negative assertions are evaluated. Existing strict negatives alone do not establish RED. The current planning checkpoint intentionally fails the old amended boundary because new collateral is unadopted; do not label that a new app defect or claim tests pass before implementation.
 
 - [ ] **Step 3: Invoke the supported project-local setter, then verify the image.** In the genuine active54 checkout, use the admitted2012 CLI path already recorded by the root with these literal arguments:
 
@@ -160,14 +186,14 @@ writeFileSync(
 
 Use the real child cwd and transparent admitted foreign-worktree wrapper when required. No fake cwd, foreign flag passed into Vitest, identity override or hook modification. Confirm observed report SHA d908c3bb4a8fd6ab1a99272833d6de9d69fc8f43cebccf563aea61afe1ee6882 and every existing immutable anchor remain unchanged. Confirm current source digest differs honestly from physical14bee and L4fail6.6/L6unverified remain in observations; runtime profile12/cap72 remains distinct from default14. Check the complete current changed-file mode/blob inventory and fixed54 authority record. Re-run default missing-disposition/alternate-report tests rather than altering these gates.
 
-- [ ] **Step 2: Run quality checks before full stable-source tests.** Required environment applies to every command. Run npm run lint, npm run format:check, npm run verify:docs, npm run verify:live, npm run verify:sealed-evidence, npm run test:evidence and npm run verify:toolchain. Preserve exact native Markdown hard-break bytes; if scans reject new immutable native text, stop for root review rather than trim it or add blanket exclusions. Run npm run typecheck and npm run build:clean serially; builds may use only mock/offline fixtures.
+- [ ] **Step 2: Run quality checks before full stable-source tests.** Required environment applies to every command. Run npm run lint, npm run format:check, npm run verify:docs, npm run verify:live, npm run verify:sealed-evidence, npm run test:evidence and npm run verify:toolchain. Preserve exact native Markdown hard-break bytes; if scans reject new immutable native text, stop for root review rather than trim it or add blanket exclusions. Run affected TypeScript checking for the modified test fixture. The root owns the final clean-source build and full matrix; no duplicate author build is required for this verifier-only correction. Builds use only mock/offline fixtures.
 
-- [ ] **Step 3: Run the full required offline matrix once source is stable.** Run npm test, npm run test:slow, npm run test:contracts, npm run test:integration, npm run test:voice and npm run test:browser using the existing mock browser harness and .tmp/playwright-last-run.json. No owned interactive browser, microphone, speaker or application-provider call. Record exact outputs/counts/exit codes. Repeat only failed or newly impacted lanes after a meaningful change. Do not reuse prior55-file/372-test counts or canonical receipts as new-source proof.
+- [ ] **Step 3: Hand the mandatory full matrix to the final clean canonical Test/CI boundary.** The author runs focused RED/GREEN and necessary impacted quality from Step2 during implementation. The root executes all issue54 declared commands, including npm test and npm run test:slow, at the final clean candidate through canonical Test and exact-head CI; full owning/impacted coverage also includes contracts, integration, voice, existing mock browser, typecheck and clean build as required by project gates. Do not duplicate unaffected full application lanes in the author pass before that mandatory final matrix. Use the existing mock browser harness and .tmp/playwright-last-run.json; no interactive browser, microphone, speaker or application-provider call. Keep every required VC and full project gate; report exact outputs/counts/exit codes at its actual boundary. Repeat only failed or newly impacted lanes after a meaningful change. Prior55-file/372-test counts and canonical receipts remain historical, never new-source proof.
 
 - [ ] **Step 4: Inspect final Git inventory, original evidence hashes and disposition consistency.** Run git diff --check for authored files, account separately for authentic historical trailing hard-break whitespace, inspect git diff --stat and exact stage inventory, then git log --oneline -1. Regenerate the disposition again if any inventory-bearing bytes changed after Step1, including genuine final review archive updates admitted by the fixed policy. Do not exclude additional paths merely to make it pass.
 
-- [ ] **Step 5: Stage only the fixed owners, normalStop54 and hand off CODE_COMPLETE.** Report exact source digest, config pre/post tuples, review/archive/adoption commits, staged patch SHA, file blobs/hashes, tests and unchecked lifecycle items. Root transports if needed, updates trace, dispatches same genuine Astra independent implementation/full-PR review, runs registered canonical Test at final cleanSHA and checks all exact-head CI. Root handles human approval, exact-head child integration and Close54 before epic final Test/Review/approval and genuine PR17 trunk delivery. A draft PR, local pass or this plan is not delivery authority.
+- [ ] **Step 5: Stage only the fixed owners, normalStop54 and hand off CODE_COMPLETE.** Report exact source digest, config pre/post tuples, review/archive/adoption commits, staged patch SHA, file blobs/hashes, focused/impacted author check results and unchecked lifecycle items. Root transports if needed, updates trace, dispatches same genuine Astra independent implementation/full-PR review, and owns the mandatory full matrix through registered canonical Test at final cleanSHA plus exact-head CI; the author does not first duplicate unaffected application lanes. Root handles human approval, exact-head child integration and Close54 before epic final Test/Review/approval and genuine PR17 trunk delivery. A draft PR, local pass or this plan is not delivery authority.
 
 ## Self-review coverage
 
-Task1 owns the exact configuration transition, all five Review Focus failure classes, immutable54 authority, independent full HEAD/worktree boundaries and unchanged strict behavior. Task2 owns separate current disposition, historical custody, quality/full offline matrix and handoff. No product/profile/source-evidence rebinding or new live qualification appears in either task. Execution is the same author with root-supervised genuine distinct Astra review; the written artifacts require that review and governed Plan approval before code.
+Task1 owns the exact configuration transition, all five Review Focus failure classes, immutable54 authority, independent full HEAD/worktree boundaries and unchanged strict behavior. Task2 owns separate current disposition, historical custody, impacted author quality, root-owned final full matrix and handoff. No product/profile/source-evidence rebinding or new live qualification appears in either task. Execution is the same author with root-supervised genuine distinct Astra review; the written artifacts require that review and governed Plan approval before code.
