@@ -1,0 +1,13 @@
+Preliminary review of `368273fdbf7568060d658f64cab1ff1d0c1c7f46`, base `31948e8d40ce11bf36a1ca74cc4363a9643f7757`: **two P2 findings**, sent to root and author.
+
+1. **Incomplete timing evidence can pass.** [verify-live.mjs:336](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/scripts/verify-live.mjs:336) counts an entirely null research row as a measured sample. Scenario matching ignores case while duplicate detection preserves it, so `Atlas`, `atlas`, and `ATLAS`, each sample `1`, satisfy the three-trial requirement. Normalize scenario identity and require applicable measured research durations.
+
+2. **Credential checks miss provider-named fields and assignments.** [verify-live.mjs:57](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/scripts/verify-live.mjs:57) accepts a `DEEPGRAM_API_KEY` observation property containing a synthetic hex-looking value. [verify-docs.mjs:147](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/scripts/verify-docs.mjs:147) likewise accepts that assignment in README. Add focused fake-literal regressions while allowing blank configuration examples and ordinary variable-name documentation.
+
+These are static code-path findings; independent execution remains pending resource handoff.
+
+The specification transfer is byte-identical to accepted `bc6e15ec…`: `cmp` exited zero and SHA-256 matches `8512daa8…fff6`. Its formatting exception is exact-path and guarded by both hash and original Git bytes. CI ordering and documentation preserve the mock/live distinction; the committed report explicitly leaves L1–L8 unverified.
+
+No tests, builds, browser/provider calls, source changes, or lifecycle actions performed. Uncommitted joined-system work was excluded. **No final whole-story Spec/Quality verdict or physical acceptance claim.**
+
+Reviewer SID: `01a13c7c-c4a4-7760-8b80-278687d46e54`.

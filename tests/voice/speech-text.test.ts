@@ -13,7 +13,7 @@ const cases: Array<[string, string[]]> = [
   ],
   ['See https://example.com/path now. Next.', ['See now.', 'Next.']],
   ['First [1]. Next [label](https://x.test).', ['First.', 'Next label.']],
-  ['Say `secret. no` hello. Next.', ['Say hello.', 'Next.']],
+  ['Say `secret. no` hello. Next.', ['Say secret. no hello.', 'Next.']],
   [
     'Before ```js\nhidden. text\n``` after. Final fragment',
     ['Before after.', 'Final fragment'],
@@ -88,4 +88,163 @@ it('counts raw retained text and conservatively drops unfinished structured suff
   const u = new SpeechText();
   u.push('Read https://unclosed');
   expect(u.finish()).toEqual(['Read']);
+});
+
+it('retains an ordered-list prefix with its item across every chunk split', () => {
+  const input =
+    'First answer.\n\n  2. Atlas is active.\n3. Beacon is paused. Next';
+  const expected = [
+    'First answer.',
+    '2. Atlas is active.',
+    '3. Beacon is paused.',
+    'Next',
+  ];
+  for (let split = 0; split <= input.length; split++) {
+    const scanner = new SpeechText();
+    expect([
+      ...scanner.push(input.slice(0, split)),
+      ...scanner.push(input.slice(split)),
+      ...scanner.finish(),
+    ]).toEqual(expected);
+  }
+  const scanner = new SpeechText();
+  expect(scanner.push('2. ')).toEqual([]);
+  expect(scanner.push('Atlas is active. Next')).toEqual([
+    '2. Atlas is active.',
+  ]);
+  expect(scanner.finish()).toEqual(['Next']);
+});
+
+it('preserves numeric-only answers and decimal model versions near list items', () => {
+  const numeric = new SpeechText();
+  expect(numeric.push('2. ')).toEqual([]);
+  expect(numeric.finish()).toEqual(['2.']);
+  const scanner = new SpeechText();
+  expect([
+    ...scanner.push('2. Claude 3.7 costs 10.50 today. Next'),
+    ...scanner.finish(),
+  ]).toEqual(['2. Claude 3.7 costs 10.50 today.', 'Next']);
+});
+
+it('keeps the observed detailed-answers phrase together at an existing clause boundary', () => {
+  const input =
+    'perform iterative searches, refining queries based on previous results to generate more detailed answers. Next';
+  const expected = [
+    'perform iterative searches,',
+    'refining queries based on previous results to generate more detailed answers.',
+    'Next',
+  ];
+  for (let split = 0; split <= input.length; split++) {
+    const scanner = new SpeechText(84);
+    expect([
+      ...scanner.push(input.slice(0, split)),
+      ...scanner.push(input.slice(split)),
+      ...scanner.finish(),
+    ]).toEqual(expected);
+  }
+});
+
+it.each([',', ';', ':', '—'])(
+  'prefers an existing %s clause boundary within the unchanged cap',
+  (punctuation) => {
+    const scanner = new SpeechText(40);
+    const segments = [
+      ...scanner.push(
+        'First useful clause' +
+          punctuation +
+          ' second useful clause stays together. Next',
+      ),
+      ...scanner.finish(),
+    ];
+    expect(segments).toEqual([
+      'First useful clause' + punctuation,
+      'second useful clause stays together.',
+      'Next',
+    ]);
+    expect(segments.every((segment) => segment.length <= 40)).toBe(true);
+  },
+);
+
+it('does not reinterpret an inline numeric sentence as a line-leading list item', () => {
+  const input = 'Count now. 2. Next answer.';
+  for (let split = 0; split <= input.length; split++) {
+    const scanner = new SpeechText();
+    expect([
+      ...scanner.push(input.slice(0, split)),
+      ...scanner.push(input.slice(split)),
+      ...scanner.finish(),
+    ]).toEqual(['Count now.', '2.', 'Next answer.']);
+  }
+});
+
+it('retains the meaningful inline value from the captured research answer', () => {
+  const scanner = new SpeechText(84);
+  const input =
+    '4. To access the model, you simply use **`model=nova-3`** in your API calls.';
+  expect([...scanner.push(input), ...scanner.finish()]).toEqual([
+    '4. To access the model, you simply use model=nova-3 in your API calls.',
+  ]);
+});
+
+it.each([
+  [
+    'Use `owner_team=North` and `amount=10.50` with `items[1]`.',
+    ['Use owner_team=North and amount=10.50 with items[1].'],
+  ],
+  [
+    'Values `3.7`, `10.50` and `a*b` stay readable.',
+    ['Values 3.7, 10.50 and a*b stay readable.'],
+  ],
+  ['Use ``literal ` value`` now.', ['Use literal ` value now.']],
+  ['Read `alpha``. beta` now. Next.', ['Read alpha``. beta now.', 'Next.']],
+  ['Read ``alpha```. beta`` now. Next.', ['Read alpha```. beta now.', 'Next.']],
+  [
+    'See `https://example.com/private` and `model=nova-3` [1].',
+    ['See and model=nova-3.'],
+  ],
+  [
+    'Before ````ts\nhidden. language_tag\n````` after `model=nova-3`.',
+    ['Before after model=nova-3.'],
+  ],
+] as const)(
+  'keeps readable inline content and visual-only fences across every split: %s',
+  (input, expected) => {
+    for (let split = 0; split <= input.length; split++) {
+      const scanner = new SpeechText(120);
+      expect([
+        ...scanner.push(input.slice(0, split)),
+        ...scanner.push(input.slice(split)),
+        ...scanner.finish(),
+      ]).toEqual(expected);
+    }
+    const scanner = new SpeechText(120);
+    expect([
+      ...Array.from(input).flatMap((char) => scanner.push(char)),
+      ...scanner.finish(),
+    ]).toEqual(expected);
+  },
+);
+
+it.each([
+  ['Read `unfinished model=nova-3', ['Read']],
+  ['Read `alpha``. beta', ['Read']],
+  ['Read ``unfinished ` value', ['Read']],
+  ['Read ```ts\nmodel=nova-3', ['Read']],
+])(
+  'drops only a dangling structured suffix conservatively: %s',
+  (input, expected) => {
+    const scanner = new SpeechText();
+    expect(scanner.push(input)).toEqual([]);
+    expect(scanner.finish()).toEqual(expected);
+  },
+);
+
+it('applies the existing segment cap and oversized-token notice to retained inline content', () => {
+  const omitted: string[] = [];
+  const scanner = new SpeechText(12, (reason) => omitted.push(reason));
+  expect([
+    ...scanner.push('Use `model=nova-3` with `temperature=0.25` now. '),
+    ...scanner.finish(),
+  ]).toEqual(['Use', 'model=nova-3', 'with', 'now.']);
+  expect(omitted).toEqual(['SPEECH_TOKEN_TOO_LONG']);
 });

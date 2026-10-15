@@ -48,11 +48,8 @@ export async function turnResponse(
         null,
         false,
       );
-    const request = new Request(req, {
-      signal: AbortSignal.any([req.signal, cancel.signal]),
-    });
     const task = runAdmittedTurn(
-      request,
+      req,
       runtime.config,
       async (input, signal) => {
         turnId = input.turnId;
@@ -95,6 +92,7 @@ export async function turnResponse(
           close();
         }
       },
+      AbortSignal.any([req.signal, cancel.signal]),
     );
     // Client-facing timeout/cancellation is not proof that paid upstream settled.
     void task.settled.then(() => lease?.release());

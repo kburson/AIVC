@@ -1,0 +1,26 @@
+Scoped UI review: **Spec FAIL; Quality FAIL — one P2 requires correction.**
+
+Reviewer: native Astra6/high, SID `01a13c7c-c4a4-7760-8b80-278687d46e54`. Ordinary code review.
+
+Reviewed exact HEAD `0e06ef473d67b8211f0b79ad2d853634e64a2179` against prior `96ee0a413aa30042f37e2f59e69d13af5e813ed5`; whole-story base `31948e8d40ce11bf36a1ca74cc4363a9643f7757`.
+
+**P2 — Short windows make responses and controls unreachable.**  
+[globals.css:13](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/apps/web/app/globals.css:13), together with the nonshrinking controls at line43 and timeline at line151, fixes the shell to `100dvh`, hides overflow, and permits the response pane to collapse completely.
+
+Independent Chromium reproduction: complete a mock Atlas turn, then resize to **900×400**. Timeline top is423px, height0, content height458px; document height remains400px, so scrolling cannot reveal the response. Status also extends below the viewport. Reproduced at640×360 and390×500. At640×360, controls are clipped too. Add a bounded short-height fallback that keeps both controls and responses reachable while preserving normal-height stationary controls and independent response scrolling.
+
+Evidence: [short-window screenshot](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/.tmp/reviewer-ui-short-viewport.png).
+
+Independent verification:
+
+- `node node_modules/vitest/vitest.mjs run tests/ui/conversation.test.tsx tests/contracts/history.test.ts tests/contracts/turn-controller.test.ts` — **42 passed**, three files.
+- `PLAYWRIGHT_LAST_RUN_OUTPUT_FILE=.tmp/playwright-last-run.json npm run test:browser -- tests/browser/typed-system.spec.ts` — **5 passed**, actual joined mock Next/Fastify routes.
+- Additional inline Playwright probe against `node --import tsx tests/browser/system-server.ts` reproduced the clipping above after a completed response.
+- Inspected desktop1280×720 and narrow390×700 screenshots: expected layout works at those sizes.
+- Newest-first display preserves original Turn numbers and chronological history. New-turn scrolling and later streaming-update scroll preservation pass.
+
+Working-tree and HEAD source digests both equal `4322b60113bb140f0c09aa5d27a06ce8ac6fe3766eeac99ea4490a5410cdcdb7`. Retained96ee native report matches2541bytes and SHA256 `45df7baa2ff43f3d2b81f08b7581f2abeda6eab16e2998fa8521abd79557504f`; prior live provenance remains distinct.
+
+Cleanup complete: owned Chromium closed; mock server exited0; no listeners on3000/3001. Own `npx aitm stop 11` exited0. HEAD unchanged and tracked worktree clean. Resources released.
+
+No provider, paid, microphone, or physical-device checks performed. This verdict covers the UI correction only; whole-story L1–L8 acceptance remains pending.

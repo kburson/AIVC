@@ -1,3 +1,4 @@
+import { observe } from '../measurements';
 import {
   createVad,
   type CaptureToken,
@@ -297,6 +298,11 @@ export class CaptureSession {
         }
         c.phase = 'consumed'; // Consume before the callback so reentrant duplicate end cannot notify again.
         try {
+          observe('vad-end', {
+            captureEpoch: c.token.epoch,
+            utteranceId: c.token.utteranceId,
+            intentVersion: c.token.intentVersion,
+          });
           this.deps.onUtterance(c.token, encodeWav(samples));
         } catch {
           this.deps.onStatus('CAPTURE_LOAD_FAILED');

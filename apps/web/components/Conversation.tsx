@@ -3,6 +3,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { FormEvent } from 'react';
 import { TurnController, clientReason } from '../client/turn-controller';
 import { HistoryStore } from '../client/history';
+import { observe } from '../client/measurements';
+import type { CaptureToken } from '../client/voice/capture-session';
 import { startTurn } from '../client/turn-stream';
 import type { Capabilities as CapabilityContract } from '../shared/contracts';
 import { validateCapabilities } from '../shared/validation';
@@ -53,6 +55,7 @@ export default function Conversation({
     token: TurnToken | null;
   } | null>(null);
   const capture = useRef<CaptureRun | null>(null);
+  const timeline = useRef<HTMLElement | null>(null);
   const teardown = useRef<Promise<void> | null>(null);
   const mounted = useRef(false);
   const capsRef = useRef<CapabilityContract | null>(null);
@@ -115,6 +118,11 @@ export default function Conversation({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [controller]);
   const current = turns.at(-1);
+  const newestFirstTurns = turns.slice().reverse();
+  const currentTurnId = current?.turnId;
+  useEffect(() => {
+    if (currentTurnId && timeline.current) timeline.current.scrollTop = 0;
+  }, [currentTurnId]);
   const status:
     'Ready' | 'Listening' | 'Working' | 'Speaking' | 'Busy' | 'Error' =
     formError ||
@@ -266,7 +274,7 @@ export default function Conversation({
             !run.interruption.admitEnd(token)
           )
             return;
-          void runTurn({ wav });
+          void runTurn({ wav }, false, token);
         },
         onStatus: (reason) => {
           if (capture.current === run && reason === 'CAPTURE_OVERLONG')
@@ -348,6 +356,7 @@ export default function Conversation({
   async function runTurn(
     input: { text?: string; wav?: Blob },
     gesture = false,
+    captureToken?: CaptureToken,
   ): Promise<void> {
     const capability = capsRef.current;
     if (!capability?.turnsAvailable) return;
@@ -356,6 +365,16 @@ export default function Conversation({
       output.current.queue.cancel(output.current.token, 'TURN_INTERRUPTED');
     const token = controller.begin(),
       abort = new AbortController();
+    observe('turn-created', {
+      turnId: token.turnId,
+      ...(captureToken
+        ? {
+            captureEpoch: captureToken.epoch,
+            utteranceId: captureToken.utteranceId,
+            intentVersion: captureToken.intentVersion,
+          }
+        : {}),
+    });
     if (input.text !== undefined) controller.setUser(token, input.text);
     controller.attachAbort(token, abort);
     controller.setSpeech(
@@ -464,93 +483,103 @@ export default function Conversation({
   }
   return (
     <main className="conversation">
-      <header>
-        <p className="eyebrow">Voice BFF reference</p>
-        <h1>Ask a question</h1>
-        <p>
-          Follow up using completed answers. Inspect the details when you need
-          them.
-        </p>
-      </header>
-      <Capabilities value={caps} error={capError} />
-      <form onSubmit={submit} className="composer">
-        <label htmlFor="question">Question</label>
-        <textarea
-          id="question"
-          value={question}
-          onChange={(event) => setQuestion(event.target.value)}
-          maxLength={2000}
-          aria-describedby="question-help"
-          placeholder="What is the status of Atlas?"
-          required
-        />
-        <p id="question-help">
-          Typed fallback · {question.length}/2,000 characters
-        </p>
-        <div className="controls">
-          <button type="submit" disabled={!caps?.turnsAvailable}>
-            Start
-          </button>
-          <button
-            type="button"
-            onClick={startConversation}
-            disabled={!caps?.turnsAvailable || stopping}
-          >
-            Start conversation
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              void stopConversation();
-            }}
-            disabled={!current && captureState === 'stopped' && !stopping}
-          >
-            Stop
-          </button>
-          <label>
-            <input
-              type="checkbox"
-              checked={micMuted}
-              onChange={(event) => {
-                void muteMicrophone(event.target.checked);
+      <div
+        className="conversation-controls"
+        role="region"
+        aria-label="Conversation controls"
+      >
+        <header>
+          <p className="eyebrow">Voice BFF reference</p>
+          <h1>Ask a question</h1>
+          <p>
+            Follow up using completed answers. Inspect the details when you need
+            them.
+          </p>
+        </header>
+        <Capabilities value={caps} error={capError} />
+        <form onSubmit={submit} className="composer">
+          <label htmlFor="question">Question</label>
+          <textarea
+            id="question"
+            value={question}
+            onChange={(event) => setQuestion(event.target.value)}
+            maxLength={2000}
+            aria-describedby="question-help"
+            placeholder="What is the status of Atlas?"
+            required
+          />
+          <p id="question-help">
+            Typed fallback · {question.length}/2,000 characters
+          </p>
+          <div className="controls">
+            <button type="submit" disabled={!caps?.turnsAvailable}>
+              Start
+            </button>
+            <button
+              type="button"
+              onClick={startConversation}
+              disabled={!caps?.turnsAvailable || stopping}
+            >
+              Start conversation
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                void stopConversation();
               }}
-            />
-            Mute microphone
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={muted}
-              onChange={(event) => muteOutput(event.target.checked)}
-            />
-            Mute output
-          </label>
-        </div>
-        <p>
-          {stopping
-            ? 'Stopping microphone and audio…'
-            : captureState === 'starting'
-              ? 'Starting microphone…'
-              : captureState === 'muted'
-                ? 'Microphone muted. Typed questions still work.'
-                : captureState === 'listening'
-                  ? 'Speak naturally. Completed questions submit automatically.'
-                  : 'Start conversation to speak, or type a question.'}
+              disabled={!current && captureState === 'stopped' && !stopping}
+            >
+              Stop
+            </button>
+            <label>
+              <input
+                type="checkbox"
+                checked={micMuted}
+                onChange={(event) => {
+                  void muteMicrophone(event.target.checked);
+                }}
+              />
+              Mute microphone
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={muted}
+                onChange={(event) => muteOutput(event.target.checked)}
+              />
+              Mute output
+            </label>
+          </div>
+          <p>
+            {stopping
+              ? 'Stopping microphone and audio…'
+              : captureState === 'starting'
+                ? 'Starting microphone…'
+                : captureState === 'muted'
+                  ? 'Microphone muted. Typed questions still work.'
+                  : captureState === 'listening'
+                    ? 'Speak naturally. Completed questions submit automatically.'
+                    : 'Start conversation to speak, or type a question.'}
+          </p>
+        </form>
+        <p className="status" role="status" aria-live="polite">
+          {status}
         </p>
-      </form>
-      <p className="status" role="status" aria-live="polite">
-        {status}
-      </p>
-      {formError && <p role="alert">{formError}</p>}
-      {speechRecoveryFailure && <p role="alert">{speechRecoveryFailure}</p>}
-      {captureReason && (
-        <p role={captureReason === 'CAPTURE_OVERLONG' ? undefined : 'alert'}>
-          {captureReasons[captureReason]}
-        </p>
-      )}
-      <section aria-label="Conversation timeline" className="timeline">
-        {turns.map((turn, i) => (
-          <article key={turn.turnId} aria-label={'Turn ' + (i + 1)}>
+        {formError && <p role="alert">{formError}</p>}
+        {speechRecoveryFailure && <p role="alert">{speechRecoveryFailure}</p>}
+        {captureReason && (
+          <p role={captureReason === 'CAPTURE_OVERLONG' ? undefined : 'alert'}>
+            {captureReasons[captureReason]}
+          </p>
+        )}
+      </div>
+      <section
+        ref={timeline}
+        aria-label="Conversation timeline"
+        className="timeline"
+      >
+        {newestFirstTurns.map((turn, i) => (
+          <article key={turn.turnId} aria-label={'Turn ' + (turns.length - i)}>
             <h2>{turn.question || 'Voice question'}</h2>
             {turn.mode === 'mock' && (
               <p className="simulation">Simulated answer</p>

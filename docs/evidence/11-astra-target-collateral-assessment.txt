@@ -1,0 +1,92 @@
+PR37 is **not ready to merge at this head**. The application remains unchanged from the earlier whole-PR review, and the amendment preserves the measured limitations honestly. Four P2 corrections remain in acceptance verification and its tests.
+
+Reviewed by the same native Astra6/high session, `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`. This is an ordinary independent implementation review and bounded design assessment; it does not revise the closed primary SPR or claim a protocol receipt.
+
+Reviewed identities:
+
+- HEAD: `5083687c83839113069cae2d6b3f660fef891517`
+- Target: `fe2a158c8f717aed43d604c3d7614dc18a3452e1`
+- Actual merge base: `31948e8d40ce11bf36a1ca74cc4363a9643f7757`
+- Working-tree and HEAD source digest: `7f96a68596067a90d2345df6f1478b4ce530dbc38eb26c6158ca6e398a3fb4f3`
+
+The checkout was clean. I independently inventoried all **78 changed paths** against the merge base and the **21 intervening paths** since the previous whole-PR review at `f2baab7`. That intervening inventory contains only three verifier/quality scripts, their three owning tests, documentation, disposition and review collateral. All previously reviewed application code, runtime configuration, dependencies, patches, launcher, CI and application-test changes remain byte-identical. The prior full review covered their correctness, security, cancellation, concurrency, playback, segmentation, search accounting and relevant unchanged interactions; this pass independently inspected every intervening changed script and test, the accepted amendments, current authority, documentation changes and evidence protections.
+
+1. **P2 — Validate candidate HEAD independently of working files.**  
+   [scripts/verify-live.mjs:319](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/scripts/verify-live.mjs:319)
+
+   `acceptanceProvenance` compares the fixed baseline and historical search tree with `workingTree(root)`, but never compares the candidate `HEAD` tree independently. A protected product change committed in HEAD can therefore disappear from the proof when its working file is restored to accepted bytes. Likewise, a newly committed runtime path can disappear if removed from the index and working directory.
+
+   This is a source-grounded finding; I did not mutate this checkout to demonstrate it. It violates the accepted requirement to check both candidate and worktree path/mode/blob inventories. Clean delivery checks reduce exposure but do not implement that verifier contract.
+
+   **Correction:** independently validate complete HEAD and working-tree inventories against the same fixed protected boundaries. Keep permitted acceptance-source edits distinct from protected product/runtime changes. Add isolated-clone regressions for a committed protected change followed by working-file restoration, and a committed runtime addition subsequently removed from index/worktree. Do not replace these checks with a blanket dirty-tree check.
+
+2. **P2 — Account for the target’s immutable handoff before merge.**  
+   [scripts/verify-live.mjs:329](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/scripts/verify-live.mjs:329)
+
+   The actual target adds `docs/implementation/2-live-validation-handoff.md`, which is absent from the adoption baseline and child HEAD. A normal merge retains it, but the current changed-path gate rejects it as an unreviewed acceptance-boundary change. Moving tests into a fixture reset to `63fdb69` would conceal this integration failure.
+
+   Independent three-tree inspection found no conflicts. The target’s other addition, the historical UI review, already matches the child exactly. The handoff anchor is:
+
+   - Target commit: `fe2a158c8f717aed43d604c3d7614dc18a3452e1`
+   - Mode: `100644`
+   - Git blob: `bd64361def52c6ce512bad6ac90deb96f2a8e406`
+   - Length: **11,475 bytes**
+   - SHA-256: `c75d79584e13b4685650ca6bbbe29a9cbce9305b8b23e9a96023525b89891be0`
+
+   **Correction:** preserve those exact historical bytes in the child before implementation, then require the file as fixed immutable collateral. This is simpler and safer than optional absent-to-present handling: child and merged inventories will agree, so merging will not invalidate the disposition merely by introducing the document.
+
+3. **P2 — Isolate the positive acceptance test from concurrent fixtures.**  
+   [tests/scripts/verify-live.test.ts:527](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/tests/scripts/verify-live.test.ts:527)
+
+   This test calls `verifyLive` against the shared checkout. Concurrent formatter tests create temporary untracked Markdown there, which the deliberately strict complete inventory rejects.
+
+   Exact-head CI run `38738772943`, job `116434755602`, confirms this failure: `.scratch/spec-copy-ne8XUD/docs/ordinary.md` caused the assertion at line531 to fail; unit/UI results were **140 passed, one failed**.
+
+   **Correction:** use the isolated amended fixture and read the original report from that fixture. Preserve strict untracked-file rejection. Independently test the actual target integration context so isolation does not hide finding2.
+
+4. **P2 — Preserve final review collateral in the amended fixture.**  
+   [tests/scripts/verify-live.test.ts:561](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/tests/scripts/verify-live.test.ts:561)
+
+   The fixture resets to `63fdb69` and copies a fixed list that omits the permitted final `docs/evidence/11-astra-amended-pr-review.txt`. Once that authentic report is archived and enters regenerated `changedFiles`, the fixture will lack its bytes and reject otherwise valid provenance.
+
+   **Correction:** base the fixture on the newly reviewed archival checkpoint, and copy the exact optional final-review path when it exists in the candidate checkout. Never fabricate a placeholder or remove its inventory entry. Cover both pre-archive and post-archive states with matching disposition generation.
+
+No critical application defect or additional actionable minor issue was found in this recheck.
+
+The existing implementation has substantial strengths. It retains strict validation when the disposition is absent or invalid, rejects caller-selected reports under the fixed policy, and recomputes the disposition instead of trusting supplied hashes or allowed paths. Original evidence is bound to fixed committed storage and actual bytes; package and installed-patch checks remain mandatory. Historical ordinary continuation is explicitly separated from unobserved provider pause.
+
+The formatter and Markdownlint share the same exact native-pair integrity gate. Missing files, corruption, aliases and invalid lineage fail before exclusion. The pair remains in inventory; Markdownlint explicitly reports it as **not linted**, while startup, invitation, lookalikes and ordinary files remain checked. Protected writes, strict root settings, inline-suppression refusal and required results for submitted files remain intact.
+
+Original observed report SHA-256 remains `d908c3bb4a8fd6ab1a99272833d6de9d69fc8f43cebccf563aea61afe1ee6882`; physical artifact SHA-256 remains `663b8089359e22afa454abf7e5f1bd9139befc4710e5a9d9a2365b46e08b0da6`. I also verified the archived prior full review and ordinary formatting/lint assessments against their recorded lengths and hashes. The one report change since the earlier full-review head records that review’s completion; it predates the accepted immutable anchor and does not alter physical outcomes.
+
+The following bounded target-collateral extension is justified to preserve existing target evidence and make the accepted policy work after integration:
+
+1. Archive the exact target handoff above, plus only these two new collateral paths:  
+   `docs/superpowers/specs/2026-10-15-11-target-collateral-addendum.md` and  
+   `docs/evidence/11-astra-target-collateral-assessment.txt`.
+2. Preserve the primary amendment, closed SPR and previous addenda unchanged. Record this ordinary assessment and the narrow extension through governed issue11/issue2 Scope updates.
+3. Pin the new archival commit and collateral bytes. For the handoff, require regular file/parents, exact mode, length, SHA and equality with both its trusted target blob and archived copy. Require archival ancestry to candidate HEAD. Do not require the unmerged child already to contain target `fe2a158` as an ancestor.
+4. Change only the already permitted live verifier and its owning test. Retain complete HEAD/worktree comparisons, exact disposition inventory and all product/runtime protections. No directory wildcard, caller exception, target deletion or historical-text rewrite is warranted.
+5. Test child and merged contexts, tampering, missing handoff, wrong mode, aliases, invalid storage/ancestry, unrelated target additions, both HEAD-hiding cases and final-review archive preservation. Regenerate disposition only after the authored files settle.
+
+This is a necessary, narrowly anchored evidence-preservation extension. It requires explicit recording and implementation review; it does not retroactively become part of the sealed primary decision. A new sealed review merely to preserve this already existing target document is not necessary for this bounded remedy.
+
+Independent checks in this pass:
+
+- Serial focused tests: **91/91 passed** — live verifier62, formatter13, quality scans16.
+- `verify:live`: passed locally with the explicit amended-limitations verdict.
+- `verify:docs`: passed.
+- Markdownlint: **157 of159 files linted**, two integrity-verified exclusions, zero issues.
+- Formatting: **335 inventory files**, zero findings; exact sealed pair preserved.
+- HEAD/worktree source digests matched the value above.
+- Exact-head CI: five jobs succeeded, including offline system acceptance; unit/UI failed as described. The serial local pass does not override that failure.
+
+**Requirements/spec assessment:** the measured-outcome separation, fixed policy, original-evidence custody and formatter/linter preservation design conform to the accepted amendments. Candidate-HEAD proof and target integration handling are incomplete.
+
+**Quality assessment:** application quality conclusions from the prior complete review remain supported by byte identity. Amendment tooling requires the four corrections above and a focused recheck before technical approval.
+
+**Declined to judge:** this review does not establish genuine live provider-pause behavior, fulfillment of the original six-second duration target, or qualification of unchanged default CPS14. These are explicit accepted limitations: pause remains unverified/deferred; the actual6.60-second response remains an observed failure with an accepted release disposition; physical qualification is CPS12/cap72. I did not infer acoustic causes, zero glitches, remote-provider cessation, current account behavior or new physical performance. Those limitations are visible, not hidden exclusions from the review. No new physical or paid checks were performed or are needed for the corrections identified here.
+
+Technical merge recommendation: **request changes at `5083687`**. After the bounded corrections, authentic final-review archive, regenerated disposition and independent recheck, require successful exact-final-candidate verification and the registered Test/Review process. Owner merge approval, sanctioned integration, target reachability and Close remain separate obligations.
+
+Normal **Stop11 exited0** before this response. It reported `Unknown active min (wall 11)`; I do not substitute invented timing. All reviewer command sessions completed, test fixtures cleaned up, and binding/resources were released. No tracked source, index, HEAD or branch was changed; no application server, browser, microphone or provider resource was opened.

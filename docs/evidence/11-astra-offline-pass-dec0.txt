@@ -1,0 +1,28 @@
+Correction review at `dec0d2295f03277624614ce990ff9efbe04caf26`, compared with reviewed `7294c3ebd7138781d5e60eb287a8166787b4abd7`; whole-story base `31948e8d40ce11bf36a1ca74cc4363a9643f7757`.
+
+Reviewer: same distinct native Astra6/high seat, SID `01a13c7c-c4a4-7760-8b80-278687d46e54`. Ordinary native code review.
+
+**Offline implementation Spec: PASS. Quality: PASS. No remaining actionable findings in this correction review.** This is not final whole-story acceptance: all mandatory L1–L8 live provider/device cases remain unverified.
+
+All three findings are resolved:
+
+- `packages` remains schema-version-1 `Record<string,string>`, with context-qualified keys preserving actual workspace resolution.
+- `VadCallbacks.end(capture,samples)` again takes exactly two arguments. Adapter-local timing marks precede the unchanged callback; documentation distinguishes adapter and capture token namespaces.
+- The joined suite now uses `tests/browser/typed-system.spec.ts`, with current documentation references updated.
+
+Independent checks at this head:
+
+- `node node_modules/vitest/vitest.mjs run tests/scripts/verify-live.test.ts tests/scripts/verify-docs.test.ts tests/voice/vad-measurements.test.ts tests/voice/capture-module.test.ts tests/voice/capture-session.test.ts tests/voice/measurements.test.ts`: **89 passed, six files**.
+- `PLAYWRIGHT_LAST_RUN_OUTPUT_FILE=.tmp/playwright-last-run.json npm run test:browser -- tests/browser/capture.spec.ts tests/browser/typed-system.spec.ts`: **six passed**.
+- `npm run verify:docs` and `npm run typecheck`: **passed**.
+- Independent inspection confirmed 29 flat string-valued package entries, retrieval AJV **8.17.1**, report/package equality, and continued rejection of incomplete live evidence.
+
+Working-tree and exact-HEAD source digests match:
+
+`72074dde94ba9256aabe29034fb3f90fd4e25d1cd233a3b02365866dcea8bfcf`
+
+The retained prior native report faithfully preserves its failed verdict, findings, checks, and limitations: **4483 bytes**, SHA-256 `50153e5127a7ddfbff7eedb44b08d17e4ec01331614918acc1019cb13cd1d89e`.
+
+The broader matrix and production probes previously reported remain bound to `7294c3e`; they were not represented as rerun at this correction head. No paid/provider calls or physical microphone/headset/speaker acceptance occurred. Browser capture used explicitly synthetic input.
+
+Checkout is clean at the reviewed SHA. All reviewer commands and owned processes completed; ports 3000/3001 have no listeners. **All build, browser, test, and port resources are released to the author.**

@@ -1,3 +1,4 @@
+import { observe } from '../measurements';
 import type { TurnController, TurnToken } from '../turn-controller';
 import type { CaptureToken } from './capture-session';
 import type { Playback } from './playback';
@@ -37,6 +38,12 @@ export class Interruption {
     if (this.candidate) this.candidate.phase = 'consumed';
     this.advance();
     const answerToken = this.deps.answerToken();
+    observe('vad-raw-start', {
+      turnId: answerToken?.turnId,
+      captureEpoch: capture.epoch,
+      utteranceId: capture.utteranceId,
+      intentVersion: capture.intentVersion,
+    });
     const candidate: Candidate = { capture, answerToken, phase: 'tentative' };
     this.candidate = candidate;
     const output = this.deps.output();
@@ -47,6 +54,17 @@ export class Interruption {
       output.queue.setTentative(answerToken, true);
       const pause = this.pause!;
       pause.settled = output.playback.suspend();
+      void pause.settled
+        .then(() => {
+          if (this.owns(pause))
+            observe('playback-suspended', {
+              turnId: answerToken.turnId,
+              captureEpoch: capture.epoch,
+              utteranceId: capture.utteranceId,
+              intentVersion: capture.intentVersion,
+            });
+        })
+        .catch(() => {});
       void pause.settled.catch((error) => {
         if (this.owns(pause) && candidate.phase === 'tentative') {
           this.stopRetained(pause);
@@ -65,6 +83,12 @@ export class Interruption {
       !this.deps.captureIsCurrent(capture)
     )
       return;
+    observe('vad-confirmed-start', {
+      turnId: candidate.answerToken?.turnId,
+      captureEpoch: capture.epoch,
+      utteranceId: capture.utteranceId,
+      intentVersion: capture.intentVersion,
+    });
     candidate.phase = 'confirmed'; // Canceling the answer must not revoke capture.
     const version = this.advance();
     const old = candidate.answerToken;

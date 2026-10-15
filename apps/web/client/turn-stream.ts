@@ -1,3 +1,4 @@
+import { observe } from './measurements';
 import { AppError } from '../shared/contracts';
 import type { HistoryMessage, TurnEvent } from '../shared/contracts';
 import { parseTurn, validateHistory } from '../shared/validation';
@@ -39,7 +40,9 @@ export async function* startTurn(
   signal.throwIfAborted();
   let response: Response;
   try {
+    observe('turn-request', { turnId: token.turnId });
     response = await fetch(request);
+    observe('turn-headers', { turnId: token.turnId });
   } catch (error) {
     if (
       signal.aborted ||
@@ -111,6 +114,9 @@ export async function* startTurn(
   let terminal: TurnEvent | undefined;
   for await (const e of decodeSse(bytes())) {
     signal.throwIfAborted();
+    observe(e.type === 'stage' ? 'stage-' + e.data.stage : e.type, {
+      turnId: token.turnId,
+    });
     if (e.turnId !== token.turnId)
       throw new SseDecodeError('INVALID_STREAM', 'Mismatched turn.');
     // Delay terminal publication until the codec accepts the entire stream.

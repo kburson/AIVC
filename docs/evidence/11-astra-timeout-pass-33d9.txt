@@ -1,0 +1,23 @@
+Focused review of `33d9cd3ce648f06710c96b011257bde0db795510` against `dec0d2295f03277624614ce990ff9efbe04caf26`; whole-story base `31948e8d40ce11bf36a1ca74cc4363a9643f7757`.
+
+Reviewer: same distinct native Astra6/high seat, SID `01a13c7c-c4a4-7760-8b80-278687d46e54`.
+
+**Scoped offline Spec: PASS. Quality: PASS. No actionable findings.** Mandatory L1–L8 live acceptance remains pending.
+
+The implementation change only floors the bounded timeout passed to both Anthropic SDK methods. It preserves the positive minimum, 60-second cap, existing deadline/cancellation signal, token cap, leases, and zero-retry configuration. Temporary diagnostics are absent from the final source diff.
+
+Independent verification:
+
+- `node node_modules/vitest/vitest.mjs run tests/contracts/search-budget.test.ts tests/integration/typed-turn.test.ts tests/slow/deadlines.test.ts tests/slow/disconnect.test.ts`: **69 passed, four files**.
+- An independent pinned-SDK probe with injected fake fetch reproduced `timeout must be an integer` for both `models.retrieve` and `messages.stream` using `59999.75`. **Fetch calls: zero.**
+- The new fractional-deadline regression passes through the actual SDK with fake transport, asserting one metadata request, one message request, retained search configuration, and `max_tokens:1024`.
+
+Working-tree and reviewed-HEAD source digests match:
+
+`e4ee93ffc87e2e3f2f696f7fbdc42dc6caa93389eb8d57a97bc27f9ff27c169d`
+
+The failed production and diagnostic attempts remain separately recorded without passing live claims. The retained `dec0d229` report matches its documented **2550 bytes** and SHA-256 `4b29e7301e81d1cf8702d0f372771f90c2b226252efdae1788d6157362c8fa51`.
+
+No paid/provider requests, physical-device tests, browser runs, or broad matrix repeats were performed during this focused recheck.
+
+Checkout is clean at the reviewed SHA. All reviewer commands completed; ports 3000/3001 have no listeners. **All build/browser/test/port resources are released to the author.**

@@ -37,6 +37,33 @@ repairs remains approval deferred where already recorded.
 - The original AC referenced full `npm run test:slow` before the canonical Test phase, while the stamper reserves that full lane for Test. The public issue-body operation made VC2 the accepted targeted rapid-interruption file and retained the complete slow suite as VC9. Scope, AC text/citations, rank, refinement semantics and full Test floor stayed intact; mutation read-back passed at body version72.
 - Distinct preliminary Astra review identified a never-settling recovery gap despite the initial green interruption/playback/capture suites. The author reproduced the missing pre-end speech-status failure in a red test, then added the existing two-second resume limit as a transition-owned deadline. New candidate/Stop tests check retirement of the obsolete deadline. The final distinct review passed corrected source `e0ed8a8`, independently checking204 targeted tests,12 browser cases and seven extra controlled Chromium probes. Canonical exact-head Test remains a separate gate.
 
+## Story #11 additional observations
+
+- The public deep-dive mirror help places `--from-comment <id>` before the issue number. Supplying the issue first made the early parser treat the numeric comment ID as the target and return `bind-mismatch`; the genuine issue binding was unchanged. The documented argument order is the supported retry, without a new helper or framework change.
+- The same genuine story session can be normally paused during dependency waits and resumed for released work. Its actual binding generation, branch and clean feature fast-forward were preserved; preparation did not authorize Plan or implementation before predecessor completion.
+- The root credential file is not automatically loaded by the two-process launcher because Next runs in `apps/web`. Live setup must explicitly supply server-only process environment. Configuration names, model metadata and actual provider observations stay separate from credentials and from each other.
+
+- The original #11 acceptance criterion cited full `test:slow` before canonical Test, while the stamper reserves that full command for Test. Public issue-body replacement made VC6 the focused documentation/live verifier tests and retained full slow as VC15. The epic-trail VC now explicitly targets parent2; its bare form targets the bound child and has no child trail to verify. Scope, acceptance text, rank and full verification floors remain unchanged.
+- The exact accepted specification transfer has historical Markdown formatting that fails the authored-file formatter. The transfer is checked against both its authoritative SHA256 and original Git bytes before only `docs/specification.md` is excluded from authored formatting/lint inventory. Regression tests reject changed bytes and aliases; existing archived evidence protections remain intact.
+- Plain Explain requires its documented `--json` output flag. A fresh JSON Explain after declaration corrections reports the expected incomplete Develop acceptance evidence; it does not indicate an unfinished predecessor or authorize stage advancement.
+
+- The final joined actual Next/Fastify browser check exposed a native Node26 Request-clone branding defect absent from pure handler/intercepted browser coverage. The actual failing browser run became passing after the bounded reader accepted the original request with a separate cancellation signal. Can a minimal real HTTP smoke run earlier without delaying complete final acceptance?
+- Preliminary distinct #11 component review found null research rows and case-variant duplicate Atlas trials that could pass the timing verifier, plus provider-named credential literals that escaped sanitized-report/docs checks. Four fake-only regressions were observed failing and passing after focused corrections. These are product/evidence correctness findings, separate from administrative friction.
+- Expanding pinned Ubuntu CI to all offline lanes surfaced production server descendants retaining ports after npm wrapper exit. Local owned-process ancestry showed the wrappers; direct production server ownership passed launcher and actual compiled HTTP shutdown checks. Linux confirmation remains a separate CI observation, with no unowned process mutation.
+
+- The first actual #11 provider turn failed despite offline SDK tests and successful account model metadata. Sanitized server diagnostics identified fractional monotonic timeout milliseconds rejected by the pinned Anthropic SDK. An actual SDK/fetch-boundary regression failed and passed after rounding down both bounded options. This is a product integration lesson: fixtures using an untracked infinite deadline had not represented the native bounded deadline path. No account failure or automatic retry was invented.
+
+- Actual physical use exposed a voice-control expectation gap. The participant said, “the audio continued but I told it to cancel, then had to argue until I said "stop"”; they clarified, “eventually I clicked stop button”. Actual STT treated `cancel` and `stop conversation` as ordinary questions. The accepted app has no spoken Stop/cancel command. Preserve this usability observation for later evaluation; it does not authorize a new voice-command feature.
+- A later real speaker run produced the participant's report of choppy audio. One explicit typed public-research diagnostic matched “more detailed answers” to an independent TTS fragment: native sources were contiguous at that boundary, while generated PCM had440–480ms of low-energy tail/head padding. SpeechText also emitted isolated list numbers. Eight focused regressions were observed red before the bounded list-prefix/clause-boundary correction. Browser buffers, PCM samples, APIs and budgets were unchanged; improved boundary placement does not promise seamless independent synthesis.
+
+- The physical muted-output exercise initially looked like missing text despite successful STT/model/SSE. The participant's screenshot matched the latest completed Beacon response; chronological oldest-first cards had hidden the new result below prior content. The owner then explicitly selected newest-first cards and stationary controls above an independently scrolling response pane. A meaningful layout regression reproduced the scroll problem before correction. Product visibility and perceived provider failure need separate diagnosis.
+- The live observer's default Playwright context emulated1280×720 even when the real Chrome window was enlarged. A blank native-window resize probe reproduced that harness limitation; the next observer uses `viewport:null`. Could physical acceptance harnesses establish native window behavior before asking a participant to diagnose layout?
+- The author’s ordinary child commit was evaluated against the root native task context. A registered Stop/start handoff let the genuine root orchestrator commit/push the author’s exact staged files with explicit authorship provenance, then restore both genuine bindings. No hook override or copied identity was used. Can ordinary child-worktree commit context be resolved without an additional transport handoff?
+
+- An ordinary Python test edit was refused because its literal HTTP `/release` endpoint was classified as an out-of-scope filesystem path; the ordinary patch tool separately reported an invalid patch payload. Separate normal file edits and the existing public test configure helper completed the approved change, without altering guards, encoding the path or adding a framework helper.
+
+- Independent short-window review exposed a zero-height response pane despite green desktop/narrow700 layout checks. The actual900×400 red regression justified a shrinking, scrollable upper controls region with a separately reserved usable response area. Viewport width alone had not covered short-window reachability; this is a concrete product review finding, not administrative friction.
+
 ## Controls with demonstrated delivery value
 
 Independent #8 review found concrete playback and recovery defects that the author
@@ -93,3 +120,29 @@ For each proposed simplification, identify the failure it prevents, the observed
 cost, the smallest change, and the evidence that the change preserves correctness
 and owner control. Prefer removing redundant work over adding another recovery
 layer. Do not make completion of this evaluation a new prerequisite for AIVC.
+
+## Story #11 evidence-policy observations
+
+The fresh independent Astra6/high audit at `c63c4d2` authenticated the saved
+physical observations, source digests, raw-file hashes and timing calculations.
+It identified unchanged provider/capture/interruption/playback boundaries across
+the later segmentation and UI corrections. Those historical observations remain
+useful, while the accepted verifier requires one current whole-source digest.
+Allowing reviewed evidence to carry forward by affected boundary would require
+an explicit evidence-contract amendment; the audit did not grant one. Evaluate
+that tradeoff later rather than silently relaxing current acceptance or repeating
+all answered physical rounds as a substitute for an owner decision.
+
+The same audit distinguished conforming visible compatibility truncation from
+the separate mandatory successful omitted-tool/provider-pause gate. Further paid
+searches without a discriminating hypothesis are not justified. This is a
+product/provider acceptance decision, distinct from administrative workflow cost.
+
+Fresh successor commit transport again required normal author Stop, root
+pause2/start11 with the explicit foreign-worktree exception, registered commit
+trace, root Stop11 and resume2. Explicit child tool workdir and literal shell cd
+still left the hook evaluating the original epic invocation context; the recorded
+supported Node exception and exact child Git context worked. No identity copying,
+hook changes, fabricated timing or lifecycle bypass was used. These observations
+are retained for direction C evaluation after delivery, not a framework-work
+prerequisite.

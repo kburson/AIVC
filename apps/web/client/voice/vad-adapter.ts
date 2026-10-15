@@ -1,3 +1,4 @@
+import { observe } from '../measurements';
 export type CaptureToken = Readonly<{
   epoch: number;
   utteranceId: number;
@@ -45,11 +46,13 @@ export async function createVad(
   const { MicVAD } = await import('@ricky0123/vad-web'); // Module entry, never its CDN bundle.
   if (MicVAD.lifecyclePatchRevision !== VAD_LIFECYCLE_REVISION)
     throw Error('Pinned VAD lifecycle patch is not applied.');
+  observe('vad-module', { revision: MicVAD.lifecyclePatchRevision });
   if (!globalThis.location?.origin)
     throw Error('Capture requires a browser origin.');
   const assets = new URL('vad/', globalThis.location.origin);
   const ortAssets = new URL('vad/ort/', globalThis.location.origin);
   const epoch = ++allocationEpoch;
+  let lastSpeechFrameAt = 0;
   let utteranceId = 0,
     capture: CaptureToken | null = null,
     phase: 'tentative' | 'confirmed' | null = null;
@@ -69,6 +72,7 @@ export async function createVad(
     pauseStream: stopStream,
     resumeStream: async () => acquireStream(),
     onSpeechStart: () => {
+      lastSpeechFrameAt = performance.now();
       capture = Object.freeze({
         epoch,
         utteranceId: ++utteranceId,
@@ -95,9 +99,19 @@ export async function createVad(
       const token = capture;
       capture = null;
       phase = null;
+      const endCallbackAt = performance.now();
+      observe('vad-frame-end', {
+        vadEpoch: token.epoch,
+        vadUtteranceId: token.utteranceId,
+        lastSpeechFrameAt,
+        vadEndDelayMs: Math.max(0, endCallbackAt - lastSpeechFrameAt),
+      });
       callbacks.end(token, samples);
     },
-    onFrameProcessed: (_probs, samples) => callbacks.frame(samples),
+    onFrameProcessed: (probs, samples) => {
+      if (probs.isSpeech >= 0.25) lastSpeechFrameAt = performance.now();
+      callbacks.frame(samples);
+    },
   });
   const pause = vad.pause,
     destroy = vad.destroy;

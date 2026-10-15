@@ -1,0 +1,55 @@
+Targeted independent assessment at `3e0303686e550c166d4958f19d3c29123830494c`, source digest `ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51`.
+
+Reviewer: same genuine native Astra6/high session, SID `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`. Ordinary review; no sealed or lifecycle acceptance.
+
+**One new P2 finding: pending search IDs are incorrectly reported as actual search usage.** The supplied native evidence establishes this defect independently of the correctly implemented compatibility fallback.
+
+At [claude.ts:44](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/apps/web/server/providers/claude.ts:44), `accountSearch()` returns the number of observed search-use IDs when the provider usage counter is absent. A search-use block can represent pending work. In the observed request, two pending IDs became `searchUses: 2` in public terminal usage despite zero result pairs and no native search counter. This conflicts with the accepted requirement to omit unknown usage.
+
+The existing test at [search-budget.test.ts:200](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/tests/contracts/search-budget.test.ts:200) codifies that incorrect assumption by expecting two searches from native IDs alone. It needs a semantic correction, not merely another passing test.
+
+The new diagnostic establishes the failure cause for **this request**:
+
+- Native round 1 ended with `tool_use`, **not `pause_turn`**.
+- It contained two pending `web_search` server-tool IDs, zero search-result pairs, and one `lookup_projects` client call.
+- Native usage contained 2387 input and 154 output tokens, with no `server_tool_use.web_search_requests` counter.
+- The next outgoing request retained all four assistant blocks: whole-content JSON/canonical hashes and every corresponding block hash match.
+- That request defined only `lookup_projects`.
+- The original HTTP 400 explicitly identified the pending search ID, missing corresponding result, and omitted `web_search` definition.
+- The application then emitted its specified truncated fallback, with Atlas active/North/3 and no citations.
+
+Thus, missing search-tool definition on a **mixed pending server/client continuation** caused the observed rejection. No budget overrun, retry, or prior-block rewriting is evidenced. This does not prove a provider-pause case or establish the native cause of the earlier `69e8e493` run.
+
+I independently verified all five supplied artifact hashes, compared the native and outgoing block summaries, and inspected the observer implementation. It forwards original fetch arguments and returns the original Response while parsing a bounded background clone. The diagnostic’s timing exclusion is appropriate: clone read-ahead can affect latency. The saved offline observer proof supports transport identity and contained failure behavior; I did not rerun that observer harness or make provider calls.
+
+Read-only offline probes against the actual `accountSearch()` reproduced:
+
+- Two pending IDs, absent counter → **2**.
+- One completed pair plus one pending ID, absent counter → **2**.
+- Stream-only ID, absent counter → **1**.
+- One completed pair, absent counter → **1**.
+- Supplied counter 1 without blocks → **1**.
+- Two pending IDs with supplied counter 0 → **null**, under the existing conservative consistency check.
+
+The focused existing accounting/unknown-budget tests passed: **9 passed, 24 skipped**. Their pass confirms the current behavior, including the faulty IDs-only expectation.
+
+The smallest correction within the approved design is:
+
+1. **Tighten the absent-counter fallback.** Return `null` when IDs remain unresolved, exist only in streamed projections, or have malformed/ambiguous pairing. Infer a numeric count only from validated, distinct completed search-use/result pairs with no unresolved observed search IDs. Do not infer zero from missing evidence.
+2. **Preserve supplied-counter safeguards.** Keep finite nonnegative integer validation, existing fail-closed consistency checks, and valid counter-only handling. Do not relax those checks to enable pending searches as part of this fix. A counter that conflicts with pending-ID cardinality can conservatively remain unknown; pending cardinality is not itself executed-use evidence.
+3. **Reuse the existing unknown path.** [run-turn.ts:117](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/apps/web/server/turns/run-turn.ts:117) already sets remaining search budget to zero and removes unknown public `usage.searchUses`. No new interface, pin, budget, tool API, or retry behavior is required.
+
+Meaningful regressions should cover:
+
+- The observed mixed-call shape: two pending search IDs, absent counter, client lookup, preserved native continuation, omitted search tool, HTTP 400, explicit truncation, and **no public `searchUses` field**.
+- A completed pair plus an unresolved pending ID returning unknown.
+- Valid completed-pair fallback and stream/final deduplication without double counting.
+- Stream-only IDs, malformed IDs/pairing, duplicate or contradictory final records, absent evidence, and invalid counters remaining unknown.
+- Valid supplied counters, including zero and counter-only records, retaining the intended conservative behavior.
+- Across later rounds, unknown usage keeping search disabled and public total omitted—even if a later round reports a known counter—with no extra request or restored budget.
+
+This correction fixes reporting truthfulness. It deliberately **does not solve** the required successful omitted-tool/pause acceptance case. The owner’s full-scope choice remains in effect: L6 success and the other outstanding live obligations stay unmet. Do not rewrite historical observations; add a disposition distinguishing the newly proven computed usage error from genuine provider counters.
+
+**Recommendation: implement this bounded P2 correction, then request its targeted independent recheck. Whole-live acceptance and merge readiness remain NOT PASSED.**
+
+No tracked files were changed and no scratch report was written. HEAD remained clean and unchanged. My normal admitted `stop 11 --allow-foreign-worktree` exited 0; it reported active minutes as Unknown, which I left unchanged. All reviewer resources are released.

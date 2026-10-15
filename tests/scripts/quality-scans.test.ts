@@ -6,7 +6,9 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterEach, expect, it } from 'vitest';
+import { afterEach, afterAll, expect, it } from 'vitest';
+import { execFileSync } from 'node:child_process';
+import { renameSync, symlinkSync } from 'node:fs';
 import { enumerateOwnedFiles } from '../../scripts/format-check.mjs';
 
 const roots: string[] = [];
@@ -222,3 +224,122 @@ it('ESLint rejects undefined JavaScript names across authored service and toolin
   for (const result of await eslint.lintFiles(paths))
     expect(result.errorCount).toBe(0);
 });
+
+it('preserves the exact accepted native pair as integrity exclusions rather than Markdownlint passes', async () => {
+  const { lintMarkdown } = await import('../../scripts/lint-markdown.mjs');
+  const paths = ['review-manifest.md', 'reviewer-response-1.md'].map(
+    (name) =>
+      'docs/peer-reviews/spec/live-acceptance-amendment-review-d37abf9831b9cc30583d0df9ef47d2f9/spr/' +
+      name,
+  );
+  const before = paths.map((path) => readFileSync(path));
+  const messages: string[] = [];
+  expect(await lintMarkdown({ log: (message) => messages.push(message) })).toBe(
+    0,
+  );
+  for (const [index, path] of paths.entries()) {
+    expect(readFileSync(path)).toEqual(before[index]);
+    expect(messages.join('\n')).toContain(
+      'Integrity-verified immutable evidence (not linted): ' + path,
+    );
+  }
+  expect(messages.join('\n')).toMatch(/2 integrity-verified exclusions/);
+}, 15000);
+
+const lintGroup =
+  'docs/peer-reviews/spec/live-acceptance-amendment-review-d37abf9831b9cc30583d0df9ef47d2f9/spr';
+let lintRoot: string | undefined;
+function anchoredLintFixture() {
+  if (!lintRoot) {
+    lintRoot = mkdtempSync(join(process.cwd(), '.scratch/anchored-lint-'));
+    execFileSync('git', [
+      'clone',
+      '--shared',
+      '--quiet',
+      process.cwd(),
+      lintRoot,
+    ]);
+  }
+  rmSync(join(lintRoot, lintGroup), { recursive: true, force: true });
+  execFileSync(
+    'git',
+    ['reset', '--hard', '63fdb6911a87d2978551e0a86c7387a53cfc0461'],
+    { cwd: lintRoot },
+  );
+  execFileSync('git', ['clean', '-fd'], { cwd: lintRoot });
+  return lintRoot;
+}
+afterAll(() => {
+  if (lintRoot) rmSync(lintRoot, { recursive: true, force: true });
+});
+for (const kind of [
+  'corrupt',
+  'missing',
+  'file alias',
+  'parent alias',
+  'lineage',
+] as const)
+  it(
+    'propagates ' + kind + ' sealed integrity failure before lint exclusion',
+    async () => {
+      const { lintMarkdown } = await import('../../scripts/lint-markdown.mjs');
+      const root = anchoredLintFixture();
+      const path = join(root, lintGroup, 'reviewer-response-1.md');
+      if (kind === 'corrupt')
+        writeFileSync(path, readFileSync(path, 'utf8') + '\n');
+      if (kind === 'missing') rmSync(path);
+      if (kind === 'file alias') {
+        renameSync(path, path + '.original');
+        symlinkSync(path + '.original', path);
+      }
+      if (kind === 'parent alias') {
+        const dir = join(root, lintGroup);
+        renameSync(dir, dir + '-original');
+        symlinkSync(dir + '-original', dir);
+      }
+      if (kind === 'lineage')
+        execFileSync(
+          'git',
+          [
+            'update-ref',
+            'refs/replace/71fc7115200bd94e7872c3e2f5dc3e15fd10bbce',
+            '385d11b2448dac5bf01400bb7c11834bfefbfbfd',
+          ],
+          { cwd: root },
+        );
+      try {
+        await expect(lintMarkdown({ root, log: () => {} })).rejects.toThrow();
+      } finally {
+        if (kind === 'lineage')
+          execFileSync(
+            'git',
+            ['replace', '-d', '71fc7115200bd94e7872c3e2f5dc3e15fd10bbce'],
+            { cwd: root },
+          );
+      }
+    },
+  );
+it('still lints copied native response, exact startup/invitation and unrelated Markdown', async () => {
+  const { lintMarkdown } = await import('../../scripts/lint-markdown.mjs');
+  const root = anchoredLintFixture();
+  writeFileSync(
+    join(root, 'copied-native.md'),
+    readFileSync(join(root, lintGroup, 'reviewer-response-1.md')),
+  );
+  const messages: string[] = [];
+  expect(await lintMarkdown({ root, log: (m) => messages.push(m) })).toBe(1);
+  expect(messages.join('\n')).toContain('copied-native.md');
+  rmSync(join(root, 'copied-native.md'));
+  for (const name of ['author-startup.md', 'reviewer-invitation.md']) {
+    const path = join(root, lintGroup, name);
+    const original = readFileSync(path);
+    writeFileSync(path, '#Title\n');
+    expect(await lintMarkdown({ root, log: () => {} })).toBe(1);
+    writeFileSync(path, original);
+  }
+  writeFileSync(
+    join(root, 'ordinary.md'),
+    '<!-- markdownlint-disable -->\n\n#Title\n',
+  );
+  expect(await lintMarkdown({ root, log: () => {} })).toBe(1);
+}, 15000);

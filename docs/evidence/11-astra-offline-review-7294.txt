@@ -1,0 +1,35 @@
+Offline review of `7294c3ebd7138781d5e60eb287a8166787b4abd7`, base `31948e8d40ce11bf36a1ca74cc4363a9643f7757`.
+
+Reviewer: distinct native Astra6/high seat, SID `01a13c7c-c4a4-7760-8b80-278687d46e54`. Ordinary native code review.
+
+**Offline implementation Spec: FAIL pending the corrections below. Quality: changes requested.** No final whole-story verdict: mandatory L1–L8 provider/device acceptance remains unverified.
+
+Findings:
+
+1. **P2 — Preserve the accepted package-report value type.** [verify-live.mjs:108](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/scripts/verify-live.mjs:108) now emits nested workspace objects, and the evidence report retains `schemaVersion:1`. Accepted scope specifies `packages:Record<string,string>`. Workspace-aware resolution correctly fixes retrieval AJV identification, but context-qualified flat keys can preserve that resolution and the accepted interface.
+
+2. **P2 — Preserve the declared two-argument VAD end callback.** [vad-adapter.ts:11](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/apps/web/client/voice/vad-adapter.ts:11) adds optional timing metadata; [capture-session.ts:287](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/apps/web/client/voice/capture-session.ts:287) consumes it. Base plan `cb82f730…` explicitly declares `end(capture,samples)`; amendment `6eda972a…` preserves that interface. The extension is structurally backward-compatible, and no consumer failure was observed, but the diagnostic extension lacks accepted authorization. Preserve two arguments and correlate timing without changing that seam.
+
+3. **P3 — Use the accepted joined-test path.** The delivered [system.spec.ts](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/tests/browser/system.spec.ts) should be `tests/browser/typed-system.spec.ts`, as specified repeatedly in accepted scope/amendment. Update documentation links with the rename. Its tested behavior passed.
+
+The preliminary timing and credential findings are corrected: the four focused regressions independently passed in the current suite. Research rows containing no measured durations are rejected; capitalization cannot duplicate Atlas trials; provider-named credentials are rejected in observations and README examples.
+
+Independent verification:
+
+- `node --version` / `npm --version`: **26.8.1 / 12.0.2**.
+- `node node_modules/vitest/vitest.mjs run tests/scripts tests/contracts tests/integration tests/voice tests/slow tests/ui`: **612 passed, 49 files**. Includes verifier regressions, capture/interruption preservation, admission/body/deadline/lease checks, and compiled two-process HTTP/shutdown integration.
+- `PLAYWRIGHT_LAST_RUN_OUTPUT_FILE=.tmp/playwright-last-run.json npm run test:browser`: **15 passed**, including three real Next/Fastify cases without turn interception.
+- `npm run test:evidence`: **10 passed**.
+- `AIVC_MODE=mock npm run build:clean`, `npm run typecheck`, `npm run verify:docs`, `npm run lint`, and `npm run format:check`: **passed**. Markdown: 152 files, zero findings; formatting: 315 files, zero findings.
+- Additional inline probes passed combined-signal cancellation of a stalled body, body deadline cancellation, and Origin rejection before body access. Each canceled body was canceled once with zero upstream work.
+- Additional production probes passed actual Atlas SSE, foreign-Origin rejection, SIGINT shutdown, and unexpected retrieval-child exit shutting down its sibling. Both ports became reusable. The first probe omitted required numeric configuration and failed setup; the corrected mock-only probe passed without product changes.
+
+Source digest independently matched both working tree and reviewed HEAD:
+
+`f7bcc742330cea00b246754600fa571cfda983119a0e3abbbca76f041aedfe38`
+
+Installed VAD metadata genuinely lacks `gitHead`. Retrieval resolves AJV **8.17.1**, distinct from root transitive **6.15.0**. Both installed VAD implementation/declaration blobs match their patch postimages; locked upstream integrity matches. The read-only live verifier correctly rejects the incomplete report.
+
+No paid/provider, physical microphone, headset/speaker, acoustic, or live-search acceptance was performed or inferred. Linux CI success was reported by root, not independently executed here.
+
+All reviewer processes completed; ports 3000/3001 have no listeners. Checkout remains clean at the reviewed SHA. **All runtime/build/browser/test resources are released to the author for the bounded fixes.**
