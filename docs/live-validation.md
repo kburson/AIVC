@@ -174,3 +174,12 @@ executed usage. The bounded correction requires completed pairs for absent-count
 fallback and reuses the existing unknown/omitted usage path without restoring
 budget. Current changed source awaits independent recheck and genuine live
 qualification under the unchanged whole-source gate.
+
+A [single ordered corrected-source diagnostic](evidence/11-native-search-ordered-385d11b.json)
+then observed both matched completed search results before client lookup, followed
+by accepted search omission and unchanged native prior blocks. The public total
+remained omitted when a later round had unknown search usage. No structured
+sources SSE event/native citation evidence or provider pause was captured. It is
+a successful ordinary boundary observation with all observer-assisted timing
+excluded; full L6 and observer-free current-source physical acceptance remain
+unverified. Clean baseline readiness precedes any new participant request.

@@ -461,3 +461,62 @@ Lint, format and docs checks passed; read-only live verification exited1 with
 the expected stale-source and outstanding fail/unverified acceptance reasons.
 This checkpoint requests targeted independent source recheck, not whole-live
 acceptance, canonical Test or later delivery gates.
+
+## Reviewed correction and ordered-search continuation
+
+The same distinct Astra6/high reviewer returned scoped Spec/Quality PASS at
+`385d11b2448dac5bf01400bb7c11834bfefbfbfd`, source
+`cfa3cca0d676f4e98545aa965c6526f7c098ddbbaca6de6c3784a3b1262707bf`,
+with no remaining finding in the seven-file correction. Its
+[unchanged native response](../evidence/11-astra-accounting-fix-385d11b.txt) is
+5561 characters/5565 UTF-8 bytes, SHA256
+`d1e877dc42257d087f41d84a798dd0db2a89dcc769d10abcd377eb4fba855813`,
+message `msg_0cf7ad7b97c73867016ad0580916588195afb8852b994ced0f`, same reviewer
+SID `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`. Independent 63 accounting tests,
+both-workspace typecheck and docs passed; live verification remained nonpassing.
+This is ordinary scoped review, not whole-live or lifecycle acceptance.
+
+After fresh verified-module build:clean, production build
+`O9qVb3AkQrdBpNGEUkEyB` served exact 385d/source cfa3 to actual Chrome 155.0.8059.40
+on macOS with native 1200×1279 content, both mutes on and zero acquired tracks.
+A separate one-shot ordered prompt explicitly required both web-search results
+before catalog lookup. The [new sanitized diagnostic](../evidence/11-native-search-ordered-385d11b.json)
+preserves that actual request and its native/public observations separately
+from the earlier 69e8/bfe61 failures.
+
+Turn `9866542c-9f0c-4495-8e22-cf51aa609dda` completed HTTP 200/SSE. First native
+round `tool_use` contained two search-use blocks at indices 1/2, matching completed
+results at 3/4 and catalog lookup at 6. Its authoritative search counter was 2,
+with 15236 input/201 output tokens. The next outgoing request offered only
+lookup_projects, retained all seven native blocks with matching whole-content and
+per-block JSON/canonical hashes, and was accepted with `end_turn`. That round
+reported 11202 input/240 output tokens and no search counter. The public completed
+answer reported 26438/441 tokens and omitted unknown cumulative search usage;
+the UI displayed unavailable. Atlas rendered active/North/3. No API/observer
+error, cap, retry, budget reset/increase or policy/flag change occurred.
+
+The final answer contained official-site Markdown links, but no structured
+`sources` SSE event or native citation evidence was captured. The hash/type
+observer does not prove categorical absence of native citation payloads. Those
+links alone do not establish structured-citation acceptance. The response also
+included prefatory narration; no strict three-sentence compliance is claimed.
+No `pause_turn` occurred. This is successful ordinary completed-result omission,
+not required provider-pause acceptance or complete L6 qualification.
+
+The unchanged observer core and offline proof retain hashes 1d65f669/4b2b1db0.
+A unique-output wrapper retained the original request/Response behavior and
+explicitly labeled the core's old ID-fallback accounting projection as historical.
+Only actual native counters/results and actual public usage support current
+accounting conclusions. Observer-assisted latency remains excluded from baseline
+timing. Both mutes stayed on, with zero microphone tracks, speech requests and
+native audio sources; no browser MicVAD marker or physical acceptance was obtained.
+Owned browser exited 0, server exited 130 after SIGINT and both ports closed.
+
+The next phase is a clean production restart with NODE_OPTIONS and the passive
+fetch-observer activation explicitly unset. A documentation-only descendant may
+reuse the clean O9qV build after unchanged source/module/patch bytes and served
+build provenance are checked. A fresh browser with a unique output path must
+reach idle Ready, both mutes on, zero turns/tracks, before the root asks for human
+participation. No microphone starts during this preparation. Baseline physical
+qualification and the existing missing Speaking-candidate/native-resume correlation
+remain pending under the unchanged whole-source gate.

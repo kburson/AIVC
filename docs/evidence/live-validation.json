@@ -89,9 +89,9 @@
     },
     {
       "id": "L6",
-      "status": "fail",
-      "observations": "33d9: actual sources and searchUses 1 observed in typed 41780eda and microphone research 0c94862f/59d426d5. First speaker reply stopped after 4/16 eligible segments; second delivered 16/16 before later Stop. Actual microphone research timing is preserved below. No historical genuine exhausted/pause success established. Current d98 uses 2 then explicit incompatible truncated fallback; current citations absent, wire identity/pause unverified.",
-      "artifact": "docs/evidence/11-live-search-continuation-d98.json"
+      "status": "unverified",
+      "observations": "33d9: actual sources and searchUses 1 observed in typed 41780eda and microphone research 0c94862f/59d426d5. First speaker reply stopped after 4/16 eligible segments; second delivered 16/16 before later Stop. Actual microphone research timing is preserved below. No historical genuine exhausted/pause success established. Current d98 uses 2 then explicit incompatible truncated fallback; current citations absent, wire identity/pause unverified. Separate corrected385d turn9866542c completed two matched results before lookup, then accepted omitted-search continuation with seven prior blocks identical. Native round1 counter2; round2 absent counter; public total omitted. No structured sources SSE event/native citation evidence or pause captured. Earlier failed trials remain unchanged; full L6 remains unverified.",
+      "artifact": "docs/evidence/11-native-search-ordered-385d11b.json"
     },
     {
       "id": "L7",
@@ -124,6 +124,7 @@
     "This report binds only the current d98 muted typed run. Historical33d9/96ee microphone/listening/echo/timing/usage evidence is separately source-bound in docs/evidence/11-live-partial-history.json and not relabeled current.",
     "All required cases remain fail/unverified pending independent evidence assessment and genuinely missing acceptance. No Test/Review/Close transition is authorized by this checkpoint.",
     "Earlier 69e8 application-reported searchUses:2 remains preserved in its original artifact. Its native counter was not observed. Separate 3e030/bfe61 native evidence proves pending-ID fallback can invent public usage; summary actual-only usage therefore omits the unverified search counter. No retroactive native-cause claim is made.",
-    "The corrected accounting source has not yet received live qualification. This report retains its original tested source/build and is deliberately stale against the changed source until genuine new evidence exists."
+    "The corrected source has only the separately source-bound ordered diagnostic; observer-free baseline/physical qualification is pending. The summary retains its original tested source/build and remains deliberately stale until clean baseline evidence is assembled.",
+    "Corrected-source ordered continuation succeeded as an ordinary tool_use/end_turn sequence. No provider pause or structured sources SSE/native citation evidence was captured; observer-assisted timing does not establish baseline acceptance."
   ]
 }
