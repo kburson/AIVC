@@ -1,5 +1,6 @@
 import type { ModelRoundInput } from '../../apps/web/server/providers/contracts';
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
+import { runWithDeadline } from '../../apps/web/server/turns/deadline';
 import type Anthropic from '@anthropic-ai/sdk';
 import {
   ClaudeAdapter,
@@ -725,4 +726,32 @@ it('an in-flight successful search cannot erase a concurrent explicit account re
     state: 'unavailable',
     accountValidation: 'unavailable',
   });
+});
+it('uses integer SDK timeouts inside a fractional monotonic deadline without replay or increasing the token cap', async () => {
+  let now = 100;
+  const clock = vi.spyOn(performance, 'now').mockImplementation(() => now);
+  const t = transport([nativeRound({ text: 'Done' }).message]);
+  const c = caps();
+  try {
+    const run = runWithDeadline(
+      60000,
+      new AbortController().signal,
+      async (signal) => {
+        now = 100.25;
+        return collect(sdk(t, c).runRound(modelInput(), signal));
+      },
+    );
+    const events = await run.result;
+    await run.settled;
+    expect(events).toContainEqual({ type: 'text', text: 'Done' });
+    expect(t.modelCalls()).toBe(1);
+    expect(t.requests).toHaveLength(1);
+    expect(t.requests[0].max_tokens).toBe(1024);
+    expect(t.requests[0].tools.some((tool) => tool.name === 'web_search')).toBe(
+      true,
+    );
+    expect(c.search.state).toBe('configured');
+  } finally {
+    clock.mockRestore();
+  }
 });

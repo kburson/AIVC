@@ -89,7 +89,7 @@ interface using context-qualified keys; preserve exactly two arguments to
 VadCallbacks.end and keep timing in adapter-local marks; and use the accepted
 `tests/browser/typed-system.spec.ts` path. The focused callback and flat-map
 regressions were observed failing before correction. No live acceptance verdict
-is claimed by the offline checks. Same-seat correction review remains pending.
+is claimed by the offline checks. The same-seat correction recheck is recorded below; actual live acceptance remains pending.
 
 The [unchanged native whole-offline response](../evidence/11-astra-offline-review-7294.txt)
 has4483 UTF-8 bytes, SHA256
@@ -98,3 +98,30 @@ native message `msg_03981de7adb10efe016ad01f36fe848194b1751b92e57bf5aa`
 from the same genuine reviewer SID above. Its specification FAIL/quality changes
 requested is preserved; independent offline passes do not replace the requested
 compatibility corrections or actual provider/device evidence.
+
+## Actual provider qualification failure and focused fix
+
+The same-seat correction recheck at exactdec0d229 returned offline Spec PASS and
+Quality PASS:89 focused tests, six capture/joined browser cases and typecheck/docs
+passed. Its [unchanged native response](../evidence/11-astra-offline-pass-dec0.txt)
+is2550 UTF-8 bytes, SHA256
+`4b29e7301e81d1cf8702d0f372771f90c2b226252efdae1788d6157362c8fa51`,
+native message `msg_03981de7adb10efe016ad0202137b8819489c8c5a78a197643`.
+This offline verdict did not claim actual L1–L8 acceptance.
+
+A clean production build then served actual Live capabilities and explicit models
+to real desktop Chrome155.0.8059.40. The first deliberate typed Atlas question
+was accepted as local HTTP200/SSE and failed with MODEL_FAILED. One separate
+diagnostic Atlas request exposed the original error at both Models lookup and
+Messages streaming: `timeout must be an integer`. The SDK rejects fractional
+remaining monotonic milliseconds locally. The metadata-only Node probe had used
+an integer timeout, so it did not cover this native deadline path.
+
+[Both failed attempts](../evidence/11-live-failed-attempts.json) remain distinct;
+the second had temporary sanitized diagnostics and is not frozen-source acceptance.
+The diagnostics were restored before the permanent change. A deterministic
+fractional-deadline test through the actual pinned SDK/fetch boundary reproduced
+the same error, then passed after flooring both bounded positive timeout options.
+All69 owning search/deadline/disconnect/typed-loop tests pass. Overall deadline,
+cancellation, paid leases, token cap and zero-retry behavior are unchanged.
+Actual provider/device acceptance still requires a fresh reviewed build/run.

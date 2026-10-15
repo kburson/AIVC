@@ -101,7 +101,10 @@ export class ClaudeAdapter implements ModelAdapter {
         {},
         {
           signal,
-          timeout: Math.max(1, Math.min(60000, deadlineRemainingMs(signal))),
+          timeout: Math.max(
+            1,
+            Math.floor(Math.min(60000, deadlineRemainingMs(signal))),
+          ),
         },
       );
       if (this.checked) return;
@@ -156,7 +159,10 @@ export class ClaudeAdapter implements ModelAdapter {
       },
       {
         signal,
-        timeout: Math.max(1, Math.min(60000, deadlineRemainingMs(signal))),
+        timeout: Math.max(
+          1,
+          Math.floor(Math.min(60000, deadlineRemainingMs(signal))),
+        ),
       },
     );
     const seen = new Set<string>();

@@ -51,6 +51,8 @@ repairs remains approval deferred where already recorded.
 - Preliminary distinct #11 component review found null research rows and case-variant duplicate Atlas trials that could pass the timing verifier, plus provider-named credential literals that escaped sanitized-report/docs checks. Four fake-only regressions were observed failing and passing after focused corrections. These are product/evidence correctness findings, separate from administrative friction.
 - Expanding pinned Ubuntu CI to all offline lanes surfaced production server descendants retaining ports after npm wrapper exit. Local owned-process ancestry showed the wrappers; direct production server ownership passed launcher and actual compiled HTTP shutdown checks. Linux confirmation remains a separate CI observation, with no unowned process mutation.
 
+- The first actual #11 provider turn failed despite offline SDK tests and successful account model metadata. Sanitized server diagnostics identified fractional monotonic timeout milliseconds rejected by the pinned Anthropic SDK. An actual SDK/fetch-boundary regression failed and passed after rounding down both bounded options. This is a product integration lesson: fixtures using an untracked infinite deadline had not represented the native bounded deadline path. No account failure or automatic retry was invented.
+
 ## Controls with demonstrated delivery value
 
 Independent #8 review found concrete playback and recovery defects that the author
