@@ -120,3 +120,29 @@ For each proposed simplification, identify the failure it prevents, the observed
 cost, the smallest change, and the evidence that the change preserves correctness
 and owner control. Prefer removing redundant work over adding another recovery
 layer. Do not make completion of this evaluation a new prerequisite for AIVC.
+
+## Story #11 evidence-policy observations
+
+The fresh independent Astra6/high audit at `c63c4d2` authenticated the saved
+physical observations, source digests, raw-file hashes and timing calculations.
+It identified unchanged provider/capture/interruption/playback boundaries across
+the later segmentation and UI corrections. Those historical observations remain
+useful, while the accepted verifier requires one current whole-source digest.
+Allowing reviewed evidence to carry forward by affected boundary would require
+an explicit evidence-contract amendment; the audit did not grant one. Evaluate
+that tradeoff later rather than silently relaxing current acceptance or repeating
+all answered physical rounds as a substitute for an owner decision.
+
+The same audit distinguished conforming visible compatibility truncation from
+the separate mandatory successful omitted-tool/provider-pause gate. Further paid
+searches without a discriminating hypothesis are not justified. This is a
+product/provider acceptance decision, distinct from administrative workflow cost.
+
+Fresh successor commit transport again required normal author Stop, root
+pause2/start11 with the explicit foreign-worktree exception, registered commit
+trace, root Stop11 and resume2. Explicit child tool workdir and literal shell cd
+still left the hook evaluating the original epic invocation context; the recorded
+supported Node exception and exact child Git context worked. No identity copying,
+hook changes, fabricated timing or lifecycle bypass was used. These observations
+are retained for direction C evaluation after delivery, not a framework-work
+prerequisite.

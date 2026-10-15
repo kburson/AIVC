@@ -340,3 +340,49 @@ the current browser marker and STT/TTS/device acceptance are absent, hosted
 citations/accepted continuation/pause are unverified, and current-source Atlas,
 research and interruption timing arrays are empty. The separately preserved
 historical samples do not satisfy a current-source report automatically.
+
+## Fresh independent whole-story evidence review
+
+A fresh distinct Astra6/high reviewer assessed exact checkpoint
+`c63c4d2cdc243d995d0d73fa92b303ece0357b54`, whole-story base `31948e8`.
+The independently computed source digest equals the reviewed d98 application
+source. Offline implementation Spec and Quality passed with no new actionable
+source finding; evidence is honest but incomplete. Whole-live acceptance did
+not pass, and merge/lifecycle readiness remains not ready.
+
+The [unchanged native final response](../evidence/11-astra-evidence-review-c63.txt)
+is12094 UTF-8 bytes, SHA256
+`89933453d4a591fe6c71714a0e4a7a261a90d5a452b188d59d37d19f9cc29aa2`,
+native message `msg_0cf7ad7b97c73867016ad046a436ec819595d08e9f0a437d79`,
+reviewer SID `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`. Root extracted only
+this final message from the current reviewer chat and preserved its bytes. It
+is ordinary independent review, not a sealed APR or registered lifecycle receipt.
+
+Independent143 targeted tests and six actual joined mock browser cases passed.
+The broader run initially passed621/623: concurrent reviewer browser use caused
+an exclusive-port refusal and an ESLint fixture timed out under load. A sequential
+rerun of those two files passed all ten tests, including production HTTP/shutdown,
+without product edits or relaxed timeouts. Docs verification passed; live
+verification correctly exited1. The report preserves both initial failures and
+the bounded sequential result.
+
+The reviewer authenticated four saved observation hashes, historical source
+digests, retained records and all five historical Atlas/research timing rows.
+Historical evidence remains useful for unchanged boundaries. The later source
+changes were segmentation, then Conversation display/layout/CSS; the provider,
+capture, interruption, playback and budgets were unchanged across those
+intervals. These facts do not override the accepted whole-source equality gate.
+
+The observed compatibility fallback conforms to the accepted specification.
+Successful omitted-tool/prior-block/pause continuation remains a separate unmet
+gate. The genuinely missing physical observation is a short unconfirmed
+Speaking candidate with native playback correlation and same-answer resumption.
+Actual Stop and controlled offline unmount retain their different boundaries.
+No blanket repetition of answered physical rounds is recommended without first
+resolving the accepted current-source evidence policy.
+
+All six GitHub CI checks passed at c63, including Offline system acceptance.
+The reviewer stopped normally and released all resources. Story11 remains
+Develop with a nonpassing live report and draft PR37; canonical Test, task
+Review, approval, cloud merge and Close have not occurred. The two numbered
+owner paths above remain the concrete decision boundary.
