@@ -1,7 +1,8 @@
 # Live validation procedure and current evidence
 
-Required live acceptance is currently **unverified**. No actual provider/browser/
-physical run has been recorded for story#11. Offline Mock/Contract Simulation is
+Required whole-story live acceptance is currently **unverified**. Partial actual
+provider/browser/physical observations and a real voice finding are recorded in
+the [story status](implementation/11-system-acceptance.md). Offline Mock/Contract Simulation is
 separate and cannot establish real microphone, generated voice, hosted search,
 echo or physical latency acceptance. The [live report](evidence/live-validation.json)
 retains missing/failed/unverified observations; `npm run verify:live` must remain

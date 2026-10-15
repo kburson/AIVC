@@ -1,0 +1,24 @@
+Recommend a **text-segmentation repair and evidence-based CPS retune**, preserving the existing PCM path.
+
+The reported trace supports a narrow conclusion: the “more detailed answers” boundary was scheduled contiguously, with matching received/played frames and no suspension. Its audible pause therefore appears to be in the received provider audio/prosody. That does not prove every perceived interruption has the same cause. I read the source and accepted rules; I did not independently inspect or replay the diagnostic recording.
+
+Minimal repair:
+
+- **Keep numbered-list prefixes attached to their content.** `SpeechText.boundary()` currently treats the period in line-leading `2. ` as a complete sentence. Recognize list-marker context without changing ordinary numbers, decimals, abbreviations, or displayed text. Do not emit a marker merely because its following whitespace arrived.
+- **For oversized stable sentences, prefer an existing nearby clause boundary**—such as comma, semicolon, or colon—when it produces useful segments within the cap. Retain deterministic word-boundary fallback. Avoid a new linguistic parser or invented punctuation.
+- **Retune CPS from actual segment character counts and durations.** The default cap is **84 characters**, not words. Repeated six-second overruns justify lowering the estimate under the accepted specification. This is a duration-safety adjustment; smaller segments can increase independent synthesis boundaries and should not be presented as a padding fix.
+
+Keep the six-second estimate, ten-second actual PCM bound, two-second low-water mark, sequential speech requests, and public interfaces unchanged.
+
+I would **not introduce RMS-based trimming in this repair**. Low-energy regions can contain quiet phonemes and intentional pauses; the reported thresholds do not establish disposable silence. Trimming also changes generated-audio accounting and requires buffering decisions. The current evidence justifies correcting text segmentation, not deleting PCM. No additional approval is needed for the bounded segmentation/CPS work already authorized.
+
+Focused checks should cover:
+
+- Numbered items across every two-way split and character-by-character input; no standalone marker when item content follows.
+- Existing decimal/abbreviation/link/code/citation behavior, early sentence emission, final flushing, cap enforcement, and unchanged sanitized content/order.
+- The reported sentence’s segmentation, avoiding a tiny trailing fragment where a natural boundary exists.
+- Queue admission, full-answer draining, cancellation, and unchanged PCM sample accounting at the selected cap.
+
+Independent REST synthesis can retain audible pauses even with contiguous browser scheduling. Record that limitation honestly if it persists. After offline checks, combine one focused listening check with the still-required L4 exercise rather than repeating completed human trials for paperwork.
+
+Read-only assessment at `33d9cd3`; no implementation, tests, runtime operations, provider calls, or acceptance verdict performed.

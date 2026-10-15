@@ -64,6 +64,7 @@ function clean(text: string): string {
 export class SpeechText {
   private buffer = '';
   private ended = false;
+  private initialLine = true;
   private cap: number;
   constructor(
     cap = 84,
@@ -113,6 +114,12 @@ export class SpeechText {
         continue;
       if (text[i] === '.') {
         const prefix = text.slice(0, i + 1);
+        // A line-leading list marker belongs to its item, not its own sentence.
+        if (
+          /\n[ \t]*\d+\.$/u.test(prefix) ||
+          (this.initialLine && /^[ \t]*\d+\.$/u.test(prefix))
+        )
+          continue;
         if (
           /(?:^|[^\p{L}\p{N}_])(?:Dr|Mr|Mrs|Ms|Prof|Sr|Jr|St|vs|etc)\.$/iu.test(
             prefix,
@@ -128,23 +135,32 @@ export class SpeechText {
   private segments(text: string): string[] {
     const words = clean(text).split(/\s/u).filter(Boolean);
     const result: string[] = [];
-    let segment = '';
+    const run: string[] = [];
+    const flush = () => {
+      while (run.length) {
+        let end = 0;
+        let length = 0;
+        let clause = 0;
+        while (
+          end < run.length &&
+          length + (end ? 1 : 0) + run[end].length <= this.cap
+        ) {
+          length += (end ? 1 : 0) + run[end].length;
+          if (/[,;:—–]$/u.test(run[end])) clause = end + 1;
+          end++;
+        }
+        // Only split oversized stable text; preserve existing punctuation/words.
+        const take = end < run.length && clause ? clause : end;
+        result.push(run.splice(0, take).join(' '));
+      }
+    };
     for (const word of words) {
       if (word.length > this.cap) {
-        if (segment) {
-          result.push(segment);
-          segment = '';
-        }
+        flush();
         this.onOmitted?.('SPEECH_TOKEN_TOO_LONG');
-        continue;
-      }
-      if (segment.length + 1 + word.length > this.cap) {
-        result.push(segment);
-        segment = '';
-      }
-      segment += (segment ? ' ' : '') + word;
+      } else run.push(word);
     }
-    if (segment) result.push(segment);
+    flush();
     return result;
   }
   push(delta: string): string[] {
@@ -154,6 +170,7 @@ export class SpeechText {
     for (let end = this.boundary(); end >= 0; end = this.boundary()) {
       output.push(...this.segments(this.buffer.slice(0, end)));
       this.buffer = this.buffer.slice(end);
+      this.initialLine = false;
     }
     return output;
   }

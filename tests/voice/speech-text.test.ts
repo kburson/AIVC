@@ -89,3 +89,90 @@ it('counts raw retained text and conservatively drops unfinished structured suff
   u.push('Read https://unclosed');
   expect(u.finish()).toEqual(['Read']);
 });
+
+it('retains an ordered-list prefix with its item across every chunk split', () => {
+  const input =
+    'First answer.\n\n  2. Atlas is active.\n3. Beacon is paused. Next';
+  const expected = [
+    'First answer.',
+    '2. Atlas is active.',
+    '3. Beacon is paused.',
+    'Next',
+  ];
+  for (let split = 0; split <= input.length; split++) {
+    const scanner = new SpeechText();
+    expect([
+      ...scanner.push(input.slice(0, split)),
+      ...scanner.push(input.slice(split)),
+      ...scanner.finish(),
+    ]).toEqual(expected);
+  }
+  const scanner = new SpeechText();
+  expect(scanner.push('2. ')).toEqual([]);
+  expect(scanner.push('Atlas is active. Next')).toEqual([
+    '2. Atlas is active.',
+  ]);
+  expect(scanner.finish()).toEqual(['Next']);
+});
+
+it('preserves numeric-only answers and decimal model versions near list items', () => {
+  const numeric = new SpeechText();
+  expect(numeric.push('2. ')).toEqual([]);
+  expect(numeric.finish()).toEqual(['2.']);
+  const scanner = new SpeechText();
+  expect([
+    ...scanner.push('2. Claude 3.7 costs 10.50 today. Next'),
+    ...scanner.finish(),
+  ]).toEqual(['2. Claude 3.7 costs 10.50 today.', 'Next']);
+});
+
+it('keeps the observed detailed-answers phrase together at an existing clause boundary', () => {
+  const input =
+    'perform iterative searches, refining queries based on previous results to generate more detailed answers. Next';
+  const expected = [
+    'perform iterative searches,',
+    'refining queries based on previous results to generate more detailed answers.',
+    'Next',
+  ];
+  for (let split = 0; split <= input.length; split++) {
+    const scanner = new SpeechText(84);
+    expect([
+      ...scanner.push(input.slice(0, split)),
+      ...scanner.push(input.slice(split)),
+      ...scanner.finish(),
+    ]).toEqual(expected);
+  }
+});
+
+it.each([',', ';', ':', '—'])(
+  'prefers an existing %s clause boundary within the unchanged cap',
+  (punctuation) => {
+    const scanner = new SpeechText(40);
+    const segments = [
+      ...scanner.push(
+        'First useful clause' +
+          punctuation +
+          ' second useful clause stays together. Next',
+      ),
+      ...scanner.finish(),
+    ];
+    expect(segments).toEqual([
+      'First useful clause' + punctuation,
+      'second useful clause stays together.',
+      'Next',
+    ]);
+    expect(segments.every((segment) => segment.length <= 40)).toBe(true);
+  },
+);
+
+it('does not reinterpret an inline numeric sentence as a line-leading list item', () => {
+  const input = 'Count now. 2. Next answer.';
+  for (let split = 0; split <= input.length; split++) {
+    const scanner = new SpeechText();
+    expect([
+      ...scanner.push(input.slice(0, split)),
+      ...scanner.push(input.slice(split)),
+      ...scanner.finish(),
+    ]).toEqual(['Count now.', '2.', 'Next answer.']);
+  }
+});

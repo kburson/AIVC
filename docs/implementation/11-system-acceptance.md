@@ -125,3 +125,50 @@ the same error, then passed after flooring both bounded positive timeout options
 All69 owning search/deadline/disconnect/typed-loop tests pass. Overall deadline,
 cancellation, paid leases, token cap and zero-retry behavior are unchanged.
 Actual provider/device acceptance still requires a fresh reviewed build/run.
+
+## Actual voice finding and bounded boundary correction
+
+The same-seat [timeout correction review](../evidence/11-astra-timeout-pass-33d9.txt)
+passed exact33d9 offline Spec/Quality with69 affected tests. The unchanged native
+response is1992 UTF-8 bytes, SHA256
+`fd9ded3b51f2f60a0f2696559717440c0aebe8878fb90cad9ddae861a2599faf`, native
+message `msg_03981de7adb10efe016ad021cf6da08194bb334c64584f58ab`.
+All six cloud checks passed at33d9. That source then served clean production
+build `pTj3pXYyKylP2hszporEW` to actual desktop Chrome.
+
+Actual provider lookup, hosted citations, Bluetooth output, three hands-free
+Atlas turns and owner follow-up were observed. The three VAD-frame-estimated
+speech-end to scheduled-audio totals were4002.5,3848.6 and3820.9ms, missing the
+roughly three-second target. The real summary→Beacon interruption had0.2ms
+callback-to-local-suspension and0.1ms confirmation-to-local-cancel initiation.
+These are same-clock browser measurements, not acoustic onset or remote abort.
+The participant later clicked visible Stop; spoken cancel/stop had been ordinary
+model questions. Two later speaker research attempts remain distinct: first
+0c94862f was stopped after4/16 eligible segments; second59d426d5 delivered16/16
+before a later Stop. The Yeti microphone track was observed ended; actual default
+output was USB Audio. These prior-source observations are preserved, not relabeled
+as later corrected-source acceptance.
+
+The participant reported choppy audio, then anchored a stutter before “more
+detailed answers” in one explicit microphone-off typed diagnostic. Its
+[request-correlated diagnostic](../evidence/11-live-audio-diagnostic-33d9.json)
+accounts for every HTTP PCM byte and all1168 native sources/ended events.
+The anchored independent-synthesis boundary was scheduled contiguously; actual
+provider PCM had200ms low-energy tail plus240–280ms low-energy head. RMS is not
+a calibrated acoustic/phoneme boundary. No playback buffer or silence trimming
+is justified by this finding. Other subjective cuts may have a different cause.
+
+The [unchanged distinct remediation assessment](../evidence/11-astra-segmentation-assessment.txt)
+is3077 UTF-8 bytes, SHA256
+`cc0fe22962abc7f791be5a71462bfdbda202f1298a65e6366402c0728ad8855a`, native
+message `msg_03981de7adb10efe016ad02ecd3ea88194ba1be8003d7a061e`.
+It is a read-only assessment, not a new acceptance verdict.
+
+Eight focused regressions were observed failing before correction. Line-leading
+ordered-list numbers now remain with their item; inline numeric sentences,
+standalone numeric answers, decimals and abbreviations retain their meaning.
+Oversized stable sentences prefer existing clause punctuation before the same
+safe word fallback and unchanged effective cap. No punctuation/words or PCM are
+trimmed, and no public callback, API, pin, deadline, lease or audio budget changed.
+Independent corrected-head review and affected actual listening/L4 qualification
+remain pending. Full L1–L8 acceptance remains unverified.

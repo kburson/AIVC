@@ -53,6 +53,9 @@ repairs remains approval deferred where already recorded.
 
 - The first actual #11 provider turn failed despite offline SDK tests and successful account model metadata. Sanitized server diagnostics identified fractional monotonic timeout milliseconds rejected by the pinned Anthropic SDK. An actual SDK/fetch-boundary regression failed and passed after rounding down both bounded options. This is a product integration lesson: fixtures using an untracked infinite deadline had not represented the native bounded deadline path. No account failure or automatic retry was invented.
 
+- Actual physical use exposed a voice-control expectation gap. The participant said, “the audio continued but I told it to cancel, then had to argue until I said "stop"”; they clarified, “eventually I clicked stop button”. Actual STT treated `cancel` and `stop conversation` as ordinary questions. The accepted app has no spoken Stop/cancel command. Preserve this usability observation for later evaluation; it does not authorize a new voice-command feature.
+- A later real speaker run produced the participant's report of choppy audio. One explicit typed public-research diagnostic matched “more detailed answers” to an independent TTS fragment: native sources were contiguous at that boundary, while generated PCM had440–480ms of low-energy tail/head padding. SpeechText also emitted isolated list numbers. Eight focused regressions were observed red before the bounded list-prefix/clause-boundary correction. Browser buffers, PCM samples, APIs and budgets were unchanged; improved boundary placement does not promise seamless independent synthesis.
+
 ## Controls with demonstrated delivery value
 
 Independent #8 review found concrete playback and recovery defects that the author
