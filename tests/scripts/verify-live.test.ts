@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
+  appendFileSync,
   mkdirSync,
   existsSync,
   chmodSync,
@@ -26,6 +27,32 @@ const revision = 'aivc-vad-lifecycle-v1';
 const upstream = 'de9b3ff83fd44cd7a2b3e07e9454e6b6f0bc249d';
 const sha = (bytes: string | Uint8Array) =>
   createHash('sha256').update(bytes).digest('hex');
+// Preserve genuine case errors when an outer acceptance runner discards stdout.
+beforeEach((context) => {
+  context.onTestFailed(({ task }) => {
+    try {
+      mkdirSync('.scratch/gh', { recursive: true });
+      appendFileSync(
+        '.scratch/gh/54-verify-live-failures.jsonl',
+        JSON.stringify({
+          recordedAt: new Date().toISOString(),
+          testFileSha256: sha(readFileSync(import.meta.filename)),
+          caseId: task.id,
+          caseName: task.fullName,
+          state: task.result?.state,
+          hookStates: task.result?.hooks ?? null,
+          errors: task.result?.errors?.map(({ name, message, stack }) => ({
+            name,
+            message,
+            stack,
+          })),
+        }) + '\n',
+      );
+    } catch {
+      // Failure recording must never replace the original test failure.
+    }
+  });
+});
 function put(root: string, path: string, bytes: string | Uint8Array) {
   mkdirSync(dirname(join(root, path)), { recursive: true });
   writeFileSync(join(root, path), bytes);
