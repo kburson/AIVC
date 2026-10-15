@@ -91,4 +91,3 @@ Run: `gh issue view 52 --repo kburson/AIVC --json blockedBy`
 These read-only command outputs require comparison to the explicit source/count/dependency expectations above; a successful API read alone is not proof of the relationship. The coordinator independently read and checked all twelve native edges before recording the handoff.
 
 These checks validate this documentation/backlog delivery, not application behavior or performance. Future application and research test commands belong to their unstarted delivery stories. Publication/merge and final issue state require separate live readback; no result is predeclared here.
-
