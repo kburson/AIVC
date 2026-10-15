@@ -259,3 +259,15 @@ The [current implementation checkpoint](implementation/11-system-acceptance.md#c
 records limits, source/build custody and the owner-requested full PR37 review by
 the same distinct Astra6/high, pending after this evidence is pushed. All owned
 browser/microphone/server resources are closed.
+
+## Full PR37 review complete
+
+The [full Astra6/high report](evidence/11-astra-full-pr-review-f2baab7.txt)
+covers all65 changed paths at f2baab7. Offline implementation Spec/Quality passed,
+with no new actionable code defect. Independent189-test rerun and all six
+exact-head CI jobs passed. Whole-live acceptance and merge readiness remain
+nonpassing for L4's6.60-second segment and L6's missing current native
+omission/prior-block/pause evidence. The current physical artifact and all minor
+owner reports remain unchanged. See the
+[review checkpoint](implementation/11-system-acceptance.md#full-pr37-astra-review-at-f2baab7)
+for exact source, target, merge-base and native-report custody.
