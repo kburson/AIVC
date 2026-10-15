@@ -641,8 +641,10 @@ describe('reviewed live acceptance real history', () => {
     );
     return root;
   }
+  let producedRoot: string | undefined;
   let preparedRoot: string | undefined;
   beforeEach(() => {
+    producedRoot = undefined;
     preparedRoot = undefined;
     const root = deliveryFixtureTree();
     let baseline!: ReturnType<typeof acceptanceProvenance>;
@@ -651,6 +653,13 @@ describe('reviewed live acceptance real history', () => {
     }).not.toThrow();
     expect(baseline.deliveryConfiguration.after.blob).toBe(deliveryPostBlob);
     json(root, 'docs/evidence/11-live-acceptance-disposition.json', baseline);
+    producedRoot = root;
+  });
+  beforeEach(() => {
+    preparedRoot = undefined;
+    const root = producedRoot;
+    producedRoot = undefined;
+    if (!root) throw Error('Real-history producer baseline was not verified');
     expect(amendErrors(root)).toBe('');
     preparedRoot = root;
   });
