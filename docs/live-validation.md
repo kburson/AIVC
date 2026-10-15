@@ -147,7 +147,7 @@ cannot be isolated, retain null and explain the unavailable boundary.
 abort initiation. Neither mark proves remote provider cessation. `vad-module`
 records the revision checked on the actual imported module after patch validation.
 
-## Current bounded checkpoint
+## Historical bounded checkpoints before the current baseline
 
 The [d98 muted typed diagnostic](evidence/11-live-search-continuation-d98.json)
 observed one actual HTTP200/SSE request, two reported search uses, Atlas's
@@ -183,3 +183,31 @@ sources SSE event/native citation evidence or provider pause was captured. It is
 a successful ordinary boundary observation with all observer-assisted timing
 excluded; full L6 and observer-free current-source physical acceptance remain
 unverified. Clean baseline readiness precedes any new participant request.
+
+## Current observer-free physical result
+
+The [current cfa3 baseline](evidence/11-live-baseline-eddb472.json) and
+[case report](evidence/live-validation.json) bind actual eddb472/Chrome 155,
+browser-observed patched MicVAD and reused clean 385d production build O9qV.
+They preserve current headset/speaker, Working/Speaking candidate, confirmed
+Beacon, batch STT, incremental TTS/SSE, typed fallback/mutes and actual Stop
+observations. Browser/document process closure remains distinct from direct
+controlled React-unmount tests.
+
+Full acceptance remains nonpassing. Three Atlas scheduled first-audio values
+were 6514.8/4419.6/4179.2ms using the documented frame proxy, so the target failed.
+Five native PCM segments exceeded the six-second estimate; L4 duration tuning
+is failed. Current research produced four structured sources events and public
+searchUses 1. Same-source ordinary omitted-tool/prior-block continuation is
+accepted in the separate native artifact, but genuine provider pause stays
+unobserved and L6 unverified. Do not retry to chase a pause.
+
+The original source-excerpt hearing complaint and later clarification are both
+retained: eleven research speech requests exactly match offline replay of eligible
+answer text, with inline code omitted by existing normalization. Visual Sources
+excerpts are separate metadata. Three reported short sounds yielded two genuine
+unconfirmed Speaking candidates; no third correlation is fabricated. Historical
+artifacts retain older source bindings. See the
+[implementation checkpoint](implementation/11-system-acceptance.md#current-observer-free-physical-checkpoint-at-eddb472)
+for case scope, precise timing limits, custody and the unexecuted CPS 12/cap 72
+tuning proposal awaiting independent assessment.

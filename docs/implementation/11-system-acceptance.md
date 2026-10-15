@@ -2,8 +2,9 @@
 
 Whole-story acceptance remains unverified. This checkpoint supplies the joined
 system, documentation, read-only verifiers, source-qualified partial live evidence
-and measurement implementation for independent review. Required L1–L8 acceptance
-remains failed/unverified; no controlled run is a substitute.
+and measurement implementation for independent review. Current functional subcases are supported by the observer-free physical checkpoint below;
+L4 duration tuning is failed and L6 provider pause remains unverified. Full
+acceptance has not passed; no controlled run is a substitute.
 
 ## Actual application boundary
 
@@ -520,3 +521,103 @@ reach idle Ready, both mutes on, zero turns/tracks, before the root asks for hum
 participation. No microphone starts during this preparation. Baseline physical
 qualification and the existing missing Speaking-candidate/native-resume correlation
 remain pending under the unchanged whole-source gate.
+
+## Current observer-free physical checkpoint at eddb472
+
+The [deduplicated current-source evidence](../evidence/11-live-baseline-eddb472.json)
+binds actual head `eddb4722584cda6137d0e456c87f4a560f90e117`, source
+`cfa3cca0d676f4e98545aa965c6526f7c098ddbbaca6de6c3784a3b1262707bf`,
+Node 26.8.1 and actual Chrome 155.0.8059.40 on macOS. It reuses production build
+`O9qVb3AkQrdBpNGEUkEyB`, clean-built at reviewed 385d with identical source,
+installed patch postimages and module bytes reverified at eddb. It was not rebuilt
+at the documentation-only descendant. Both server observer environment flags
+were explicitly unset. The actual browser imported the patched MicVAD and
+recorded `aivc-vad-lifecycle-v1`.
+
+This checkpoint records eleven actual completed application turns, forty-eight
+speech requests, 670 unique bounded browser marks and 4649 native PCM sources.
+The original stopped 29,478,554-byte snapshot remains unchanged in ignored
+`.scratch/11-live-eddb472-groups1-4-stopped.json`, SHA256
+`4748a59552face0821cbd40570588a8e98ff1aa327b5cfef29a41cd02964660f`.
+The cloud artifact retains deduplicated exact marks/native PCM summaries, public
+SSE, selected UI/device states, request delivery summaries and source custody;
+it contains no raw audio or credential headers. The initial 04:50 session timestamp
+is not an event timestamp. Owner answers retain their visible values, times and
+question context supplied from the current root transcript, without a native-byte
+authentication claim.
+
+| Case | Current disposition and limits                                                                                                                                                                                                                                  |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| L1   | Functional pass: three spoken Atlas replies had active/North/3 and audible voice. First-audio target failed; see measured values below.                                                                                                                         |
+| L2   | Owner follow-up resolved Atlas/North after completed history. Provider outgoing history bodies were not separately captured.                                                                                                                                    |
+| L3   | Two genuine unconfirmed Speaking candidates overlap nonquiet native PCM, suspend/resume the same context at its frozen clock and preserve the answer. A Working candidate and confirmed Beacon interruption also occurred.                                      |
+| L4   | **Fail:** normal answer hearing/coverage is supported, but five PCM segments exceeded the six-second estimate and required tuning remains open.                                                                                                                 |
+| L5   | Typed mic-muted Cedar had no STT and 5 TTS requests; output-muted spoken Beacon had STT and 0 TTS. Clearing output mute did not replay Beacon.                                                                                                                  |
+| L6   | **Unverified:** current spoken research supplied four structured sources events and actual public searchUses 1; ordinary seven-block-identical omitted-tool continuation was separately accepted at the same source. Genuine provider pause remains unobserved. |
+| L7   | Bounded headset and speaker trials passed with owner confirmation; no universal echo claim.                                                                                                                                                                     |
+| L8   | Actual Stop ended 5 acquired tracks/closed 8 contexts. Separate live capture followed by owned document/process close is distinct from controlled React-unmount tests.                                                                                          |
+
+The three Atlas frame-end-proxy→first-text/scheduled-audio pairs were
+5307/6514.8ms, 3769/4419.6ms and 2602.2/4179.2ms. All miss the around-three-second
+first-audio target. The owner follow-up was 2178.3/3882.2ms; the spoken public
+research was 5343.9/7087.6ms. STT/model-tool/TTS spans include browser, dispatch and
+network time. Scheduled native playback includes its 10ms scheduling offset;
+these values do not measure Bose/OS acoustic onset. Independent acoustic timing
+stays null with a reason, and no percentile/SLA is claimed.
+
+The owner reported three short sounds during the first four-sentence answer.
+Only two VAD candidates were observed, so no one-to-one third-sound mapping is
+invented. Each overlaps an actual nonquiet 40ms PCM source in native context 3:
+suspensions at 1517911.4/1531069.1 retain clocks 66.4148752834/78.6459863946;
+the same context resumes at 1518843.4/1532090.7. No confirmation or new turn
+occurs for either candidate; the owner confirmed the same answer resumed and
+finished clearly. Callback→native suspension was 1.7/0.7ms. Later Working raw
+1730589.9 precedes first playback 1733031.8 and preserves the same Atlas answer.
+Confirmed Beacon raw1740070.2→native suspension1740070.6 took about 0.4ms;
+confirmation1740640.8→local cancel1740641.1 took about 0.3ms. These are local
+context/abort boundaries, never independent acoustic silence or remote cessation.
+
+The research hearing complaint is preserved exactly: the owner said voice stopped
+after point 4 and did not read the following bullets. Phase1 traced the boundary:
+the final answer ends at point 4; the visual bullets are separate Sources metadata.
+Offline replay of the captured answer chunks through current SpeechText(84)
+exactly matches all 11 speech request texts. Existing normalization omits inline
+code, including model=nova-3, so this is eligible-answer coverage rather than
+verbatim display reading. All 1428 research PCM sources ended before Stop;
+last native end 1826329.3 precedes Stop 1853065.4 by 26,736.1ms. The owner subsequently
+confirmed all four answer points were heard and understood the source distinction.
+No dropped eligible tail, retry or source/UI change was established.
+
+Duration accounting nevertheless found a separate unmet accepted obligation:
+five segments measured 6.08/6.40/6.12/6.04/6.20 seconds at 81/81/80/74/81 characters.
+All 48 admitted synthesis bodies completed; maximum observed scheduled native
+outstanding was 6.3447 seconds, below the ten-second emergency bound. This does
+not directly inspect every unscheduled internal queue field. Repeated duration
+overruns leave L4 failed until accepted CPS/segment tuning is validated. The
+profile remains CPS 14/cap 84. A concrete proposal for independent review is
+runtime CPS 12/cap 72, replaying captured answers offline and validating only
+distinct recut speech segments through the existing speech endpoint before any
+joined listening check. It has not been executed; no source/config/budget change
+or extra paid call is authorized by writing this proposal.
+
+Headset input/default output were actual Bose QC Bluetooth. The speaker group
+used actual Yeti input/default USB Audio output, with the owner confirming
+speakers. Inputs were 48000Hz/16bit/mono/10ms and reported AEC/NS/AGC enabled.
+Speaker Atlas's last native source ended 13,415.1ms before Stop, with no extra
+turn and owner-reported no self voice. This bounded quiet observation does not
+establish general speaker-echo immunity.
+
+The final quiet teardown started capture once, observed live Yeti/Listening and
+two running contexts, then closed only the owned browser/document. The browser
+control exited 0; owned Node 92292/Chrome 92298 were absent; turn/speech request
+counts stayed 11/48. No post-close JavaScript track-state query or direct React
+cleanup observation is claimed. Existing controlled tests cover pending startup,
+typed playback/timer and React unmount; current CI was independently checked by
+the root. Owned production server SIGINT exited 130 and ports 3000/3001 were clear.
+No microphone was reacquired after close.
+
+The read-only report is now bound to this actual current-source baseline, while
+all older failed/partial artifacts remain unchanged at their own source. L4
+duration tuning and L6 genuine pause remain open; failed timing targets stay
+failed. Full scope is unchanged and no canonical Test, Review, approval, merge
+or Close follows from this checkpoint.
