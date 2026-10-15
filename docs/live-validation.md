@@ -297,3 +297,10 @@ callback-versus-acoustic and Stop-versus-remote-cessation limits stay recorded.
 No further paid or physical checks occurred. Registered Test, independent final
 review, final owner merge approval, sanctioned integration and Close remain
 separate gates; PR37 is not merged by this disposition.
+
+The separately governed [lint preservation addendum](superpowers/specs/2026-10-15-11-sealed-review-lint-addendum.md)
+extends only the existing Markdown linter/owning test and exact collateral.
+Formatter and Markdownlint retain full inventory, verify the same two sealed
+native files against fixed accepted storage/lineage, and report their preservation
+separately from normalization/lint results. Ordinary files and strict configuration
+remain checked. The original reports and case outcomes are unchanged.

@@ -170,14 +170,29 @@ const policyId = 'aivc.issue11.accepted-live-limitations/v1';
 const acceptancePaths = new Set([
   'scripts/verify-live.mjs',
   'scripts/format-check.mjs',
+  'scripts/lint-markdown.mjs',
   'tests/scripts/verify-live.test.ts',
   'tests/scripts/format-check.test.ts',
+  'tests/scripts/quality-scans.test.ts',
   'docs/implementation/11-system-acceptance.md',
   'docs/live-validation.md',
   'README.md',
   'docs/evidence/11-astra-amended-pr-review.txt',
   dispositionPath,
 ]);
+const lintStorageCommit = '63fdb6911a87d2978551e0a86c7387a53cfc0461';
+const lintAnchors = [
+  [
+    'docs/superpowers/specs/2026-10-15-11-sealed-review-lint-addendum.md',
+    4125,
+    'b4a92bd2148cb7987f98f48acd9ccd51e01857a72adf492024b350e9a25b9e68',
+  ],
+  [
+    'docs/evidence/11-astra-sealed-lint-assessment.txt',
+    3776,
+    '7c46b0e3b912433e32854e0595ead2a76bb6799d4c25828501d51596b4c8a52f',
+  ],
+];
 const acceptedAnchors = [
   [
     'docs/superpowers/specs/2026-10-15-11-live-acceptance-amendment-design.md',
@@ -267,6 +282,21 @@ export function acceptanceProvenance(root = workspace) {
   git(root, ['merge-base', '--is-ancestor', acceptanceBase, 'HEAD']);
   git(root, ['merge-base', '--is-ancestor', physicalHead, acceptanceBase]);
   verifyAmendmentReview(root);
+  git(root, ['merge-base', '--is-ancestor', lintStorageCommit, 'HEAD']);
+  for (const [path, length, digest] of lintAnchors) {
+    const bytes = readFileSync(regular(root, path));
+    const stored = execFileSync(
+      'git',
+      ['show', lintStorageCommit + ':' + path],
+      { cwd: root },
+    );
+    if (
+      bytes.length !== length ||
+      sha(bytes) !== digest ||
+      !bytes.equals(stored)
+    )
+      throw Error('Accepted lint anchor differs: ' + path);
+  }
   if (
     computeSourceDigest(root, physicalHead) !== physicalDigest ||
     computeSourceDigest(root, acceptanceBase) !== physicalDigest
@@ -300,7 +330,11 @@ export function acceptanceProvenance(root = workspace) {
     .sort()
     .filter((path) => !equal(baseline.get(path), current.get(path)));
   for (const path of changed)
-    if (!acceptancePaths.has(path) || current.get(path)?.mode !== '100644')
+    if (
+      (!acceptancePaths.has(path) &&
+        !lintAnchors.some(([anchor]) => anchor === path)) ||
+      current.get(path)?.mode !== '100644'
+    )
       throw Error('Unreviewed acceptance boundary change: ' + path);
   const ordinaryHead = '385d11b2448dac5bf01400bb7c11834bfefbfbfd';
   git(root, ['merge-base', '--is-ancestor', ordinaryHead, acceptanceBase]);
@@ -343,6 +377,7 @@ export function acceptanceProvenance(root = workspace) {
       amendmentCommit: '75ffee8031203efec513b589daf74f2f2ab4453d',
       reviewStorageCommit: '71fc7115200bd94e7872c3e2f5dc3e15fd10bbce',
       adoptionCommit: acceptanceBase,
+      lintAdoptionCommit: lintStorageCommit,
       humanTurn: '01a13f63-b581-7f11-af49-fc567f7aa25b',
       authorityAssurance: 'unavailable',
     },
@@ -359,7 +394,8 @@ export function acceptanceProvenance(root = workspace) {
       testedHead: ordinaryHead,
       storageCommit: storage,
       artifact: ordinaryPath,
-      sha256: acceptedAnchors.at(-1)[2],
+      sha256:
+        '4b0159c5d9594ac142bb3104e5ddf1de7a9bd1bca631e59a961da5ade88484c3',
     },
     runtimeProfile: json(root, 'docs/evidence/11-live-physical-2687b54.json')
       .runtimeProfile,

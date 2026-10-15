@@ -909,3 +909,52 @@ unamended report behavior; its targeted regression passes. Full unit and remaini
 impacted checks will be rerun after the separately governed lint implementation.
 Original physical, ordinary native, primary/addendum/SPR and observed report bytes
 remain unchanged. The owner still has not granted final merge approval.
+
+## Completed bounded acceptance implementation
+
+Root adopted the separately assessed lint extension through live issue11
+version76 and parent2 version40, anchored to63fdb6911a87d2978551e0a86c7387a53cfc0461.
+The linter now reuses the same fixed native integrity proof, retains full owned
+inventory and reports the two native files as preserved/not linted. Only the
+remaining input paths are submitted and iterated; every submitted file still
+requires a result. Strict root rules, noInlineConfig, fix:false and ordinary-file
+checks remain. No other consumer exception was introduced.
+
+Final stable source digest is
+7f96a68596067a90d2345df6f1478b4ce530dbc38eb26c6158ca6e398a3fb4f3.
+The new disposition is mechanically recomputed after authored docs/tests settle;
+its own bytes are excluded from its changed-file inventory to avoid a selfhash
+cycle. A final reviewer report at the exact allowed path will require root to
+recompute it again before final verification/canonical Test. The original observed
+report remains d908c3bb; original physical, native, primary SPR and both accepted
+addenda retain exact bytes and original tested/storage identities.
+
+Local stable unit rerun passed141/141 (12files); affected quality tests16/16.
+The first lint regression failed for the intended native-response findings before
+the minimal fix. The unit rerun caught a stale pre-lint-adoption fixture checkout;
+updating only that checkout to63fdb restored real authority testing rather than
+relaxing ancestry. Earlier timeout/type/build-concurrency failures above remain
+recorded; all had bounded test/orchestration corrections, no product change.
+
+Final lint, format (335owned/0findings), docs, typecheck, live limited acceptance,
+sealed archive90/90 and evidence10/10 passed. Previously green application lanes
+remain contracts355, voice160, slow27, serialized integration26, standalone build
+and mock Chromium18; their product/runtime bytes are unchanged by this final lint
+extension. Exact-head canonical Test will rerun declared commands. The genuine
+provider pause remains unverified/deferred, original duration target remains
+missed/accepted, and physical evidence qualifies CPS12/cap72 only.
+
+No new application provider, microphone, speaker or physical browser experiment
+occurred. Offline mock tests closed their own resources. Work is CODE_COMPLETE
+for the bounded implementation, subject to the independent implementation/full-PR
+recheck, exact clean canonical Test, registered Review and final owner merge
+approval. No AC tick, state move, merge or Close is implied.
+
+Exact focused final verifier command also passed73/73 (62live +11docs),
+log .scratch/11-amendment-focused-final.log. Local unit141/141 is retained in
+.scratch/11-amendment-unit-final2.log; final guards in
+.scratch/11-amendment-final-{format,docs,sealed,evidence}.log. All are machine-local
+output custody, not committed raw-provider evidence. The final read-only format,
+docs and live commands passed again after the documentation/provenance refresh.
+Root owns the separate exact-ref epic trail and clean canonical Test; no root
+binding, trail receipt or already-integrated target state is claimed by this author.

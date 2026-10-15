@@ -3,7 +3,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lint } from 'markdownlint-cli2/markdownlint/promise';
 import parseConfig from 'markdownlint-cli2/parsers/jsonc';
-import { enumerateOwnedFiles } from './format-check.mjs';
+import { enumerateOwnedFiles, verifyAmendmentReview } from './format-check.mjs';
 
 const workspace = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export async function lintMarkdown({
@@ -11,10 +11,18 @@ export async function lintMarkdown({
   log = console.log,
 } = {}) {
   root = resolve(root);
-  const paths = enumerateOwnedFiles(root).filter((path) =>
+  const inventory = enumerateOwnedFiles(root).filter((path) =>
     /\.(?:md|markdown)$/i.test(path),
   );
-  if (!paths.length) throw Error('No first-party Markdown files found');
+  if (!inventory.length) throw Error('No first-party Markdown files found');
+  const anchoredManifest =
+    'docs/peer-reviews/spec/live-acceptance-amendment-review-d37abf9831b9cc30583d0df9ef47d2f9/spr/review-manifest.md';
+  const immutable = inventory.includes(anchoredManifest)
+    ? new Set(verifyAmendmentReview(root))
+    : new Set();
+  const paths = inventory.filter((path) => !immutable.has(path));
+  for (const path of immutable)
+    log('Integrity-verified immutable evidence (not linted): ' + path);
   const settings = parseConfig(
     readFileSync(join(workspace, '.markdownlint-cli2.jsonc'), 'utf8'),
   );
@@ -34,7 +42,9 @@ export async function lintMarkdown({
       'Markdown scan overrides, ignores and custom rules are unsupported',
     );
   }
-  log(`markdownlint: scanning ${paths.length} first-party Markdown files.`);
+  log(
+    `markdownlint: scanning ${paths.length} of ${inventory.length} first-party Markdown files; ${immutable.size} integrity-verified exclusions.`,
+  );
   const strings = Object.fromEntries(
     paths.map((path) => [path, readFileSync(join(root, path), 'utf8')]),
   );

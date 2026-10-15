@@ -4,6 +4,7 @@
     "amendmentCommit": "75ffee8031203efec513b589daf74f2f2ab4453d",
     "reviewStorageCommit": "71fc7115200bd94e7872c3e2f5dc3e15fd10bbce",
     "adoptionCommit": "fc51a548e73dc74bb14cfb9805eb381182fb8ad8",
+    "lintAdoptionCommit": "63fdb6911a87d2978551e0a86c7387a53cfc0461",
     "humanTurn": "01a13f63-b581-7f11-af49-fc567f7aa25b",
     "authorityAssurance": "unavailable"
   },
@@ -11,7 +12,7 @@
     "gitHead": "2687b5434377f423363be7d279dbcaf12279aa8f",
     "sourceDigest": "14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63"
   },
-  "currentSourceDigest": "d255d18b799d190b1327251af1e04959c8ab37ae2261c9b6a8ba17132d7eb085",
+  "currentSourceDigest": "7f96a68596067a90d2345df6f1478b4ce530dbc38eb26c6158ca6e398a3fb4f3",
   "changedFiles": [
     {
       "path": "README.md",
@@ -25,6 +26,14 @@
       }
     },
     {
+      "path": "docs/evidence/11-astra-sealed-lint-assessment.txt",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "905232a1a3b460b8a0952fc54ff2f38180354668"
+      }
+    },
+    {
       "path": "docs/implementation/11-system-acceptance.md",
       "before": {
         "mode": "100644",
@@ -32,7 +41,7 @@
       },
       "after": {
         "mode": "100644",
-        "blob": "5a948c56e5bb3efd4bfe7fe9c1e881ff69079dec"
+        "blob": "c83596ab6beef7dc31ee2c8579efdc3ebd1d59fe"
       }
     },
     {
@@ -43,7 +52,15 @@
       },
       "after": {
         "mode": "100644",
-        "blob": "1b2a9390a5c7cef4dcb44f21155be3bf014d9bed"
+        "blob": "50618c9c79f4778dc197b6b18c2c6788efad00eb"
+      }
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-15-11-sealed-review-lint-addendum.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "e7cfc4a2f6c8eb8d52de2d7de1d77a41e0dfbb03"
       }
     },
     {
@@ -58,6 +75,17 @@
       }
     },
     {
+      "path": "scripts/lint-markdown.mjs",
+      "before": {
+        "mode": "100644",
+        "blob": "16b420f6fba8627a22b784d07d7df3471c3da51a"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "3db867ac7f17ce164962b00d2d7fc8e8b7193e7c"
+      }
+    },
+    {
       "path": "scripts/verify-live.mjs",
       "before": {
         "mode": "100644",
@@ -65,7 +93,7 @@
       },
       "after": {
         "mode": "100644",
-        "blob": "ea19c884e52b699740bbbc36388e893ec5b611ff"
+        "blob": "3b47cc945458c958f6a05bf558c8bc0333711a4c"
       }
     },
     {
@@ -80,6 +108,17 @@
       }
     },
     {
+      "path": "tests/scripts/quality-scans.test.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "ab9368947dfe0e0675a4539df7e84e0cc83517a9"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "11188988f6ba4760a270bbc2dda0a0c4af81a74b"
+      }
+    },
+    {
       "path": "tests/scripts/verify-live.test.ts",
       "before": {
         "mode": "100644",
@@ -87,7 +126,7 @@
       },
       "after": {
         "mode": "100644",
-        "blob": "e3d270a2ad1133007188508a47fb99937a83389e"
+        "blob": "ee20969b7cd42042dd1970a278c8bf84e77d5153"
       }
     }
   ],

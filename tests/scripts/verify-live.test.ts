@@ -558,13 +558,15 @@ function amendedFixture() {
     ]);
   }
   const root = amendmentRoot;
-  git(root, 'reset', '--hard', 'fc51a548e73dc74bb14cfb9805eb381182fb8ad8');
+  git(root, 'reset', '--hard', '63fdb6911a87d2978551e0a86c7387a53cfc0461');
   git(root, 'clean', '-fd');
   for (const path of [
     'scripts/verify-live.mjs',
     'scripts/format-check.mjs',
+    'scripts/lint-markdown.mjs',
     'tests/scripts/verify-live.test.ts',
     'tests/scripts/format-check.test.ts',
+    'tests/scripts/quality-scans.test.ts',
     'docs/evidence/11-live-acceptance-disposition.json',
     'docs/implementation/11-system-acceptance.md',
     'docs/live-validation.md',
@@ -678,6 +680,8 @@ for (const path of [
   'docs/superpowers/specs/2026-10-15-11-live-acceptance-amendment-design.md',
   'docs/superpowers/specs/2026-10-15-11-sealed-review-formatting-addendum.md',
   'docs/evidence/11-astra-full-pr-review-f2baab7.txt',
+  'docs/superpowers/specs/2026-10-15-11-sealed-review-lint-addendum.md',
+  'docs/evidence/11-astra-sealed-lint-assessment.txt',
 ])
   it('rejects changed immutable component or collateral ' + path, () => {
     const root = amendedFixture();
