@@ -193,6 +193,26 @@ const lintAnchors = [
     '7c46b0e3b912433e32854e0595ead2a76bb6799d4c25828501d51596b4c8a52f',
   ],
 ];
+const targetArchive = 'c529123d95e782acd962aa8276cd635616d59db9';
+const targetRef = 'fe2a158c8f717aed43d604c3d7614dc18a3452e1';
+const handoffPath = 'docs/implementation/2-live-validation-handoff.md';
+const targetAnchors = [
+  [
+    handoffPath,
+    11475,
+    'c75d79584e13b4685650ca6bbbe29a9cbce9305b8b23e9a96023525b89891be0',
+  ],
+  [
+    'docs/superpowers/specs/2026-10-15-11-target-collateral-addendum.md',
+    3627,
+    '1c058fa9d9d7e164223edef0c0b80d198d186cfe17b2d666f43fce73b1a28afa',
+  ],
+  [
+    'docs/evidence/11-astra-target-collateral-assessment.txt',
+    11739,
+    '77d7d222834c7cfa7ef1c730dd9782b041f8fc4dfe2b5ed1706360e5ec4f3262',
+  ],
+];
 const acceptedAnchors = [
   [
     'docs/superpowers/specs/2026-10-15-11-live-acceptance-amendment-design.md',
@@ -316,6 +336,35 @@ export function acceptanceProvenance(root = workspace) {
     )
       throw Error('Accepted immutable anchor differs: ' + path);
   }
+  git(root, ['merge-base', '--is-ancestor', targetArchive, 'HEAD']);
+  const archiveTree = tree(root, targetArchive);
+  const targetTree = tree(root, targetRef);
+  for (const [path, length, digest] of targetAnchors) {
+    const file = regular(root, path);
+    const bytes = readFileSync(file);
+    const archived = execFileSync('git', ['show', targetArchive + ':' + path], {
+      cwd: root,
+    });
+    if (
+      lstatSync(file).mode & 0o111 ||
+      archiveTree.get(path)?.mode !== '100644' ||
+      bytes.length !== length ||
+      sha(bytes) !== digest ||
+      !bytes.equals(archived)
+    )
+      throw Error('Target collateral integrity differs: ' + path);
+    if (
+      path === handoffPath &&
+      (targetTree.get(path)?.mode !== '100644' ||
+        targetTree.get(path)?.blob !==
+          'bd64361def52c6ce512bad6ac90deb96f2a8e406' ||
+        !equal(targetTree.get(path), archiveTree.get(path)) ||
+        !bytes.equals(
+          execFileSync('git', ['show', targetRef + ':' + path], { cwd: root }),
+        ))
+    )
+      throw Error('Target handoff storage/blob differs');
+  }
   const baseline = tree(root, acceptanceBase);
   const current = workingTree(root);
   const tested = tree(root, physicalHead);
@@ -329,20 +378,35 @@ export function acceptanceProvenance(root = workspace) {
   const changed = [...new Set([...baseline.keys(), ...current.keys()])]
     .sort()
     .filter((path) => !equal(baseline.get(path), current.get(path)));
-  for (const path of changed)
-    if (
-      (!acceptancePaths.has(path) &&
-        !lintAnchors.some(([anchor]) => anchor === path)) ||
-      current.get(path)?.mode !== '100644'
-    )
-      throw Error('Unreviewed acceptance boundary change: ' + path);
+  // Same protected boundary for committed candidate and actual working files.
+  // Reviewed immutable collateral is required in both, never just exempted.
+  const protectedTree = new Map(baseline);
+  const lintTree = tree(root, lintStorageCommit);
+  for (const [path] of lintAnchors) protectedTree.set(path, lintTree.get(path));
+  for (const [path] of targetAnchors)
+    protectedTree.set(path, archiveTree.get(path));
   const ordinaryHead = '385d11b2448dac5bf01400bb7c11834bfefbfbfd';
   git(root, ['merge-base', '--is-ancestor', ordinaryHead, acceptanceBase]);
   const oldSearch = tree(root, ordinaryHead);
-  for (const path of new Set([...oldSearch.keys(), ...current.keys()])) {
-    if (searchBoundary(path) && !equal(oldSearch.get(path), current.get(path)))
-      throw Error('Historical search component differs: ' + path);
-  }
+  const validateBoundary = (actual, label) => {
+    for (const path of new Set([...protectedTree.keys(), ...actual.keys()])) {
+      if (
+        !equal(protectedTree.get(path), actual.get(path)) &&
+        (!acceptancePaths.has(path) || actual.get(path)?.mode !== '100644')
+      )
+        throw Error(
+          'Unreviewed acceptance boundary change in ' + label + ': ' + path,
+        );
+    }
+    for (const path of new Set([...oldSearch.keys(), ...actual.keys()])) {
+      if (searchBoundary(path) && !equal(oldSearch.get(path), actual.get(path)))
+        throw Error(
+          'Historical search component differs in ' + label + ': ' + path,
+        );
+    }
+  };
+  validateBoundary(tree(root, 'HEAD'), 'candidate HEAD');
+  validateBoundary(current, 'working tree');
   const ordinaryPath = 'docs/evidence/11-native-search-ordered-385d11b.json';
   const storage = 'eddb4722584cda6137d0e456c87f4a560f90e117';
   git(root, ['merge-base', '--is-ancestor', storage, acceptanceBase]);
@@ -378,8 +442,15 @@ export function acceptanceProvenance(root = workspace) {
       reviewStorageCommit: '71fc7115200bd94e7872c3e2f5dc3e15fd10bbce',
       adoptionCommit: acceptanceBase,
       lintAdoptionCommit: lintStorageCommit,
+      targetCollateralCommit: targetArchive,
       humanTurn: '01a13f63-b581-7f11-af49-fc567f7aa25b',
       authorityAssurance: 'unavailable',
+    },
+    targetHandoff: {
+      path: handoffPath,
+      targetCommit: targetRef,
+      storageCommit: targetArchive,
+      blob: 'bd64361def52c6ce512bad6ac90deb96f2a8e406',
     },
     originalPhysical: { gitHead: physicalHead, sourceDigest: physicalDigest },
     currentSourceDigest: computeSourceDigest(root),

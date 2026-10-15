@@ -958,3 +958,63 @@ output custody, not committed raw-provider evidence. The final read-only format,
 docs and live commands passed again after the documentation/provenance refresh.
 Root owns the separate exact-ref epic trail and clean canonical Test; no root
 binding, trail receipt or already-integrated target state is claimed by this author.
+
+## Four acceptance-verifier P2 corrections after 5083687 review
+
+The same independent Astra assessment is preserved unchanged in
+[the target-collateral review](../evidence/11-astra-target-collateral-assessment.txt).
+The separate [adopted addendum](../superpowers/specs/2026-10-15-11-target-collateral-addendum.md)
+anchors c529123d95e782acd962aa8276cd635616d59db9, live issue11 Scope77 and parent2
+Scope41. It does not rewrite the closed primary SPR or its earlier addenda.
+The remote5083687/c529 unit failures remain genuine historical failures; local
+corrections do not turn those CI runs green retroactively.
+
+Only scripts/verify-live.mjs and its owning test changed as source. The verifier
+now independently compares the complete committed candidate HEAD and actual
+working-tree path/mode/blob inventories against the same fixed protected tree.
+A committed product change restored in the working file, or committed runtime
+addition removed from both index and disk, cannot disappear from that proof.
+Target/lint collateral is required at its exact trusted mode/blob in HEAD as well
+as matching regular working files, not merely treated as an allowed path.
+
+The imported historical parent handoff is required byte-identically in child and
+merged contexts: targetfe2a158, archivalc529123, blobbd64361def52c6ce512bad6ac90deb96f2a8e406,
+100644,11475bytes/SHA c75d79584e13b4685650ca6bbbe29a9cbce9305b8b23e9a96023525b89891be0.
+Its text remains historical material. All three new archival anchors have fixed
+length/hash, regular-path/mode and committed-blob checks. Archival ancestry is
+mandatory; an unmerged child does not need targetfe2a158 ancestry.
+
+The positive acceptance test now uses the isolated c529 fixture, preserving the
+strict complete inventory instead of ignoring concurrent scratch files. The
+fixture copies the exact optional final native review when actually present.
+Pre/post archive tests regenerate matching disposition; before that production
+report exists, the post-state uses genuine archived assessment bytes only as
+explicitly labelled copied test-fixture content. No placeholder final review is
+written to the real repository.
+
+TDD first reproduced both HEAD-hiding cases as no-throw failures, then reproduced
+the actual target handoff rejection using isolated Git merge-tree/commit-tree and
+materialized handoff. All now pass. Additional negatives cover corrupt/missing/
+wrong-mode/file-or-parent-aliased handoff, altered committed collateral restored
+on disk, invalid storage/ancestry, and an unrelated addition in the real target
+merge tree. Target refs/worktree and application behavior were not mutated.
+
+Focused verification passed76/76; the full concurrent unit suite passed155/155
+across12files. Typecheck, limited live validation, docs, lint, format (337owned),
+sealed90 and evidence10 passed. Markdownlint checked159of161 files with the same
+two integrity-verified exclusions, not lint passes. Logs:
+.scratch/11-target-corrections-focused.log,
+.scratch/11-target-corrections-unit.log and .scratch/11-target-final-*.log.
+Unchanged application lanes retain their prior passes pending mandatory clean
+canonical Test; no new provider, interactive browser, microphone or speaker run.
+
+Current source digest:
+bd2e9413572655e5e73e8a03316a7fd4b04442c236a07bcd5f3fcba60d99ea04.
+The separate disposition is recomputed after this checkpoint. Original observed
+report d908c3bb, physical663b8089, ordinary-native4b0159c5 and every accepted
+sealed/addendum byte remain unchanged. Original L4 fail and L6 unverified stay
+separate from accepted duration/deferred-pause release dispositions, qualified
+only for CPS12/cap72. Technical corrections are CODE_COMPLETE, with same-Astra
+recheck, authentic final archive/provenance refresh, exact-head green CI,
+canonical Test/Review and final owner merge approval still required. No state,
+AC checkbox, integration, approval or Close is granted here.

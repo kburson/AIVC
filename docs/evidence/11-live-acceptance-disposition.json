@@ -5,14 +5,21 @@
     "reviewStorageCommit": "71fc7115200bd94e7872c3e2f5dc3e15fd10bbce",
     "adoptionCommit": "fc51a548e73dc74bb14cfb9805eb381182fb8ad8",
     "lintAdoptionCommit": "63fdb6911a87d2978551e0a86c7387a53cfc0461",
+    "targetCollateralCommit": "c529123d95e782acd962aa8276cd635616d59db9",
     "humanTurn": "01a13f63-b581-7f11-af49-fc567f7aa25b",
     "authorityAssurance": "unavailable"
+  },
+  "targetHandoff": {
+    "path": "docs/implementation/2-live-validation-handoff.md",
+    "targetCommit": "fe2a158c8f717aed43d604c3d7614dc18a3452e1",
+    "storageCommit": "c529123d95e782acd962aa8276cd635616d59db9",
+    "blob": "bd64361def52c6ce512bad6ac90deb96f2a8e406"
   },
   "originalPhysical": {
     "gitHead": "2687b5434377f423363be7d279dbcaf12279aa8f",
     "sourceDigest": "14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63"
   },
-  "currentSourceDigest": "7f96a68596067a90d2345df6f1478b4ce530dbc38eb26c6158ca6e398a3fb4f3",
+  "currentSourceDigest": "bd2e9413572655e5e73e8a03316a7fd4b04442c236a07bcd5f3fcba60d99ea04",
   "changedFiles": [
     {
       "path": "README.md",
@@ -34,6 +41,14 @@
       }
     },
     {
+      "path": "docs/evidence/11-astra-target-collateral-assessment.txt",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "f06456f630d86d3351e216aefbb0c1f7eeba23e4"
+      }
+    },
+    {
       "path": "docs/implementation/11-system-acceptance.md",
       "before": {
         "mode": "100644",
@@ -41,7 +56,15 @@
       },
       "after": {
         "mode": "100644",
-        "blob": "c83596ab6beef7dc31ee2c8579efdc3ebd1d59fe"
+        "blob": "13cfc6bd165490d16dc4469fc1c68af18ac35f9e"
+      }
+    },
+    {
+      "path": "docs/implementation/2-live-validation-handoff.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "bd64361def52c6ce512bad6ac90deb96f2a8e406"
       }
     },
     {
@@ -61,6 +84,14 @@
       "after": {
         "mode": "100644",
         "blob": "e7cfc4a2f6c8eb8d52de2d7de1d77a41e0dfbb03"
+      }
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-15-11-target-collateral-addendum.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "c0770608b7ba1e64e23042970d9b3ac589ff9f99"
       }
     },
     {
@@ -93,7 +124,7 @@
       },
       "after": {
         "mode": "100644",
-        "blob": "3b47cc945458c958f6a05bf558c8bc0333711a4c"
+        "blob": "27726f9afdf44e9963ae73e70159fed2afa16d03"
       }
     },
     {
@@ -126,7 +157,7 @@
       },
       "after": {
         "mode": "100644",
-        "blob": "ee20969b7cd42042dd1970a278c8bf84e77d5153"
+        "blob": "e10e3f0f954991c82a329d96466a70b9c1b79634"
       }
     }
   ],

@@ -2,6 +2,10 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
   mkdirSync,
+  existsSync,
+  chmodSync,
+  renameSync,
+  symlinkSync,
   mkdtempSync,
   readFileSync,
   rmSync,
@@ -526,14 +530,17 @@ it('rejects altered installed code despite a retained marker and recomputed repo
 
 it('consumes the fixed reviewed release disposition without relabelling original L4/L6 observations', () => {
   const messages: string[] = [];
-  const before = readFileSync('docs/evidence/live-validation.json');
-  const result = verifyLive({ log: (message) => messages.push(message) });
+  const root = amendedFixture();
+  const before = readFileSync(join(root, 'docs/evidence/live-validation.json'));
+  const result = verifyLive({ root, log: (message) => messages.push(message) });
   expect(result.errors).toEqual([]);
   expect(messages.join('\n')).toContain(
     'Amended release acceptance with explicit limitations',
   );
   expect(messages.join('\n')).not.toContain('Live evidence is complete');
-  expect(readFileSync('docs/evidence/live-validation.json')).toEqual(before);
+  expect(
+    readFileSync(join(root, 'docs/evidence/live-validation.json')),
+  ).toEqual(before);
   const report = JSON.parse(before.toString());
   expect(
     report.cases.find((item: { id: string }) => item.id === 'L4').status,
@@ -558,7 +565,8 @@ function amendedFixture() {
     ]);
   }
   const root = amendmentRoot;
-  git(root, 'reset', '--hard', '63fdb6911a87d2978551e0a86c7387a53cfc0461');
+  rmSync(join(root, 'docs/implementation'), { recursive: true, force: true });
+  git(root, 'reset', '--hard', 'c529123d95e782acd962aa8276cd635616d59db9');
   git(root, 'clean', '-fd');
   for (const path of [
     'scripts/verify-live.mjs',
@@ -573,6 +581,9 @@ function amendedFixture() {
     'README.md',
   ])
     put(root, path, readFileSync(path));
+  const finalReview = 'docs/evidence/11-astra-amended-pr-review.txt';
+  if (existsSync(finalReview))
+    put(root, finalReview, readFileSync(finalReview));
   const packages = JSON.parse(
     readFileSync('docs/evidence/live-validation.json', 'utf8'),
   ).packages;
@@ -754,4 +765,207 @@ it('does not apply the fixed disposition to a caller-selected report even in an 
       '\n',
     ),
   ).toContain('requires the fixed observed report path');
+}, 15000);
+
+it('rejects a committed protected change even after the working file is restored', () => {
+  const root = amendedFixture();
+  const path = 'apps/web/server/config.ts';
+  const original = readFileSync(join(root, path));
+  put(
+    root,
+    path,
+    Buffer.concat([original, Buffer.from('\n// committed product change\n')]),
+  );
+  commit(root, 'Protected candidate change');
+  put(root, path, original);
+  expect(() => acceptanceProvenance(root)).toThrow(/candidate HEAD/i);
+}, 15000);
+it('rejects a committed runtime addition removed from both index and working tree', () => {
+  const root = amendedFixture();
+  const path = 'apps/web/server/hidden-runtime.ts';
+  put(root, path, 'export const hidden=true;\n');
+  commit(root, 'Hidden committed runtime');
+  git(root, 'rm', '--cached', path);
+  unlinkSync(join(root, path));
+  expect(() => acceptanceProvenance(root)).toThrow(/candidate HEAD/i);
+}, 15000);
+
+it('accepts the actual target merge context in an isolated candidate', () => {
+  const root = amendedFixture();
+  const target = 'fe2a158c8f717aed43d604c3d7614dc18a3452e1';
+  const mergedTree = git(
+    root,
+    'merge-tree',
+    '--write-tree',
+    'HEAD',
+    target,
+  ).split('\n')[0];
+  const mergedHead = git(
+    root,
+    '-c',
+    'user.name=Evidence fixture',
+    '-c',
+    'user.email=fixture@example.test',
+    'commit-tree',
+    mergedTree,
+    '-p',
+    'HEAD',
+    '-p',
+    target,
+    '-m',
+    'Actual target merge fixture',
+  );
+  git(root, 'update-ref', 'HEAD', mergedHead);
+  git(
+    root,
+    'checkout',
+    mergedHead,
+    '--',
+    'docs/implementation/2-live-validation-handoff.md',
+  );
+  expect(() => acceptanceProvenance(root)).not.toThrow();
+}, 15000);
+
+const handoff = 'docs/implementation/2-live-validation-handoff.md';
+for (const kind of [
+  'missing',
+  'changed',
+  'mode',
+  'file alias',
+  'parent alias',
+] as const)
+  it(
+    'rejects ' + kind + ' immutable target handoff',
+    () => {
+      const root = amendedFixture();
+      const path = join(root, handoff);
+      if (kind === 'missing') unlinkSync(path);
+      if (kind === 'changed')
+        put(root, handoff, readFileSync(path, 'utf8') + '\nChanged\n');
+      if (kind === 'mode') chmodSync(path, 0o755);
+      if (kind === 'file alias') {
+        renameSync(path, path + '.original');
+        symlinkSync(path + '.original', path);
+      }
+      if (kind === 'parent alias') {
+        const dir = join(root, 'docs/implementation');
+        renameSync(dir, dir + '-original');
+        symlinkSync(dir + '-original', dir);
+      }
+      expect(() => acceptanceProvenance(root)).toThrow();
+    },
+    15000,
+  );
+it('pins target collateral in candidate HEAD even when working bytes are restored', () => {
+  const root = amendedFixture();
+  const original = readFileSync(join(root, handoff));
+  put(root, handoff, Buffer.concat([original, Buffer.from('\nChanged\n')]));
+  commit(root, 'Committed altered handoff');
+  put(root, handoff, original);
+  expect(() => acceptanceProvenance(root)).toThrow(/candidate HEAD/i);
+}, 15000);
+it('requires archival ancestry but not target ancestry for the unmerged child', () => {
+  const root = amendedFixture();
+  expect(() =>
+    git(
+      root,
+      'merge-base',
+      '--is-ancestor',
+      'fe2a158c8f717aed43d604c3d7614dc18a3452e1',
+      'HEAD',
+    ),
+  ).toThrow();
+  expect(() => acceptanceProvenance(root)).not.toThrow();
+  git(root, 'update-ref', 'HEAD', '63fdb6911a87d2978551e0a86c7387a53cfc0461');
+  expect(() => acceptanceProvenance(root)).toThrow(/c529123/);
+}, 15000);
+it('refuses a different trusted-target storage blob despite correct working and archive bytes', () => {
+  const root = amendedFixture();
+  const target = 'fe2a158c8f717aed43d604c3d7614dc18a3452e1';
+  git(
+    root,
+    'update-ref',
+    'refs/replace/' + target,
+    '63fdb6911a87d2978551e0a86c7387a53cfc0461',
+  );
+  try {
+    expect(() => acceptanceProvenance(root)).toThrow(/Target handoff storage/);
+  } finally {
+    git(root, 'replace', '-d', target);
+  }
+}, 15000);
+it('rejects an unrelated addition in an actual target merge tree even if absent from working files', () => {
+  const root = amendedFixture();
+  const target = 'fe2a158c8f717aed43d604c3d7614dc18a3452e1';
+  const mergedTree = git(
+    root,
+    'merge-tree',
+    '--write-tree',
+    'HEAD',
+    target,
+  ).split('\n')[0];
+  const blob = execFileSync('git', ['hash-object', '-w', '--stdin'], {
+    cwd: root,
+    input: '# Unrelated target fixture\n',
+    encoding: 'utf8',
+  }).trim();
+  const badTree = execFileSync('git', ['mktree'], {
+    cwd: root,
+    input:
+      git(root, 'ls-tree', mergedTree) +
+      '\n100644 blob ' +
+      blob +
+      '\tunrelated-target.md\n',
+    encoding: 'utf8',
+  }).trim();
+  const head = git(
+    root,
+    '-c',
+    'user.name=Evidence fixture',
+    '-c',
+    'user.email=fixture@example.test',
+    'commit-tree',
+    badTree,
+    '-p',
+    'HEAD',
+    '-p',
+    target,
+    '-m',
+    'Unrelated target addition fixture',
+  );
+  git(root, 'update-ref', 'HEAD', head);
+  expect(() => acceptanceProvenance(root)).toThrow(
+    /candidate HEAD.*unrelated-target/,
+  );
+}, 15000);
+it('validates genuine pre-archive provenance without manufacturing a final-review file', () => {
+  const root = amendedFixture();
+  const path = 'docs/evidence/11-astra-amended-pr-review.txt';
+  if (existsSync(join(root, path))) unlinkSync(join(root, path));
+  json(
+    root,
+    'docs/evidence/11-live-acceptance-disposition.json',
+    acceptanceProvenance(root),
+  );
+  expect(amendErrors(root)).toBe('');
+  expect(existsSync(join(root, path))).toBe(false);
+}, 15000);
+it('retains authentic native bytes for post-archive fixture provenance', () => {
+  const root = amendedFixture();
+  const path = 'docs/evidence/11-astra-amended-pr-review.txt';
+  // If final review is not archived yet, use genuine existing assessment bytes
+  // ONLY as copied test-fixture content, never a production final-review placeholder.
+  const native = readFileSync(
+    existsSync(path)
+      ? path
+      : 'docs/evidence/11-astra-target-collateral-assessment.txt',
+  );
+  put(root, path, native);
+  json(
+    root,
+    'docs/evidence/11-live-acceptance-disposition.json',
+    acceptanceProvenance(root),
+  );
+  expect(amendErrors(root)).toBe('');
+  expect(readFileSync(join(root, path))).toEqual(native);
 }, 15000);
