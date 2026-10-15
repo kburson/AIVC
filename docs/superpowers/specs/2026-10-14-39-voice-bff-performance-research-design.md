@@ -8,7 +8,7 @@ Status: draft specification for owner review. The owner requested this specifica
 
 ## 1. Intent and decisions this research must support
 
-Measure the performance curve of the local reference services, identify the first binding resource at each configuration, and explain the financial and operational consequences of optimizing code, assigning more resources, running more processes, and adding instances. Begin without a target peak-call count: discover the reliable operating envelope rather than validate an assumed capacity.
+Measure the performance curve of the local reference services, identify the first binding resource at each configuration, and explain the financial and operational consequences of optimizing code, assigning more resources, running more processes, and adding instances. Begin without a target peak-call count: discover the observed operating envelope rather than validate an assumed capacity.
 
 The VP-level report must answer:
 
@@ -18,7 +18,7 @@ The VP-level report must answer:
 4. How do external STT, model inference, TTS, and tool waits affect in-flight work, local capacity, bandwidth, and user-perceived response delay?
 5. What are the cost curves, provider allocation thresholds, and economically useful scaling choices? Which further optimizations are unlikely to repay their engineering cost?
 
-The main investment is repeatable local experimentation. External APIs receive only a small bounded calibration sample across reasonable use cases. Network simulators replace paid services for capacity, stress, scaling, and soak runs. Results distinguish measured local behavior, exploratory live samples, simulated behavior, and financial projections.
+The measurement definitions, completion oracles, pacing rules, and evidence classifications in section 16 govern all experiments and report labels below. The main investment is repeatable local experimentation. External APIs receive only a small bounded calibration sample across reasonable use cases. Network simulators replace paid services for capacity, stress, scaling, and soak runs. Results distinguish measured local behavior, exploratory live samples, simulated behavior, and financial projections.
 
 ## 2. Governing architecture and source evidence
 
@@ -216,7 +216,7 @@ All requests use the real documented contracts, permitted Origin/Host, body/hist
 | B5 | Disconnect, cancellation, rapid replacement, slow consumer, and quota/error profiles | Cleanup, backpressure, and overload behavior |
 | M1 | Declared mixed conversation population | Primary capacity and cost curve |
 
-Initial M1 turn mix: 40% B1, 30% B2, and 30% B3. Initial conversation pacing is four user turns/minute with seeded jitter; report actual achieved pacing. B3 includes all required speech requests, not just `/api/turn`. Sweep pacing at two and eight turns/minute at the paired executive configurations. Run B4/B5 as explicit interventions rather than silently changing the baseline mix. Preserve separate typed, voice, and mixed results; one scenario's capacity cannot label another.
+Initial M1 turn mix: 40% B1, 30% B2, and 30% B3. Initial conversation pacing follows the fixed schedule and residence policy in section 16.4 at four intended user turns/minute; report actual achieved pacing. B3 includes all required speech requests, not just `/api/turn`. Sweep pacing at two and eight turns/minute at the paired executive configurations. Run B4/B5 as explicit interventions rather than silently changing the baseline mix. Preserve separate typed, voice, and mixed results; one scenario's capacity cannot label another.
 
 Each virtual conversation has independent history and generation state, only one current answer, and one active speech request at a time. A headless speech scheduler uses actual stable-text segmentation, effective caps, pending text/audio limits, virtual playback progress, and interruption rules. Count speech requests, audio duration, and suppressed/canceled segments. Virtual playback is calculated byte-duration consumption, not proof of audible telephone/browser playback.
 
@@ -241,14 +241,14 @@ Default discovery procedure:
 2. Use session plateaus of 1, 2, 4, 8, and so forth, with at least 120 seconds of steady observation after stabilization. Stop after sustained failure or a validity/safety stop, retaining the failed point.
 3. Refine the last passing/first failing bracket with intermediate loads. If no failure was reached, publish a lower bound, not an exact capacity.
 4. Repeat low-load baseline, last-pass, boundary, and first-fail points three times with declared independent seeds and clean run state. Randomize configuration order where practical.
-5. Select a candidate operating point at 75% of the highest repeatably passing session count, round down, and verify it for a 30-minute mock-only soak. The 25% margin is a stated operating policy, not an inferred confidence interval. Increase the margin if the workload or failures justify it.
+5. Select a candidate operating point at 75% of the highest repeatably passing session count, round down, and verify it for a 30-minute mock-only soak. If the highest passing count is one, retain one only as a no-headroom candidate and explicitly report that the margin cannot be achieved; do not publish a zero-session operating point. The 25% margin is a stated operating policy, not an inferred confidence interval. Increase the margin if the workload or failures justify it.
 6. Verify cleanup after repeated batches and after overload. Retained heap/external memory and live resources should stabilize; RSS need not immediately return to its original value because allocators can retain pages.
 
-Initial research acceptance thresholds, to be frozen in the first run manifest:
+Initial empirical screening thresholds, subject to the sample-count and repeated-run evidence rules in section 16.3, to be frozen in the first run manifest:
 
 - At least 99.9% correct completed turns among all offered turns expected to complete; report load-generator drops, admission rejects, timeouts, stream failures, and unfinished turns in the denominator. Planned cancellation has its own expected-outcome denominator and cannot hide ordinary failures.
-- For a given workload/profile, p95 first answer delta no more than its low-load baseline p95 plus 100 ms; p95 first server audio write no more than its baseline plus 150 ms; p95 turn completion no more than its baseline plus 250 ms.
-- These baseline comparisons are acceptance budgets, not subtraction-based estimates of local percentile duration. Report absolute latencies alongside them, and also apply the reference simple first-audio goal around three seconds where the selected profile makes that goal applicable. A slow profile that already misses it remains visibly outside that conversational goal.
+- For a given workload/profile, p95 first answer delta no more than its low-load baseline p95 plus 100 ms; p95 speech-request-local first server audio write no more than its baseline plus 150 ms; p95 turn completion no more than its baseline plus 250 ms.
+- These baseline comparisons are acceptance budgets, not subtraction-based estimates of local percentile duration. Report absolute latencies alongside them, and show an exploratory three-second client-submit-to-first-received-PCM budget only where the section 16.1 same-client observer is validated. A slow profile that already misses it remains visibly outside that backend budget.
 - Event-loop delay p99 at most 20 ms for the published low-lag operating point, with the sampling resolution disclosed. Also publish the empirical latency curve beyond that policy limit.
 - No unbounded audio/text/telemetry queue, OOM, stale-generation output, duplicate paid work, or resource leak. Container memory remains below 85% of its limit at the proposed operating point.
 
@@ -306,7 +306,7 @@ Every run manifest records at least: run ID/time, source commit and dirty/input 
 
 The VP report begins with the measured operating envelope, first binding constraints, cost composition, and recommended spending/engineering sequence. It must contain:
 
-1. A configuration table with reliable operating point, observed boundary bracket, workload, latency, correct goodput, bandwidth, and evidence status.
+1. A configuration table with candidate operating point, observed boundary bracket, workload, latency, correct goodput, bandwidth, and evidence status.
 2. Clear latency/goodput/resource curves with threshold crossings and uncertainty; failed points remain visible.
 3. What more CPU, more RAM, workers, and additional instances actually produced, including disappointing or non-scaling results.
 4. External latency observations, sample limitations, quota thresholds, and the sensitivity of capacity and cost to provider behavior.
@@ -342,3 +342,77 @@ These sources support mechanisms, not capacity claims for this application. Rech
 - [k6 open and closed models](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/), [protocols](https://grafana.com/docs/k6/latest/using-k6/protocols/), and [HTTP Response](https://grafana.com/docs/k6/latest/javascript-api/k6-http/response/): offered-load models and client capabilities.
 - [xk6-sse author repository](https://github.com/phymbert/xk6-sse): candidate incremental SSE client; compatibility with the actual POST contract is an explicit prerequisite.
 - [Deepgram limits](https://developers.deepgram.com/reference/api-rate-limits), [Deepgram pricing](https://deepgram.com/pricing), [Claude limits](https://platform.claude.com/docs/en/api/rate-limits), [Claude pricing](https://platform.claude.com/docs/en/about-claude/pricing), and [Twilio US pricing](https://www.twilio.com/en-us/voice/pricing/us): inputs to refresh for calibration and projections.
+
+## 16. Measurement, outcome, and evidence definitions
+
+These definitions resolve the cross-request and statistical details of sections 8–13. A report cannot substitute a cheaper or earlier milestone for the named metric, count a text-only result as voice success, or turn an inconclusive observation into a passing capacity point.
+
+### 16.1 Metric dictionary and clock ownership
+
+| Metric | Origin → end | Clock owner and eligible population |
+| --- | --- | --- |
+| Client first answer | Immediately before submitting `/api/turn` → first valid nonempty semantic answer delta received | One headless client monotonic clock; one observation per text-bearing turn, excluding admission/status events |
+| Speech-request first server audio | Entry to one `/api/speech` request → first valid PCM write for that request | One server process monotonic clock; per segment, not per conversation turn |
+| Client turn first audio | Immediately before submitting `/api/turn` → first valid PCM received for the first eligible speech segment of that turn | One validated headless client monotonic clock spanning both HTTP requests; one observation per ordinary voice-bearing turn |
+| Client text completion | Turn submission → valid terminal answer completion received | Same client clock; text oracle must pass |
+| Client voice delivery completion | Turn submission → receipt/draining of every required eligible segment and final pending-speech settlement | Same client clock; voice oracle must pass |
+| Virtual playback completion | Turn submission → virtual consumption of all required audio at its declared sample rate | Same client clock/model; includes virtual queue drain, not physical audible playback |
+| Request residence | Request entry → normal end or observed abort/settlement | Same server process; aborted/failed outcomes remain distinguishable |
+
+Every record correlates conversation ID, `turnId`, generation, request ID, and `segmentId` where applicable. The client schedules speech from the actual stable text and records both intended and actual speech-request initiation. Use the first eligible segment once for turn-level first audio; later segments contribute request-local metrics and continuity checks, not additional first-audio samples.
+
+The BFF can serve turn and speech requests on different processes. Matching IDs do not make their monotonic clocks comparable. The same-client cross-request observer is mandatory for client turn first-audio claims; otherwise that metric is unavailable and request-local server measurements remain useful under their own names. Distinguish a first PCM byte from a complete valid sample; require valid format and sufficient bytes for a sample before recording first audio. Warmup, canceled generations, provider failures, and fixtures intentionally producing no speech have separately declared populations rather than being silently removed from ordinary outcome accounting.
+
+Client submission includes upload/STT/model/segmentation/client scheduling as exercised by the harness, but excludes earlier capture/VAD and physical playback. The exploratory three-second backend budget is not proof of the original speech-end-to-audible goal. Server first-write and endpoint latency cannot demonstrate either client-receipt or acoustic timing. No sample is created when its required observer or endpoint is missing.
+
+The 150 ms baseline regression budget in section 10 applies only to speech-request first server audio. The 250 ms completion budget applies to client text completion for typed turns and client voice delivery completion for ordinary voice turns. Virtual playback duration is reported separately because answer length deliberately changes it. Client turn first audio is also reported as its own absolute curve and backend-budget comparison when supported.
+
+### 16.2 Workload-specific outcome oracle and settlement
+
+For B1/B2, successful completion requires the scripted expected final text, correct actual tool results and identifiers where required, a valid terminal sequence, and no stale/duplicate output. For ordinary B3 and voice-bearing M1 turns, voice success additionally requires every fixture-required eligible speech segment in order, valid audio format and byte-duration, successful complete draining, bounded queues, and no unintended suppression, overflow, truncation, synthesis failure, or obsolete-generation audio. Select fixture expectations before each run and account for the real segmenter and configured limits.
+
+Record `textOutcome`, `voiceOutcome`, and `cancellationOutcome` independently. A valid completed text answer followed by failed speech is text success and voice failure; it cannot increase ordinary voice goodput or reduce cost per successful voice turn. At least one ordinary B3 fixture produces multiple segments with speech continuing after SSE completion, so that omission is detectable. Deterministic audio checks establish transport correctness, not naturalness, intelligibility, or successful business resolution.
+
+A voice turn's delivery observation window stays open after answer SSE completion until required segments and pending speech settle or a 120-second absolute turn-observation deadline is reached. Requests still obey their shorter reference deadlines. Use concise ordinary fixtures that fit this window; long/over-cap fixtures are separately labeled policy tests. The headless scheduler also tracks virtual playback to apply backpressure and pacing even after network delivery completes.
+
+Stopping offered arrivals does not discard admitted work. Drain for up to 120 seconds, classify remaining operations unfinished/failed against the ordinary denominator, initiate cancellation, and retain a further settlement record for up to 30 seconds. If upstream work remains unconfirmed, retain its unresolved lease/resource status and mark cleanup failure. Do not free a lease early or mark missing audio successful to finish a run. Include all resulting bytes, operations, reservations, and failures in accounting.
+
+Intentional B5 interruption and intentionally policy-limited cases have explicit expected outcomes and their own denominators. Prove old-generation cancellation and absence of stale output. Ordinary baseline turns are not reclassified as intentional cancellations after failure. Mixed goodput and costs use each workload's matching oracle and also publish per-workload counts; they cannot hide voice failures behind typed successes.
+
+### 16.3 Empirical screening, confirmation, and inconclusive outcomes
+
+The 99.9% figure in section 10 is an observed success-fraction screening policy. Neither three short repeats nor a 30-minute soak proves an underlying 99.9% service reliability. Call the proposed operating point an **empirically observed candidate** and state that production reliability is unproven. Preserve those labels in executive tables and financial projections. Any later reliability claim needs a separate confidence/precision design that addresses within-session dependence and changing workloads.
+
+For each baseline and candidate stratum, publish offered/admitted/completed/failed counts, applicable timing count, duration, independent session count, repeat count, per-run histogram/range, and uncertainty method. A p95 regression decision requires at least 200 applicable timing observations in both the comparable low-load baseline and each candidate repeat. This minimum is an exploratory decision policy, not a confidence guarantee. Baselines may use several independent sessions only while resource measurements confirm they remain below the local contention region. Do not silently change pacing, payload, profile, or mixture to manufacture samples.
+
+Discovery plateaus are screens. Extend mock-only baseline or confirmation observation up to 60 minutes per run if needed for the named metric counts. If counts, a comparable baseline, or uncertainty evidence remain insufficient within that bound, label the threshold inconclusive. Sparse points may still show descriptive data and observed hard failures; they cannot be accepted as fully confirmed capacity points. No extra live calibration is required or authorized to improve these statistics.
+
+A repeated point passes empirical confirmation only when all three repeats separately meet every applicable outcome, timing, resource, and validity rule. One failed repeat makes the point fail; an inconclusive repeat makes confirmation inconclusive. A pooled average or percentile cannot conceal a failed or sparse repeat. The 30-minute soak is an additional recovery/stability observation and cannot by itself repair inadequate confirmation evidence.
+
+Use the highest repeatably confirmed passing point for the 75% policy candidate. If none can be confirmed, report the observed bracket and unconfirmed candidate rather than a validated operating count. If that count is one, publish the no-headroom caveat specified in section 10. The p99 minimum in section 10 remains exploratory and does not imply statistical confidence or override these p95/count rules.
+
+### 16.4 Session schedules, pacing, and open arrivals
+
+One ordinary conversation resides for 180 seconds plus bounded drain. Give each session an independent deterministic seed. Its first intended turn is session start plus a uniform phase in [0,15) seconds. Later intended submissions occur at that phase plus `15*k` seconds and independent uniform jitter in [-1.5,1.5] seconds, while the intended time remains inside the 180-second residence. Each submission uses a completed synthetic utterance or typed fixture; prior recording time is not silently added to HTTP submit latency. At two/eight turns per minute, use 30/7.5-second intervals with jitter of plus/minus 10% and a phase over one interval.
+
+A scheduled ordinary turn cannot overlap unsettled prior answer, required speech delivery, or virtual playback in that session. If the session is still busy at its intended start, count that offer as a `busy-schedule-miss`, exclude it from admitted goodput, include it among failed offers for the offered-work screening policy, and do not queue, catch up, or cancel the old turn. Normal baseline waits therefore cannot silently lower offered demand. Intentional barge-in is only the separately labeled B5 policy. Keep request service latency for admitted turns distinct from the failed-offer rate.
+
+Closed-population plateaus maintain the declared number of resident sessions, replacing each expired session after its bounded drain; retain both intended resident slots and actual resident/in-flight/settling populations. A slot temporarily in drain is visible, and its missed scheduled work is not hidden. Report idle residents, in-flight turns, pending speech, measured starts/minute, successful completions/minute, and session residence separately. A cold-start replacement period is not automatically counted as steady state.
+
+For the mandatory open scenario, one k6 arrival iteration represents one **new 180-second conversation** with its own session ID and the above schedule. Conversation start arrivals are independently scheduled; record late or dropped starts, offered conversations/second, actual lifetime, and population. An optional open-turn saturation test uses a new independent one-turn session per iteration, has no overlapping turns, and is labeled unpaced backend saturation rather than realistic caller population.
+
+Translate callers into RPM, bandwidth, and cost using actual achieved turn rates and residence, showing offered demand and failed offers alongside them. Report paced-session capacity and unpaced request throughput as different curves. The no-target discovery is allowed to show a conversational pacing limit before CPU saturation; F1/B1 and open-turn controls then isolate remaining backend headroom rather than changing the baseline definition.
+
+### 16.5 Mandatory coverage and hosting-price mapping
+
+| Experiment family | Minimum-wait network control | Calibrated replay | Sensitivity/fault/pacing |
+| --- | --- | --- | --- |
+| F1 isolation, every feasible resource cell | Required; no external wait is injected into real retrieval | Not applicable to direct retrieval | Fault subset at the four paired executive configurations |
+| M1 BFF path, every feasible resource cell and both constrained-service sweeps | Required | One declared supported replay profile required; if calibration is unavailable, use a clearly hypothetical profile and mark empirical replay unavailable | Four paired executive configurations |
+| Worker and two/four-instance comparisons | Required | Same supported replay profile as single-instance comparison | Boundary, skew, and recovery subset |
+| B1/B2/B3 deep dives | Four paired executive configurations | Same profile at those configurations | Declared selected slow/tail cells |
+| B4/B5 interventions | Appropriate controlled profile | Not required | Four paired executive configurations; never pooled into ordinary M1 |
+
+A missing supported calibration remains explicit; a hypothetical replay cannot be counted as measured external behavior. This matrix defines minimum coverage, not permission to purchase more samples or invent support for an unimplemented protocol.
+
+For every costed deployment, map the experimental entitlement to a dated purchasable hosting SKU, region, architecture, shared/dedicated/burst CPU policy, billing granularity, usable resource overhead, packing assumptions, and required spare resources. A 3-CPU experiment is not automatically priced at three quarters of a 4-CPU server. If the actual platform cannot buy that allocation, show its containing purchasable unit and unused capacity. If machine performance differs, label both the capacity transfer and allocation-price mapping as projections. Preserve unpriced cells and unknown provider contract changes as unknown.
