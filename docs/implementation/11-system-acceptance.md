@@ -1018,3 +1018,11 @@ only for CPS12/cap72. Technical corrections are CODE_COMPLETE, with same-Astra
 recheck, authentic final archive/provenance refresh, exact-head green CI,
 canonical Test/Review and final owner merge approval still required. No state,
 AC checkbox, integration, approval or Close is granted here.
+
+## Final Astra recheck and review archival
+
+The same genuine Astra6/high session independently cleared all four P2 corrections at `0e0e6b6f60dff333de99754c6884a4a816b91424`: Spec PASS / Quality PASS for the accepted amended scope, with no blocking implementation finding. Its complete 81-path inventory and all intervening changes retain the earlier complete application review through verified product/runtime byte identity. Exact native final message `msg_0cf7ad7b97c73867016ad0d761e35c819581bd3860745e7ae8` is preserved unchanged at `docs/evidence/11-astra-amended-pr-review.txt` (7,387 bytes; SHA-256 `d376746d237744a53ea4619d4852bb27c4ee240bcbd3d6f63722a8f87185ea6f`). This ordinary implementation recheck is not a sealed protocol receipt or owner approval.
+
+Independent focused results remain explicit: 85/87 passed, two older Git/filesystem fixtures exceeded their unchanged five-second limits, then one targeted unchanged rerun passed both. The reviewer records a nonblocking local test-timing risk, not an assertion defect or a rewritten 87/87 result. Author full concurrent unit155/155 and exact-head CI run38743555390 all six jobs passed. Working and HEAD source digest is `bd2e9413572655e5e73e8a03316a7fd4b04442c236a07bcd5f3fcba60d99ea04`.
+
+This final archival checkpoint changes only this status document, the authentic final report and regenerated separate disposition. Original physical, observed, native and sealed evidence stays unchanged, including L4 fail, L6 unverified, actual6.60-second limitation and CPS12/cap72 qualification; default CPS14 remains unqualified. No additional microphone, speaker, browser application or paid provider checks occurred. Exact-final-candidate CI and registered Test/Review remain required; owner final merge approval, sanctioned integration and Close remain pending.
