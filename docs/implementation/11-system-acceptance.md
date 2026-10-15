@@ -1,9 +1,9 @@
 # Story #11 joined system and live acceptance status
 
 Whole-story acceptance remains unverified. This checkpoint supplies the joined
-system, documentation, read-only verifiers and measurement implementation for
-independent review. Required actual provider/browser/device L1–L8 observations
-remain pending; no controlled run is a substitute.
+system, documentation, read-only verifiers, source-qualified partial live evidence
+and measurement implementation for independent review. Required L1–L8 acceptance
+remains failed/unverified; no controlled run is a substitute.
 
 ## Actual application boundary
 
@@ -227,8 +227,9 @@ browser case covers new submissions after reading older history and preservation
 of deliberate scroll during a held answer’s later deltas. Real Next/Fastify mock checks cover
 stable control bounds during pane scrolling, viewport-height growth, desktop and
 390×700 narrow sizing, usable response area and no outer-page overflow. These are
-offline UI results. New-source independent review and production qualification
-remain pending; prior live observations retain their actual96ee/33d9 provenance.
+offline UI results. The corrected-head independent review and bounded new-source
+production result are recorded below; prior live observations retain their
+actual96ee/33d9 provenance.
 Full L1–L8 acceptance remains unverified.
 
 ## Short-window review correction
@@ -251,5 +252,91 @@ The existing desktop/narrow700 checks still require every control visible withou
 upper scrolling, responsive pane growth and newest-card visibility. Six joined
 browser tests,19 UI tests and typecheck passed. Newest-first display, original turn
 numbers, chronological history and new-turn-only scroll reset are unchanged.
-Same-seat corrected-head review and new production qualification remain pending;
-this checkpoint makes no additional provider or whole-live acceptance claim.
+The same distinct Astra6/high reviewer passed the corrected exact head
+`d98fcd99ffea8c2b8266a9fde7c34f664b88e7c8`:42 scoped tests and six joined
+browser cases passed, with no remaining scoped finding. The
+[unchanged native response](../evidence/11-astra-ui-pass-d98.txt) has2190 UTF-8
+bytes, SHA256 `28098b2237d4200bdb208d71f8cabd59fd77dc42b5cfc3e741e1eea5ab5464e3`,
+message `msg_03981de7adb10efe016ad03fa52d28819480ce8b0d2939e7ae`, reviewer SID
+`01a13c7c-c4a4-7760-8b80-278687d46e54`. The report is copied byte-identically
+from epic documentation checkpoint `fe2a158`. This is an ordinary native code
+review, not a sealed APR/provider-action receipt or full live acceptance.
+
+## Bounded current-source live evidence checkpoint
+
+A fresh Sol6.1/high author session qualified exact `d98fcd99`, source digest
+`ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51`,
+Node26.8.1, Chrome155.0.8059.40 on macOS. Actual installed VAD JS/declaration
+postimages and the installed lifecycle marker passed before a fresh
+`npm run build:clean`. Production build `Fm7ulGF7DhoVvhi0AyrOw` served both
+runtimes through the production launcher used by npm start. The visible Chrome
+context used native `viewport:null`, inner1200×919/outer1200×1006, scrollY0,
+both microphone and output muted, and zero acquired microphone tracks. This typed
+run did not import MicVAD, so its browser lifecycle marker remains unobserved.
+
+The [sanitized current observation](../evidence/11-live-search-continuation-d98.json)
+preserves the single deliberately submitted two-search-then-Atlas request,
+actual HTTP200/SSE events, tool result/card, UI/mutes, marks and usage. Turn
+`69e8e493-437b-4cfe-8647-785f54822ff2` reported2387 input/157 output tokens
+and2 search uses. The model announced simultaneous lookups; Atlas rendered
+active/North/3. The terminal answer was explicitly truncated with
+“hosted search continuation is incompatible.” No sources event or complete cited
+answer was observed. No retry, search-budget reset or increase followed.
+
+Actual first text arrived1489.4ms after the browser request mark,1970ms before
+the terminal event; total request-to-terminal was3459.4ms. These are typed,
+network-inclusive same-clock browser spans, not speech-end or pure provider
+latency. Zero speech requests/native audio sources were observed. The newest
+Turn1 card was visible without outer-page scrolling. Stop/quit completed;
+the owned browser exited0 and server exited130 after SIGINT, releasing both ports.
+
+The application mapped the incompatible continuation to its documented truncated
+fallback. Source inspection explains that the adapter omits exhausted search and
+retains native prior content; outgoing provider bytes, original API error text and
+an actual provider pause were not observed. The resulting configured/pending
+capability is not an account-unavailable branch. L6 remains failed against the
+required successful continuation; its unobserved wire/pause aspects stay
+unverified. This result does not justify more paid attempts or relaxed budgets.
+
+The current official [Anthropic server-tools documentation](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools)
+requires the same tools when resuming a paused or mixed client/server-tool turn,
+and documents a validation400 when a waiting server tool is omitted. This creates
+a plausible tension with the accepted exhausted-budget omission requirement. It
+is a source-based compatibility hypothesis, not proof that this observed turn
+paused or contained a waiting server block. No budget/tool policy was changed.
+
+The [historical partial evidence](../evidence/11-live-partial-history.json)
+consolidates exact33d9 and96ee source/build identities, saved-artifact hashes,
+request-correlated marks, actual terminal usage/cards/citation URLs, devices and
+Stop context states. It preserves all three Atlas timing misses and the actual
+microphone research samples: first text5161.9/5079.9ms and scheduled first
+audio5648.3/5664.5ms from the VAD-frame speech-end estimate. The first research
+reply was stopped after4/16 eligible segments; the second delivered16/16 before
+later Stop. Historical incremental TTS HTTP evidence is109 chunks/188160 bytes.
+These observations are not relabeled as current-source trials.
+
+The [live report](../evidence/live-validation.json) now has concrete current
+source/build/browser/package/patch provenance and source-qualified case narratives.
+It deliberately retains L1–L5/L7/L8 unverified and L6 failed, empty current-source
+audio timing arrays, and no current browser lifecycle marker. Historical Working
+misfire/resume, confirmed interruption, corrected listening, mute results,
+headset/speaker answers and Stop evidence are preserved for distinct independent
+assessment; short Speaking-misfire acceptance remains ambiguous. No acceptance
+box, canonical Test or later lifecycle gate has been advanced.
+
+Two concrete paths remain for owner consideration after the independent audit:
+
+1. Keep #11 in Develop and use the audit to identify only genuinely missing
+   observations or a narrowly scoped compatibility correction, preserving answered
+   human rounds and requiring new exact-source evidence for any affected fix.
+2. Explicitly amend the accepted scope to publish a partial reference baseline
+   with the observed incompatibility and remaining gaps. This requires governed
+   scope/approval changes; it cannot reuse the present acceptance as passing.
+
+Checkpoint verification: `npm run verify:docs` passed;
+`npm run format:check` checked320 files with zero findings. The read-only
+`npm run verify:live` exited1 as required: all eight cases are fail/unverified,
+the current browser marker and STT/TTS/device acceptance are absent, hosted
+citations/accepted continuation/pause are unverified, and current-source Atlas,
+research and interruption timing arrays are empty. The separately preserved
+historical samples do not satisfy a current-source report automatically.

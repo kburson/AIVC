@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "gitHead": "",
-  "sourceDigest": "",
+  "gitHead": "d98fcd99ffea8c2b8266a9fde7c34f664b88e7c8",
+  "sourceDigest": "ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51",
   "mode": "live",
   "nodeVersion": "v26.8.1",
   "packages": {
@@ -36,79 +36,93 @@
     "apps/retrieval:fastify": "5.12.5"
   },
   "providers": {
-    "claudeModel": "unverified",
-    "sttModel": "unverified",
-    "ttsModel": "unverified"
+    "claudeModel": "claude-sonnet-4-6",
+    "sttModel": "nova-3",
+    "ttsModel": "aura-2-thalia-en"
   },
   "vadPatch": {
     "packageVersion": "0.0.31",
     "upstreamGitHead": "de9b3ff83fd44cd7a2b3e07e9454e6b6f0bc249d",
     "patchPath": "patches/@ricky0123+vad-web+0.0.31.patch",
-    "patchDigest": "",
+    "patchDigest": "44485e484f4f0223b720e0e02e12e8e498ce6354bf24a21c71e7c60a9f5d9137",
     "modulePath": "node_modules/@ricky0123/vad-web/dist/real-time-vad.js",
-    "appliedModuleDigest": "",
+    "appliedModuleDigest": "37b55cc57c1463624857ad65a9ceaf9cc073327bc9ed07fd34d0ecbe564eaa2a",
     "observedLifecycleRevision": "",
-    "buildId": "",
+    "buildId": "Fm7ulGF7DhoVvhi0AyrOw",
     "buildMode": "production"
   },
   "browser": {
-    "name": "unverified",
-    "version": "unverified",
-    "os": "unverified"
+    "name": "Chrome",
+    "version": "155.0.8059.40",
+    "os": "darwin"
   },
   "cases": [
     {
       "id": "L1",
       "status": "unverified",
-      "observations": "Required actual provider/browser/device exercise has not yet occurred for this source.",
-      "artifact": null
+      "observations": "33d9: three actual hands-free Atlas trials completed batch-WAV STT, lookup/text and generated voice. Participant heard replies. First-audio target missed:4002.5/3848.6/3820.9ms. No d98 hands-free replay claimed.",
+      "artifact": "docs/evidence/11-live-search-continuation-d98.json"
     },
     {
       "id": "L2",
       "status": "unverified",
-      "observations": "Required actual provider/browser/device exercise has not yet occurred for this source.",
-      "artifact": null
+      "observations": "33d9: f0749512 completed Who owns it? with Atlas/North from prior completed history. Later interruption did not rewrite completed text. No d98 replay claimed.",
+      "artifact": "docs/evidence/11-live-partial-history.json"
     },
     {
       "id": "L3",
       "status": "unverified",
-      "observations": "Required actual provider/browser/device exercise has not yet occurred for this source.",
-      "artifact": null
+      "observations": "33d9: confirmed c6d3ec67 to e3296785 Beacon interruption observed, with 0.2ms callback-to-suspension and 0.1ms confirmation-to-local-cancel. 96ee: Working candidate raw 59/suspended 60 had no confirmation; native context resumed at 223626.1 and same 0edda763 answer survived. Speaking umm raw 83 to confirmed 85 crossed about 362.6ms and cancelled; not a short Speaking misfire pass. Earlier unconfirmed raw 77/160/343/346 candidates lack native playback-state correlation in the headset snapshot and remain unverified as Speaking-misfire acceptance.",
+      "artifact": "docs/evidence/11-live-partial-history.json"
     },
     {
       "id": "L4",
       "status": "unverified",
-      "observations": "Required actual provider/browser/device exercise has not yet occurred for this source.",
-      "artifact": null
+      "observations": "33d9: genuine choppiness and contiguous anchored provider-padding finding are preserved in 11-live-audio-diagnostic-33d9.json. Corrected 96ee 0529a441 numbered Atlas/Beacon reply had 2.60/3.16/3.60s segments; all 248 sources ended; participant reported Clear and complete, without the earlier cutouts. This is affected listening evidence at96ee, not d98 replay or universal long-answer acceptance.",
+      "artifact": "docs/evidence/11-live-partial-history.json"
     },
     {
       "id": "L5",
       "status": "unverified",
-      "observations": "Required actual provider/browser/device exercise has not yet occurred for this source.",
-      "artifact": null
+      "observations": "96ee: typed Cedar bab72245 with mic-muted completed text and audible speech. Microphone Beacon 7a0be96f/8b72a809/ada42eb5 completed batch STT/model text with output muted, no TTS for those turns. Latest result was hidden below old turns; participant screenshot confirmed it. Current d98 typed search: both mutes true, zero STT/TTS/native sources; current newest card visibly present.",
+      "artifact": "docs/evidence/11-live-partial-history.json"
     },
     {
       "id": "L6",
-      "status": "unverified",
-      "observations": "Required actual provider/browser/device exercise has not yet occurred for this source.",
-      "artifact": null
+      "status": "fail",
+      "observations": "33d9: actual sources and searchUses 1 observed in typed 41780eda and microphone research 0c94862f/59d426d5. First speaker reply stopped after 4/16 eligible segments; second delivered 16/16 before later Stop. Actual microphone research timing is preserved below. No historical genuine exhausted/pause success established. Current d98 uses 2 then explicit incompatible truncated fallback; current citations absent, wire identity/pause unverified.",
+      "artifact": "docs/evidence/11-live-search-continuation-d98.json"
     },
     {
       "id": "L7",
       "status": "unverified",
-      "observations": "Required actual provider/browser/device exercise has not yet occurred for this source.",
-      "artifact": null
+      "observations": "Participant supplied headset and speaker no-self-trigger/full-reply/Stop answers during historical rounds. Later observed input is Yeti Stereo Microphone, default output USB Audio; do not relabel input built-in/Bluetooth. Source 33d9 speaker research had no new raw-start between each request and its later Stop. Exact historical device/participant provenance remains qualified; no d98 physical echo trial claimed.",
+      "artifact": "docs/evidence/11-live-partial-history.json"
     },
     {
       "id": "L8",
       "status": "unverified",
-      "observations": "Required actual provider/browser/device exercise has not yet occurred for this source.",
-      "artifact": null
+      "observations": "96ee saved device snapshots show actual Yeti tracks ended and all 6 native contexts closed after Stop. Browser unmount coverage is controlled offline evidence. Current d98 Stop/quit had zero acquired tracks/audio contexts and clean owned browser/server shutdown; it cannot prove release of a newly acquired mic.",
+      "artifact": "docs/evidence/11-live-partial-history.json"
     }
   ],
   "timings": [],
-  "usage": [],
+  "usage": [
+    {
+      "inputTokens": 2387,
+      "outputTokens": 157,
+      "searchUses": 2
+    }
+  ],
   "limitations": [
-    "Implementation is in progress. Package and Node versions reflect local setup only. No actual provider/browser/device acceptance or tested source/build identity is claimed."
+    "Exactly one deliberate typed /api/turn request; no retry, budget reset or budget increase was requested.",
+    "The model announced simultaneous lookups despite the requested sequence. Two reported search uses do not prove two successful searches or the requested official source results. No sources SSE event was returned.",
+    "Atlas active/North/3 was observed in tool.completed and the visible card. The answer was explicitly truncated and excluded from follow-up context.",
+    "No provider-wire observer was installed. Native omitted-tool/prior-block identity, original API error text and pause_turn remain unverified.",
+    "A configured/pending search state is not genuine account-unavailable evidence or successful search-off fallback.",
+    "Installed patch postimages/marker and fresh production build were verified. This muted typed run did not import/acquire MicVAD, so no current browser-observed lifecycle marker is claimed.",
+    "No raw audio, credentials or fabricated provider counters are included. Unknown counters remain omitted.",
+    "This report binds only the current d98 muted typed run. Historical33d9/96ee microphone/listening/echo/timing/usage evidence is separately source-bound in docs/evidence/11-live-partial-history.json and not relabeled current.",
+    "All required cases remain fail/unverified pending independent evidence assessment and genuinely missing acceptance. No Test/Review/Close transition is authorized by this checkpoint."
   ]
 }

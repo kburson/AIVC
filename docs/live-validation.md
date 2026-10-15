@@ -5,7 +5,8 @@ provider/browser/physical observations and a real voice finding are recorded in
 the [story status](implementation/11-system-acceptance.md). Offline Mock/Contract Simulation is
 separate and cannot establish real microphone, generated voice, hosted search,
 echo or physical latency acceptance. The [live report](evidence/live-validation.json)
-retains missing/failed/unverified observations; `npm run verify:live` must remain
+now binds the exact current muted typed run and links source-qualified historical
+observations; it retains failed/unverified acceptance, `npm run verify:live` must remain
 nonzero until every required case is actually satisfied.
 
 ## Production and runtime binding
@@ -145,3 +146,22 @@ cannot be isolated, retain null and explain the unavailable boundary.
 `vad-confirmed-start` to `turn-local-cancel` measures separate local generation/
 abort initiation. Neither mark proves remote provider cessation. `vad-module`
 records the revision checked on the actual imported module after patch validation.
+
+## Current bounded checkpoint
+
+The [d98 muted typed diagnostic](evidence/11-live-search-continuation-d98.json)
+observed one actual HTTP200/SSE request, two reported search uses, Atlas's
+active/North/3 card and explicit incompatible-continuation truncation. It produced
+no citation event, microphone/STT, speech request or audible playback. Native
+provider prior-block identity and pause remain unverified; configured/pending
+search does not qualify as account-unavailable fallback. No retry or budget
+change followed. Source/build/package/browser/patch identities are recorded,
+while the unobserved current browser lifecycle marker stays empty.
+
+The [historical observations](evidence/11-live-partial-history.json) preserve
+33d9/96ee microphone, research, callback, listening/mute/device/Stop evidence with
+their original heads/builds and saved-file hashes. Research microphone timings
+were recovered from genuine saved marks rather than repeating participant rounds.
+Review must assess each affected boundary and ambiguity; historical successes do
+not turn the current report into full acceptance. The read-only live gate remains
+nonzero.
