@@ -43,6 +43,10 @@ repairs remains approval deferred where already recorded.
 - The same genuine story session can be normally paused during dependency waits and resumed for released work. Its actual binding generation, branch and clean feature fast-forward were preserved; preparation did not authorize Plan or implementation before predecessor completion.
 - The root credential file is not automatically loaded by the two-process launcher because Next runs in `apps/web`. Live setup must explicitly supply server-only process environment. Configuration names, model metadata and actual provider observations stay separate from credentials and from each other.
 
+- The original #11 acceptance criterion cited full `test:slow` before canonical Test, while the stamper reserves that full command for Test. Public issue-body replacement made VC6 the focused documentation/live verifier tests and retained full slow as VC15. The epic-trail VC now explicitly targets parent2; its bare form targets the bound child and has no child trail to verify. Scope, acceptance text, rank and full verification floors remain unchanged.
+- The exact accepted specification transfer has historical Markdown formatting that fails the authored-file formatter. The transfer is checked against both its authoritative SHA256 and original Git bytes before only `docs/specification.md` is excluded from authored formatting/lint inventory. Regression tests reject changed bytes and aliases; existing archived evidence protections remain intact.
+- Plain Explain requires its documented `--json` output flag. A fresh JSON Explain after declaration corrections reports the expected incomplete Develop acceptance evidence; it does not indicate an unfinished predecessor or authorize stage advancement.
+
 ## Controls with demonstrated delivery value
 
 Independent #8 review found concrete playback and recovery defects that the author

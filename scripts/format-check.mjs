@@ -3,6 +3,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as prettier from 'prettier';
 import { verifyEvidenceArchive } from './sealed-evidence.mjs';
+import { verifySpecificationCopy } from './verify-docs.mjs';
 export { verifyEvidenceArchive } from './sealed-evidence.mjs';
 
 const workspace = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -28,6 +29,12 @@ export function enumerateOwnedFiles(root = workspace) {
       withFileTypes: true,
     })) {
       const path = directory ? directory + '/' + entry.name : entry.name;
+      // This exact transfer path is immutable accepted source, not an authored view.
+      // Changed bytes or aliases refuse before this single path can be excluded.
+      if (path === 'docs/specification.md') {
+        verifySpecificationCopy(root);
+        continue;
+      }
       if (entry.isSymbolicLink()) continue;
       if (entry.isDirectory()) {
         if (

@@ -36,3 +36,56 @@ it('refuses an empty ownership selection', () => {
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+it('excludes only the verified byte-exact specification transfer copy from authored scans', async () => {
+  const { execFileSync } = await import('node:child_process');
+  const original = execFileSync('git', [
+    'show',
+    'bc6e15ecb2f48c9f3b0cc030609fd99a8f17adac:docs/superpowers/specs/2026-10-12-voice-bff-reference-design.md',
+  ]);
+  const root = mkdtempSync(join(process.cwd(), '.scratch/spec-copy-'));
+  try {
+    mkdirSync(join(root, 'docs'), { recursive: true });
+    writeFileSync(join(root, 'docs/specification.md'), original);
+    writeFileSync(join(root, 'docs/ordinary.md'), '# Ordinary\n');
+    writeFileSync(join(root, 'docs/specification-other.md'), original);
+    expect(enumerateOwnedFiles(root)).toEqual([
+      'docs/ordinary.md',
+      'docs/specification-other.md',
+    ]);
+    expect(
+      (await import('node:fs')).readFileSync(
+        join(root, 'docs/specification.md'),
+      ),
+    ).toEqual(original);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+it('refuses altered or symlinked specification copies instead of suppressing their findings', async () => {
+  const { execFileSync } = await import('node:child_process');
+  const { symlinkSync, unlinkSync } = await import('node:fs');
+  const original = execFileSync('git', [
+    'show',
+    'bc6e15ecb2f48c9f3b0cc030609fd99a8f17adac:docs/superpowers/specs/2026-10-12-voice-bff-reference-design.md',
+  ]);
+  const root = mkdtempSync(join(process.cwd(), '.scratch/spec-copy-'));
+  try {
+    mkdirSync(join(root, 'docs'), { recursive: true });
+    writeFileSync(join(root, 'ordinary.md'), '# Ordinary\n');
+    const copy = join(root, 'docs/specification.md');
+    writeFileSync(copy, Buffer.concat([original, Buffer.from('\nChanged\n')]));
+    expect(() => enumerateOwnedFiles(root)).toThrow(
+      /specification.*(?:bytes|hash)/i,
+    );
+    unlinkSync(copy);
+    writeFileSync(join(root, 'original.md'), original);
+    symlinkSync(join(root, 'original.md'), copy);
+    expect(() => enumerateOwnedFiles(root)).toThrow(
+      /specification.*(?:regular|symlink)/i,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
