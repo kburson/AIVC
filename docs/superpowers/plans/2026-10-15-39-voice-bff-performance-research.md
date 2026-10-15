@@ -1,20 +1,20 @@
-# Voice BFF Performance Research Implementation Plan
+# Voice orchestrator Performance Research Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. This draft authorizes neither implementation nor experiment execution; preserve the owner's selected execution method and applicable AITM approvals.
 
-**Goal:** Build a reproducible, predominantly mock-only experiment system that measures the voice BFF's local operating envelope and produces an evidence-backed performance and cost report.
+**Goal:** Build a reproducible, predominantly mock-only experiment system that measures the voice orchestrator's local operating envelope and produces an evidence-backed performance and cost report.
 
-**Architecture:** Headless k6 conversations enter the real Next.js Node BFF, call the real Fastify retrieval peer when selected, and use separately provisioned network provider simulators. Local stage telemetry, client observations, cgroup metrics and immutable manifests support service attribution, resource/process comparisons and cost projections. The real provider APIs receive only separately authorized bounded calibration samples.
+**Architecture:** Primary headless k6 conversations enter a standalone Fastify orchestrator directly. It owns STT/model/tool/TTS and calls a second Fastify lookup service; separately provisioned network simulators replace paid providers. A thin Next.js web BFF delegates to that same orchestrator only in a bounded forwarding-overhead comparison. Local stage telemetry, client observations, cgroup metrics and immutable manifests support service attribution, resource/process comparisons and cost projections. The real provider APIs receive only separately authorized bounded calibration samples.
 
 **Tech Stack:** The integrated application's exact Node/npm/dependency pins; Node-native `.mjs` research utilities and `node:test`; existing TypeScript/Vitest for application changes; Docker/Compose or equivalent verified cgroups; a pinned k6 build whose POST/multipart SSE and concurrent speech behavior passes Task 5. Node >=26 is the governing floor; the existing amendment selects Node 26.8.1/npm 12.0.2. Reverify these against the selected integrated revision; no runtime upgrade is part of this plan.
 
-**Spec:** [Story 39 amended design](../specs/2026-10-14-39-voice-bff-performance-research-design.md), source commit `e293c3aa5dd015a3737f7453b44d336f5752b046`, SHA-256 `76c5bc37359cecc3b2dda0cd32fd409771d36c7d639876021b2e3a6c2eebc38d`. Read the whole spec; sections 16 and 17 govern qualifications and amendment lineage.
+**Spec:** [Story 39 amended design](../specs/2026-10-14-39-voice-bff-performance-research-design.md), source commit `3e96c9e5734e2e940d849c3e1339bcb0f0592c97`, SHA-256 `7146781add44a11ba5f90371482901a645ffc4b14c8e8fa50ef23f3361270db4`. Read the whole spec; sections 16–18 govern qualifications, corrected architecture and amendment lineage.
 
 **Issue:** [#39](https://github.com/kburson/AIVC/issues/39). Date: October 15, 2026 (America/Chicago). Draft plan for owner review; no new plan SAR/XPR is claimed. The earlier SAR/XPR accepted the identified predecessor spec, not this plan or its later owner-directed amendment.
 
 ## Global Constraints
 
-- Primary entry is the actual Next.js BFF; Fastify isolation cannot be labeled voice-session capacity.
+- Primary entry is the portable Fastify orchestrator; lookup-only throughput cannot be labeled voice-session capacity. Next.js serves React and delegates; it owns no provider orchestration.
 - Use production builds and pinned toolchains/images. Do not benchmark Next.js development compilation, HMR, debug builds, or an unreported profiler as steady production overhead.
 - All primary cells run one application process per target container.
 - Primary grid: 1, 2, 3, 4 CPU quotas crossed with 2, 4, 8, 12 GiB. Executive pairs: 1/2, 2/4, 3/8, 4/12 CPU/GiB.
@@ -33,7 +33,7 @@
 - p95 decisions require >=200 applicable observations per baseline stratum and per candidate repeat; extend at most 60 minutes/run, otherwise inconclusive. Exploratory p99 requires >=1,000 applicable observations across repeats and remains qualified.
 - All three confirmation repeats must pass separately; candidate is floor(75% of highest confirmed pass), with the spec's one-session/no-headroom exception and a 30-minute mock-only soak.
 - Before each plateau validate generator/simulator capacity at 1.5 times its request, connection, byte and scheduled-output demand; unvalidated points are censored.
-- Search disabled, stable tool definitions, actual Origin/Host protections, no wildcard or forwarded-header trust.
+- Search disabled, stable tool definitions, private core caller authentication plus web Origin/Host protections, no wildcard or forwarded-header trust.
 - No actual Twilio gateway, production deployment, new Kubernetes cluster, browser rendering, acoustic measurement, self-hosted inference or multi-agent-per-turn fanout is implemented here. Telephony and cloud transfers remain projections.
 
 ## Review Focus
@@ -50,15 +50,11 @@
 
 This plan is one integrated research workstream because session scheduling, streaming observation and outcome/cost accounting share contracts. Independently reviewable tasks below can become delivery stories through the governed approved-plan workflow; no extra stories or issue-state changes are created by writing this document. Story #39 is currently docs-only. Do not treat it as permission to modify application code or bypass its state gates; approved execution must use correctly scoped, bound delivery issues.
 
-Authoring checked `trunk` at `e293c3a`: its tracked application workspace, tests and runtime configs are absent, and root `npm test` is intentionally failing bootstrap text. Untracked `apps/` contains generated assets/build information; preserve it and do not stage it. Read-only inspection of `codex/2-draft` at `fe2a158c8f717aed43d604c3d7614dc18a3452e1` established concrete candidate integration paths, not accepted/merged application authority:
+Authoring found no complete integrated tracked application in this checkout; generated untracked `apps/` is not source evidence and stays untouched. Read-only predecessor inspection at `fe2a158c8f717aed43d604c3d7614dc18a3452e1` showed provider/runtime/leases under `apps/web/server`, Next.js turn handlers, and separate Fastify lookup. Those are historical observations of the old architecture, not verified new Fastify module paths.
 
-- `apps/web/server/runtime.ts` chooses in-process `MockAdapter`/mock speech or real Claude/Deepgram, with actual retrieval HTTP in either mode.
-- `ModelAdapter.runRound(input, signal): AsyncIterable<ModelEvent>`; `SpeechAdapter.transcribe(wav, signal)` and `synthesize(input, signal)` are the adapter seams.
-- `apps/web/server/turns/leases.ts` hardcodes two slots per kind; it needs an explicit mock research option before a hardware curve is meaningful.
-- `apps/web/app/api/turn/route.ts` wraps `turnResponse`; Fastify `createRetrievalApp()` registers `/v1/projects` and `/health`.
-- `apps/web/client/voice/speech-queue.ts` and `speech-text.ts` implement actual speech scheduling/segmentation. Headless tests must conform to those policies, not invent an easier output stream.
+The owner subsequently required three independent application services: Next.js UI/thin BFF, Fastify orchestrator, and Fastify lookup. Task0 now requires the accepted integrated orchestration migration and transport/auth contract before research application instrumentation. The target module map below uses `apps/orchestrator/src` as the explicit proposed core location; reconcile exact accepted paths/signatures before coding. `ModelAdapter.runRound`, `SpeechAdapter.transcribe/synthesize`, turn/speech leases and cancellation semantics move behind Fastify; the lookup retains its independent HTTP boundary. Next.js retains only UI, web admission and streaming delegation. A renamed metric around existing Next.js paid orchestration cannot satisfy this prerequisite.
 
-Task 0 rechecks all paths and APIs against the accepted integrated application. If they differ, record an exact path/signature map in `research/performance/baseline.json` and update this plan before downstream coding. If the implementation is unavailable, Task 0 can deliver only the blocker inventory; do not implement a stand-in reference application. No merge, checkout, reset, runtime install, package upgrade or mutation of another worktree is implied by inspection.
+The migration itself belongs to separately governed application architecture work, not docs-only issue39 or a mock harness. Preserve original epic2/spec acceptance bytes and superseded SAR reports. If the three-service revision is absent, Task0 returns the blocker inventory and stops downstream app coding; it does not implement an imitation core. The source spec section18 is the owner-directed architecture authority; new review evidence must identify its revised digest. No merge, checkout, reset, runtime install, package upgrade or mutation of another worktree is implied by this plan.
 
 ## 2. File structure and interfaces
 
@@ -67,8 +63,8 @@ All paths below are repository-relative. Paths marked application are conditiona
 | Boundary | New or modified paths | Responsibility |
 | --- | --- | --- |
 | Baseline and manifest | `tools/performance/{baseline,records,verify}.mjs`; `research/performance/{baseline.json,schema/records.schema.json}` | Source/toolchain/path authority, schema, hashes and read-only verification |
-| Timing (application) | `apps/web/server/observability/{timing,metrics}.ts`; `apps/retrieval/src/http/timing.ts`; route/error/SSE/provider/retrieval integration points | Early headers, streaming spans, process samples, bounded export |
-| Research configuration (application) | `apps/web/server/{config,runtime}.ts`; `apps/web/server/turns/leases.ts`; `apps/retrieval/src/index.ts` | Default-preserving mock-only network adapters/admission/bind configuration |
+| Timing (application) | `apps/orchestrator/src/observability/{timing,metrics}.ts`; `apps/retrieval/src/http/timing.ts`; core route/error/SSE/provider/lookup integration points; `apps/web/server/observability/timing.ts` and `apps/web/server/orchestrator-client.ts` for thin forwarding only | Early headers, streaming spans, process samples, bounded export |
+| Research configuration (application) | `apps/orchestrator/src/{config,runtime}.ts`; `apps/orchestrator/src/turns/leases.ts`; `apps/retrieval/src/index.ts` | Default-preserving mock-only network adapters/admission/bind configuration |
 | Network mocks | `tools/performance/simulators/{server,profiles,model,speech}.mjs`; `research/performance/fixtures/{turns,replay,hypothetical}.json` | Versioned protocol fixtures and observed simulator scheduling |
 | Calibration | `tools/performance/calibration/{ledger,run}.mjs`; `research/performance/calibration/{casebook,rate-card}.json` | Separate paid command, durable reservations and sanitized observations |
 | Streaming proof | `tools/performance/clients/{probe,observer}.mjs`; `tools/performance/k6/{compat,transport}.js`; `research/performance/client-lock.json` | Actual k6 protocol support and separately validated audio observer |
@@ -112,20 +108,20 @@ Execution order: 0 → 1 → 2 → 3; Task 4 follows 1 and 3; Task 5 follows 2 a
 
 | Task | Engineering estimate | Principal uncertainty |
 | --- | --- | --- |
-| 0 Baseline and prerequisites | 2–4 h | Accepted integrated application availability |
+| 0 Baseline and prerequisites | 3–5 h | Accepted integrated application availability |
 | 1 Evidence contracts | 3–5 h | Existing source-digest conventions |
 | 2 Application instrumentation/admission | 8–14 h | Framework error/stream completion ownership |
 | 3 Network simulators | 6–10 h | Actual provider protocol/SDK redirect support |
 | 4 Paid calibration and ledger | 4–7 h | Usage/rate visibility and continuation accounting |
-| 5 k6 streaming compatibility | 4–8 h | POST/multipart support and concurrent speech |
+| 5 k6 streaming compatibility | 5–10 h | POST/multipart support and concurrent speech |
 | 6 Headless workload/oracle | 8–14 h | Conformance to actual segment/playback behavior |
-| 7 Resource and campaign runner | 8–14 h | Host entitlements, finite controller and cleanup |
+| 7 Resource and campaign runner | 9–16 h | Host entitlements, finite controller and cleanup |
 | 8 Validity and capacity analysis | 5–8 h | Sparse strata and attribution |
-| 9 Cost model/report | 5–8 h | Purchasable SKU/contract inputs |
+| 9 Cost model/report | 6–9 h | Purchasable SKU/contract inputs |
 | 10 Campaign operations/interpretation | 4–8 h active effort | Measured boundaries and repeat length |
-| **Total** | **57–100 h active effort** | Excludes blocked integration time and unattended experiment runtime |
+| **Total** | **61–106 h active effort** | Excludes the separately governed orchestration migration, blocked integration time and unattended experiment runtime |
 
-These are planning estimates, not executed measurements or delivery promises. A new k6 extension or alternate streaming implementation is outside the 4–8-hour compatibility gate: if no available pinned build passes, record a blocked prerequisite and propose a separately estimated client change before capacity work.
+These are planning estimates, not executed measurements or delivery promises. A new k6 extension or alternate streaming implementation is outside the 5–10-hour compatibility gate: if no available pinned build passes, record a blocked prerequisite and propose a separately estimated client change before capacity work.
 
 ### Finite campaign estimate
 
@@ -139,15 +135,15 @@ Use sequential target experiments initially. A target-environment hour means one
 | Experiment family | Initial count before infeasibility/reduction | Target-environment hours |
 | --- | --- | --- |
 | F1 grid discovery | 16 | 4.8–17.6 |
-| BFF-constrained M1 discovery, minimum-wait + replay | 32 | 16–51.2 |
-| Fastify-constrained M1 discovery, same profiles | 32 | 16–51.2 |
+| orchestrator-constrained M1 discovery, minimum-wait + replay | 32 | 16–51.2 |
+| lookup-constrained M1 discovery, same profiles | 32 | 16–51.2 |
 | Default-admission M1 discovery at four pairs | 8 | 4–12.8 |
 | Worker/instance discovery, four deployments × two profiles | 8 | 4–12.8 |
-| Paired and scaling M1 confirmation packages | Up to 34: 8 BFF + 8 Fastify + 8 default + 8 scaling + 2 matched worker baselines | 68–578 |
+| Paired and scaling M1 confirmation packages | Up to 34: 8 orchestrator + 8 Fastify + 8 default + 8 scaling + 2 matched worker baselines | 68–578 |
 | Mandatory controls and interventions | Finite inventory and tier attribution in section 8 | Added separately below |
 | **Core discovery/confirmation subtotal** | Controls excluded here; section 8 supplies the complete envelope | **112.8–723.6 target-environment hours** |
 
-The table above is a core subtotal, not the full campaign estimate. Section 8 defines the mandatory controls, finite count parameters, family-by-tier estimates and full envelope; its inventory governs Task 7 and Task 10. Actual discovery failures, statistical insufficiency, validated Fastify reductions and unavailable workers can reduce completed work; extra profiles or infrastructure retesting can increase it. Do not count reduced/unavailable cells as measured. A two-turn replay replaces the infeasible four-turn replay's confirmation package in the budget, while retaining its failed feasibility control; it is not pooled into the four-turn result. Section 16.9's Fastify reduction applies only with all its measured prerequisites; no resource matrix is silently dropped to meet this estimate.
+The table above is a core subtotal, not the full campaign estimate. Section 8 defines the mandatory controls, finite count parameters, family-by-tier estimates and full envelope; its inventory governs Task 7 and Task 10. Actual discovery failures, statistical insufficiency, validated lookup reductions and unavailable workers can reduce completed work; extra profiles or infrastructure retesting can increase it. Do not count reduced/unavailable cells as measured. A two-turn replay replaces the infeasible four-turn replay's confirmation package in the budget, while retaining its failed feasibility control; it is not pooled into the four-turn result. Section 16.9's lookup reduction applies only with all its measured prerequisites; no resource matrix is silently dropped to meet this estimate.
 
 **Proposed execution checkpoints, requiring owner agreement before running:** first authorize at most 12 target-environment hours for the pilot and initial Tier 1 evidence; then return the coverage ledger, actual rate of progress and revised remaining estimate. Proposed cumulative campaign ceiling is 160 target-environment hours, with a partial report at exhaustion. That ceiling may be insufficient for complete research, especially sparse low-load confirmations; it is a stop policy, not a reduced definition of completion. No timer or hosting budget auto-renews. Owner agreement to this plan's content alone is not an actual cloud purchase or permission to exceed the paid calibration ceiling.
 
@@ -179,7 +175,7 @@ test('an untracked route cannot satisfy the baseline', async () => {
     throw new Error('unexpected command');
   };
   await assert.rejects(verifyBaseline({root: process.cwd(), expectedHead: 'a'.repeat(40),
-    requiredPaths: ['apps/web/app/api/turn/route.ts'], exec}), /missing tracked source/);
+    requiredPaths: ['apps/orchestrator/src/http/app.ts'], exec}), /missing tracked source/);
 });
 ```
 
@@ -222,11 +218,11 @@ test('partial evidence is not a complete manifest', () => {
 it('does not claim a future stream duration in a header', () => {
   let ms = 0;
   const records: unknown[] = [];
-  const ctx = beginTiming({requestId:'r', service:'bff', now:()=>ms,
+  const ctx = beginTiming({requestId:'r', service:'orchestrator', now:()=>ms,
     exporter:{emit:(record:unknown)=>{ records.push(record); return true; }}});
-  const model = ctx.span('bff.model');
+  const model = ctx.span('orchestrator.model');
   const early = ctx.headers();
-  expect(early.get('Server-Timing')).not.toContain('bff.model');
+  expect(early.get('Server-Timing')).not.toContain('orchestrator.model');
   ms = 250; model.end('success'); ctx.finish('success');
   expect(records.length).toBeGreaterThan(0);
   expect(early.get('Server-Timing')).not.toContain('250');
@@ -240,7 +236,7 @@ it('does not claim a future stream duration in a header', () => {
 
 ### Task 3: Build seeded network provider simulators and isolate paid egress
 
-**Files:** Create simulator modules/fixtures from section 2, `apps/web/server/providers/network-mock.ts`, `tests/performance/simulators.test.mjs`, `tests/contracts/network-mock.test.ts`; modify runtime/config to select the narrow network mock only in explicit mock research mode.
+**Files:** Create simulator modules/fixtures from section 2, `apps/orchestrator/src/providers/network-mock.ts`, `tests/performance/simulators.test.mjs`, `tests/contracts/network-mock.test.ts`; modify runtime/config to select the narrow network mock only in explicit mock research mode.
 
 **Interfaces:** `startSimulators({profile,seed,clock,bind}): Promise<{url,close,events}>`; `selectTuple(profile,seed,caseId)` preserves observed tuple relationships. `NetworkMockModelAdapter implements ModelAdapter` and `createNetworkMockSpeechAdapter(): SpeechAdapter` use real HTTP and actual abort signals. Prefer redirecting actual SDKs when verified supported; otherwise this narrow adapter's omitted SDK parsing/setup behavior is explicitly recorded. There is no in-process shortcut in published capacity runs.
 
@@ -260,7 +256,7 @@ test('replay keeps first output, completion and bytes from one tuple', () => {
 
 - [ ] Run `node --test tests/performance/simulators.test.mjs`; expect red. Implement bounded HTTP fixtures using native `http`, scripted model/tool messages, submitted WAV metadata and deterministic valid PCM bytes. Record intended dispatch/chunk times and actual times independently of target traces. Never synthesize real speech or use a model to prepare load responses.
 - [ ] Implement minimum-wait, empirical tuple replay, clearly hypothetical sensitivity and fault/quota profiles. Include finite active-request and token/audio quota models; expose actual simulator queue/scheduling lag and byte counters. Validate fixture output lengths against the real speech caps.
-- [ ] Run actual BFF-to-network-mock-to-real-Fastify integration in mock mode. Prove no dummy retrieval data shortcut, exact cancellation signal propagation and correct usage semantics. Run `npx --no-install vitest run tests/contracts/network-mock.test.ts` and simulator tests.
+- [ ] Run actual orchestrator-to-network-mock-to-real-Fastify integration in mock mode. Prove no dummy retrieval data shortcut, exact cancellation signal propagation and correct usage semantics. Run `npx --no-install vitest run tests/contracts/network-mock.test.ts` and simulator tests.
 - [ ] Create a mock container network with explicit local allowlists, no paid credentials and no usable external route. From the actual application namespace attempt a paid-host connection and confirm denial, including SDK fallback/metadata routes; verify intended internal routes work. A test-only hostname interceptor alone does not establish egress isolation. Retain namespace/routing/firewall evidence, not secrets. Commit owned simulator, adapter, config and fixture files.
 
 ### Task 4: Add the separate bounded live calibration mode
@@ -339,7 +335,7 @@ test('20 seconds needs the separately agreed slower series', () => {
 - [ ] Implement oracle checks for expected complete text, correct tool result/IDs, all required eligible speech segments, ordered complete PCM drain, terminal events and generation ownership. Test a mandatory multi-segment B3 where second speech starts after SSE completion: missing second audio must produce `textOutcome:'success'`, `voiceOutcome:'failed'`, `outcome:'failed'`. A synthesized audio response with JSON/error MIME must fail; stale-generation output must never pass.
 - [ ] Implement virtual playback and headless segmentation conformance. Test segment cap `min(120,floor(6*CPS))`, default CPS14, 2,400-character pending limit, two-second low-water, ten-second outstanding limit and cancellation. Require the entire speech plan before ordinary success; preserve separate delivery and virtual-playback completion clocks. Test odd PCM byte handling and stalled consumers without inventing physical playback.
 - [ ] Wire F1, standalone B1/B2 muted controls, B3 voice, B4 extremes and B5 cancellation/fault cases. M1 draws 40/30/30 per intended turn with output enabled for all three. Closed populations replace after residence plus bounded drain; open k6 arrivals each start a new independent 180-second conversation. Record dropped starts and actual resident/in-flight/settling populations; optional one-turn saturation is explicitly unpaced.
-- [ ] Prove every predeclared ordinary fixture/tuple/seed schedule passes load-one maximum-occupancy feasibility for the chosen profile. Use all declared tuples, not just a selected median. Run k6 mock smoke through real BFF/Fastify and compare harness speech segmentation/history behavior with application fixture tests. Rerun the three Node suites and commit exact shared/scenario/test/fixture files.
+- [ ] Prove every predeclared ordinary fixture/tuple/seed schedule passes load-one maximum-occupancy feasibility for the chosen profile. Use all declared tuples, not just a selected median. Run k6 mock smoke through real orchestrator/lookup and compare harness speech segmentation/history behavior with application fixture tests. Rerun the three Node suites and commit exact shared/scenario/test/fixture files.
 
 ### Task 7: Enforce resources and implement the finite campaign controller
 
@@ -347,14 +343,14 @@ test('20 seconds needs the separately agreed slower series', () => {
 
 **Interfaces:** `buildMatrix(config): Experiment[]`; `nextAction(state,observation): {kind,load,reason}` is pure; `estimateCampaign(experiments,policy): {targetHours,containerCpuHours,containerGiBHours,helperHostHours,priceInputs}`; `runExperiment(experiment,dependencies): Promise<RunManifest>`. `Experiment` includes tier, workload/profile/pacing, constrained service, allocations, seed set, admission, topology, required observer/headroom refs, repeat role and `maxDurationMs`. `runExperiment` must use verified production images and Task 1 records, never run paid calibration implicitly.
 
-- [ ] Write tests for exactly 16 one-process grid cells per required sweep, all four paired configurations, default versus research admission, worker resource normalization and full resource provisioning. Add Fastify reduction tests rejecting average-only retrieval demand, fewer than three controls, >10% effects, insufficient 10× peak headroom and any reduction of the BFF/F1 grids:
+- [ ] Write tests for exactly 16 one-process grid cells per required sweep, all four paired configurations, default versus research admission, worker resource normalization and full resource provisioning. Add lookup reduction tests rejecting average-only retrieval demand, fewer than three controls, >10% effects, insufficient 10× peak headroom and any reduction of the orchestrator/F1 grids:
 
 ```js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { buildMatrix } from '../../tools/performance/campaign/matrix.mjs';
-test('primary BFF discovery retains the entire grid', () => {
-  const cells=buildMatrix({family:'bff-grid',profiles:['minimum-wait'],
+test('primary orchestrator discovery retains the entire grid', () => {
+  const cells=buildMatrix({family:'orchestrator-grid',profiles:['minimum-wait'],
     cpus:[1,2,3,4],memoryGiB:[2,4,8,12],processes:1});
   assert.equal(cells.length,16);
   assert.equal(new Set(cells.map(c=>`${c.cpu}/${c.memoryGiB}`)).size,16);
@@ -362,8 +358,8 @@ test('primary BFF discovery retains the entire grid', () => {
 ```
 
 - [ ] Run `node --test tests/performance/matrix.test.mjs tests/performance/controller.test.mjs tests/performance/estimate.test.mjs tests/performance/topology.test.mjs`; expect red. Implement a manifest-driven controller: preflight → load-one feasibility → infrastructure proof → warm/ramp → plateau → drain/settle → screen → refine → confirmation → candidate/soak → cleanup. Stop on finite discovery/time budgets and unsafe validity conditions; restart creates a new run, not appended results.
-- [ ] Implement actual cgroup CPU/memory settings and record effective values/heap behavior. Keep target service and peer in separate application containers; no ambiguous shared quota. Container entry invokes the verified production build/start for exactly its service and binds the explicit private address. Task 0 resolves the precise workspace startup command, avoiding the root launcher starting two copies. Keep peers fixed at demonstrated nonbinding allocations for BFF-constrained and Fastify-constrained sweeps.
-- [ ] Validate network protections through both actual paid-capable routes for every topology: missing, malformed, null, mismatched or disallowed Origin/Host gets 403 with zero simulator/provider calls; permitted pair works. Preserve the exact BFF target Host/Origin through the balancer. Record research address deviation, allowlists, TLS, connection reuse and pool settings; do not accept `X-Forwarded-*` as authority.
+- [ ] Implement actual cgroup CPU/memory settings and record effective values/heap behavior. Keep Fastify orchestrator, Fastify lookup and any measured Next.js BFF in separately budgeted application containers; no ambiguous shared quota. Container entry invokes the verified production build/start for exactly its service and binds the explicit private address. Task 0 resolves the precise workspace startup command, avoiding the root launcher starting duplicate or unintended services. Keep peers fixed at demonstrated nonbinding allocations for orchestrator-constrained and lookup-constrained sweeps.
+- [ ] Validate core bearer admission through both direct paid-capable routes: missing/invalid credentials return 401 with zero upstream work, valid private test/service credentials work without a browser Origin. Separately validate both thin Next.js routes: missing, malformed, null, mismatched or disallowed Origin/Host returns 403 with zero core/provider work; permitted pair delegates using the server-held core credential. Preserve the exact web target Host/Origin through its balancer. Record research address deviation, allowlists, TLS, connection reuse and pool settings; do not accept `X-Forwarded-*` as authority.
 - [ ] Implement independent nonbinding sink/driver controls at 1.5× each next plateau's request/connection/byte/output demand, without the constrained app in the loop. Inject simulator delay, generator dropped arrivals and collector loss to prove censor/invalid/stop outcomes; stop attribution when a peer binds. Record cgroup OOM/throttle, FD/socket pool limits, host swap and queue/settlement state.
 - [ ] Add frozen finite research admission pilot and shipped 2/2 controls. An admission-first boundary remains admission-bound, with no hardware-efficiency claim. Compare two workers under a common 2-CPU/12-GiB budget and four workers under 4-CPU/12-GiB against one process with the same total allocations. Promote the single-process 2-CPU/12-GiB discovery cell to three-repeat confirmation plus candidate soak for both profiles before using its worker ratio; the 4-CPU/12-GiB baseline is already paired. Unsupported worker mechanisms remain unavailable. For horizontal comparisons select 1-CPU/2-GiB per instance for both two and four instances, with the matching one-instance baseline, fixed balancer policy, per-instance loads/skew and aggregate admission accounting. All ratios require identical profile/pacing; apply the declared replay fallback to matched comparisons consistently. Revalidate infrastructure/peer headroom at aggregate scale.
 - [ ] Run tests plus proposed `node tools/performance/cli.mjs estimate --campaign research/performance/campaign.json` and `node tools/performance/cli.mjs preflight --campaign research/performance/campaign.json`. Estimate output must instantiate every row and finite parameter in section 8, reject omission of a mandatory family, reconcile family-by-tier subtotals with the campaign total, and include every fresh or explicitly reused control, failed/infeasible attempt, repeat/soak and stop ceiling. Preflight must fail on missing baseline/client-lock/budget evidence; a negative preflight is a successful refusal test, not campaign readiness. Commit exact campaign/container/test files.
@@ -428,8 +424,8 @@ test('continuations multiply model requests, not callers', () => {
 - [ ] Before any run, verify approved execution scope, bound delivery issue/worktree, clean source or declared input digest, production images, client-lock, isolation/headroom controls, and exact allowed spend/time. Run all research tests offline with `node --test tests/performance/*.test.mjs`; run accepted app typecheck/build/contracts/integration/slow/lint/format commands from its actual root. Fix failures before resource comparisons; preserve reviewed app contracts.
 - [ ] Execute only separately agreed live calibration using the casebook/ledger; confirm aggregate/request reservations, five repeats only for funded selected cells, redacted observations and actual usage/rates. No permission to spend follows from the mock campaign command. If unavailable, retain unknown calibration and use labeled hypothetical profiles without claiming real provider latency or completing empirical requirements.
 - [ ] Freeze fixtures/profiles/seeds/admission/thresholds and campaign estimate after the bounded pilot. Prove load-one feasibility and all predeclared replay tuples. If four-turn replay fails, retain failure and test unchanged two-turn replay at every Tier1 pair. If two also fails, stop for the separately agreed one-turn series and budget; absence of that agreement leaves realistic-wait work incomplete.
-- [ ] Run initial Tier1 within the agreed 12-hour checkpoint or its explicitly revised budget: F1 at pairs, BFF-constrained minimum-wait/replay/default controls, three-repeat confirmation and candidate/soak where evidence permits. Do not pretend the checkpoint guarantees full Tier1. Publish progress, observed point costs and remaining-hour estimate before extending the campaign.
-- [ ] Run Tier2 full F1 and BFF grids and Fastify-constrained grid. Apply the only permitted memory-cell reduction with linked three-repeat controls and >10× observed peak retrieval headroom; recheck after scaling. Record unavailable, infeasible, invalid, censored, inconclusive and reduced cells explicitly. Do not label discovery-only cells confirmed.
+- [ ] Run initial Tier1 within the agreed 12-hour checkpoint or its explicitly revised budget: F1 at pairs, orchestrator-constrained minimum-wait/replay/default controls, three-repeat confirmation and candidate/soak where evidence permits. Do not pretend the checkpoint guarantees full Tier1. Publish progress, observed point costs and remaining-hour estimate before extending the campaign.
+- [ ] Run Tier2 full F1 and orchestrator grids and lookup-constrained grid. Apply the only permitted memory-cell reduction with linked three-repeat controls and >10× observed peak retrieval headroom; recheck after scaling. Record unavailable, infeasible, invalid, censored, inconclusive and reduced cells explicitly. Do not label discovery-only cells confirmed.
 - [ ] Run Tier3 equal-aggregate worker comparisons (if supported), two/four-instance configurations and paired B1/B2/B3 deep dives, B4/B5 failures/recovery, two/eight pacing, mandatory open conversations and instrumentation-on/off controls. Revalidate helpers, peers and balanced distribution at each greater aggregate demand. Compute efficiency only for genuinely comparable nonbinding-admission deployments.
 - [ ] After every series verify bounded cleanup, leases/queues/FDs/connections, retained heap/external memory trend, infrastructure telemetry and full offered-work reconciliation. Stop at OOM, unsafe queues, swapping, attribution loss or the agreed cumulative budget. Publish partial evidence immediately on stop; no automatic repeat/purchase/budget extension.
 - [ ] Run read-only verification over every retained run, then `analyze` and `report` into new output directories. Independent rerender from raw records must reproduce tables/figures. Review the actual report for unsupported percentile, telephony, quota and cost claims; update story references through governed records and commit the small report/index artifacts. Do not close implementation/research issues or claim complete research until their required approvals/evidence exist.
@@ -463,7 +459,7 @@ Task7 owns `estimate/preflight/campaign`; Task4 owns `calibrate`; Task1 owns `ve
 
 | Spec requirements | Owner tasks | Required evidence |
 | --- | --- | --- |
-| 1–4 intent, actual backend, topology, attribution | 0,3,7,10 | Integrated source/path record, real BFF/Fastify/network calls, independently nonbinding peers |
+| 1–4 intent, actual backend, topology, attribution | 0,3,7,10 | Integrated source/path record, real orchestrator/lookup/network calls, independently nonbinding peers |
 | 5 full resource/process/instance matrix | 7,10 | Effective cgroups, one-process grids, supported workers, balanced replicas and coverage ledger |
 | 6 bounded calibration | 4,10 | Reservations/request counts/rate sources, per-case actual samples, unknown outcomes |
 | 7 network simulation and egress | 3,7 | Tuple/stream conformance, denied paid access, scheduling/headroom controls |
@@ -476,14 +472,14 @@ Task7 owns `estimate/preflight/campaign`; Task4 owns `calibrate`; Task1 owns `ve
 | 16.1–16.4 metric/oracle/statistics/schedule | 1–2,5–6,8 | Same-clock observations, multi-segment regressions, sample counts, no suppressed offers |
 | 16.5–16.6 coverage and admission | 2,7–10 | Default versus nonbinding research modes, hardware versus semaphore attribution |
 | 16.7 and owner amendment R2-F001 | 6–7,9–10 | Mandatory unchanged two-turn substitute; bounded one-turn agreement; Q4 incomplete if unavailable |
-| 16.8 private topology/search | 2–3,7 | Actual Origin/Host conformance through both routes, disabled search and metadata behavior |
-| 16.9 finite tiers and reduction | 7–10 | Complete cost/hour estimate, stop budget, full BFF/F1 grids, measured reduction authority |
+| 16.8 private topology/search | 2–3,7 | Actual core caller-auth and web Origin/Host conformance through both routes, disabled search and metadata behavior |
+| 16.9 finite tiers and reduction | 7–10 | Complete cost/hour estimate, stop budget, full orchestrator/F1 grids, measured reduction authority |
 | 16.10 and R2-F002 forward references | 3,7 | Independent pre-plateau 1.5× proof and explicit governing-spec links |
 
 ## 7. Plan author self-review and handoff
 
 - All eleven tasks have file ownership, consumed/produced interfaces, specific negative tests, bounded implementation steps and verification/commit boundaries. Proposed code/commands are future implementation instructions, not executed evidence.
-- The actual application is a prerequisite, not reconstructed by this work. Concrete candidate interfaces were read from the epic branch; Task0 revalidates them at the accepted revision.
+- The migrated three-service application is a prerequisite, not reconstructed by this research. Predecessor interfaces were observed under Next.js; Task0 requires verified Fastify-owned replacements and thin-BFF delegation at the accepted revision.
 - Both owner-requested optional observations are incorporated in the source spec and in Tasks6–7/10. The primary four-turn workload and real replay tuples remain unchanged; substitute pacing receives its own curve and cost label.
 - Empirical calibration, network simulation and hypothetical sensitivity remain separate. The report may answer local-hardware questions while external/telephony questions remain explicitly incomplete.
 - The full campaign is potentially expensive in elapsed hours even with zero paid load traffic. The estimate, initial checkpoint and cumulative stop policy expose that cost without weakening completion rules.
@@ -500,15 +496,15 @@ This section replaces the former undifferentiated 15–60-hour control allowance
 - Ordinary feasibility fixtures are exactly four: B1 short typed answer, B2 one lookup, B3 short audio input, and B3 multi-segment output continuing after SSE. Preserve their accepted contracts. For each fixture minimum-wait has one tuple. Replay uses K=1–5 funded, supported complete tuples per fixture; select by predeclared chronological inclusion, not favorable latency. Fewer/missing supported tuples are explicit; unsupported cases are not fabricated. Freeze exact K per fixture before quoting/execution. The upper bound below uses K=5 for all four.
 - Use exactly three independent declared seed schedules for controls and matched comparisons. Every active source/profile/fixture/pacing/admission/topology combination is bound by hashes. A failed tuple is retained; an infeasible profile can stop further capacity progression without testing every expensive load. Maximum occupancy is reported only over cases actually observed; no omitted case is assumed to pass.
 - A load-one case probe submits one declared fixture/tuple and observes through virtual playback/settlement, with up to120 seconds ordinary observation plus30 seconds unresolved cancellation settlement. For the primary context, probe every fixture/tuple under all three seeds, then run three full180-second seeded M1 schedules per profile, each with up to150 seconds drain/settlement. A profile failing a case probe is infeasible and does not get a false full-schedule pass. The seed schedule checks busy misses; the exhaustive probes prevent a favorable per-turn draw from omitting a slow tuple.
-- Contexts are eight Tier1 contexts (four BFF-constrained research, four default-admission),28 Tier2 contexts (12 additional BFF-constrained plus16 Fastify-constrained), and four Tier3 scaling deployments. Each has minimum-wait and replay profiles. The extra single-process2-CPU/12-GiB worker baseline reuses its exact Tier2 feasibility evidence only if all bindings and allocations are unchanged.
+- Contexts are eight Tier1 contexts (four orchestrator-constrained research, four default-admission),28 Tier2 contexts (12 additional orchestrator-constrained plus16 lookup-constrained), and four Tier3 scaling deployments. Each has minimum-wait and replay profiles. The extra single-process2-CPU/12-GiB worker baseline reuses its exact Tier2 feasibility evidence only if all bindings and allocations are unchanged.
 - A feasibility result is reusable only with identical source, fixture/tuple, seed, output mode, admission, constrained/peer resources, protocol and topology. Re-evaluating the measured occupancy against a different pacing ceiling can reuse case probes; a new pacing still runs its own three full schedules. Muted B1/B2 cannot reuse output-enabled probes as proof of their own text oracle. Any change makes the affected control fresh and enters a newly quoted scope.
 - Headroom proofs may reuse a prior proof only when source/client/simulator/collector builds, profile/output pattern, hosts, allocations and topology are unchanged, the prior proof independently covers at least1.5 times every proposed demand dimension, and current health/scheduling observations remain in the proven envelope. Record the reused proof ID before the next plateau. Otherwise run a fresh proof. No capacity point beyond proven infrastructure is accepted.
-- Topology protection preflight is fresh before each series named below, including fallback and recovery series. A preflight sends the six required permitted/invalid Origin/Host cases through each of the two paid-capable routes (12 bounded requests), proving zero upstream work for refusals. Budget30–120 seconds including observation/export; if that bound expires mark the preflight failed. Reuse is limited to repeats within that unchanged series, never an unrecorded topology change.
+- Topology protection preflight is fresh before each series named below, including fallback and recovery series. A preflight sends the six permitted/invalid web Origin/Host cases through each of two Next.js routes (12 requests), plus missing/invalid/valid core-credential cases through each of two direct core routes (six requests). The total18 bounded requests prove entry-specific admission and zero upstream work for refusals. Budget30–120 seconds including observation/export; if that bound expires mark the preflight failed. Reuse is limited to repeats within that unchanged series, never an unrecorded topology change.
 - After a failure, do not automatically rerun a series to obtain a pass. The three specified repeats remain independent even when one fails. Defect fixes or additional repetitions require a new baseline/input digest and revised quoted scope. Stop at the first sustained discovery failure and at the finite bracket ceiling; unreached failures remain lower bounds.
 
 ### Experiment/control families
 
-Durations below include their stated observation and bounded drain; independent headroom and topology checks are additional rows. Where a series has already met an identical required control, retain both coverage references but charge its actual execution once. The conservative upper estimate assumes fresh controls and no Fastify reduction. Normal unavailable/infeasible cases consume their attempted time and stay visible.
+Durations below include their stated observation and bounded drain; independent headroom and topology checks are additional rows. Where a series has already met an identical required control, retain both coverage references but charge its actual execution once. The conservative upper estimate assumes fresh controls and no lookup reduction. Normal unavailable/infeasible cases consume their attempted time and stay visible.
 
 | Family | Tier and finite count | Window/repeat policy | Planning target-environment hours |
 | --- | --- | --- | --- |
@@ -521,17 +517,21 @@ Durations below include their stated observation and bounded drain; independent 
 | B1/B2/B3 deep dives | T3 four pairs*three types*two profiles*three offered-load points*three seeds =216 windows | B1/B2 explicitly muted text controls, B3 output-enabled; load points1,half the corresponding M1 candidate,that candidate, deduplicating equal loads. Without a confirmed candidate, use the corresponding screened last pass and label descriptive. Each window3min ramp+2min steady+up to2.5min drain | T3 18–27 |
 | Deep-dive feasibility | T3 24 type/profile/pair cells | Three full schedules/cell =72 at3–5.5min. Exhaustive probes cover one fixture each for muted B1/B2 and both B3 fixtures:48*(1+K) probes at0–2.5min. Reuse only exact matching output-mode evidence | T3 3.6–18.6 |
 | Two/eight pacing sensitivity | T3 four pairs*two profiles*two pacings =16 discovery series | Up to12 plateaus/series,0.5–1.6h; three full load-one seed schedules per new pacing, reusing only equivalent case probes. At most48 feasibility schedules at3–5.5min. A two-turn baseline substitute can satisfy an identical pacing cell by reference. These are screened/descriptive intervention curves unless separately quoted for confirmation | T3 10.4–30 (8–25.6 discovery plus2.4–4.4 schedules) |
-| Mandatory open-conversation arrivals | T3 four pairs*two profiles*three arrival rates*three seeds =72 windows | Each arrival iteration owns a new180-second conversation. Rates are0.5,1,1.5 times N/L, where N is matching confirmed M1 candidate (otherwise screened last pass) and L its observed mean session residence seconds. Freeze rates before running; unavailable N/L leaves that cell unavailable.3min population ramp+2min steady+up to2.5min drain. Count late/dropped starts and actual population; no overlapping turns | T3 6–9 |
+| Mandatory open-conversation arrivals | T3 four pairs*two profiles*three arrival rates*three seeds =72 windows | Each arrival iteration owns a new180-second conversation. Rates are0.5,1,1.5 times N/L, where N is matching confirmed M1 candidate (otherwise screened last pass) and L its observed mean session residence seconds. Freeze rates before running; unavailable N/L leaves that cell unavailable. Stop new starts after3min population ramp+2min steady, then allow the last accepted conversation its remaining180-second residence before up to120-second request drain and30-second cancellation settlement. Budget8–10.5min/window and k6 gracefulStop at least330seconds after the new-start cutoff. Count late/dropped starts and actual population; no overlapping turns | T3 9.6–12.6 |
 | B4/B5 paired policy interventions | T3 four pairs*five scripts*three seeds =60 windows | Scripts: B4 largest valid body/history/utterance with bounded long output; B5 disconnect with delayed settlement; rapid replacement/stale generation; slow PCM consumer; provider error script with declared429,500 and malformed-result stages. One minimum-wait/fault profile each,3min setup/ramp+2min observation+up to2.5min drain; separate expected outcomes | T3 5–7.5 |
 | F1 fault subset | T3 four pairs*two scripts*three seeds =24 windows | Malformed query and interrupted/slow-read client;1min warmup+2min observation+up to2.5min drain; check schema/status/cleanup, not ordinary voice goodput | T3 1.2–2.2 |
 | Worker/instance skew and recovery | T3 four deployments*two scripts*three seeds =24 windows | Scripts: one slowed worker/instance and one terminated worker/instance; use matching feasible replay at declared candidate or screened load.3min ramp+2min observation+up to2.5min drain. Capture per-instance skew, failed established streams and new-connection redistribution; no seamless migration claim. Unsupported workers unavailable | T3 2–3 |
 | Instrumentation on/off pairs | T3 four pairs*two profiles*two states*three matched seeds =48 windows | Same source except explicit instrumentation flag, profile, workload and offered load; use matching M1 candidate or screened last pass.3min ramp+2min observation+up to2.5min drain. Compare paired descriptive latency/resource deltas, not a new capacity label | T3 4–6 |
-| Actual-path topology protection checks | T1 28; T2 84; T3 110 series, maximum222 | Each30–120sec. Counts: T1 four F1+sixteen M1+eight possible fallback; T2 twelve F1+fifty-six M1+sixteen F1 control series; T3 eight scaling+two matched baselines+24 deep+16 pacing+eight open+20 B4/B5+eight F1 fault+eight recovery+16 instrumentation | T1 0.233–0.933; T2 0.7–2.8; T3 0.917–3.667 |
-| Independent1.5-times infrastructure proofs | T1 maximum520; T2 1192; T3 940 windows, total2652 before exact reuse | Each60sec same-profile demand observation plus at most60sec warm/drain. Count a fresh proof for every discovery, confirmation/soak or intervention window and one load-one envelope per new context/profile/pacing. Case probes within the exact proven envelope reuse that proof; this row does not recursively require proofs of proof drivers. Record attempted/valid/reused separately | T1 8.667–17.333; T2 19.867–39.733; T3 15.667–31.333 |
+| Selected ordinary slow/tail sensitivity | T3 two orchestrator allocations (1CPU/2GiB and4CPU/12GiB)*B1/B2/B3*two named hypothetical profiles*two loads*three seeds =72 windows | B1/B2 muted, B3 output-enabled. Profiles slow2x and tail4x each use one source tuple per fixture, chosen by maximum observed completion with stable-ID ties, and multiply its first-output/completion/chunk waits by2/4 while preserving bytes/text/tool shape; fallback source is the explicitly hypothetical profile when empirical replay is absent. Fixed four-turn pacing; load1 and half matching ordinary candidate or screened last pass, deduplicating equal loads. Use ordinary success oracle,5–7.5min/window; infeasible cells stay infeasible, no fixture/pacing substitution | T3 6–9 |
+| Slow/tail feasibility | T3 twelve type/profile/allocation cells | Three full schedules/cell =36 at3–5.5min, plus48 bounded fixture/tuple/seed probes at0–2.5min (one fixed slow/tail tuple per ordinary fixture). Verify transformed durations against actual deadlines; a violation is an infeasible/failed observation, never a manufactured ordinary pass. No extra paid samples | T3 1.8–5.3 |
+| Thin Next.js forwarding overhead | T3 four orchestrator executive pairs*two profiles*three offered-load points*three seeds*two entry modes =144 windows | Next.js fixed1CPU/2GiB; lookup/simulators fixed proven nonbinding. Compare direct core versus Next.js-to-core at load1,half matching M1 candidate,and candidate (screened last pass if unconfirmed). Same fixtures/output/seed/core resources;5–7.5min/window. Descriptive paired latency/bytes/CPU/memory/abort/flush deltas, no new confirmed capacity label. A binding BFF is a web-path limit, never a lower portable-core limit | T3 12–18 |
+| Web-path feasibility | T3 four allocations*two profiles =eight web contexts | Exhaustive probes3*4*(1+K) per allocation at0–2.5min, plus24 full seed schedules at3–5.5min. Direct-core feasibility may reuse only identical earlier direct controls; web observations are fresh and retain their own clock/path. If the matched core profile needs declared replay fallback, use exactly that pacing for both entries | T3 1.2–14.2 |
+| Actual-path topology protection checks | T1 28; T2 84; T3 138 series, maximum250 | Each30–120sec. Counts: T1 four F1+sixteen M1+eight possible fallback; T2 twelve F1+fifty-six M1+sixteen F1 control series; T3 eight scaling+two matched baselines+24 deep+16 pacing+eight open+20 B4/B5+eight F1 fault+eight recovery+16 instrumentation+12 slow/tail+16 web-forwarding | T1 0.233–0.933; T2 0.7–2.8; T3 1.15–4.6 |
+| Independent1.5-times infrastructure proofs | T1 maximum520; T2 1192; T3 1176 windows, total2888 before exact reuse | Each60sec same-profile demand observation plus at most60sec warm/drain. Count a fresh proof for every discovery, confirmation/soak or intervention window and one load-one envelope per new context/profile/pacing. Case probes within the exact proven envelope reuse that proof; this row does not recursively require proofs of proof drivers. Record attempted/valid/reused separately | T1 8.667–17.333; T2 19.867–39.733; T3 19.6–39.2 |
 
-The F1 control row supplies the measured data for the spec16.9 reduction test: at every CPU compare memory using matched payload/routes/load, no memory-induced threshold crossing, <=10% goodput/p95 difference with uncertainty; each retained2-GiB point must show >=10 times the largest peak retrieval RPS from the BFF campaign. A first-fail point that is unreachable is explicitly absent, not retried beyond the quoted bracket. A failed/sparse reduction control leaves the full Fastify-constrained sweep required. Recheck after worker/instance demand; new invalidating demand restores omitted cells through a revised quote, never inferred results.
+The F1 control row supplies the measured data for the spec16.9 reduction test: at every CPU compare memory using matched payload/routes/load, no memory-induced threshold crossing, <=10% goodput/p95 difference with uncertainty; each retained2-GiB point must show >=10 times the largest peak retrieval RPS from the orchestrator campaign. A first-fail point that is unreachable is explicitly absent, not retried beyond the quoted bracket. A failed/sparse reduction control leaves the full lookup-constrained sweep required. Recheck after worker/instance demand; new invalidating demand restores omitted cells through a revised quote, never inferred results.
 
-Infrastructure window count reconciliation: T1=48 F1 discovery+192 M1 discovery+256 confirmation/soak+16 primary load-one envelopes+eight possible fallback=520. T2=144 F1 discovery+672 M1 discovery+128 confirmation/soak+192 F1 controls+56 primary load-one=1192. T3=96 discovery+160 confirmation/soak+216 deep+192 pacing+72 open+60 B4/B5+24 F1 fault+24 recovery+48 instrumentation+eight primary load-one+24 deep feasibility+16 pacing feasibility=940. These counts bound all windows with no proof reuse; the estimator replaces maxima with exact applicable windows and records reuse IDs. The proof for each next discovery plateau precedes that plateau; a later successful proof cannot retroactively validate an unproven point.
+Infrastructure window count reconciliation: T1=48 F1 discovery+192 M1 discovery+256 confirmation/soak+16 primary load-one envelopes+eight possible fallback=520. T2=144 F1 discovery+672 M1 discovery+128 confirmation/soak+192 F1 controls+56 primary load-one=1192. T3=96 discovery+160 confirmation/soak+216 deep+192 pacing+72 open+60 B4/B5+24 F1 fault+24 recovery+48 instrumentation+eight primary load-one+24 deep feasibility+16 pacing feasibility+72 slow/tail+12 slow/tail feasibility+144 web-forwarding+eight web feasibility=1176. These counts bound all windows with no proof reuse; the estimator replaces maxima with exact applicable windows and records reuse IDs. The proof for each next discovery plateau precedes that plateau; a later successful proof cannot retroactively validate an unproven point.
 
 ### Tier totals, approvals and estimator tests
 
@@ -539,14 +539,14 @@ Infrastructure window count reconciliation: T1=48 F1 discovery+192 M1 discovery+
 | --- | --- | --- | --- |
 |1 decision baseline |41.2–302 |11.3–68.867 |**52.5–370.867** |
 |2 resource attribution |47.6–238.8 |38.567–185.133 |**86.167–423.933** |
-|3 scaling/robustness |24–182.8 |67.983–152.5 |**91.983–335.3** |
-|**Whole campaign** |**112.8–723.6** |**117.85–406.5** |**230.65–1130.1** |
+|3 scaling/robustness |24–182.8 |96.75–211.4 |**120.75–394.2** |
+|**Whole campaign** |**112.8–723.6** |**146.6167–465.4** |**259.4167–1189.0** |
 
 Values are rounded planning intervals, not confidence intervals. They assume both profiles, supported deployments and the conservative control inventory; unavailable/infeasible cells, exact reuse and validated reduction can lower actual executed time while preserving coverage labels. Extra one-turn fallback feasibility/series is excluded until separately agreed and requoted; add at most eight Tier1 substitute series with the same finite probe/window policy, without adding a second primary capacity package for an infeasible four/two-turn result. Defect repairs/reruns are also outside this initial inventory. The exact quote derives CPU/GiB-hours and helper-host hours from each window's allocations/lifetime; parallel scheduling never converts target-environment hours directly into elapsed wall hours or double-counts a host price.
 
 The initial12-hour checkpoint is only a pilot/progress checkpoint. It is not the estimated52.5–370.867 hours for complete Tier1. The proposed cumulative160-hour ceiling may stop before complete Tier2/3 and may be insufficient even for Tier1's sparse cases. Retain the partial report and remaining coverage on exhaustion; only owner agreement to a revised concrete quote can extend it. No mandatory family is removed to fit either checkpoint.
 
-Task7 adds `validateInventory(inventory)` in matrix.mjs, rejecting any missing required family or unbounded parameter; estimator output includes per-tier fresh/reused/attempted/omitted-by-evidence counts and durations. Add tests that remove the open-conversation family, remove pre-plateau headroom, exceed K=5, omit fallback attempts after four-turn infeasibility, reuse a proof with lower byte/output capacity, and omit a matched worker baseline. Each must fail before launch. Add a fixture of this exact maximal inventory: core subtotal112.8–723.6, controls117.85–406.5 and total230.65–1130.1; assert each tier reconciles within rounding tolerance, no operation is charged twice, and failure/reuse/unavailable changes preserve remaining required coverage rather than promoting it. Budget exhaustion returns a partial report and cannot mark that tier complete.
+Task7 adds `validateInventory(inventory)` in matrix.mjs, rejecting any missing required family or unbounded parameter; estimator output includes per-tier fresh/reused/attempted/omitted-by-evidence counts and durations. Add tests that remove the open-conversation family, truncate final open-session residence, omit selected slow/tail coverage or thin-BFF forwarding, remove pre-plateau headroom, exceed K=5, omit fallback attempts after four-turn infeasibility, reuse a proof with lower byte/output capacity, and omit a matched worker baseline. Each must fail before launch. Add a fixture of this exact maximal inventory: core subtotal112.8–723.6, controls146.6167–465.4 and total259.4167–1189.0; assert each tier reconciles within rounding tolerance, no operation is charged twice, and failure/reuse/unavailable changes preserve remaining required coverage rather than promoting it. Budget exhaustion returns a partial report and cannot mark that tier complete.
 
 ## 9. SAR evidence refinements and interruption tests
 
@@ -580,3 +580,46 @@ test('large pooled volume does not replace session provenance', () => {
 ```
 
 Run the owning offline test suites from Tasks1,7,8 after implementing these additions. These fixtures are proposed tests, not tests executed while revising this plan. The sealed report/disposition chain records which SAR revision introduced these requirements.
+
+## 10. Owner architecture correction and remaining predecessor findings
+
+The owner clarified the target during plan SAR on October15,2026: **Next.js UI/thin BFF → Fastify orchestrator → separate Fastify lookup/providers**, with non-web/telephony clients delegating directly to the same orchestrator. The corrected spec section18 governs this plan. This is a material architecture amendment, not a claim that existing Next.js code already meets the target. Native SAR reports for initial plan5be232d and revisionb9e74a2 remain unchanged predecessor evidence; their scope is not accepted for this architecture. The next review request identifies new source hashes and explicitly closes or carries their findings. XPR has not started and must review the corrected artifact.
+
+### Concrete ownership and integration checks
+
+- Task0 requires an accepted integrated three-service application with independent entry points/cgroups. The Fastify orchestrator serves `/api/turn`, `/api/speech` and `/api/capabilities`; the separate Fastify lookup serves `/v1/projects` and `/health`. Next.js retains the browser routes as HTTP delegates. No new message broker, durable session database or telephony gateway is introduced by the term service bus.
+- Target core modules are `apps/orchestrator/src/{config,runtime}.ts`, `providers/{contracts,claude,deepgram,network-mock}.ts`, `turns/{leases,deadline,run-turn}.ts`, `tools/retrieval-client.ts` and `http/{app,auth,timing}.ts`, reconciled to actual migrated files by Task0. Next's `apps/web/server/orchestrator-client.ts` and API route wrappers contain no SDK/provider/model/tool/retrieval orchestration. Preserve source dependency-graph evidence for that ownership; core imports no Next.js server runtime. Application migration implementation/acceptance remains a separately governed prerequisite.
+- Task2 instruments Fastify lifecycle and actual streamed writes, including explicit preheaders before a raw/hijacked stream when applicable; it does not assume a Next.js Response wrapper runs in Fastify. Begin timing before core auth/body parsing, and attach completion/lease release to real producer/upstream settlement. Instrument lookup and thin web forwarding under distinct service/process namespaces. A Next timeout/disconnect propagates an abort to core; it does not acquire/release paid leases or retry providers.
+- Core requires its private server/test bearer credential before body/provider work, returns401 on absent/wrong credentials, and accepts a valid non-browser caller without an Origin. Next retains strict web Origin/Host403 policy, supplies its own server-held credential and drops arbitrary browser Authorization before delegation. Test both paths with no real credentials/providers; redact secret fields. Do not replace core identity with a permissive browser allowlist.
+- Tasks3–6 and primary grid/worker/replica experiments call the actual Fastify orchestrator and real lookup. Headless segmentation/playback follows the chosen workload's declared client protocol; browser device work remains excluded. The separate web forwarding family uses the same core/profile/output/pacing and records added BFF cost and failure modes. An observed web cap cannot be presented as portable-core capacity.
+- Task9 prices core, lookup and optional web resources independently. Direct telephony forecasts do not include Next.js on the critical path or charge a mandatory web BFF. Per-provider units, shared hosting overhead, actual quota constraints and unimplemented telephone/WebSocket/acoustic behavior remain separately labeled.
+
+Task0 adds an architecture negative fixture: a source map with providers under Next.js and no core app must fail baseline verification even if its turn responses pass functional tests. Task2/5 web-path integration fixtures must show first SSE event before EOF, first valid PCM behavior where supported, client abort reaching the core, zero automatic replay, and exactly one core provider operation. Forbid full-response buffering and direct Next.js provider calls. Task7 estimator/coverage tests require the new web-forwarding family and its own feasibility/topology/headroom controls; it cannot replace either Fastify grid.
+
+### R2-F001: ordinary open arrivals finish their residence
+
+The section8 open window now separates start cutoff, residual residence and request drain. Task6 exports `conversationCutoffs({startMs,residenceMs,drainMs,settlementMs})` from schedule.js, returning `{residenceEndMs,drainEndMs,settlementEndMs}`. Task7 records `newStartCutoffMs`, per-conversation residence cutoffs and the runner hard stop; k6 open scenarios use gracefulStop >=330seconds after the last permitted new start. With3min ramp+2min steady, a final accepted start gets180seconds residence plus120seconds drain plus30seconds settlement: maximum630seconds from experiment start, not450seconds.
+
+```js
+test('a final accepted conversation retains late turns after new starts stop', () => {
+  const newStartCutoffMs=300000;
+  const startMs=newStartCutoffMs-1;
+  const cutoffs=conversationCutoffs({startMs,residenceMs:180000,
+    drainMs:120000,settlementMs:30000});
+  assert.equal(cutoffs.residenceEndMs,479999);
+  assert.equal(cutoffs.drainEndMs,599999);
+  assert.equal(cutoffs.settlementEndMs,629999);
+  assert.ok(startMs+165000 < cutoffs.residenceEndMs); // late scheduled offer is retained
+  assert.ok(startMs+165000 > newStartCutoffMs+150000); // old graceful cutoff was too early
+});
+```
+
+Add a companion fake-clock integration test admitting that last conversation, emitting its late turn and a delayed final speech segment, then applying an actual route timeout or final safety stop. Preserve the scheduled offer/outcome/usage distinction: a route timeout is an ordinary failed turn; a real safety/budget stop is a stopped-run record with unfinished work, not silently deleted arrivals or a new cancellation-success label. Exact quote/maxDuration includes residual residence; the72-window row is now9.6–12.6hours, and tier/full expectations are updated.
+
+### R2-F002: selected slow/tail profiles are scheduled work
+
+Section8 now declares two endpoint allocations, three B1/B2/B3 types, named hypothetical slow2x/tail4x transformations, two offered-load points and three seeds. Its72 windows and twelve feasibility contexts are distinct from B5 faults and empirical replay. One preselected source tuple per fixture keeps the sensitivity scope finite; source choice, transformation and hypothetical status are versioned. Transform waits, not output bytes, tool IDs or text. Require the ordinary matching text/voice oracle and unchanged four-turn feasibility gate; retain infeasible cells without silently slowing pacing, shortening output or substituting a faster tuple. Missing empirical replay uses a labeled hypothetical source, not manufactured calibration.
+
+Task7 tests that simulator capability alone cannot complete this family, and that deleting any required selected cell leaves coverage incomplete. It also reconciles the added12 topology series and84 infrastructure windows for slow/tail, and16 topology series/152 infrastructure windows for web forwarding, exactly once. Complete estimate now includes2888 maximum infrastructure windows and250 topology series before valid reuse. The amended total259.4167–1189.0target-environment hours remains a conditional planning interval; the12-hour checkpoint and proposed160-hour stop policy are unchanged and cannot erase incomplete coverage.
+
+The source architecture correction and these plan changes require the requested SAR/XPR review before implementation. They do not authorize executing this larger campaign, buying infrastructure, spending the calibration allowance, or moving any story's lifecycle state.

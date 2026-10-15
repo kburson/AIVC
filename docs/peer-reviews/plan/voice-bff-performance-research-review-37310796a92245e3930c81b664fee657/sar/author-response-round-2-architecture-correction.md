@@ -1,0 +1,15 @@
+# Story 39 plan — round2 dispositions and owner architecture correction
+
+The coordinator read the complete same-session Astra round2 report before revising. Date: October15,2026 (America/Chicago). Issue: https://github.com/kburson/AIVC/issues/39.
+
+Revised plan SHA-256:8c74c0533d3debe88f3f4f475361b2d3df87a3752b9df6aa25c903cf0ff52d66. Governing corrected spec: commit3e96c9e5734e2e940d849c3e1339bcb0f0592c97, SHA-2567146781add44a11ba5f90371482901a645ffc4b14c8e8fa50ef23f3361270db4.
+
+- R2-F001: addressed in the open-arrival inventory, Task6/7 contracts and plan section10. New-start cutoff is distinct from full remaining180-second conversation residence,120-second drain and30-second settlement. k6 gracefulStop is at least330seconds; last-start lifecycle test proves a late offer survives the former early cutoff. Open windows now8–10.5min,72-window family9.6–12.6h, with tier/full totals updated. Safety stops remain stopped/incomplete evidence, not ordinary completed sessions.
+- R2-F002: addressed by finite ordinary slow2x/tail4x sensitivity at1CPU/2GiB and4CPU/12GiB, B1/B2 muted and B3 voice, two loads, three seeds,72 windows plus explicit feasibility/topology/headroom. One declared source tuple/fixture is transformed without changing payload/output; hypothetical labels, true deadlines and four-turn infeasibility are retained. Capability alone cannot satisfy coverage. No paid sampling expansion or favorable pacing is permitted.
+- Owner architecture correction: primary portable backend is now a standalone Fastify orchestrator plus separate Fastify lookup. Next.js delegates as a thin BFF. Updated spec/plan ownership, diagram, target modules, auth/proxy boundaries, direct-core matrix and worker/replica target, lookup isolation/reduction, optional web cost and mandatory bounded forwarding-overhead family. Migration is an explicitly verified application prerequisite; this research does not invent an implementation or relabel predecessor Next.js metrics.
+
+Control accounting now includes2888 maximum infrastructure windows and250 topology series before valid reuse. Full conditional planning envelope259.4167–1189.0target-environment hours separates core and controls, with unchanged12-hour pilot/progress checkpoint and proposed160-hour cumulative stop that can leave required research incomplete. Active research engineering estimate61–106h excludes separately governed architecture migration. Actual quote still freezes supported tuples/hosts/evidence and requires normal execution agreement.
+
+Coordinator verification: full document diff and predecessor report read; Git whitespace checks; source-spec hash match; independent arithmetic reconciliation. Proposed tests remain unexecuted instructions. Unrelated generated apps/ remains untouched. No implementation, API sample, benchmark, purchase, package update or lifecycle movement occurred.
+
+See predecessor-scope-status.md for why the old two-round scope is superseded rather than claimed accepted. The corrected artifact requires explicit new-scope SAR followed by the requested XPR. Historical review bytes are not rewritten.
