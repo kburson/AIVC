@@ -13,7 +13,7 @@ const cases: Array<[string, string[]]> = [
   ],
   ['See https://example.com/path now. Next.', ['See now.', 'Next.']],
   ['First [1]. Next [label](https://x.test).', ['First.', 'Next label.']],
-  ['Say `secret. no` hello. Next.', ['Say hello.', 'Next.']],
+  ['Say `secret. no` hello. Next.', ['Say secret. no hello.', 'Next.']],
   [
     'Before ```js\nhidden. text\n``` after. Final fragment',
     ['Before after.', 'Final fragment'],
@@ -175,4 +175,76 @@ it('does not reinterpret an inline numeric sentence as a line-leading list item'
       ...scanner.finish(),
     ]).toEqual(['Count now.', '2.', 'Next answer.']);
   }
+});
+
+it('retains the meaningful inline value from the captured research answer', () => {
+  const scanner = new SpeechText(84);
+  const input =
+    '4. To access the model, you simply use **`model=nova-3`** in your API calls.';
+  expect([...scanner.push(input), ...scanner.finish()]).toEqual([
+    '4. To access the model, you simply use model=nova-3 in your API calls.',
+  ]);
+});
+
+it.each([
+  [
+    'Use `owner_team=North` and `amount=10.50` with `items[1]`.',
+    ['Use owner_team=North and amount=10.50 with items[1].'],
+  ],
+  [
+    'Values `3.7`, `10.50` and `a*b` stay readable.',
+    ['Values 3.7, 10.50 and a*b stay readable.'],
+  ],
+  ['Use ``literal ` value`` now.', ['Use literal ` value now.']],
+  ['Read `alpha``. beta` now. Next.', ['Read alpha``. beta now.', 'Next.']],
+  ['Read ``alpha```. beta`` now. Next.', ['Read alpha```. beta now.', 'Next.']],
+  [
+    'See `https://example.com/private` and `model=nova-3` [1].',
+    ['See and model=nova-3.'],
+  ],
+  [
+    'Before ````ts\nhidden. language_tag\n````` after `model=nova-3`.',
+    ['Before after model=nova-3.'],
+  ],
+] as const)(
+  'keeps readable inline content and visual-only fences across every split: %s',
+  (input, expected) => {
+    for (let split = 0; split <= input.length; split++) {
+      const scanner = new SpeechText(120);
+      expect([
+        ...scanner.push(input.slice(0, split)),
+        ...scanner.push(input.slice(split)),
+        ...scanner.finish(),
+      ]).toEqual(expected);
+    }
+    const scanner = new SpeechText(120);
+    expect([
+      ...Array.from(input).flatMap((char) => scanner.push(char)),
+      ...scanner.finish(),
+    ]).toEqual(expected);
+  },
+);
+
+it.each([
+  ['Read `unfinished model=nova-3', ['Read']],
+  ['Read `alpha``. beta', ['Read']],
+  ['Read ``unfinished ` value', ['Read']],
+  ['Read ```ts\nmodel=nova-3', ['Read']],
+])(
+  'drops only a dangling structured suffix conservatively: %s',
+  (input, expected) => {
+    const scanner = new SpeechText();
+    expect(scanner.push(input)).toEqual([]);
+    expect(scanner.finish()).toEqual(expected);
+  },
+);
+
+it('applies the existing segment cap and oversized-token notice to retained inline content', () => {
+  const omitted: string[] = [];
+  const scanner = new SpeechText(12, (reason) => omitted.push(reason));
+  expect([
+    ...scanner.push('Use `model=nova-3` with `temperature=0.25` now. '),
+    ...scanner.finish(),
+  ]).toEqual(['Use', 'model=nova-3', 'with', 'now.']);
+  expect(omitted).toEqual(['SPEECH_TOKEN_TOO_LONG']);
 });

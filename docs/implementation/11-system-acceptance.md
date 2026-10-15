@@ -621,3 +621,68 @@ all older failed/partial artifacts remain unchanged at their own source. L4
 duration tuning and L6 genuine pause remain open; failed timing targets stay
 failed. Full scope is unchanged and no canonical Test, Review, approval, merge
 or Close follows from this checkpoint.
+
+## Independent physical audit and inline-content correction
+
+The same distinct Astra6/high reviewer found one P2 in the prior cfa3 checkpoint:
+closed inline code was deleted wholesale, so point 4 said “you simply use in your
+API calls” while the displayed answer supplied model=nova-3. The earlier exact
+scanner replay proved queue consistency, not permission to delete that meaningful
+value. The separate Sources-excerpt explanation remains valid; it does not resolve
+this semantic omission.
+
+The [unchanged native audit](../evidence/11-astra-physical-audit-1bbe506.txt) is 7046
+UTF-8 bytes, SHA256
+`5374216421508c1e470dd68eea969fb12765514b55bba4b99bf60f4f76123951`, native
+message `msg_0cf7ad7b97c73867016ad06915c0e88195a4ef8fef437713d7`, reviewer SID
+`01a13d8d-0f96-7862-a1f0-c8d3c5c86071`. It supports the stated bounded prior
+functional cases and requests this correction; it grants no whole-live acceptance.
+
+The minimal scanner correction retains closed inline payloads while removing
+matching delimiters. Numeric values, underscores, operators and indexing remain
+readable. Inline delimiters must close with the same run length; a longer run
+inside the span cannot prematurely commit a sentence. Backtick-fenced listings
+remain deliberately visual, with language tags excluded. Dangling tokens remain
+conservative and existing URL/citation sanitation, segment cap, overlong-token
+notice, backlog and playback policy remain intact. No API, queue, pin, default
+CPS or budget changed.
+
+The captured sentence and related regressions were observed failing before code:
+eight failures included the missing model value and wrong delimiter handling.
+All 42 scanner tests now pass, including every two-way split and one-character
+chunks, one/two delimiters with longer nonmatching runs, numeric/code values,
+fenced language tags, dangling tokens and the existing cap/omission behavior.
+No actual new listening, synthesis, browser or microphone run occurred.
+
+This changes the whole-source digest. The cfa3/cap 84 artifact and its human reports
+remain byte-identical at their original tested source/build; the mutable summary
+keeps that tested provenance and is now deliberately stale for corrected code.
+L4 duration tuning and L6 genuine provider pause remain nonpassing. The same
+reviewer must recheck this stable correction before the proposed CPS 12/cap 72
+engineering screen; no probes have been released or executed here.
+
+Correction verification at source
+`14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63`:
+160 voice tests (including42 scanner tests),98 unit/UI/script tests,355 contracts,
+27 slow and26 integration tests passed. Integration rebuilt the current workspaces
+and exercised compiled two-process HTTP/shutdown with mock providers. Typecheck,
+ESLint, Markdown lint, format and docs checks passed. No live browser/microphone
+or paid synthesis/model request ran. Read-only live verification exits1 for the
+historical source digest plus L4 fail, L6 unverified and unobserved required pause.
+
+The [offline cap72 coverage analysis](../evidence/11-inline-content-offline-replay.json)
+is a proposal input bound to the corrected source, not an executed CPS profile.
+It replays full captured answer deltas without repairing the existing observer
+encoding mismatch: Atlas SSE has mojibake where actual queued speech/UI has an
+emoji. Two secondary Atlas analyses reconstruct the complete actually submitted
+speech text with explicit lost whitespace/line-boundary provenance; they do not
+prove display/final-answer equality. Research's captured ASCII delta replay is
+primary and retains model=nova-3 after correction.
+
+Eight distinct recut segments overlap the five previous overrun occurrences
+(four distinct old text regions). Expanding to all immediate neighboring segments
+produces fourteen distinct candidates, beyond the hard maximum ten probes.
+The two raw Atlas source variants cannot exactly locate the queued emoji-bearing
+region and remain unknown. Independent review must resolve whether a smaller
+complete affected-boundary set is justified; no difficult case is silently
+dropped, no text is normalized to hide a mismatch, and no probe budget expands.

@@ -211,3 +211,15 @@ artifacts retain older source bindings. See the
 [implementation checkpoint](implementation/11-system-acceptance.md#current-observer-free-physical-checkpoint-at-eddb472)
 for case scope, precise timing limits, custody and the unexecuted CPS 12/cap 72
 tuning proposal awaiting independent assessment.
+
+## Inline-content correction after the cfa3 trial
+
+Independent review found that deleting closed inline code removed meaningful
+model=nova-3 from the spoken answer. The scanner now retains readable inline
+payloads and distinguishes visual-only backtick-fenced listings; see the
+[normalization policy](architecture.md#deepgram-pcm-and-bounded-playback).
+The [exact audit](evidence/11-astra-physical-audit-1bbe506.txt) and
+[correction status](implementation/11-system-acceptance.md#independent-physical-audit-and-inline-content-correction)
+preserve the finding and test evidence. The cfa3/cap84 physical artifact stays
+unchanged and cannot qualify the new source digest. Its timing misses, L4 duration
+overruns and L6 unobserved pause remain; no new live run or lifecycle gate passed.

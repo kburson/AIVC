@@ -14,15 +14,26 @@ function closing(
 }
 function codeEnd(text: string, start: number): number {
   const run = text.slice(start).match(/^`+/u)![0];
-  const end = text.indexOf(run, start + run.length);
-  return end < 0 ? -1 : end + run.length;
+  for (let i = start + run.length; i < text.length;) {
+    const next = text.indexOf('`', i);
+    if (next < 0) break;
+    const width = text.slice(next).match(/^`+/u)![0].length;
+    // Inline spans close with the same run; fences may use a longer closer.
+    if (width === run.length || (run.length >= 3 && width > run.length))
+      return next + width;
+    i = next + width;
+  }
+  return -1;
 }
-function clean(text: string): string {
+function clean(text: string, inlineCode = false): string {
   let output = '';
   for (let i = 0; i < text.length;) {
-    if (text[i] === '`') {
+    if (!inlineCode && text[i] === '`') {
+      const width = text.slice(i).match(/^`+/u)![0].length;
       const end = codeEnd(text, i);
       if (end < 0) break;
+      // Closed inline payload is readable; fenced listings remain visual only.
+      if (width < 3) output += clean(text.slice(i + width, end - width), true);
       i = end;
       continue;
     }
@@ -37,25 +48,26 @@ function clean(text: string): string {
       i = end + 1;
       continue;
     }
-    if (text[i] === '[') {
+    if (!inlineCode && text[i] === '[') {
       const end = closing(text, i, '[', ']');
       if (end < 0) break;
       if (text[end + 1] === '(') {
         const urlEnd = closing(text, end + 1, '(', ')');
         if (urlEnd < 0) break;
-        output += text.slice(i + 1, end);
+        output += text.slice(i + 1, end).replace(/[*_#~]/gu, '');
         i = urlEnd + 1;
       } else {
         const label = text.slice(i + 1, end);
-        if (!/^\s*(?:\d+[\s,–-]*)+\s*$/u.test(label)) output += label;
+        if (!/^\s*(?:\d+[\s,–-]*)+\s*$/u.test(label))
+          output += label.replace(/[*_#~]/gu, '');
         i = end + 1;
       }
       continue;
     }
-    output += text[i++];
+    const char = text[i++];
+    output += inlineCode ? char : char.replace(/[*_#~]/gu, '');
   }
   return output
-    .replace(/[*_#~]/gu, '')
     .replace(/\s+/gu, ' ')
     .replace(/\s+([.,!?;:])/gu, '$1')
     .trim();

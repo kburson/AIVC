@@ -78,7 +78,7 @@
     {
       "id": "L4",
       "status": "fail",
-      "observations": "Current multi-sentence answers and all four research points heard; source-excerpt complaint traced to separate Sources list, not dropped answer tail. Offline exact chunk replay matches all11 research TTS requests and1428 native sources ended before Stop. HOWEVER five actual segments6.08/6.40/6.12/6.04/6.20s exceed6s estimate; accepted repeated-duration tuning remains unmet. No CPS/config change or rerun. Inline code omitted by existing normalization; not verbatim speech.",
+      "observations": "Current multi-sentence answers and all four research points heard; source-excerpt complaint traced to separate Sources list, not dropped answer tail. Offline exact chunk replay matches all11 research TTS requests and1428 native sources ended before Stop. HOWEVER five actual segments6.08/6.40/6.12/6.04/6.20s exceed6s estimate; accepted repeated-duration tuning remains unmet. No CPS/config change or rerun. Inline code omitted by existing normalization; not verbatim speech. Independent audit additionally confirms closed inline-code deletion was a semantic P2; prior normalization wording was not acceptance of that omission.",
       "artifact": "docs/evidence/11-live-baseline-eddb472.json"
     },
     {
@@ -268,6 +268,8 @@
     }
   ],
   "limitations": [
+    "This report retains historical cfa3/cap84 tested provenance after the inline-content scanner correction. It is deliberately stale for new code; no prior physical run is rebound to the corrected source digest.",
+    "Independent physical audit found meaningful inline model=nova-3 was omitted by the cfa3 scanner. Exact old segment replay establishes consistency only, not semantic permission. A captured-sentence TDD correction awaits independent recheck and actual affected qualification.",
     "Atlas first-audio target around3s missed:6514.8/4419.6/4179.2ms using speech-frame proxy to scheduled native audio, not acoustic latency.",
     "L4 duration tuning remains failed: five admitted PCM segments exceeded6s estimate despite no cutoff/overflow and maximum observed scheduled outstanding6.3447s.",
     "L6 genuine provider-pause continuation remains unverified.",

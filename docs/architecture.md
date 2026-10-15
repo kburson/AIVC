@@ -62,6 +62,14 @@ segments and applies the text backlog/segment limits.
 the audio clock, with ten-second high water, two-second low water and emergency
 overrun/stall teardown. Text remains usable when speech fails or output is muted.
 
+Closed inline code retains its readable payload, including model IDs, numeric values,
+underscores and indexing; only its matching one/two-backtick delimiters are removed.
+URLs and citation metadata still receive speech sanitization. Backtick-fenced
+listings use three or more opening backticks and a closing run at least as long;
+the listing and language tag remain visual rather than being read as prose.
+An unmatched structured suffix is held while streaming and dropped conservatively
+at finish. This policy preserves inline meaning without speaking fence syntax.
+
 ## Cancellation, budgets and measurement
 
 [Leases](../apps/web/server/turns/leases.ts) retain capacity until real upstream
