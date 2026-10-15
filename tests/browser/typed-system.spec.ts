@@ -316,3 +316,63 @@ test('response pane scrolls below stationary controls and grows with the viewpor
     });
   }
 });
+
+test('short windows retain a usable response pane with independently reachable controls', async ({
+  page,
+}) => {
+  await ask(page);
+  await expect(page.getByRole('status')).toHaveText('Ready');
+  const pane = page.getByLabel('Conversation timeline');
+  for (const size of [
+    { width: 900, height: 400 },
+    { width: 640, height: 360 },
+    { width: 390, height: 500 },
+  ]) {
+    await page.setViewportSize(size);
+    expect(
+      await pane.evaluate((element) => element.clientHeight),
+    ).toBeGreaterThan(80);
+    const paneBounds = await pane.boundingBox();
+    expect(paneBounds!.y).toBeGreaterThanOrEqual(0);
+    expect(paneBounds!.y + paneBounds!.height).toBeLessThanOrEqual(size.height);
+    const upper = page.getByRole('region', {
+      name: 'Conversation controls',
+      exact: true,
+    });
+    await upper.evaluate((element) => {
+      element.scrollTop = element.scrollHeight;
+    });
+    expect(
+      await upper.evaluate((element) => element.scrollTop),
+    ).toBeGreaterThan(0);
+    const stop = page.getByRole('button', { name: 'Stop', exact: true });
+    await expect(stop).toBeInViewport({ ratio: 1 });
+    await expect(
+      page.getByLabel('Mute output', { exact: true }),
+    ).toBeInViewport({ ratio: 1 });
+    await expect(page.getByRole('status')).toBeInViewport({ ratio: 1 });
+    const controlBounds = await stop.boundingBox();
+    const upperScroll = await upper.evaluate((element) => element.scrollTop);
+    await pane.evaluate((element) => {
+      element.scrollTop = element.scrollHeight;
+    });
+    expect(await pane.evaluate((element) => element.scrollTop)).toBeGreaterThan(
+      0,
+    );
+    expect(await stop.boundingBox()).toEqual(controlBounds);
+    expect(await upper.evaluate((element) => element.scrollTop)).toBe(
+      upperScroll,
+    );
+    await upper.evaluate((element) => {
+      element.scrollTop = 0;
+    });
+    expect(await pane.boundingBox()).toEqual(paneBounds);
+    expect(
+      await page.evaluate(() => ({
+        vertical: document.documentElement.scrollHeight > innerHeight,
+        horizontal: document.documentElement.scrollWidth > innerWidth,
+        scrollY,
+      })),
+    ).toEqual({ vertical: false, horizontal: false, scrollY: 0 });
+  }
+});

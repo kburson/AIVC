@@ -230,3 +230,26 @@ stable control bounds during pane scrolling, viewport-height growth, desktop and
 offline UI results. New-source independent review and production qualification
 remain pending; prior live observations retain their actual96ee/33d9 provenance.
 Full L1–L8 acceptance remains unverified.
+
+## Short-window review correction
+
+The distinct [unchanged native UI review](../evidence/11-astra-ui-fail-0e06.txt)
+at exact `0e06ef473d67b8211f0b79ad2d853634e64a2179` found one P2 despite42
+focused tests and five joined browser checks passing. At900×400 the nonshrinking
+upper chrome consumed all remaining space: response-pane height0, status clipped,
+and outer overflow hidden. The same issue reproduced at640×360 and390×500.
+The native response retains its requested-changes verdict:2759 UTF-8 bytes,
+SHA256 `cbef9a0c46ed4afa67e8bd342a8771fe052de3dec92cbc1abbe26febae1198f3`,
+message `msg_03981de7adb10efe016ad03d909ebc8194b35f743663da5f74`.
+
+An actual joined browser regression reproduced height0 before the fix. An explicit
+named upper controls region can now shrink and scroll when necessary; the separate
+response pane reserves100px and retains independent scrolling. At all three short
+sizes, Stop/mute/status remain reachable, response scrolling preserves control
+bounds, controls scrolling preserves response bounds, and the body does not scroll.
+The existing desktop/narrow700 checks still require every control visible without
+upper scrolling, responsive pane growth and newest-card visibility. Six joined
+browser tests,19 UI tests and typecheck passed. Newest-first display, original turn
+numbers, chronological history and new-turn-only scroll reset are unchanged.
+Same-seat corrected-head review and new production qualification remain pending;
+this checkpoint makes no additional provider or whole-live acceptance claim.

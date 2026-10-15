@@ -62,6 +62,8 @@ repairs remains approval deferred where already recorded.
 
 - An ordinary Python test edit was refused because its literal HTTP `/release` endpoint was classified as an out-of-scope filesystem path; the ordinary patch tool separately reported an invalid patch payload. Separate normal file edits and the existing public test configure helper completed the approved change, without altering guards, encoding the path or adding a framework helper.
 
+- Independent short-window review exposed a zero-height response pane despite green desktop/narrow700 layout checks. The actual900×400 red regression justified a shrinking, scrollable upper controls region with a separately reserved usable response area. Viewport width alone had not covered short-window reachability; this is a concrete product review finding, not administrative friction.
+
 ## Controls with demonstrated delivery value
 
 Independent #8 review found concrete playback and recovery defects that the author

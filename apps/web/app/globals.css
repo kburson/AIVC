@@ -40,10 +40,17 @@ body {
   flex: 1;
   min-height: 0;
 }
-.conversation > :not(.timeline) {
+.conversation-controls {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+.conversation-controls > * {
   flex-shrink: 0;
 }
-.conversation > header p {
+.conversation-controls > header p {
   margin: 2px 0;
   font-size: 0.8rem;
 }
@@ -151,8 +158,8 @@ a {
 .timeline {
   display: grid;
   align-content: start;
-  flex: 1;
-  min-height: 0;
+  flex: 1 0 100px;
+  min-height: 100px;
   overflow-y: auto;
   gap: 20px;
 }
