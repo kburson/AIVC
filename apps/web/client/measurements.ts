@@ -7,6 +7,8 @@ export type Measurement = {
   intentVersion?: number;
   revision?: string;
   scheduledAfterMs?: number;
+  vadEpoch?: number;
+  vadUtteranceId?: number;
   lastSpeechFrameAt?: number;
   vadEndDelayMs?: number;
 };
@@ -18,6 +20,8 @@ const keys = [
   'intentVersion',
   'revision',
   'scheduledAfterMs',
+  'vadEpoch',
+  'vadUtteranceId',
   'lastSpeechFrameAt',
   'vadEndDelayMs',
 ] as const;

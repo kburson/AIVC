@@ -8,11 +8,7 @@ export type VadCallbacks = {
   rawStart(capture: CaptureToken): void;
   confirmedStart(capture: CaptureToken): void;
   misfire(capture: CaptureToken): void;
-  end(
-    capture: CaptureToken,
-    samples: Float32Array,
-    timing?: { lastSpeechFrameAt: number; endCallbackAt: number },
-  ): void;
+  end(capture: CaptureToken, samples: Float32Array): void;
   frame(samples: Float32Array): void;
 };
 export type VadHandle = {
@@ -103,10 +99,14 @@ export async function createVad(
       const token = capture;
       capture = null;
       phase = null;
-      callbacks.end(token, samples, {
+      const endCallbackAt = performance.now();
+      observe('vad-frame-end', {
+        vadEpoch: token.epoch,
+        vadUtteranceId: token.utteranceId,
         lastSpeechFrameAt,
-        endCallbackAt: performance.now(),
+        vadEndDelayMs: Math.max(0, endCallbackAt - lastSpeechFrameAt),
       });
+      callbacks.end(token, samples);
     },
     onFrameProcessed: (probs, samples) => {
       if (probs.isSpeech >= 0.25) lastSpeechFrameAt = performance.now();

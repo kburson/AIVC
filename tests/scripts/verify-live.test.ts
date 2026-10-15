@@ -143,7 +143,7 @@ function fixture() {
     sourceDigest,
     mode: 'live',
     nodeVersion: process.version,
-    packages: { '.': { '@ricky0123/vad-web': '0.0.31' } },
+    packages: { '.:@ricky0123/vad-web': '0.0.31' },
     providers,
     browser,
     vadPatch: {
@@ -294,7 +294,7 @@ it.each([
   [
     'package binding',
     (f: ReturnType<typeof fixture>) => {
-      f.report.packages['.']['@ricky0123/vad-web'] = '0.0.30';
+      f.report.packages['.:@ricky0123/vad-web'] = '0.0.30';
     },
     /package/,
   ],
@@ -503,7 +503,7 @@ it('records actual dependency versions resolved independently by each workspace'
   });
   const { installedPackages } = await import('../../scripts/verify-live.mjs');
   expect(installedPackages(f.root)).toMatchObject({
-    'apps/retrieval': { ajv: '8.17.1' },
+    'apps/retrieval:ajv': '8.17.1',
   });
 });
 it('rejects altered installed code despite a retained marker and recomputed report digest', () => {

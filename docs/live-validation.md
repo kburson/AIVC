@@ -90,7 +90,7 @@ observation into a pass.
 
 | Original case | Executable coverage and remaining actual observation                                                                                                                                                 |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1             | [Typed tool loop](../tests/integration/typed-turn.test.ts) and [joined HTTP browser](../tests/browser/system.spec.ts); actual Claude lookup remains L1.                                              |
+| 1             | [Typed tool loop](../tests/integration/typed-turn.test.ts) and [joined HTTP browser](../tests/browser/typed-system.spec.ts); actual Claude lookup remains L1.                                        |
 | 2             | [Retrieval contract](../tests/contracts/retrieval.test.ts) and joined HTTP cards.                                                                                                                    |
 | 3             | [SSE codec](../tests/contracts/sse.test.ts) and [PCM decoder](../tests/voice/pcm.test.ts).                                                                                                           |
 | 4             | [Turn controller](../tests/contracts/turn-controller.test.ts), [interruption](../tests/voice/interruption.test.ts) and [browser interruption](../tests/browser/interruption.spec.ts); physical L3.   |
@@ -120,7 +120,11 @@ performance
   .map(({ name, startTime, detail }) => ({ name, startTime, detail }));
 ```
 
-`vad-end` joins `turn-created` by captureEpoch/utteranceId/intentVersion. Its
+`vad-end` joins `turn-created` by captureEpoch/utteranceId/intentVersion. The
+immediately preceding synchronous adapter-local `vad-frame-end` mark records
+its separate vadEpoch/vadUtteranceId and frame estimate; the unchanged two-argument
+end callback carries no diagnostic extension. Pair these chronological marks
+within the accepted end callback, without equating the two token namespaces.
 lastSpeechFrameAt is the last VAD frame classified above the configured negative
 threshold, not an acoustic recording of the last phoneme; its resolution includes
 32ms frame quantization and scheduling. vadEndDelayMs is the observed model-frame

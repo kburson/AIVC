@@ -7,7 +7,7 @@ remain pending; no controlled run is a substitute.
 
 ## Actual application boundary
 
-The [joined browser suite](../../tests/browser/system.spec.ts) runs the actual
+The [joined browser suite](../../tests/browser/typed-system.spec.ts) runs the actual
 Next Route Handlers and Fastify catalog using a [test-owned launcher](../../tests/browser/system-server.ts).
 It never routes, replaces or intercepts `/api/turn`. Test-owned Fastify controls
 hold or fail the real catalog HTTP request. Passive CDP request observation checks
@@ -27,8 +27,10 @@ before their server descendants released ports. An owned-only local ancestry
 trace confirmed the wrapper topology. Production now directly launches the pinned
 Next CLI and compiled Fastify entry. Its owned trace contains the two actual server
 processes and confirms both ports close. No process-group/global kill, unowned
-process cleanup or dependency change was introduced. Linux CI must confirm the
-fix separately; a local pass does not claim that result.
+process cleanup or dependency change was introduced. Ubuntu CI confirmed this fix at source `7294c3e`: all six checks passed,
+including Offline system acceptance in [run38660164354](https://github.com/kburson/AIVC/actions/runs/38660164354/job/116179276814),
+completed2026-10-15T00:30:16Z. The earlier component368273f run failed shutdown
+truthfully and remains distinct from this passing result.
 
 ## Offline verification observed
 
@@ -76,3 +78,23 @@ failing before passing. Versions are now recorded per actual root/workspace
 resolution; accepted upstream provenance uses lock integrity, and both installed
 VAD JS/declaration bytes must match the unchanged patch's full Git postimages.
 No gitHead field was invented and no package/patch/manifest pin changed.
+
+## Whole offline review corrections
+
+Independent review at7294c3e passed612 tests/49 files,15 browser cases,10 separate
+archive cases, clean build/typecheck/docs/lint/format and additional actual
+production SSE/admission/shutdown probes. Its offline specification verdict
+requested three corrections: retain the accepted flat `packages:Record<string,string>`
+interface using context-qualified keys; preserve exactly two arguments to
+VadCallbacks.end and keep timing in adapter-local marks; and use the accepted
+`tests/browser/typed-system.spec.ts` path. The focused callback and flat-map
+regressions were observed failing before correction. No live acceptance verdict
+is claimed by the offline checks. Same-seat correction review remains pending.
+
+The [unchanged native whole-offline response](../evidence/11-astra-offline-review-7294.txt)
+has4483 UTF-8 bytes, SHA256
+`50153e5127a7ddfbff7eedb44b08d17e4ec01331614918acc1019cb13cd1d89e`,
+native message `msg_03981de7adb10efe016ad01f36fe848194b1751b92e57bf5aa`
+from the same genuine reviewer SID above. Its specification FAIL/quality changes
+requested is preserved; independent offline passes do not replace the requested
+compatibility corrections or actual provider/device evidence.

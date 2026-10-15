@@ -105,7 +105,7 @@ export function installedPackages(root = workspace) {
       json(root, path + '/package.json'),
     ]),
   ];
-  return Object.fromEntries(
+  const byContext = Object.fromEntries(
     contexts.map(([context, declaration]) => {
       const require = createRequire(join(root, context, 'package.json'));
       const names = Object.keys({
@@ -149,6 +149,14 @@ export function installedPackages(root = workspace) {
         ),
       ];
     }),
+  );
+  return Object.fromEntries(
+    Object.entries(byContext).flatMap(([context, versions]) =>
+      Object.entries(versions).map(([name, version]) => [
+        context + ':' + name,
+        version,
+      ]),
+    ),
   );
 }
 export function verifyLive({
