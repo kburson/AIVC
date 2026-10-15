@@ -223,3 +223,16 @@ The [exact audit](evidence/11-astra-physical-audit-1bbe506.txt) and
 preserve the finding and test evidence. The cfa3/cap84 physical artifact stays
 unchanged and cannot qualify the new source digest. Its timing misses, L4 duration
 overruns and L6 unobserved pause remain; no new live run or lifecycle gate passed.
+
+## Corrected-source partial duration screen
+
+The [CPS12/cap72 partial screen](evidence/11-cps12-partial-screen-3e7170f.json)
+records ten exact one-off synthesis responses at corrected source14bee, clean
+production build2DZ7lAnJs9Ui-zV4QVYF_ and voice aura-2-thalia-en. All ten had valid
+PCM and durations3.28–5.40seconds. Nine changed texts remain uncovered; no audible
+listening, joined playback/backlog or whole-source physical qualification was
+established. The cfa3/cap84 physical evidence remains historical and unchanged.
+L4 stays failed/incomplete, L6 genuine provider pause unobserved, and the read-only
+live report intentionally remains nonpassing. See the
+[implementation checkpoint](implementation/11-system-acceptance.md#reviewed-partial-cps12-synthesis-screen-at-3e7170f)
+for exact selection, provenance and limitations.

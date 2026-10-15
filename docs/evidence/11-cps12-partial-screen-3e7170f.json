@@ -1,0 +1,650 @@
+{
+  "schemaVersion": 1,
+  "purpose": "PARTIAL ten-text rejection screen, not L4 or whole-live acceptance",
+  "status": "TEN_EXACT_SAMPLES_VALID_PCM_AND_DURATION_AT_MOST_6_SECONDS_ONCE",
+  "gitHead": "3e7170f83f7618955f53c080e2d184dc3d16409b",
+  "sourceDigest": "14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63",
+  "build": {
+    "mode": "production",
+    "buildId": "2DZ7lAnJs9Ui-zV4QVYF_"
+  },
+  "runtimeProfile": {
+    "cps": 12,
+    "segmentChars": 72,
+    "voice": "aura-2-thalia-en",
+    "deepgramSdk": "5.15.0",
+    "format": {
+      "encoding": "pcm_s16le",
+      "sampleRate": 24000,
+      "channels": 1
+    },
+    "speechTimeoutMs": 20000,
+    "turnTimeoutMs": 60000,
+    "retrievalTimeoutMs": 5000,
+    "sdkRetries": 0
+  },
+  "packages": {
+    ".:@eslint/js": "9.39.1",
+    ".:@kburson/ai-task-manager": "0.1.0",
+    ".:@playwright/test": "1.64.0",
+    ".:@testing-library/react": "16.3.3",
+    ".:@types/node": "26.6.5",
+    ".:@types/react": "19.3.0",
+    ".:@types/react-dom": "19.3.0",
+    ".:eslint": "9.39.1",
+    ".:eslint-config-next": "16.4.0",
+    ".:eslint-config-prettier": "10.1.8",
+    ".:globals": "16.4.0",
+    ".:jsdom": "26.1.0",
+    ".:markdownlint-cli2": "0.23.3",
+    ".:patch-package": "8.0.1",
+    ".:prettier": "3.9.10",
+    ".:tsx": "4.20.6",
+    ".:typescript": "5.9.3",
+    ".:typescript-eslint": "8.71.2",
+    ".:vitest": "4.0.18",
+    "apps/web:@anthropic-ai/sdk": "0.133.0",
+    "apps/web:@deepgram/sdk": "5.15.0",
+    "apps/web:@ricky0123/vad-web": "0.0.31",
+    "apps/web:next": "16.4.0",
+    "apps/web:onnxruntime-web": "1.30.0",
+    "apps/web:react": "19.3.0",
+    "apps/web:react-dom": "19.3.0",
+    "apps/web:react-markdown": "10.1.0",
+    "apps/retrieval:ajv": "8.17.1",
+    "apps/retrieval:fastify": "5.12.5"
+  },
+  "preflight": {
+    "gitHead": "3e7170f83f7618955f53c080e2d184dc3d16409b",
+    "sourceDigest": "14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63",
+    "nodeVersion": "v26.8.1",
+    "packages": {
+      ".:@eslint/js": "9.39.1",
+      ".:@kburson/ai-task-manager": "0.1.0",
+      ".:@playwright/test": "1.64.0",
+      ".:@testing-library/react": "16.3.3",
+      ".:@types/node": "26.6.5",
+      ".:@types/react": "19.3.0",
+      ".:@types/react-dom": "19.3.0",
+      ".:eslint": "9.39.1",
+      ".:eslint-config-next": "16.4.0",
+      ".:eslint-config-prettier": "10.1.8",
+      ".:globals": "16.4.0",
+      ".:jsdom": "26.1.0",
+      ".:markdownlint-cli2": "0.23.3",
+      ".:patch-package": "8.0.1",
+      ".:prettier": "3.9.10",
+      ".:tsx": "4.20.6",
+      ".:typescript": "5.9.3",
+      ".:typescript-eslint": "8.71.2",
+      ".:vitest": "4.0.18",
+      "apps/web:@anthropic-ai/sdk": "0.133.0",
+      "apps/web:@deepgram/sdk": "5.15.0",
+      "apps/web:@ricky0123/vad-web": "0.0.31",
+      "apps/web:next": "16.4.0",
+      "apps/web:onnxruntime-web": "1.30.0",
+      "apps/web:react": "19.3.0",
+      "apps/web:react-dom": "19.3.0",
+      "apps/web:react-markdown": "10.1.0",
+      "apps/retrieval:ajv": "8.17.1",
+      "apps/retrieval:fastify": "5.12.5"
+    },
+    "patchPath": "patches/@ricky0123+vad-web+0.0.31.patch",
+    "patchDigest": "44485e484f4f0223b720e0e02e12e8e498ce6354bf24a21c71e7c60a9f5d9137",
+    "modulePath": "node_modules/@ricky0123/vad-web/dist/real-time-vad.js",
+    "appliedModuleDigest": "37b55cc57c1463624857ad65a9ceaf9cc073327bc9ed07fd34d0ecbe564eaa2a",
+    "postimages": {
+      "dist/real-time-vad.js": "4213050c5a6b73b500c03d693108e62c1cfb161f",
+      "dist/real-time-vad.d.ts": "97ec3f408602bd1e0d478c0671f3fd7bb788843b"
+    },
+    "lifecycleRevision": "aivc-vad-lifecycle-v1"
+  },
+  "admission": {
+    "origin": "http://localhost:3000",
+    "host": "localhost:3000",
+    "contentType": "application/json"
+  },
+  "route": "/api/speech",
+  "selection": [
+    {
+      "ordinal": 1,
+      "text": "Here is the current status of the Atlas project: - Status:",
+      "chars": 58,
+      "textSha256": "428cad6c3a6950433a80c93cb2a0a36bf7c9ac86aeef888a55cead54fa85f949",
+      "selection": "distinctOverlapCandidates[0]"
+    },
+    {
+      "ordinal": 2,
+      "text": "Active ✅ - Owner Team: North - Open Items: 3 - Summary:",
+      "chars": 55,
+      "textSha256": "0cad8c7184b2dde7d16044a2a6b1ae499ca6bcb59dc2dd859fd4c26c26231637",
+      "selection": "distinctOverlapCandidates[1]"
+    },
+    {
+      "ordinal": 3,
+      "text": "1. Nova-3 is Deepgram's highest-performing general-purpose ASR",
+      "chars": 62,
+      "textSha256": "cfe5ab825bb738d93e95b3bbc33e0bb71d04e71998cfb30c3451da418dca88bd",
+      "selection": "distinctOverlapCandidates[2]"
+    },
+    {
+      "ordinal": 4,
+      "text": "(Automatic Speech Recognition) model, recommended for meetings,",
+      "chars": 63,
+      "textSha256": "fac0bb5504491791882c1c6d2595c6a48c5963b1709656a5b544aa0568583c3d",
+      "selection": "distinctOverlapCandidates[3]"
+    },
+    {
+      "ordinal": 5,
+      "text": "event captioning, multi-speaker, multilingual, noisy,",
+      "chars": 53,
+      "textSha256": "4a607b6781612d19d38e504a346c665eafc261c7be304817e6494bc2af1a3daa",
+      "selection": "distinctOverlapCandidates[4]"
+    },
+    {
+      "ordinal": 6,
+      "text": "or far-field audio in both batch and streaming modes.",
+      "chars": 53,
+      "textSha256": "efafa4ec7d712a2b759aa29514fca4dc619d1fa522df38966ebb89f8d2ccc9fa",
+      "selection": "distinctOverlapCandidates[5]"
+    },
+    {
+      "ordinal": 7,
+      "text": "delivering industry-leading performance with a 53.4% reduction in word",
+      "chars": 70,
+      "textSha256": "f4b133a6899e5023e95648b9c2a1b94c914ee27c07402e831e7814ffc4392c7b",
+      "selection": "distinctOverlapCandidates[6]"
+    },
+    {
+      "ordinal": 8,
+      "text": "error rate (WER) for streaming and 47.4% for batch processing compared",
+      "chars": 70,
+      "textSha256": "4075de76197fe58a61cec7e9b9e7921298666f30bbcd5be175cc85aca3012e5a",
+      "selection": "distinctOverlapCandidates[7]"
+    },
+    {
+      "ordinal": 9,
+      "text": "Let me know if you'd like more details or want to take action on any of",
+      "chars": 71,
+      "textSha256": "5e3eaebb6bae551a87d87459709c5e9f51629c4cd64161b631b8f283a44cd874",
+      "selection": "secondary341a124a segment5 one-based"
+    },
+    {
+      "ordinal": 10,
+      "text": "4. To access the model, you simply use model=nova-3 in your API calls.",
+      "chars": 70,
+      "textSha256": "bb1719ae113fe0f0ddeece5b5e69da2cd04994a0a8da84af1696cacb6ff26fda",
+      "selection": "research segment14 one-based"
+    }
+  ],
+  "uncoveredChanged": [
+    {
+      "replay": "secondary341a124a",
+      "segmentOneBased": 3,
+      "text": "Atlas is a synthetic active project owned by the North team with three"
+    },
+    {
+      "replay": "secondary341a124a",
+      "segmentOneBased": 4,
+      "text": "open items currently pending."
+    },
+    {
+      "replay": "secondary341a124a",
+      "segmentOneBased": 6,
+      "text": "the open items!"
+    },
+    {
+      "replay": "research",
+      "segmentOneBased": 1,
+      "text": "Here's a brief explanation of Nova-3 based on Deepgram's official"
+    },
+    {
+      "replay": "research",
+      "segmentOneBased": 2,
+      "text": "documentation:"
+    },
+    {
+      "replay": "research",
+      "segmentOneBased": 10,
+      "text": "to competitors."
+    },
+    {
+      "replay": "research",
+      "segmentOneBased": 11,
+      "text": "3. Nova-3 offers model options such as general (optimized for everyday"
+    },
+    {
+      "replay": "research",
+      "segmentOneBased": 12,
+      "text": "audio processing) and medical (optimized for audio with medically"
+    },
+    {
+      "replay": "research",
+      "segmentOneBased": 13,
+      "text": "oriented vocabulary, available in English and multilingual)."
+    }
+  ],
+  "corpus": {
+    "distinct": 23,
+    "changed": 19,
+    "unchangedHistoricalOnly": 4,
+    "selected": 10,
+    "uncoveredChanged": 9
+  },
+  "readiness": {
+    "capabilities": {
+      "schemaVersion": 1,
+      "mode": "live",
+      "model": "claude-sonnet-4-6",
+      "sttModel": "nova-3",
+      "ttsModel": "aura-2-thalia-en",
+      "build": {
+        "mode": "production",
+        "buildId": "2DZ7lAnJs9Ui-zV4QVYF_"
+      },
+      "turnsAvailable": true,
+      "speechAvailable": true,
+      "search": {
+        "state": "unavailable",
+        "reason": "Hosted search model support has not been checked.",
+        "accountValidation": "pending"
+      },
+      "speech": {
+        "segmentChars": 72,
+        "backlogChars": 2400,
+        "highWaterSeconds": 10,
+        "lowWaterSeconds": 2
+      }
+    },
+    "observerEnvironment": {
+      "NODE_OPTIONS": null,
+      "AIVC_PASSIVE_OBSERVER": null
+    },
+    "noBrowserMicrophonePlayback": true
+  },
+  "execution": {
+    "maxRequests": 10,
+    "actualRequests": 10,
+    "retries": 0,
+    "sequential": true,
+    "singleUse": true,
+    "earlyStopPolicy": "First overrun, HTTP failure, invalid PCM or request/stream failure; unexecuted rows retained",
+    "serverDeadlineMs": 20000,
+    "clientSafetyTimeoutMs": 25000,
+    "startedAt": "2026-10-15T06:19:09.593Z",
+    "finishedAt": "2026-10-15T06:19:31.502Z"
+  },
+  "results": [
+    {
+      "ordinal": 1,
+      "text": "Here is the current status of the Atlas project: - Status:",
+      "chars": 58,
+      "textSha256": "428cad6c3a6950433a80c93cb2a0a36bf7c9ac86aeef888a55cead54fa85f949",
+      "selection": "distinctOverlapCandidates[0]",
+      "body": {
+        "turnId": "5daff2b7-0b7a-4d3e-be57-2e52e98734c7",
+        "segmentId": "cps12-screen-1",
+        "text": "Here is the current status of the Atlas project: - Status:"
+      },
+      "startedAt": "2026-10-15T06:19:09.596Z",
+      "status": "EXACT_SAMPLE_DURATION_OK",
+      "httpStatus": 200,
+      "responseHeaders": {
+        "content-type": "application/octet-stream",
+        "x-audio-encoding": "pcm_s16le",
+        "x-audio-sample-rate": "24000",
+        "x-audio-channels": "1",
+        "cache-control": "no-store"
+      },
+      "headersMs": 450.07120799999996,
+      "bytes": 199680,
+      "chunks": 116,
+      "pcmSha256": "4da75136dcba4b377def5f690d91a46a610e0f87c7c231ce2044215664a625ae",
+      "frames": 99840,
+      "durationSeconds": 4.16,
+      "formatValid": true,
+      "elapsedMs": 2296.380666,
+      "finishedAt": "2026-10-15T06:19:11.893Z"
+    },
+    {
+      "ordinal": 2,
+      "text": "Active ✅ - Owner Team: North - Open Items: 3 - Summary:",
+      "chars": 55,
+      "textSha256": "0cad8c7184b2dde7d16044a2a6b1ae499ca6bcb59dc2dd859fd4c26c26231637",
+      "selection": "distinctOverlapCandidates[1]",
+      "body": {
+        "turnId": "e465067b-d25f-4fa3-bcd1-ddfd52ed9658",
+        "segmentId": "cps12-screen-2",
+        "text": "Active ✅ - Owner Team: North - Open Items: 3 - Summary:"
+      },
+      "startedAt": "2026-10-15T06:19:11.894Z",
+      "status": "EXACT_SAMPLE_DURATION_OK",
+      "httpStatus": 200,
+      "responseHeaders": {
+        "content-type": "application/octet-stream",
+        "x-audio-encoding": "pcm_s16le",
+        "x-audio-sample-rate": "24000",
+        "x-audio-channels": "1",
+        "cache-control": "no-store"
+      },
+      "headersMs": 148.4347090000001,
+      "bytes": 259200,
+      "chunks": 149,
+      "pcmSha256": "011d5ec3e4834d936f10d095a651a40780d3f6f1b1c3f22dbdf894381e906461",
+      "frames": 129600,
+      "durationSeconds": 5.4,
+      "formatValid": true,
+      "elapsedMs": 2561.459959,
+      "finishedAt": "2026-10-15T06:19:14.455Z"
+    },
+    {
+      "ordinal": 3,
+      "text": "1. Nova-3 is Deepgram's highest-performing general-purpose ASR",
+      "chars": 62,
+      "textSha256": "cfe5ab825bb738d93e95b3bbc33e0bb71d04e71998cfb30c3451da418dca88bd",
+      "selection": "distinctOverlapCandidates[2]",
+      "body": {
+        "turnId": "b803d2e3-33cb-4ccd-b10d-15c34c67c0d2",
+        "segmentId": "cps12-screen-3",
+        "text": "1. Nova-3 is Deepgram's highest-performing general-purpose ASR"
+      },
+      "startedAt": "2026-10-15T06:19:14.456Z",
+      "status": "EXACT_SAMPLE_DURATION_OK",
+      "httpStatus": 200,
+      "responseHeaders": {
+        "content-type": "application/octet-stream",
+        "x-audio-encoding": "pcm_s16le",
+        "x-audio-sample-rate": "24000",
+        "x-audio-channels": "1",
+        "cache-control": "no-store"
+      },
+      "headersMs": 162.6787920000006,
+      "bytes": 230400,
+      "chunks": 134,
+      "pcmSha256": "7512b3c84dad47540f8ab50d3e12dbe67067f1034c52ba96b0363c336c3a26b3",
+      "frames": 115200,
+      "durationSeconds": 4.8,
+      "formatValid": true,
+      "elapsedMs": 2285.8766670000005,
+      "finishedAt": "2026-10-15T06:19:16.742Z"
+    },
+    {
+      "ordinal": 4,
+      "text": "(Automatic Speech Recognition) model, recommended for meetings,",
+      "chars": 63,
+      "textSha256": "fac0bb5504491791882c1c6d2595c6a48c5963b1709656a5b544aa0568583c3d",
+      "selection": "distinctOverlapCandidates[3]",
+      "body": {
+        "turnId": "5bce74eb-30d1-426a-aa8d-cb0b20432efc",
+        "segmentId": "cps12-screen-4",
+        "text": "(Automatic Speech Recognition) model, recommended for meetings,"
+      },
+      "startedAt": "2026-10-15T06:19:16.744Z",
+      "status": "EXACT_SAMPLE_DURATION_OK",
+      "httpStatus": 200,
+      "responseHeaders": {
+        "content-type": "application/octet-stream",
+        "x-audio-encoding": "pcm_s16le",
+        "x-audio-sample-rate": "24000",
+        "x-audio-channels": "1",
+        "cache-control": "no-store"
+      },
+      "headersMs": 162.6497500000005,
+      "bytes": 186240,
+      "chunks": 108,
+      "pcmSha256": "cee894107bce513102d570f224c01ec95384ec6a67180593f137194f3e5be3be",
+      "frames": 93120,
+      "durationSeconds": 3.88,
+      "formatValid": true,
+      "elapsedMs": 1899.438416,
+      "finishedAt": "2026-10-15T06:19:18.644Z"
+    },
+    {
+      "ordinal": 5,
+      "text": "event captioning, multi-speaker, multilingual, noisy,",
+      "chars": 53,
+      "textSha256": "4a607b6781612d19d38e504a346c665eafc261c7be304817e6494bc2af1a3daa",
+      "selection": "distinctOverlapCandidates[4]",
+      "body": {
+        "turnId": "8b721353-d892-4760-b7a2-7a7b3e01e82b",
+        "segmentId": "cps12-screen-5",
+        "text": "event captioning, multi-speaker, multilingual, noisy,"
+      },
+      "startedAt": "2026-10-15T06:19:18.644Z",
+      "status": "EXACT_SAMPLE_DURATION_OK",
+      "httpStatus": 200,
+      "responseHeaders": {
+        "content-type": "application/octet-stream",
+        "x-audio-encoding": "pcm_s16le",
+        "x-audio-sample-rate": "24000",
+        "x-audio-channels": "1",
+        "cache-control": "no-store"
+      },
+      "headersMs": 148.11924999999974,
+      "bytes": 236160,
+      "chunks": 137,
+      "pcmSha256": "386f8a61552fffbc6f4624681e6c3b9423bc92f574bd47f0fda24a4278c07c21",
+      "frames": 118080,
+      "durationSeconds": 4.92,
+      "formatValid": true,
+      "elapsedMs": 2298.856916999999,
+      "finishedAt": "2026-10-15T06:19:20.944Z"
+    },
+    {
+      "ordinal": 6,
+      "text": "or far-field audio in both batch and streaming modes.",
+      "chars": 53,
+      "textSha256": "efafa4ec7d712a2b759aa29514fca4dc619d1fa522df38966ebb89f8d2ccc9fa",
+      "selection": "distinctOverlapCandidates[5]",
+      "body": {
+        "turnId": "1a95a57b-d137-43e9-901d-95bb977540ae",
+        "segmentId": "cps12-screen-6",
+        "text": "or far-field audio in both batch and streaming modes."
+      },
+      "startedAt": "2026-10-15T06:19:20.944Z",
+      "status": "EXACT_SAMPLE_DURATION_OK",
+      "httpStatus": 200,
+      "responseHeaders": {
+        "content-type": "application/octet-stream",
+        "x-audio-encoding": "pcm_s16le",
+        "x-audio-sample-rate": "24000",
+        "x-audio-channels": "1",
+        "cache-control": "no-store"
+      },
+      "headersMs": 142.33929200000057,
+      "bytes": 157440,
+      "chunks": 91,
+      "pcmSha256": "98bfbb2e3c21a9e33ba3820be3a4ac8a21ded940306cefed7191dbc474728b7a",
+      "frames": 78720,
+      "durationSeconds": 3.28,
+      "formatValid": true,
+      "elapsedMs": 1564.502958000001,
+      "finishedAt": "2026-10-15T06:19:22.509Z"
+    },
+    {
+      "ordinal": 7,
+      "text": "delivering industry-leading performance with a 53.4% reduction in word",
+      "chars": 70,
+      "textSha256": "f4b133a6899e5023e95648b9c2a1b94c914ee27c07402e831e7814ffc4392c7b",
+      "selection": "distinctOverlapCandidates[6]",
+      "body": {
+        "turnId": "a566f995-bb1c-482a-ac0d-36b8b7c1fabd",
+        "segmentId": "cps12-screen-7",
+        "text": "delivering industry-leading performance with a 53.4% reduction in word"
+      },
+      "startedAt": "2026-10-15T06:19:22.512Z",
+      "status": "EXACT_SAMPLE_DURATION_OK",
+      "httpStatus": 200,
+      "responseHeaders": {
+        "content-type": "application/octet-stream",
+        "x-audio-encoding": "pcm_s16le",
+        "x-audio-sample-rate": "24000",
+        "x-audio-channels": "1",
+        "cache-control": "no-store"
+      },
+      "headersMs": 158.18945899999926,
+      "bytes": 232320,
+      "chunks": 135,
+      "pcmSha256": "bbb31c5847fe287c338bba4f0e528b650128e6c1993669a92d85cce0ab42ae27",
+      "frames": 116160,
+      "durationSeconds": 4.84,
+      "formatValid": true,
+      "elapsedMs": 2275.716875,
+      "finishedAt": "2026-10-15T06:19:24.788Z"
+    },
+    {
+      "ordinal": 8,
+      "text": "error rate (WER) for streaming and 47.4% for batch processing compared",
+      "chars": 70,
+      "textSha256": "4075de76197fe58a61cec7e9b9e7921298666f30bbcd5be175cc85aca3012e5a",
+      "selection": "distinctOverlapCandidates[7]",
+      "body": {
+        "turnId": "2f96d227-846e-434a-98c9-ee7f7ed73d3e",
+        "segmentId": "cps12-screen-8",
+        "text": "error rate (WER) for streaming and 47.4% for batch processing compared"
+      },
+      "startedAt": "2026-10-15T06:19:24.788Z",
+      "status": "EXACT_SAMPLE_DURATION_OK",
+      "httpStatus": 200,
+      "responseHeaders": {
+        "content-type": "application/octet-stream",
+        "x-audio-encoding": "pcm_s16le",
+        "x-audio-sample-rate": "24000",
+        "x-audio-channels": "1",
+        "cache-control": "no-store"
+      },
+      "headersMs": 138.4674159999995,
+      "bytes": 253440,
+      "chunks": 146,
+      "pcmSha256": "59579bfdc53268d647f09dfbb88cf8ace2cd810fb4796ff9b66180d74de0142f",
+      "frames": 126720,
+      "durationSeconds": 5.28,
+      "formatValid": true,
+      "elapsedMs": 2477.042999999998,
+      "finishedAt": "2026-10-15T06:19:27.266Z"
+    },
+    {
+      "ordinal": 9,
+      "text": "Let me know if you'd like more details or want to take action on any of",
+      "chars": 71,
+      "textSha256": "5e3eaebb6bae551a87d87459709c5e9f51629c4cd64161b631b8f283a44cd874",
+      "selection": "secondary341a124a segment5 one-based",
+      "body": {
+        "turnId": "2633811d-0c50-4e67-8ae5-8789402a429d",
+        "segmentId": "cps12-screen-9",
+        "text": "Let me know if you'd like more details or want to take action on any of"
+      },
+      "startedAt": "2026-10-15T06:19:27.267Z",
+      "status": "EXACT_SAMPLE_DURATION_OK",
+      "httpStatus": 200,
+      "responseHeaders": {
+        "content-type": "application/octet-stream",
+        "x-audio-encoding": "pcm_s16le",
+        "x-audio-sample-rate": "24000",
+        "x-audio-channels": "1",
+        "cache-control": "no-store"
+      },
+      "headersMs": 143.73762500000157,
+      "bytes": 170880,
+      "chunks": 99,
+      "pcmSha256": "894329e427d3a6d8ce4792c08769cbf9730cfb4ddcc92ac0b92a0e0ab36a32e7",
+      "frames": 85440,
+      "durationSeconds": 3.56,
+      "formatValid": true,
+      "elapsedMs": 1725.4910000000018,
+      "finishedAt": "2026-10-15T06:19:28.993Z"
+    },
+    {
+      "ordinal": 10,
+      "text": "4. To access the model, you simply use model=nova-3 in your API calls.",
+      "chars": 70,
+      "textSha256": "bb1719ae113fe0f0ddeece5b5e69da2cd04994a0a8da84af1696cacb6ff26fda",
+      "selection": "research segment14 one-based",
+      "body": {
+        "turnId": "d90844b0-400f-4a1a-8df7-a9db8755a305",
+        "segmentId": "cps12-screen-10",
+        "text": "4. To access the model, you simply use model=nova-3 in your API calls."
+      },
+      "startedAt": "2026-10-15T06:19:28.993Z",
+      "status": "EXACT_SAMPLE_DURATION_OK",
+      "httpStatus": 200,
+      "responseHeaders": {
+        "content-type": "application/octet-stream",
+        "x-audio-encoding": "pcm_s16le",
+        "x-audio-sample-rate": "24000",
+        "x-audio-channels": "1",
+        "cache-control": "no-store"
+      },
+      "headersMs": 155.09904200000165,
+      "bytes": 253440,
+      "chunks": 146,
+      "pcmSha256": "20436ec5f491abce13a5d8a6f9a2df2e78539497cb3cbf34fadd036605ee72c8",
+      "frames": 126720,
+      "durationSeconds": 5.28,
+      "formatValid": true,
+      "elapsedMs": 2506.9167500000003,
+      "finishedAt": "2026-10-15T06:19:31.501Z"
+    }
+  ],
+  "method": {
+    "duration": "Complete successful response bytes / 2 bytes per frame / 24000Hz; headers require pcm_s16le/mono/24000; EOF consumed once",
+    "pcm": "No PCM stored or played; streamed bytes counted and SHA256 hashed",
+    "networkTiming": "HTTP elapsed/headers timings only, not playback or acoustic latency"
+  },
+  "provenance": {
+    "session": "01a13d81-022f-7b00-8248-db15f9d4449b",
+    "originalResult": {
+      "path": ".scratch/11-cps12-3e7170f-results.json",
+      "bytes": 12466,
+      "sha256": "a9f5d9615642994a34a70cf255bd9bd5940588f53ed6b856f15bb4ebab93ed4e"
+    },
+    "artifacts": [
+      {
+        "path": ".scratch/11-cps12-3e7170f-preflight.mjs",
+        "bytes": 2563,
+        "sha256": "cc802042dddebc5982b9e8d457d070c672f1075d9023df408e26ed3c5b0f91a0"
+      },
+      {
+        "path": ".scratch/11-cps12-3e7170f-preflight.json",
+        "bytes": 1729,
+        "sha256": "33b02ddf8a1298eda619debe876338a2393c8f008ce627a3b1ef176776dde79e"
+      },
+      {
+        "path": ".scratch/11-cps12-3e7170f-selection.json",
+        "bytes": 6012,
+        "sha256": "d432ceddd251e9b598c54ece289fa0f2155787eb7992399e3adfb36add4b78f8"
+      },
+      {
+        "path": ".scratch/11-cps12-3e7170f-screen.mjs",
+        "bytes": 4244,
+        "sha256": "1f19b3ffef592d8293c91fa5cd89a47ab64a1b4a947535341f2a3f0b3174a37a"
+      },
+      {
+        "path": ".scratch/11-cps12-3e7170f-launch.mjs",
+        "bytes": 2244,
+        "sha256": "ef0600272090922b42e163fd71ed5a5813c55b2289dd33c0f2e51cc22c99e4f0"
+      },
+      {
+        "path": "docs/evidence/11-astra-inline-fix-3e7170f.txt",
+        "bytes": 7708,
+        "sha256": "fd4b41c14bc5c73e827a649d4df317a5e820e57c2a28df86ad09ce9701b1c930"
+      }
+    ],
+    "review": {
+      "path": "docs/evidence/11-astra-inline-fix-3e7170f.txt",
+      "bytes": 7708,
+      "sha256": "fd4b41c14bc5c73e827a649d4df317a5e820e57c2a28df86ad09ce9701b1c930",
+      "nativeMessageId": "msg_0cf7ad7b97c73867016ad06e2fb71081959acd5da91f2c3a65"
+    }
+  },
+  "limitations": [
+    "Joined with single spaces; original whitespace/line boundaries and Markdown are lost. Does not prove display/final-answer equality. Used only as exact queued-word coverage analysis.",
+    "Owner reported these complete Atlas replies heard; original body text preserved in archived source, not rewritten.",
+    "Joined with single spaces; original whitespace/line boundaries and Markdown are lost. Does not prove display/final-answer equality. Used only as exact queued-word coverage analysis.",
+    "Owner reported these complete Atlas replies heard; original body text preserved in archived source, not rewritten.",
+    "Nine changed texts remain uncovered. Four unchanged texts retain only historical observations.",
+    "No joined playback, audible model value, backlog, new physical device or whole-source qualification established.",
+    "Historical cfa3/cap84 evidence and failures unchanged at original provenance; no rebind.",
+    "L4 remains failed/incomplete and L6 genuine provider pause unobserved; no lifecycle transition."
+  ]
+}

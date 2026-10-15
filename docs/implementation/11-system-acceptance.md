@@ -686,3 +686,37 @@ The two raw Atlas source variants cannot exactly locate the queued emoji-bearing
 region and remain unknown. Independent review must resolve whether a smaller
 complete affected-boundary set is justified; no difficult case is silently
 dropped, no text is normalized to hide a mismatch, and no probe budget expands.
+
+## Reviewed partial CPS12 synthesis screen at 3e7170f
+
+The [unchanged scoped inline-fix review](../evidence/11-astra-inline-fix-3e7170f.txt)
+passed Spec/Quality with the P2 resolved. Its exact native final is 7708 UTF-8 bytes,
+SHA256 `fd4b41c14bc5c73e827a649d4df317a5e820e57c2a28df86ad09ce9701b1c930`.
+The reviewer explicitly approved a partial ten-text rejection screen, with nine
+changed texts uncovered; it did not approve L4 or whole-live acceptance.
+
+The [sanitized screen](../evidence/11-cps12-partial-screen-3e7170f.json) records
+clean production build `2DZ7lAnJs9Ui-zV4QVYF_` from source
+`14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63`
+and runtime CPS12/cap72 override, with defaults unchanged. Installed VAD postimages
+and lifecycle marker matched; Node26.8.1, Deepgram SDK5.15.0 and voice
+`aura-2-thalia-en` retain their pins. Native provider-clone observer variables
+were explicitly unset. No browser, microphone, model/STT/search request or playback
+was used in this HTTP-only screen.
+
+Exactly ten sequential admitted synthesis requests completed once, with no retry,
+all HTTP200, expected PCM headers, positive even byte counts and EOF. Durations
+were 4.16,5.40,4.80,3.88,4.92,3.28,4.84,5.28,3.56,5.28 seconds. These are complete
+PCM frame counts divided by24000Hz, not elapsed network or acoustic duration.
+Original ignored results remain 12466 bytes, SHA256
+`a9f5d9615642994a34a70cf255bd9bd5940588f53ed6b856f15bb4ebab93ed4e`.
+No raw PCM or credentials are included.
+
+The bounded corpus has23 distinct texts,19 changed and4 unchanged. All eight
+overlap candidates were selected in order, then secondary Atlas segment5 and
+research segment14. Secondary Atlas segments3/4/6 and research1/2/10/11/12/13
+remain uncovered. Ten acceptable samples establish only those ten exact one-off
+durations; no audible inline-value, joined queue/backpressure or current-source
+physical qualification follows. Historical cfa3/cap84 evidence stays unchanged.
+L4 remains failed/incomplete and L6 genuine pause unobserved. Full scope remains
+retained; no Test, Review, approval, merge or Close is authorized by this result.
