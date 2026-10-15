@@ -41,7 +41,39 @@ export function accountSearch(
       return null;
     return count;
   }
-  return ids.size > 0 ? ids.size : null;
+  // A native search-use ID may still be waiting on a mixed client-tool turn.
+  // Without authoritative usage, only unambiguous completed pairs establish use.
+  if (!ids.size || [...ids].some((id) => !id.trim())) return null;
+  const completed = new Set<string>();
+  const finalIds = new Set<string>();
+  for (const block of message.content) {
+    if (block.type === 'server_tool_use' && block.name === 'web_search') {
+      if (finalIds.has(block.id)) return null;
+      finalIds.add(block.id);
+    } else if (block.type === 'web_search_tool_result') {
+      if (
+        typeof block.tool_use_id !== 'string' ||
+        !block.tool_use_id.trim() ||
+        completed.has(block.tool_use_id) ||
+        !Array.isArray(block.content) ||
+        !block.content.every(
+          (result) =>
+            result &&
+            result.type === 'web_search_result' &&
+            typeof result.url === 'string' &&
+            typeof result.title === 'string' &&
+            typeof result.encrypted_content === 'string',
+        )
+      )
+        return null;
+      completed.add(block.tool_use_id);
+    }
+  }
+  return finalIds.size === ids.size &&
+    completed.size === ids.size &&
+    [...ids].every((id) => finalIds.has(id) && completed.has(id))
+    ? ids.size
+    : null;
 }
 function citationSource(citation: Anthropic.TextCitation): Source | null {
   if (citation.type !== 'web_search_result_location') return null;

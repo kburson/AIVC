@@ -165,3 +165,12 @@ were recovered from genuine saved marks rather than repeating participant rounds
 Review must assess each affected boundary and ambiguity; historical successes do
 not turn the current report into full acceptance. The read-only live gate remains
 nonzero.
+
+The [separate native diagnostic](evidence/11-native-search-diagnostic-3e030.json)
+subsequently proved a mixed pending-tool rejection, with no provider pause and no
+authoritative search counter. The pre-correction public `searchUses:2` was
+computed from pending IDs; it is preserved as a reporting defect, not actual
+executed usage. The bounded correction requires completed pairs for absent-counter
+fallback and reuses the existing unknown/omitted usage path without restoring
+budget. Current changed source awaits independent recheck and genuine live
+qualification under the unchanged whole-source gate.

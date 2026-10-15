@@ -110,8 +110,7 @@
   "usage": [
     {
       "inputTokens": 2387,
-      "outputTokens": 157,
-      "searchUses": 2
+      "outputTokens": 157
     }
   ],
   "limitations": [
@@ -123,6 +122,8 @@
     "Installed patch postimages/marker and fresh production build were verified. This muted typed run did not import/acquire MicVAD, so no current browser-observed lifecycle marker is claimed.",
     "No raw audio, credentials or fabricated provider counters are included. Unknown counters remain omitted.",
     "This report binds only the current d98 muted typed run. Historical33d9/96ee microphone/listening/echo/timing/usage evidence is separately source-bound in docs/evidence/11-live-partial-history.json and not relabeled current.",
-    "All required cases remain fail/unverified pending independent evidence assessment and genuinely missing acceptance. No Test/Review/Close transition is authorized by this checkpoint."
+    "All required cases remain fail/unverified pending independent evidence assessment and genuinely missing acceptance. No Test/Review/Close transition is authorized by this checkpoint.",
+    "Earlier 69e8 application-reported searchUses:2 remains preserved in its original artifact. Its native counter was not observed. Separate 3e030/bfe61 native evidence proves pending-ID fallback can invent public usage; summary actual-only usage therefore omits the unverified search counter. No retroactive native-cause claim is made.",
+    "The corrected accounting source has not yet received live qualification. This report retains its original tested source/build and is deliberately stale against the changed source until genuine new evidence exists."
   ]
 }

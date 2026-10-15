@@ -16,6 +16,7 @@ import {
   ScriptedModel,
   deps,
   tool,
+  atlasCatalog,
 } from '../helpers/scripted-providers';
 const search = (id = 's1'): Anthropic.ServerToolUseBlock => ({
   type: 'server_tool_use',
@@ -197,7 +198,7 @@ function sdk(
   });
 }
 it.each([
-  ['native IDs without usage', null, [search('a'), search('b')], 2],
+  ['pending IDs without usage', null, [search('a'), search('b')], null],
   ['usage without blocks', 1, [], 1],
   ['stream/final duplicate', 1, [search('a')], 1],
   ['contradiction', 2, [search('a')], null],
@@ -217,6 +218,288 @@ it('does not double count repeated streaming projections', () => {
   const m = nativeRound({ blocks: [search()], nativeSearch: 1 }).message;
   expect(accountSearch(m, new Set(['s1', 's1']))).toBe(1);
 });
+// These fixtures catch invented public usage from pending, unmatched or ambiguous native records.
+const completedFallbackCases: Array<{
+  name: string;
+  blocks: Anthropic.ContentBlock[];
+  seen: string[];
+  want: number | null;
+}> = [
+  {
+    name: 'one validated completed pair',
+    blocks: [search('a'), result('a')],
+    seen: [],
+    want: 1,
+  },
+  {
+    name: 'two validated completed pairs',
+    blocks: [search('a'), result('a'), search('b'), result('b')],
+    seen: ['a', 'b'],
+    want: 2,
+  },
+  {
+    name: 'stream and final projections deduplicate a completed pair',
+    blocks: [search('a'), result('a')],
+    seen: ['a', 'a'],
+    want: 1,
+  },
+  {
+    name: 'completed pair plus pending search',
+    blocks: [search('a'), result('a'), search('b')],
+    seen: ['a', 'b'],
+    want: null,
+  },
+  { name: 'stream-only search ID', blocks: [], seen: ['a'], want: null },
+  {
+    name: 'completed pair plus unresolved stream ID',
+    blocks: [search('a'), result('a')],
+    seen: ['a', 'b'],
+    want: null,
+  },
+  { name: 'orphan result', blocks: [result('a')], seen: ['a'], want: null },
+  {
+    name: 'result paired with another ID',
+    blocks: [search('a'), result('b')],
+    seen: [],
+    want: null,
+  },
+  {
+    name: 'duplicate final search ID',
+    blocks: [search('a'), search('a'), result('a')],
+    seen: [],
+    want: null,
+  },
+  {
+    name: 'contradictory duplicate final search input',
+    blocks: [
+      search('a'),
+      { ...search('a'), input: { query: 'different' } },
+      result('a'),
+    ],
+    seen: [],
+    want: null,
+  },
+  {
+    name: 'duplicate result pairing',
+    blocks: [search('a'), result('a'), result('a')],
+    seen: [],
+    want: null,
+  },
+  {
+    name: 'contradictory duplicate final result',
+    blocks: [search('a'), result('a'), { ...result('a'), content: [] }],
+    seen: [],
+    want: null,
+  },
+  {
+    name: 'empty search ID',
+    blocks: [search(''), result('')],
+    seen: [],
+    want: null,
+  },
+  {
+    name: 'whitespace search ID',
+    blocks: [search(' '), result(' ')],
+    seen: [],
+    want: null,
+  },
+  {
+    name: 'malformed search input',
+    blocks: [{ ...search('a'), input: null }, result('a')],
+    seen: [],
+    want: null,
+  },
+  {
+    name: 'missing result ID',
+    blocks: [search('a'), { ...result('a'), tool_use_id: '' }],
+    seen: [],
+    want: null,
+  },
+  {
+    name: 'malformed result content',
+    blocks: [search('a'), { ...result('a'), content: null as never }],
+    seen: [],
+    want: null,
+  },
+  {
+    name: 'malformed result item',
+    blocks: [search('a'), { ...result('a'), content: [{} as never] }],
+    seen: [],
+    want: null,
+  },
+  {
+    name: 'completed empty result still confirms one request',
+    blocks: [search('a'), { ...result('a'), content: [] }],
+    seen: [],
+    want: 1,
+  },
+  {
+    name: 'no counter or completion evidence is not zero',
+    blocks: [],
+    seen: [],
+    want: null,
+  },
+];
+it.each(completedFallbackCases)(
+  'absent-counter accounting: $name',
+  ({ blocks, seen, want }) => {
+    const message = nativeRound({ blocks, nativeSearch: null }).message;
+    expect(accountSearch(message, new Set(seen))).toBe(want);
+  },
+);
+it.each([
+  ['zero counter-only', 0, [], 0],
+  ['positive counter-only', 2, [], 2],
+  [
+    'supplied counter retains conservative pending-ID consistency',
+    2,
+    [search('a'), search('b')],
+    2,
+  ],
+  ['zero conflicting with pending IDs', 0, [search('a'), search('b')], null],
+  ['nonfinite counter', Infinity, [], null],
+  ['NaN counter', NaN, [], null],
+  ['nonnumeric counter', '1' as never, [], null],
+] as const)(
+  'preserves supplied-counter semantics: %s',
+  (_name, count, blocks, want) => {
+    const message = nativeRound({
+      blocks: [...blocks],
+      nativeSearch: count,
+    }).message;
+    expect(accountSearch(message)).toBe(want);
+  },
+);
+it('pending mixed native searches truncate without inventing public usage or replaying', async () => {
+  const first = nativeRound({
+    stop: 'tool_use',
+    blocks: [
+      { type: 'text', text: 'Checking the public sources.', citations: [] },
+      search('pending-a'),
+      search('pending-b'),
+      tool('client-atlas'),
+    ],
+    nativeSearch: null,
+    inputTokens: 2387,
+    outputTokens: 154,
+  }).message;
+  // The real native response omitted this nullable-but-required SDK field.
+  Reflect.deleteProperty(first.usage, 'server_tool_use');
+  const t = transport([
+    first,
+    Response.json(
+      {
+        type: 'error',
+        error: {
+          type: 'invalid_request_error',
+          message:
+            'web_search tool use pending-a has no corresponding web_search_tool_result block, but no web_search tool was provided',
+        },
+      },
+      { status: 400 },
+    ),
+  ]);
+  const c = caps();
+  const d = deps(sdk(t, c), 'http://127.0.0.1:1');
+  d.capabilities = c;
+  d.mode = 'live';
+  d.lookup = async (name) => {
+    if (name !== 'Atlas') throw Error('Unexpected catalog request');
+    return atlasCatalog;
+  };
+  const out = await collect(
+    runTurn(
+      {
+        kind: 'text',
+        turnId: crypto.randomUUID(),
+        history: [],
+        text: 'Research then Atlas',
+      },
+      d,
+      new AbortController().signal,
+    ),
+  );
+  expect(out.at(-1)).toMatchObject({
+    type: 'turn.completed',
+    data: {
+      status: 'truncated',
+      usage: { inputTokens: 2387, outputTokens: 154 },
+    },
+  });
+  expect(out.at(-1)).not.toHaveProperty('data.usage.searchUses');
+  expect(out.find((e) => e.type === 'tool.completed')).toMatchObject({
+    data: {
+      result: {
+        records: [{ id: 'atlas', status: 'active', ownerTeam: 'North' }],
+      },
+    },
+  });
+  expect(out.some((e) => e.type === 'turn.failed')).toBe(false);
+  expect(t.requests).toHaveLength(2);
+  expect(t.requests[1].tools.map((tool) => tool.name)).toEqual([
+    'lookup_projects',
+  ]);
+  expect(t.requests[1].messages[1]).toEqual({
+    role: 'assistant',
+    content: first.content,
+  });
+  expect(c.search).toMatchObject({
+    state: 'configured',
+    accountValidation: 'pending',
+  });
+});
+it.each([
+  [0, 3, 'complete'],
+  [1, 2, 'truncated'],
+] as const)(
+  'unknown native usage stays omitted after later counter %s',
+  async (laterCounter, calls, status) => {
+    const first = nativeRound({
+      stop: 'tool_use',
+      blocks: [search('pending-a'), search('pending-b'), tool('client-atlas')],
+      nativeSearch: null,
+    }).message;
+    const t = transport([
+      first,
+      nativeRound({
+        stop: 'pause_turn',
+        text: 'Continuing',
+        nativeSearch: laterCounter,
+      }).message,
+      nativeRound({ text: 'Done', nativeSearch: 0 }).message,
+    ]);
+    const c = caps();
+    const d = deps(sdk(t, c), 'http://127.0.0.1:1');
+    d.capabilities = c;
+    d.lookup = async () => atlasCatalog;
+    const out = await collect(
+      runTurn(
+        {
+          kind: 'text',
+          turnId: crypto.randomUUID(),
+          history: [],
+          text: 'Question',
+        },
+        d,
+        new AbortController().signal,
+      ),
+    );
+    expect(out.at(-1)).toMatchObject({
+      type: 'turn.completed',
+      data: { status },
+    });
+    expect(out.at(-1)).not.toHaveProperty('data.usage.searchUses');
+    expect(t.requests).toHaveLength(calls);
+    expect(
+      t.requests
+        .slice(1)
+        .every((request) =>
+          request.tools.every((tool) => tool.name !== 'web_search'),
+        ),
+    ).toBe(true);
+  },
+);
+
 it('shares two uses across custom tools and pause continuation, omitting exhausted search', async () => {
   const a = round({
     stop: 'tool_use',

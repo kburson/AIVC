@@ -386,3 +386,78 @@ The reviewer stopped normally and released all resources. Story11 remains
 Develop with a nonpassing live report and draft PR37; canonical Test, task
 Review, approval, cloud merge and Close have not occurred. The two numbered
 owner paths above remain the concrete decision boundary.
+
+## Proven pending-search accounting finding and bounded correction
+
+The owner selected path 1: retain the full accepted live scope and whole-source
+evidence gate. A single separately released, muted current-source diagnostic
+ran at `3e0303686e550c166d4958f19d3c29123830494c`, unchanged source
+`ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51`,
+fresh production build `TzhULPOKXYtfOVmaSLSFY`. The
+[immutable sanitized diagnostic](../evidence/11-native-search-diagnostic-3e030.json)
+preserves actual browser/SSE data, original native error, block hashes, observed
+provider usage, source-derived accounting and passive-observer proof/provenance.
+The earlier 69e8 record remains separate.
+
+Turn `bfe61c51-f8f8-429e-92f2-153275fe894c` ended its first native round with
+`tool_use`, two pending web-search IDs, zero search-result pairs and one client
+lookup. Native usage supplied 2387 input/154 output tokens and no authoritative
+search counter. All four native assistant blocks matched the actual next outgoing
+assistant message by whole-content and per-block JSON/canonical hashes. The next
+request omitted search; the original HTTP 400 identified the missing definition
+for the unresolved search ID. This establishes the mixed pending-tool failure
+for this diagnostic, not a provider pause or the earlier request's native cause.
+
+The application correctly produced the specified truncated fallback and Atlas
+active/North/3, but incorrectly displayed `searchUses:2` from pending-ID fallback.
+Those IDs establish pending requests, not executed searches. The evidence retains
+the computed 2 as an actual bug observation and keeps native search usage unknown.
+Both mutes stayed on, with zero microphone tracks, speech requests and native
+audio sources. The bounded clone observer preserves original transport objects
+and bytes; delayed-clone and failure-isolation offline proofs passed. Clone
+read-ahead may affect timing, so none of this diagnostic's latency qualifies as
+baseline measurement. Owned browser/server shutdown completed and ports closed.
+
+The same distinct Astra6/high reviewer independently confirmed one P2. Its
+[unchanged native assessment](../evidence/11-astra-native-accounting-assessment.txt)
+is 6249 characters/6269 UTF-8 bytes, SHA256
+`853a85effcbf79109a6fe8c7ee689ef49e9c047b68e072e31cf6ad8e70e0f61f`,
+message `msg_0cf7ad7b97c73867016ad053f15fe08195bffb691b9d154188`, reviewer
+SID `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`. This is ordinary independent
+review and grants no sealed or lifecycle acceptance.
+
+The correction changes only the absent-counter fallback in
+[Claude accounting](../../apps/web/server/providers/claude.ts): numeric usage
+requires distinct valid completed search-use/result pairs, no unresolved observed
+IDs and no ambiguous or malformed final pairings. Supplied valid-counter handling
+and its existing conservative consistency checks stay intact. The existing
+turn loop already makes unknown consumption fail closed: remaining search becomes
+zero and the public usage field is omitted, including after later known rounds.
+No UI/interface, model/pin, prior block, retry, tool omission, token/search/round
+or deadline budget changed.
+
+The semantic IDs-only expectation was corrected and 17 regressions were observed
+failing before the minimal fix; all 63 accounting tests then passed. They cover
+the observed native mixed-call shape through the actual pinned SDK and turn loop,
+unchanged native continuation, omitted tool, HTTP 400/truncation, absent public
+search usage, completed/stream deduplication, malformed/duplicate/orphan pairings,
+valid/invalid counters and unknown totals across later rounds. This is offline
+correction evidence. Independent fixed-source recheck and all outstanding actual
+live acceptance remain required; no new paid or physical run has occurred.
+
+The mutable summary report omits the earlier unverified search-usage claim while
+its original application-reported 2 remains in the historical artifact. Its tested
+source/build remains original; after this source correction the report is
+deliberately stale as well as failed/unverified. No evidence row was rebound to
+new code, no accepted scope was amended, and no Test or later gate advanced.
+
+Correction verification: all355 contract tests,98 unit tests and26 integration
+tests passed, including the compiled production HTTP/shutdown check. Typecheck
+initially caught TS2790 in the deliberately absent-counter test fixture: the SDK
+declares its nullable field required although the actual response omitted it.
+The fixture now uses Reflect.deleteProperty to represent that observed wire
+shape, and both TypeScript workspaces plus all63 accounting tests passed again.
+Lint, format and docs checks passed; read-only live verification exited1 with
+the expected stale-source and outstanding fail/unverified acceptance reasons.
+This checkpoint requests targeted independent source recheck, not whole-live
+acceptance, canonical Test or later delivery gates.
