@@ -92,4 +92,3 @@ These read-only command outputs require comparison to the explicit source/count/
 
 These checks validate this documentation/backlog delivery, not application behavior or performance. Future application and research test commands belong to their unstarted delivery stories. Publication/merge and final issue state require separate live readback; no result is predeclared here.
 
-
