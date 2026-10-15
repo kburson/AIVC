@@ -5,6 +5,7 @@ import { existsSync, lstatSync, readFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isDeepStrictEqual } from 'node:util';
+import { verifyAmendmentReview } from './format-check.mjs';
 
 const workspace = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const patchPath = 'patches/@ricky0123+vad-web+0.0.31.patch';
@@ -159,6 +160,248 @@ export function installedPackages(root = workspace) {
     ),
   );
 }
+
+const acceptanceBase = 'fc51a548e73dc74bb14cfb9805eb381182fb8ad8';
+const physicalHead = '2687b5434377f423363be7d279dbcaf12279aa8f';
+const physicalDigest =
+  '14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63';
+const dispositionPath = 'docs/evidence/11-live-acceptance-disposition.json';
+const policyId = 'aivc.issue11.accepted-live-limitations/v1';
+const acceptancePaths = new Set([
+  'scripts/verify-live.mjs',
+  'scripts/format-check.mjs',
+  'tests/scripts/verify-live.test.ts',
+  'tests/scripts/format-check.test.ts',
+  'docs/implementation/11-system-acceptance.md',
+  'docs/live-validation.md',
+  'README.md',
+  'docs/evidence/11-astra-amended-pr-review.txt',
+  dispositionPath,
+]);
+const acceptedAnchors = [
+  [
+    'docs/superpowers/specs/2026-10-15-11-live-acceptance-amendment-design.md',
+    15886,
+    'e15e9cbace3029fa11a457383c5c2ed8fd78be27b437ffe0efe39780553cddd5',
+  ],
+  [
+    'docs/superpowers/specs/2026-10-15-11-sealed-review-formatting-addendum.md',
+    3933,
+    '5d528935471deae245c1931e825cf25ac3175cb2978021978dc86cceb0de2a56',
+  ],
+  [
+    'docs/evidence/11-astra-sealed-formatting-assessment.txt',
+    3937,
+    '3f6e35b27baee932f7fa15d99dc2ea081e735d45e9e10e70b82109ae52188352',
+  ],
+  [
+    'docs/evidence/live-validation.json',
+    11044,
+    'd908c3bb4a8fd6ab1a99272833d6de9d69fc8f43cebccf563aea61afe1ee6882',
+  ],
+  [
+    'docs/evidence/11-live-physical-2687b54.json',
+    3409513,
+    '663b8089359e22afa454abf7e5f1bd9139befc4710e5a9d9a2365b46e08b0da6',
+  ],
+  [
+    'docs/evidence/11-document-teardown-2687b54.json',
+    1838,
+    '74b2d27f80b9bff407bf58e05125ad3173e261ab0c4cb4709c7b8cdc8e7925d4',
+  ],
+  [
+    'docs/evidence/11-native-search-ordered-385d11b.json',
+    196068,
+    '4b0159c5d9594ac142bb3104e5ddf1de7a9bd1bca631e59a961da5ade88484c3',
+  ],
+];
+function tree(root, ref) {
+  return new Map(
+    git(root, ['ls-tree', '-rz', ref])
+      .split('\0')
+      .filter(Boolean)
+      .map((line) => {
+        const [meta, path] = line.split('\t');
+        const [mode, type, blob] = meta.split(' ');
+        if (type !== 'blob' || !['100644', '100755'].includes(mode))
+          throw Error('Unsupported tracked file mode: ' + path);
+        return [path, { mode, blob }];
+      }),
+  );
+}
+function workingTree(root) {
+  const paths = new Set(
+    [
+      ...git(root, ['ls-files', '-z']).split('\0'),
+      ...git(root, ['ls-files', '--others', '--exclude-standard', '-z']).split(
+        '\0',
+      ),
+    ].filter(Boolean),
+  );
+  return new Map(
+    [...paths].sort().map((path) => {
+      const file = regular(root, path);
+      const bytes = readFileSync(file);
+      return [
+        path,
+        {
+          mode: lstatSync(file).mode & 0o111 ? '100755' : '100644',
+          blob: createHash('sha1')
+            .update('blob ' + bytes.length + '\0')
+            .update(bytes)
+            .digest('hex'),
+        },
+      ];
+    }),
+  );
+}
+function searchBoundary(path) {
+  return (
+    /^(?:apps\/web\/(?:server|shared|app\/api)\/|patches\/)/.test(path) ||
+    /(?:^|\/)package(?:-lock)?[.]json$/.test(path) ||
+    (!path.includes('/') && sourcePath(path))
+  );
+}
+// A single fixed accepted policy. No caller supplies roots of trust or changed-path exemptions.
+export function acceptanceProvenance(root = workspace) {
+  git(root, ['merge-base', '--is-ancestor', acceptanceBase, 'HEAD']);
+  git(root, ['merge-base', '--is-ancestor', physicalHead, acceptanceBase]);
+  verifyAmendmentReview(root);
+  if (
+    computeSourceDigest(root, physicalHead) !== physicalDigest ||
+    computeSourceDigest(root, acceptanceBase) !== physicalDigest
+  )
+    throw Error('Accepted original physical source does not match Git');
+  for (const [path, length, digest] of acceptedAnchors) {
+    const bytes = readFileSync(regular(root, path));
+    const committed = execFileSync(
+      'git',
+      ['show', acceptanceBase + ':' + path],
+      { cwd: root, maxBuffer: 8 * 1024 * 1024 },
+    );
+    if (
+      bytes.length !== length ||
+      sha(bytes) !== digest ||
+      !bytes.equals(committed)
+    )
+      throw Error('Accepted immutable anchor differs: ' + path);
+  }
+  const baseline = tree(root, acceptanceBase);
+  const current = workingTree(root);
+  const tested = tree(root, physicalHead);
+  // Review-approved collateral between actual testing and the fixed adoption baseline.
+  // Every other physical component must already be identical there.
+  const historical = [
+    ...new Set([...tested.keys(), ...baseline.keys()]),
+  ].filter((path) => !equal(tested.get(path), baseline.get(path)));
+  if (historical.some((path) => !path.startsWith('docs/')))
+    throw Error('Adoption baseline changed product/runtime');
+  const changed = [...new Set([...baseline.keys(), ...current.keys()])]
+    .sort()
+    .filter((path) => !equal(baseline.get(path), current.get(path)));
+  for (const path of changed)
+    if (!acceptancePaths.has(path) || current.get(path)?.mode !== '100644')
+      throw Error('Unreviewed acceptance boundary change: ' + path);
+  const ordinaryHead = '385d11b2448dac5bf01400bb7c11834bfefbfbfd';
+  git(root, ['merge-base', '--is-ancestor', ordinaryHead, acceptanceBase]);
+  const oldSearch = tree(root, ordinaryHead);
+  for (const path of new Set([...oldSearch.keys(), ...current.keys()])) {
+    if (searchBoundary(path) && !equal(oldSearch.get(path), current.get(path)))
+      throw Error('Historical search component differs: ' + path);
+  }
+  const ordinaryPath = 'docs/evidence/11-native-search-ordered-385d11b.json';
+  const storage = 'eddb4722584cda6137d0e456c87f4a560f90e117';
+  git(root, ['merge-base', '--is-ancestor', storage, acceptanceBase]);
+  if (
+    !readFileSync(regular(root, ordinaryPath)).equals(
+      execFileSync('git', ['show', storage + ':' + ordinaryPath], {
+        cwd: root,
+        maxBuffer: 1024 * 1024,
+      }),
+    )
+  )
+    throw Error('Ordinary native storage blob differs');
+  const ordinary = json(root, ordinaryPath);
+  const comparison = ordinary.posthocIdentity?.[1]?.priorBlockComparison;
+  if (
+    ordinary.gitHead !== ordinaryHead ||
+    ordinary.observed?.omittedToolContinuation !== 'accepted' ||
+    ordinary.observed?.round1NativeSearchCounter !== 2 ||
+    !ordinary.observed?.bothResultsBeforeLookup ||
+    ordinary.observed.pauseObserved !== false ||
+    comparison?.jsonEqual !== true ||
+    comparison.canonicalEqual !== true ||
+    comparison.perBlock.length !== 7 ||
+    comparison.perBlock.some(
+      (item) => item.jsonEqual !== true || item.canonicalEqual !== true,
+    )
+  )
+    throw Error('Ordinary native proof incomplete');
+  return {
+    policy: policyId,
+    authority: {
+      amendmentCommit: '75ffee8031203efec513b589daf74f2f2ab4453d',
+      reviewStorageCommit: '71fc7115200bd94e7872c3e2f5dc3e15fd10bbce',
+      adoptionCommit: acceptanceBase,
+      humanTurn: '01a13f63-b581-7f11-af49-fc567f7aa25b',
+      authorityAssurance: 'unavailable',
+    },
+    originalPhysical: { gitHead: physicalHead, sourceDigest: physicalDigest },
+    currentSourceDigest: computeSourceDigest(root),
+    changedFiles: changed
+      .filter((path) => path !== dispositionPath)
+      .map((path) => ({
+        path,
+        before: baseline.get(path) ?? null,
+        after: current.get(path) ?? null,
+      })),
+    ordinarySearch: {
+      testedHead: ordinaryHead,
+      storageCommit: storage,
+      artifact: ordinaryPath,
+      sha256: acceptedAnchors.at(-1)[2],
+    },
+    runtimeProfile: json(root, 'docs/evidence/11-live-physical-2687b54.json')
+      .runtimeProfile,
+    observations: {
+      L4: 'fail',
+      L6: 'unverified',
+      durationSeconds: 6.6,
+      pauseObserved: false,
+    },
+    dispositions: {
+      duration: 'accepted-measured-limitation',
+      ordinaryContinuation: 'component-equality-qualified',
+      providerPause: 'deferred-unverified',
+      physical: 'unchanged-components-carried-forward',
+    },
+    verdict: 'amended-release-accepted-with-explicit-limitations',
+  };
+}
+function acceptedDisposition(root) {
+  const record = json(root, dispositionPath);
+  if (!secretFree(record) || !equal(record, acceptanceProvenance(root)))
+    throw Error(
+      'Fixed acceptance disposition does not match actual authority/source inventory',
+    );
+  const observed = json(root, 'docs/evidence/11-live-physical-2687b54.json');
+  if (
+    !equal(observed.runtimeProfile, {
+      speechCharsPerSecond: 12,
+      segmentChars: 72,
+      defaultUnchanged: 14,
+      backlogChars: 2400,
+      highWaterSeconds: 10,
+      lowWaterSeconds: 2,
+      speechTimeoutMs: 20000,
+      turnTimeoutMs: 60000,
+      retrievalTimeoutMs: 5000,
+    })
+  )
+    throw Error('Only actual tested CPS12/cap72 runtime profile is qualified');
+  return true;
+}
+
 export function verifyLive({
   root = workspace,
   reportPath = 'docs/evidence/live-validation.json',
@@ -166,6 +409,18 @@ export function verifyLive({
 } = {}) {
   root = resolve(root);
   const errors = [];
+  let amended = false;
+  if (existsSync(join(root, dispositionPath))) {
+    try {
+      if (reportPath !== 'docs/evidence/live-validation.json')
+        throw Error(
+          'Amended acceptance requires the fixed observed report path',
+        );
+      amended = acceptedDisposition(root);
+    } catch (error) {
+      errors.push('Amended acceptance invalid: ' + error.message);
+    }
+  }
   const require = (condition, message) => {
     if (!condition) errors.push(message);
   };
@@ -206,9 +461,12 @@ export function verifyLive({
     try {
       git(root, ['merge-base', '--is-ancestor', report.gitHead, 'HEAD']);
       const digest = computeSourceDigest(root);
-      require(report.sourceDigest === digest &&
-        computeSourceDigest(root, report.gitHead) ===
-          digest, 'Tested source digest is stale or does not match its tested head');
+      require((amended &&
+        report.gitHead === physicalHead &&
+        report.sourceDigest === physicalDigest) ||
+        (report.sourceDigest === digest &&
+          computeSourceDigest(root, report.gitHead) ===
+            digest), 'Tested source digest is stale or does not match its tested head');
       require(!git(root, ['ls-files', '--others', '--exclude-standard', '-z'])
         .split('\0')
         .some(
@@ -311,7 +569,10 @@ export function verifyLive({
       8, 'Live report must contain exactly L1–L8');
   for (let n = 1; n <= 8; n++) {
     const item = cases.find((entry) => entry.id === 'L' + n);
-    require(item?.status === 'pass' &&
+    require((item?.status === 'pass' ||
+      (amended &&
+        ((n === 4 && item?.status === 'fail') ||
+          (n === 6 && item?.status === 'unverified')))) &&
       text(item?.observations), 'Incomplete required live case L' +
       n +
       ': ' +
@@ -387,9 +648,10 @@ export function verifyLive({
         search.searchUses >= 1 &&
         search.searchUses <=
           2, 'Invalid observed per-turn hosted-search budget');
-      require(search?.omittedToolContinuation === 'accepted' &&
-        search?.pauseObserved ===
-          true, 'Required omitted-tool/prior-block provider-pause continuation remains unverified');
+      require(amended ||
+        (search?.omittedToolContinuation === 'accepted' &&
+          search?.pauseObserved ===
+            true), 'Required omitted-tool/prior-block provider-pause continuation remains unverified');
     }
   } catch (error) {
     errors.push(
@@ -477,7 +739,9 @@ export function verifyLive({
   for (const error of errors) log('Live evidence: ' + error);
   if (!errors.length)
     log(
-      'Live evidence is complete and bound to tested source/runtime. No provider calls were made.',
+      amended
+        ? 'Amended release acceptance with explicit limitations: 6.60s target miss accepted; genuine provider pause unverified/deferred. Qualified physical profile CPS12/cap72 only; default CPS14 unchanged and not qualified by this result. No provider calls were made.'
+        : 'Live evidence is complete and bound to tested source/runtime. No provider calls were made.',
     );
   return { ok: errors.length === 0, errors };
 }

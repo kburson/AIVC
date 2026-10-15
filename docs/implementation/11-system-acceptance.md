@@ -820,3 +820,92 @@ microphone or server run occurred during review.
 This documentation-only archive preserves the reviewed source and historical
 physical bytes. The full review requested before merge is fulfilled; it grants
 no live acceptance, lifecycle transition, owner approval or merge authorization.
+
+## Accepted limited release policy implementation
+
+The owner authorized the bounded acceptance change in native turn
+01a13f63-b581-7f11-af49-fc567f7aa25b (2026-10-15T11:47:41.810Z). The
+[primary amendment](../superpowers/specs/2026-10-15-11-live-acceptance-amendment-design.md)
+was accepted by genuine distinct Astra6/high SPR
+review-d37abf9831b9cc30583d0df9ef47d2f9 and finalized normally at71fc711.
+Its [sealed manifest](../peer-reviews/spec/live-acceptance-amendment-review-d37abf9831b9cc30583d0df9ef47d2f9/spr/review-manifest.md)
+and response are unchanged. Manual protocol recovery was used after the
+epic-attached MCP wait returned APR_EVENT_LOG_MISSING for the child workspace;
+no successful MCP wake is claimed. Authority assurance remains unavailable.
+Root adopted the amendment and [formatting addendum](../superpowers/specs/2026-10-15-11-sealed-review-formatting-addendum.md)
+through governed issue11 Scope/AC version75 and parent2 Scope version39.
+All boxes remain unchecked; this does not authorize merge or Close.
+
+The existing live verifier now consumes a single fixed
+[acceptance disposition](../evidence/11-live-acceptance-disposition.json).
+It reconstructs current paths/modes/blobs from actual regular files, checks
+Git ancestry and fixed immutable anchors against their real committed storage,
+compares the complete unchanged server-search boundary, and rejects changes
+outside the four reviewed verifier/test paths and exact acceptance collateral.
+computeSourceDigest and default strict report checks are unchanged. The
+original observed report (SHA256 d908c3bb4a8fd6ab1a99272833d6de9d69fc8f43cebccf563aea61afe1ee6882)
+and physical/native evidence are not edited or rebound to the new digest.
+The disposition owns that digest and the exact changed-file inventory.
+
+Ordinary native proof TESTED385d11b is stored at eddb472, not at its tested
+source commit. The pinned196068-byte artifact SHA256 is
+4b0159c5d9594ac142bb3104e5ddf1de7a9bd1bca631e59a961da5ade88484c3.
+Actual two completed search pairs/counter2 and all seven prior-block matches
+qualify only ordinary continuation after component equality. Current physical
+citations remain separate, including official Deepgram and third-party material.
+No genuine provider pause is claimed. The physical qualified profile is
+CPS12/cap72/Thalia; unchanged repository default CPS14 is not qualified by this
+result. Original L4 fail (one6.60s response), L6 unverified, first-audio target
+misses, minor acoustic reports and all historical partials remain unchanged.
+The amended verdict accepts the observed duration limitation and defers pause;
+it never states that the whole measured live baseline passed.
+
+The formatter verifies the two exact sealed native files before traversal,
+including regular parents/files, modes, lengths/hashes, actual storage blobs,
+ancestry and accepted lineage. They remain in inventory but skip normalization;
+explicit writes refuse them. All other formatting/spec-copy/archive protections
+remain. There is no directory, environment or caller-supplied exception.
+
+TDD first observed the two intended failures: sealed bytes were still rejected
+by Prettier and the original L4/L6 strict gate remained nonpassing. Focused tests
+exercise actual committed history, malformed/forged dispositions, component and
+collateral changes, altered installed code, missing observations, symlinks,
+ancestry and ordinary formatting behavior. Fixture-only corrections made Git
+repository discovery exact-root and represented the real hoisted VAD metadata.
+All implementation work is offline; no new application provider, browser,
+microphone or speaker experiment was run. Final automated matrix and independent
+implementation/full-PR recheck remain the next validation boundary.
+
+### Intermediate verification and lint preservation hold
+
+The first full offline matrix produced: contracts355/355, voice160/160,
+slow27/27, focused live/docs verifiers70/70, formatting, docs, live amended
+validation, original sealed archive and evidence10/10 all passing. Code ESLint
+passed. Unit initially129 passed and two real-history filesystem tests exceeded
+the default5s test timeout under concurrent build load; those two tests now have
+explicit15s bounds (no application deadline or timing target changed).
+Typecheck initially exposed an incomplete typed invalid-counter fixture; it was
+corrected and typecheck passed. Integration initially failed that same typecheck;
+a standalone build also collided with integration's own build. Serialized reruns
+then passed integration26/26, standalone build and mock Chromium18/18. These are
+offline results, not new physical/profile acceptance.
+
+Markdownlint remains blocked by six findings in the immutable sealed native
+response (MD003 at32/44/56/62/69 and MD022 at6). No sealed bytes or root lint
+rules were altered. The separately reviewed
+[lint addendum](../superpowers/specs/2026-10-15-11-sealed-review-lint-addendum.md)
+and [authentic assessment](../evidence/11-astra-sealed-lint-assessment.txt)
+are doc-only pending root commit/governed adoption. No lint source or owning test
+change is made at this checkpoint. The fixed acceptance policy intentionally
+rejects that newly drafted collateral until its exact reviewed extension is
+adopted; the disposition will be recomputed afterward. Therefore this intermediate
+checkpoint is not a final green result or release-ready state.
+
+An additional RED regression demonstrated that the fixed disposition could be
+applied to an alternate caller-selected report in an otherwise allowed README
+path. The verifier now requires its exact original observed report path whenever
+the disposition exists. This tightens the fixed policy without changing strict
+unamended report behavior; its targeted regression passes. Full unit and remaining
+impacted checks will be rerun after the separately governed lint implementation.
+Original physical, ordinary native, primary/addendum/SPR and observed report bytes
+remain unchanged. The owner still has not granted final merge approval.

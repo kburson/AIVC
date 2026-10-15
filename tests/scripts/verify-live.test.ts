@@ -9,8 +9,11 @@ import {
   unlinkSync,
 } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterEach, expect, it } from 'vitest';
-import { verifyLive } from '../../scripts/verify-live.mjs';
+import { afterEach, afterAll, expect, it } from 'vitest';
+import {
+  verifyLive,
+  acceptanceProvenance,
+} from '../../scripts/verify-live.mjs';
 
 const roots: string[] = [];
 const patch = 'patches/@ricky0123+vad-web+0.0.31.patch';
@@ -520,3 +523,231 @@ it('rejects altered installed code despite a retained marker and recomputed repo
   f.save();
   expect(verifyLive({ root: f.root, log: () => {} }).ok).toBe(false);
 });
+
+it('consumes the fixed reviewed release disposition without relabelling original L4/L6 observations', () => {
+  const messages: string[] = [];
+  const before = readFileSync('docs/evidence/live-validation.json');
+  const result = verifyLive({ log: (message) => messages.push(message) });
+  expect(result.errors).toEqual([]);
+  expect(messages.join('\n')).toContain(
+    'Amended release acceptance with explicit limitations',
+  );
+  expect(messages.join('\n')).not.toContain('Live evidence is complete');
+  expect(readFileSync('docs/evidence/live-validation.json')).toEqual(before);
+  const report = JSON.parse(before.toString());
+  expect(
+    report.cases.find((item: { id: string }) => item.id === 'L4').status,
+  ).toBe('fail');
+  expect(
+    report.cases.find((item: { id: string }) => item.id === 'L6').status,
+  ).toBe('unverified');
+});
+
+// Real shared Git history and actual captured evidence; no invented accepted authority.
+let amendmentRoot: string | undefined;
+function amendedFixture() {
+  if (!amendmentRoot) {
+    amendmentRoot = mkdtempSync(join(process.cwd(), '.scratch/amended-live-'));
+    execFileSync('git', [
+      'clone',
+      '--shared',
+      '--no-checkout',
+      '--quiet',
+      process.cwd(),
+      amendmentRoot,
+    ]);
+  }
+  const root = amendmentRoot;
+  git(root, 'reset', '--hard', 'fc51a548e73dc74bb14cfb9805eb381182fb8ad8');
+  git(root, 'clean', '-fd');
+  for (const path of [
+    'scripts/verify-live.mjs',
+    'scripts/format-check.mjs',
+    'tests/scripts/verify-live.test.ts',
+    'tests/scripts/format-check.test.ts',
+    'docs/evidence/11-live-acceptance-disposition.json',
+    'docs/implementation/11-system-acceptance.md',
+    'docs/live-validation.md',
+    'README.md',
+  ])
+    put(root, path, readFileSync(path));
+  const packages = JSON.parse(
+    readFileSync('docs/evidence/live-validation.json', 'utf8'),
+  ).packages;
+  for (const [key, version] of Object.entries(packages)) {
+    const [context, name] = key.split(':');
+    json(
+      root,
+      (context === '.' ? '' : context + '/') +
+        'node_modules/' +
+        name +
+        '/package.json',
+      { name, version, main: 'index.js' },
+    );
+  }
+  json(root, 'node_modules/@ricky0123/vad-web/package.json', {
+    name: '@ricky0123/vad-web',
+    version: '0.0.31',
+    main: 'dist/index.js',
+  });
+  for (const suffix of ['js', 'd.ts']) {
+    const path = 'node_modules/@ricky0123/vad-web/dist/real-time-vad.' + suffix;
+    put(root, path, readFileSync(path));
+  }
+  return root;
+}
+afterAll(() => {
+  if (amendmentRoot) rmSync(amendmentRoot, { recursive: true, force: true });
+});
+function amendErrors(root: string) {
+  return verifyLive({ root, log: () => {} }).errors.join('\n');
+}
+it('keeps the qualified profile and original observed failures separate in a fresh checkout without .next', () => {
+  const root = amendedFixture();
+  expect(amendErrors(root)).toBe('');
+});
+type AmendmentRecord = {
+  policy: string;
+  authority: { reviewStorageCommit: string };
+  currentSourceDigest: string;
+  changedFiles: unknown[];
+  runtimeProfile: { speechCharsPerSecond: number };
+  observations: { L4: string; pauseObserved: boolean };
+};
+for (const [name, mutate] of [
+  [
+    'arbitrary policy',
+    (d: AmendmentRecord) => {
+      d.policy = 'self-accepted';
+    },
+  ],
+  [
+    'self-asserted authority',
+    (d: AmendmentRecord) => {
+      d.authority.reviewStorageCommit = '0'.repeat(40);
+    },
+  ],
+  [
+    'forged current source digest',
+    (d: AmendmentRecord) => {
+      d.currentSourceDigest = 'a'.repeat(64);
+    },
+  ],
+  [
+    'caller path exception',
+    (d: AmendmentRecord) => {
+      d.changedFiles.push({ path: 'apps/web/server/config.ts', after: {} });
+    },
+  ],
+  [
+    'different runtime profile',
+    (d: AmendmentRecord) => {
+      d.runtimeProfile.speechCharsPerSecond = 14;
+    },
+  ],
+  [
+    'fabricated observed pass',
+    (d: AmendmentRecord) => {
+      d.observations.L4 = 'pass';
+    },
+  ],
+  [
+    'fabricated pause',
+    (d: AmendmentRecord) => {
+      d.observations.pauseObserved = true;
+    },
+  ],
+] as const)
+  it('rejects disposition ' + name, () => {
+    const root = amendedFixture();
+    const path = 'docs/evidence/11-live-acceptance-disposition.json';
+    const d = JSON.parse(readFileSync(join(root, path), 'utf8'));
+    mutate(d);
+    json(root, path, d);
+    expect(amendErrors(root)).toContain('Amended acceptance invalid');
+  });
+for (const path of [
+  'apps/web/server/providers/claude.ts',
+  'apps/web/server/turns/run-turn.ts',
+  'apps/web/shared/contracts.ts',
+  'apps/web/server/config.ts',
+  'package-lock.json',
+  patch,
+  'docs/evidence/11-native-search-ordered-385d11b.json',
+  'docs/evidence/11-live-physical-2687b54.json',
+  'docs/superpowers/specs/2026-10-15-11-live-acceptance-amendment-design.md',
+  'docs/superpowers/specs/2026-10-15-11-sealed-review-formatting-addendum.md',
+  'docs/evidence/11-astra-full-pr-review-f2baab7.txt',
+])
+  it('rejects changed immutable component or collateral ' + path, () => {
+    const root = amendedFixture();
+    put(root, path, readFileSync(join(root, path), 'utf8') + '\nChanged\n');
+    expect(amendErrors(root)).toContain('Amended acceptance invalid');
+  });
+it('does not accept an untracked application file or a deleted original runtime path', () => {
+  const root = amendedFixture();
+  put(root, 'apps/web/new.ts', 'export const hidden = 1;');
+  expect(amendErrors(root)).toContain('Amended acceptance invalid');
+  unlinkSync(join(root, 'apps/web/new.ts'));
+  unlinkSync(join(root, 'apps/web/server/config.ts'));
+  expect(amendErrors(root)).toContain('Amended acceptance invalid');
+}, 15000);
+it('still rejects changed installed code after the exact accepted source disposition', () => {
+  const root = amendedFixture();
+  put(
+    root,
+    modulePath,
+    readFileSync(join(root, modulePath), 'utf8') + '\n// changed',
+  );
+  expect(amendErrors(root)).toMatch(/module|postimage/);
+});
+it('refuses original observation changes to cases, timings, citations or credentials rather than masking their failures', () => {
+  for (const mutate of [
+    (r: ReturnType<typeof fixture>['report']) => {
+      r.cases[0].status = 'fail';
+    },
+    (r: ReturnType<typeof fixture>['report']) => {
+      r.timings = [];
+    },
+    (r: ReturnType<typeof fixture>['report']) => {
+      r.providers.claudeModel = 'different';
+    },
+    (r: ReturnType<typeof fixture>['report']) => {
+      r.usage = [{ inputTokens: 20, outputTokens: 30, searchUses: 99 }];
+    },
+  ]) {
+    const root = amendedFixture();
+    const path = 'docs/evidence/live-validation.json';
+    const r = JSON.parse(readFileSync(join(root, path), 'utf8'));
+    mutate(r);
+    json(root, path, r);
+    expect(amendErrors(root)).toContain('Accepted immutable anchor differs');
+  }
+}, 20000);
+it('fails missing disposition under original strict acceptance rather than treating absence as approval', () => {
+  const root = amendedFixture();
+  unlinkSync(join(root, 'docs/evidence/11-live-acceptance-disposition.json'));
+  expect(amendErrors(root)).toContain('Incomplete required live case L4: fail');
+  expect(amendErrors(root)).toContain(
+    'Incomplete required live case L6: unverified',
+  );
+});
+
+it('does not apply the fixed disposition to a caller-selected report even in an allowed documentation path', () => {
+  const root = amendedFixture();
+  put(
+    root,
+    'README.md',
+    readFileSync(join(root, 'docs/evidence/live-validation.json')),
+  );
+  json(
+    root,
+    'docs/evidence/11-live-acceptance-disposition.json',
+    acceptanceProvenance(root),
+  );
+  expect(
+    verifyLive({ root, reportPath: 'README.md', log: () => {} }).errors.join(
+      '\n',
+    ),
+  ).toContain('requires the fixed observed report path');
+}, 15000);

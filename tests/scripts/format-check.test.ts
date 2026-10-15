@@ -1,6 +1,14 @@
-import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import {
+  mkdirSync,
+  mkdtempSync,
+  writeFileSync,
+  rmSync,
+  readFileSync,
+} from 'node:fs';
 import { join } from 'node:path';
-import { expect, it } from 'vitest';
+import { afterAll, expect, it } from 'vitest';
+import { execFileSync } from 'node:child_process';
+import { symlinkSync, renameSync, chmodSync } from 'node:fs';
 import { enumerateOwnedFiles } from '../../scripts/format-check.mjs';
 it('checks all first-party files including sealed evidence and excludes generated files', () => {
   mkdirSync('.scratch', { recursive: true });
@@ -88,4 +96,133 @@ it('refuses altered or symlinked specification copies instead of suppressing the
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
+});
+
+it('keeps the exact accepted amendment pair in inventory without normalizing sealed bytes', async () => {
+  const { checkFormatting } = await import('../../scripts/format-check.mjs');
+  const paths = ['review-manifest.md', 'reviewer-response-1.md'].map(
+    (name) =>
+      'docs/peer-reviews/spec/live-acceptance-amendment-review-d37abf9831b9cc30583d0df9ef47d2f9/spr/' +
+      name,
+  );
+  const before = paths.map((path) => readFileSync(path));
+  expect(enumerateOwnedFiles()).toEqual(expect.arrayContaining(paths));
+  expect(await checkFormatting({ paths, log: () => {} })).toBe(0);
+  paths.forEach((path, index) =>
+    expect(readFileSync(path)).toEqual(before[index]),
+  );
+  await expect(
+    checkFormatting({ paths: [paths[0]], write: true, log: () => {} }),
+  ).rejects.toThrow(/Refusing/);
+}, 15000);
+
+let sealedRoot: string | undefined;
+const sealedGroup =
+  'docs/peer-reviews/spec/live-acceptance-amendment-review-d37abf9831b9cc30583d0df9ef47d2f9/spr/';
+const manifestPath = sealedGroup + 'review-manifest.md';
+function sealedFixture() {
+  if (!sealedRoot) {
+    sealedRoot = mkdtempSync(join(process.cwd(), '.scratch/sealed-format-'));
+    execFileSync('git', [
+      'clone',
+      '--shared',
+      '--quiet',
+      process.cwd(),
+      sealedRoot,
+    ]);
+  }
+  rmSync(join(sealedRoot, sealedGroup.slice(0, -1)), {
+    recursive: true,
+    force: true,
+  });
+  execFileSync(
+    'git',
+    ['reset', '--hard', 'fc51a548e73dc74bb14cfb9805eb381182fb8ad8'],
+    { cwd: sealedRoot },
+  );
+  execFileSync('git', ['clean', '-fd'], { cwd: sealedRoot });
+  return sealedRoot;
+}
+afterAll(() => {
+  if (sealedRoot) rmSync(sealedRoot, { recursive: true, force: true });
+});
+it('validates exact pair before traversal even when both files or their directory disappear', () => {
+  const root = sealedFixture();
+  rmSync(join(root, sealedGroup), { recursive: true });
+  expect(() => enumerateOwnedFiles(root)).toThrow();
+});
+for (const kind of [
+  'bytes',
+  'mode',
+  'file symlink',
+  'parent symlink',
+  'unaccepted manifest',
+] as const)
+  it('rejects sealed ' + kind + ' before exclusion', () => {
+    const root = sealedFixture();
+    const path = join(root, manifestPath);
+    if (kind === 'bytes')
+      writeFileSync(path, readFileSync(path, 'utf8') + '\n');
+    if (kind === 'mode') chmodSync(path, 0o755);
+    if (kind === 'file symlink') {
+      renameSync(path, path + '.original');
+      symlinkSync(path + '.original', path);
+    }
+    if (kind === 'parent symlink') {
+      const dir = join(root, sealedGroup.slice(0, -1));
+      renameSync(dir, dir + '-original');
+      symlinkSync(dir + '-original', dir);
+    }
+    if (kind === 'unaccepted manifest')
+      writeFileSync(
+        path,
+        readFileSync(path, 'utf8').replace(
+          '"status": "accepted"',
+          '"status": "rejected"',
+        ),
+      );
+    expect(() => enumerateOwnedFiles(root)).toThrow();
+  });
+it('requires the real storage ancestry and committed blob rather than only copied bytes', async () => {
+  const root = sealedFixture();
+  execFileSync(
+    'git',
+    [
+      'update-ref',
+      'refs/replace/71fc7115200bd94e7872c3e2f5dc3e15fd10bbce',
+      '385d11b2448dac5bf01400bb7c11834bfefbfbfd',
+    ],
+    { cwd: root },
+  );
+  try {
+    expect(() => enumerateOwnedFiles(root)).toThrow();
+  } finally {
+    execFileSync(
+      'git',
+      ['replace', '-d', '71fc7115200bd94e7872c3e2f5dc3e15fd10bbce'],
+      { cwd: root },
+    );
+  }
+});
+it('does not exempt copied lookalikes or startup/invitation or ordinary malformed source', async () => {
+  const { checkFormatting } = await import('../../scripts/format-check.mjs');
+  const root = sealedFixture();
+  writeFileSync(
+    join(root, 'copied-review.md'),
+    readFileSync(join(root, manifestPath)),
+  );
+  expect(
+    await checkFormatting({ root, paths: ['copied-review.md'], log: () => {} }),
+  ).toBe(1);
+  for (const name of ['author-startup.md', 'reviewer-invitation.md']) {
+    const path = sealedGroup + name;
+    writeFileSync(join(root, path), '# Heading\n\n\nParagraph\n');
+    expect(await checkFormatting({ root, paths: [path], log: () => {} })).toBe(
+      1,
+    );
+  }
+  writeFileSync(join(root, 'bad.ts'), 'const x={a:1}');
+  expect(
+    await checkFormatting({ root, paths: ['bad.ts'], log: () => {} }),
+  ).toBe(1);
 });

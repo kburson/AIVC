@@ -271,3 +271,29 @@ omission/prior-block/pause evidence. The current physical artifact and all minor
 owner reports remain unchanged. See the
 [review checkpoint](implementation/11-system-acceptance.md#full-pr37-astra-review-at-f2baab7)
 for exact source, target, merge-base and native-report custody.
+
+## Accepted release limitations and evidence consumption
+
+The [reviewed story11 amendment](superpowers/specs/2026-10-15-11-live-acceptance-amendment-design.md)
+and [formatting addendum](superpowers/specs/2026-10-15-11-sealed-review-formatting-addendum.md)
+provide a narrowly qualified release disposition. The observed report remains
+unchanged: L4 is fail and L6 unverified. Six seconds remains an engineering target;
+the actual6.60s response is an accepted limitation, not a measured pass. Genuine
+provider-pause live qualification is deferred/unverified, not unavailable.
+Historical ordinary omission/prior-block proof is consumed only after byte/mode/
+path equality of the complete server-search component and real storage proof.
+
+The [new disposition](evidence/11-live-acceptance-disposition.json) links current
+source digest and exact acceptance-only changes to the original tested head/digest
+and immutable artifacts. No old observations are rebound. Default strict checks
+remain; any unknown product/runtime/configuration/dependency/patch change or
+invalid authority/evidence fails closed. The only qualified physical runtime is
+recorded CPS12/cap72/Thalia; default CPS14 remains unchanged and unqualified by this
+result. A successful read-only verifier says **amended release acceptance with
+explicit limitations**, never complete measured whole-live acceptance.
+
+Original minor unevenness/cutoff/hiccup reports, owner no-iteration direction,
+callback-versus-acoustic and Stop-versus-remote-cessation limits stay recorded.
+No further paid or physical checks occurred. Registered Test, independent final
+review, final owner merge approval, sanctioned integration and Close remain
+separate gates; PR37 is not merged by this disposition.

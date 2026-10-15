@@ -121,8 +121,11 @@ Offline CI sets `AIVC_MODE=mock` and runs the full declared matrix after separat
 installing Chromium/Linux dependencies. It uses no provider secrets.
 `npm run verify:live` is a separate read-only human-run completion gate over actual
 recorded evidence; it makes no provider call and cannot create a passing report.
-Missing, stale, failed or unverified required cases remain nonpassing. Root issue#2
-also owns `node scripts/task-tracker/verify-epic-trail.mjs` after child integration.
+Default strict validation keeps missing, stale, failed or unverified required cases
+nonpassing. Only the exact reviewed story11 disposition below can consume its
+identified limitations and unchanged-component evidence. Root issue#2 also owns
+`node scripts/task-tracker/verify-epic-trail.mjs`, checking the explicit candidate
+ref before merge and actual integrated target afterward.
 The child verifier explicitly targets epic2 so it cannot mistake #11 for an epic.
 
 ## Known limits and evidence
@@ -140,3 +143,11 @@ latency are different measurements. Transport abort signals do not prove remote
 provider work stopped or was free. Public deployment, authentication, persistent
 history and scaling are outside this loopback reference baseline. Epic PR17 stays
 draft until the owner's full acceptance and integration gates pass.
+
+Story11's [accepted release amendment](docs/superpowers/specs/2026-10-15-11-live-acceptance-amendment-design.md)
+keeps measured L4 fail/L6 unverified visible while accepting the6.60-second
+limitation and deferring genuine provider-pause qualification. Its read-only
+[disposition](docs/evidence/11-live-acceptance-disposition.json) qualifies only
+recorded CPS12/cap72/Thalia and unchanged components; default CPS14 remains
+unchanged. A limited release verdict is separate from whole-live measured success
+and does not authorize merge. See [live validation](docs/live-validation.md#accepted-release-limitations-and-evidence-consumption).
