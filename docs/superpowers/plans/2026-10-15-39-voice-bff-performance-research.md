@@ -313,23 +313,23 @@ test('speech work does not stop answer event consumption', async () => {
 
 **Files:** Create portable schedule/oracle/playback modules, k6 scenario modules from section 2, `tests/performance/{schedule,oracle,playback}.test.mjs`; add declared expected segment/text/tool outcomes to `research/performance/fixtures/turns.json`. Reuse or build-test against the actual `SpeechText`/PCM policies verified by Task 0; do not import browser audio globals into k6.
 
-**Interfaces:** `makeSchedule({seed,startMs,residenceMs,turnsPerMinute}): {turnIndex,intendedAtMs,type}[]`; `checkFeasibility({maxOccupancyMs,turnsPerMinute,busyMisses}): {feasible,ceilingMs}`; `chooseReplayPacing({contexts,oneApproved}): {triggered,actions,additionalPackages}`; `evaluateTurn(expected,observed): {textOutcome,voiceOutcome,cancellationOutcome,outcome}`; `createVirtualPlayback({sampleRate:24000,now}): {enqueue(samples),advance(),outstandingSeconds(),cancel()}`. Use one pending generation, atomic completed history, one speech request and actual text/audio limits per session.
+**Interfaces:** `makeSchedule({seed,startMs,residenceMs,turnsPerMinute}): {turnIndex,intendedAtMs,type}[]`; `checkFeasibility({maxOccupancyMs,turnsPerMinute,busyMisses}): {feasible,ceilingMs}`; `mapReplayContext({context,oneApproved}): {id,action,pacing?,label?}` (isolated mapping only); `chooseReplayPacing({contexts,expectedContextIds,oneApproved}): {status,reasons,triggered,actions,additionalPackages}` (full campaign only); `evaluateTurn(expected,observed): {textOutcome,voiceOutcome,cancellationOutcome,outcome}`; `createVirtualPlayback({sampleRate:24000,now}): {enqueue(samples),advance(),outstandingSeconds(),cancel()}`. Use one pending generation, atomic completed history, one speech request and actual text/audio limits per session.
 
 - [ ] Write failing tests for independent deterministic schedules, realized per-turn mixture, no catch-up or overlapping turns, staggered 180-second session replacement, one busy miss as a failed offered turn, and actual 24-kHz byte-duration consumption. Include replay fallback cases:
 
 ```js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checkFeasibility, chooseReplayPacing } from '../../tools/performance/shared/schedule.js';
+import { checkFeasibility, mapReplayContext } from '../../tools/performance/shared/schedule.js';
 test('10 seconds does not fit four turns but fits two', () => {
   assert.equal(checkFeasibility({maxOccupancyMs:10000,turnsPerMinute:4,busyMisses:0}).feasible,false);
   assert.equal(checkFeasibility({maxOccupancyMs:10000,turnsPerMinute:2,busyMisses:0}).feasible,true);
-  assert.deepEqual(chooseReplayPacing({contexts:[{id:"c1",pair:"1CPU-2GiB",admissionMode:"research",fourFeasible:false,twoFeasible:true}],oneApproved:false}).actions[0],
+  assert.deepEqual(mapReplayContext({context:{id:"c1",pair:"1CPU-2GiB",admissionMode:"research",fourFeasible:false,twoFeasible:true},oneApproved:false}),
     {id:"c1",action:'run',pacing:2,label:'two-turn-pacing-substitute'});
 });
 test('20 seconds needs the separately agreed slower series', () => {
   assert.equal(checkFeasibility({maxOccupancyMs:20000,turnsPerMinute:2,busyMisses:0}).feasible,false);
-  assert.equal(chooseReplayPacing({contexts:[{id:"c1",pair:"1CPU-2GiB",admissionMode:"research",fourFeasible:false,twoFeasible:false}],oneApproved:false}).actions[0].action,
+  assert.equal(mapReplayContext({context:{id:"c1",pair:"1CPU-2GiB",admissionMode:"research",fourFeasible:false,twoFeasible:false},oneApproved:false}).action,
     'owner-agreement-required');
 });
 ```
@@ -528,7 +528,7 @@ Durations below include their stated observation and bounded drain; independent 
 | Instrumentation on/off pairs | T3 four pairs*two profiles*two states*three matched seeds =48 windows | Same source except explicit instrumentation flag, profile, workload and offered load; use matching M1 candidate or screened last pass.3min ramp+2min observation+up to2.5min drain. Compare paired descriptive latency/resource deltas, not a new capacity label | T3 4–6 |
 | Selected ordinary slow/tail sensitivity | T3 two orchestrator allocations (1CPU/2GiB and4CPU/12GiB)*B1/B2/B3*two named hypothetical profiles*two loads*three seeds =72 windows | B1/B2 muted, B3 output-enabled. Profiles slow2x and tail4x each use one source tuple per fixture, chosen by maximum observed completion with stable-ID ties, and multiply its first-output/completion/chunk waits by2/4 while preserving bytes/text/tool shape; fallback source is the explicitly hypothetical profile when empirical replay is absent. Fixed four-turn pacing; load1 and half matching ordinary candidate or screened last pass, deduplicating equal loads. Use ordinary success oracle,5–7.5min/window; infeasible cells stay infeasible, no fixture/pacing substitution | T3 6–9 |
 | Slow/tail feasibility | T3 twelve type/profile/allocation cells | Three full schedules/cell =36 at3–5.5min, plus48 bounded fixture/tuple/seed probes at0–2.5min (one fixed slow/tail tuple per ordinary fixture). Verify transformed durations against actual deadlines; a violation is an infeasible/failed observation, never a manufactured ordinary pass. No extra paid samples | T3 1.8–5.3 |
-| Thin Next.js forwarding overhead | T3 four orchestrator executive pairs*two profiles*three offered-load points*three seeds*two entry modes =144 windows | Next.js fixed1CPU/2GiB; lookup/simulators fixed proven nonbinding. Compare direct core versus Next.js-to-core at load1,half matching M1 candidate,and candidate (screened last pass if unconfirmed). Same fixtures/output/seed/core resources;5–7.5min/window. Descriptive paired latency/bytes/CPU/memory/abort/flush deltas, no new confirmed capacity label. A binding BFF is a web-path limit, never a lower portable-core limit | T3 12–18 |
+| Thin Next.js forwarding overhead | T3 four orchestrator executive pairs*two profiles*three offered-load points*three seeds*two entry modes =144 windows | Next.js fixed1CPU/2GiB on independently provisioned helper infrastructure, outside the orchestrator target host and cgroup; lookup/simulators fixed proven nonbinding. Compare direct core versus Next.js-to-core at load1,half matching M1 candidate,and candidate (screened last pass if unconfirmed). Same fixtures/output/seed/core resources;5–7.5min/window. Descriptive paired latency/bytes/CPU/memory/abort/flush deltas, no new confirmed capacity label. A binding BFF is a web-path limit, never a lower portable-core limit | T3 12–18 |
 | Web-path feasibility | T3 four allocations*two profiles =eight web contexts | Exhaustive probes3*4*(1+K) per allocation at0–2.5min, plus24 full seed schedules at3–5.5min. Direct-core feasibility may reuse only identical earlier direct controls; web observations are fresh and retain their own clock/path. If the matched core profile needs declared replay fallback, use exactly that pacing for both entries | T3 1.2–14.2 |
 | Actual-path topology protection checks | T1 28; T2 84; T3 138 series, maximum250 | Each30–120sec. Counts: T1 four F1+sixteen M1+eight possible fallback; T2 twelve F1+fifty-six M1+sixteen F1 control series; T3 eight scaling+two matched baselines+24 deep+16 pacing+eight open+20 B4/B5+eight F1 fault+eight recovery+16 instrumentation+12 slow/tail+16 web-forwarding | T1 0.233–0.933; T2 0.7–2.8; T3 1.15–4.6 |
 | Independent1.5-times infrastructure proofs | T1 maximum716; T2 1192; T3 1176 windows, total3084 before exact reuse | Each60sec same-profile demand observation plus at most60sec warm/drain. Count a fresh proof for every discovery, confirmation/soak or intervention window and one load-one envelope per new context/profile/pacing. Case probes within the exact proven envelope reuse that proof; this row does not recursively require proofs of proof drivers. Record attempted/valid/reused separately | T1 8.667–23.8667; T2 19.867–39.733; T3 19.6–39.2 |
@@ -634,13 +634,13 @@ This section is normative for Tasks1,4,6,7,8,10. It resolves the exact interface
 
 ### Mixed feasibility and all-pair fallback (R1-F001)
 
-`chooseReplayPacing({contexts,oneApproved})` consumes an array of `{id,pair,admissionMode,fourFeasible,twoFeasible}` records for all eight Tier1 replay contexts (four pairs times research/default admission). `triggered` is true if **any** four-turn load-one context fails. If triggered, schedule unchanged two-turn replay at **all four pairs in both admission modes**, independently gate each at19.2seconds, and retain every original four-turn result. A passing four-turn context retains its four-turn discovery/confirmation package and adds a two-turn package; a failing four-turn context replaces only its unexecutable package with the two-turn package. Missing results block the aggregate decision rather than becoming false/true defaults. Infeasible two-turn contexts request the separately agreed one-turn series or remain incomplete. `actions` returns one `{id,action,pacing,label}` per substitute context, and `additionalPackages` lists only contexts whose feasible four-turn packages remain. With no trigger, no substitute work is added.
+`chooseReplayPacing({contexts,expectedContextIds,oneApproved})` requires the frozen canonical eight expected context IDs and consumes an array of `{id,pair,admissionMode,fourFeasible,twoFeasible}` records for all eight Tier1 replay contexts (four pairs times research/default admission). `triggered` is true if **any** four-turn load-one context fails. If triggered, schedule unchanged two-turn replay at **all four pairs in both admission modes**, independently gate each at19.2seconds, and retain every original four-turn result. A passing four-turn context retains its four-turn discovery/confirmation package and adds a two-turn package; a failing four-turn context replaces only its unexecutable package with the two-turn package. Missing results block the aggregate decision rather than becoming false/true defaults. Infeasible two-turn contexts request the separately agreed one-turn series or remain incomplete. `actions` returns one `{id,action,pacing,label}` per substitute context, and `additionalPackages` lists only contexts whose feasible four-turn packages remain. With no trigger, no substitute work is added.
 
 The existing core inventory reserves one replay package per context. Let F be the number of four-turn failures. If F=0 the additional count is0; if F>=1 it is at most8-F, hence **seven additional packages maximum**. Each adds one discovery series0.5–1.6h plus confirmation/candidate/soak2–17h: conditional0–130.2h. This is additional work even when all contexts eventually pass two-turn feasibility. A two-turn failure consumes attempted time but never earns a completed package. The same unique window ID cannot be charged as both replacement and addition.
 
 Each additional package can require12 discovery plus16 confirmation/soak headroom proofs:7*28=196 additional windows, conditional0–6.5333h (two minutes maximum each). The original eight fallback topology series already cover all substitute contexts; no duplicate topology series is added. Existing fallback feasibility remains0–22.2h. Thus T1 maxima become core432.2h, controls75.4h, total507.6h; whole-campaign maxima become core853.8h, controls471.9333h, total1325.7333h. Lower bounds remain unchanged. Base proof counts520/1192/1176 become maximum716/1192/1176, total3084, with250 topology series. The exact estimator freezes F and attempted/reused windows before launch; these are conservative conditional maxima, not expected runtime. The12-hour checkpoint and160-hour stop still produce partial reports if exhausted.
 
-Task6 tests include eight mixed contexts, with only the smallest research pair failing four-turn: fallback actions cover all eight, the seven feasible four-turn packages remain, and exactly seven additions appear. Also test no failures (zero additions), all failures (zero additions, eight replacements), unknown feasibility (blocked), and two-turn failure (no success manufactured). Task7 tests use these fixtures to reconcile package/proof IDs, no double charging, unchanged250 topology series and the revised tier/full envelope. The one-context examples above exercise the pure mapping for a supplied subset; full campaign execution requires all eight records and the aggregate trigger.
+Task6 tests include eight mixed contexts, with only the smallest research pair failing four-turn: fallback actions cover all eight, the seven feasible four-turn packages remain, and exactly seven additions appear. Also test no failures (zero additions), all failures (zero additions, eight replacements), unknown feasibility (blocked), and two-turn failure (no success manufactured). Task7 tests use these fixtures to reconcile package/proof IDs, no double charging, unchanged250 topology series and the revised tier/full envelope. The one-context examples above call only mapReplayContext, which cannot authorize a campaign. Full campaign execution calls chooseReplayPacing with the canonical eight expected IDs, rejects incomplete/duplicate/unexpected inputs, and applies the aggregate trigger; section12 defines the exact separation and refusal tests.
 
 ### Deployed protection targets and preflight settlement (R1-F002)
 
@@ -651,7 +651,7 @@ The full18-request proof remains mandatory before every declared series. “Actu
 | F1 lookup isolation | Generator → independently constrained lookup | A reference core, web BFF and web balancer on helper infrastructure; core uses the actual lookup under test and the declared simulators |
 | Direct core and lookup-constrained M1 | Generator → core → lookup/providers, with only the named service constrained | Web BFF/balancer on helper infrastructure; they delegate to the same measured core for preflight only |
 | Workers/replicas | Generator → declared core deployment/balancer → lookup/providers | Helper-host web BFF delegates through the actual declared core balancer; record per-instance routing and admission |
-| Web-forwarding comparison | Both matched direct entry and web BFF → same core → lookup/providers | The measured BFF has its fixed1CPU/2GiB allocation; no second web implementation is substituted |
+| Web-forwarding comparison | Both matched direct entry and web BFF → same core → lookup/providers | The measured BFF runs on independently provisioned helper infrastructure with fixed1CPU/2GiB in its own cgroup, outside the target host; record its actual network hop and charge its helper lifetime once; no second web implementation is substituted |
 
 An auxiliary web BFF always has fixed1CPU/2GiB and an F1 auxiliary core fixed1CPU/2GiB, in separate cgroups on an independently provisioned helper host. Auxiliary balancer resources are fixed, finite and recorded by Task0. They never share the constrained target's quota or silently consume reserved target-host CPU/RAM. Their effective allocations, process/image/source/configuration, placement and helper-host lifetime enter the baseline/manifests/quote. If a helper cannot supply these resources plus validated generator/simulator/collector headroom, expand the concrete quote or stop; do not place them unaccounted on the target. The web path is absent from primary measured direct-core traffic; an off-target protection service does not make it part of that traffic.
 
@@ -715,3 +715,77 @@ The execution recommendation consistently favors native inline execution through
 Task3's tuple test also asserts equal same-seed/case results and deep equality with the immutable source tuple after selection; repeat with multiple declared seeds/cases to catch mutated samples. Task0's exec mock supplies `git rev-parse HEAD` as the expected head as well as `git ls-files`, and explicit tracked-byte reads, so it does not impose call order. Task2's early header assertions use `?? ''` and accept an absent header while forbidding future values.
 
 Task2/7 collect balancer/infrastructure-generated502/503 responses, resets and early failures that bypass application timing. Preserve generator request/offer correlation, infrastructure status/reset reason and missing application-span reason; never synthesize Server-Timing. Task8 counts these as failed offered work (or the declared fault-oracle result), separately labels attribution unavailable where necessary, and cannot silently drop them as missing telemetry. A negative fixture injects a balancer503 before core dispatch and a connection reset mid-stream, proving failed denominator accounting, zero duplicated dispatch and preserved usage/settlement evidence.
+
+## 12. Owner-directed resolution of the four remaining XPR observations
+
+On October 15, 2026 the owner instructed addressing R2-F001–R2-F004 before implementation. This section and the affected interfaces/table entries above govern the corresponding Tasks0,4,6,7,9,10. The accepted XPR identifies predecessor plan commit `8109522128c13412f8333d0029d5382011a3feb3`, SHA-256 `4e9f4e00b671e461e0a66951246441bf29e2ed5a0939fd58bfd4be10f8a6b018`. This is a subsequent owner-directed amendment, not a newly sealed peer-review acceptance. Preserve the original reports, manifest and their bytes. The governing corrected specification, three-service architecture, campaign inventory, resource allocations, deadlines, empirical thresholds and spend/time ceilings are unchanged. No implementation or paid execution is authorized by this amendment.
+
+### R2-F001: measured web BFF placement is part of the experiment contract
+
+Both the auxiliary protection BFF and the measured BFF in forwarding comparisons run on independently provisioned **helper infrastructure**, each with the declared fixed 1 CPU/2 GiB allocation in a separate recorded cgroup. The measured BFF never runs on the constrained orchestrator target host and never consumes its dedicated CPU/memory entitlement. It may reuse the same web deployment used for protection only when source/configuration/allocation match, all preflight work has settled, and its role/phase is recorded; charge its actual helper lifetime once. These are placement and isolation requirements, not extra application instances or benchmark cells.
+
+Task0's inventory/host quote and Task7's topology/run manifest explicitly record the measured BFF host ID and helper role, cgroup/effective quota/cpuset, source/image/config hashes, process count, network interface/route and actual helper-to-core hop. Record generator-to-BFF and BFF-to-core hop differences in the matched direct/web results; they are part of observed forwarding overhead. Do not subtract an assumed network latency or present co-located results as this topology. Helper provisioning must honor the BFF entitlement plus independently demonstrated generator/simulator/collector headroom; a shared helper label alone is not isolation proof. Missing helper capacity blocks the comparison or requires a revised concrete hosting quote, never an unreported move onto the target host.
+
+Task7 topology tests reject a measured BFF with target-host placement, missing effective allocation/hop evidence, overlapping constrained CPU entitlement, or insufficient helper headroom. The quote charges the existing BFF/helper lifetime and allocation, without adding a second copy when roles are reused legitimately. This clarification adds no campaign window or provider operation.
+
+### R2-F002: subset mapping cannot authorize a partial campaign
+
+`mapReplayContext({context,oneApproved})` is a pure action mapper for one already-selected fallback context. It does not compute campaign-wide triggering, claim complete coverage or launch work. Its isolated tests may use the synthetic ID c1, as in Task6. It is not a runner entry point.
+
+`chooseReplayPacing({contexts,expectedContextIds,oneApproved})` is the only campaign decision API. Task7 derives and freezes the canonical eight IDs from the four executive pairs crossed with research/default admission:
+
+```text
+research:1CPU-2GiB  default:1CPU-2GiB
+research:2CPU-4GiB  default:2CPU-4GiB
+research:3CPU-8GiB  default:3CPU-8GiB
+research:4CPU-12GiB default:4CPU-12GiB
+```
+
+The expected-ID list must itself equal this canonical set, with no duplicate, omitted or unexpected ID; supplying a one-ID expected list cannot opt into subset execution. Context IDs, pair and admission mode must agree. Missing/duplicate/unexpected contexts or missing required feasibility results return `{status:'blocked',reasons:[<bounded codes>],triggered:null,actions:[],additionalPackages:[]}` before any capacity-series launch. A complete valid decision returns status ready, with the existing any-failure trigger, all-eight two-turn coverage and replacement/addition accounting. Two-turn results may be pending only when no four-turn failure requires a substitute; once triggered, all required substitute feasibility results must be present to authorize its work. The separately agreed one-turn path remains unchanged.
+
+Add these cases to Task6's schedule tests, alongside the existing complete mixed/no-failure/all-failure cases:
+
+```js
+test('campaign refuses partial contexts even with successful subset mapping', () => {
+  const pairs=['1CPU-2GiB','2CPU-4GiB','3CPU-8GiB','4CPU-12GiB'];
+  const expectedContextIds=pairs.flatMap(pair=>['research','default'].map(mode=>`${mode}:${pair}`));
+  const contexts=[{id:'research:1CPU-2GiB',pair:'1CPU-2GiB',admissionMode:'research',
+    fourFeasible:false,twoFeasible:true}];
+  const result=chooseReplayPacing({contexts,expectedContextIds,oneApproved:false});
+  assert.equal(result.status,'blocked');
+  assert.equal(result.triggered,null);
+  assert.deepEqual(result.actions,[]);
+  assert.deepEqual(result.additionalPackages,[]);
+  assert.equal(chooseReplayPacing({contexts,expectedContextIds:[contexts[0].id],
+    oneApproved:false}).status,'blocked');
+});
+```
+
+This test imports chooseReplayPacing in addition to the pure mapper from shared/schedule.js. Add duplicate-ID, wrong pair/mode, unexpected-ID and unknown-feasibility fixtures. Task7 proves blocked decisions dispatch no experiments and cannot mark coverage complete. No partial-input option exists on the production campaign API; no budget or experiment count changes.
+
+### R2-F003: deferred calibration cells remain visible in evidence and reporting
+
+Task4's immutable calibration manifest requires a `secondaryCells` catalog even when no secondary calls are funded. Each entry records `cellId`, provider/input settings, `status`, `reasonCode`, human-readable reason, `sampleCount` and `observationIds`. At minimum include model-long-context, stt-15s, tts-120chars, tts-300chars, model-concurrency-3, stt-concurrency-3 and tts-concurrency-3. List any other secondary casebook candidate under the same rule; never silently omit a declared case.
+
+For an unfunded/unperformed entry use status unavailable, reasonCode `not-funded-primary-casebook`, reason `not funded in primary casebook`, sampleCount 0 and an empty observation-ID array. This is explicit unavailable evidence, not a failed provider call, measured zero latency, included billable request or successful sample. If existing primary observations genuinely match a secondary cell's complete settings, it may instead be labeled observed-via-primary with exact source IDs and actual sample count; this creates no extra request and cannot imply an untested duration, character length or concurrency. Missing/mismatched provenance blocks that label. Additional standalone calls still require the already specified separate funded casebook/quote and must fit unchanged limits.
+
+Task9's report reproduces every catalog entry in its external-service limitations/coverage table, with exact settings, actual counts, status and reason; unavailable rows have no fabricated percentile/cost measurement. Task1/4 schema/ledger tests reject a missing mandatory catalog ID, nonzero sample count for unavailable entries, or an observed-via-primary claim without matching source IDs/settings. Task9 report tests verify all seven initially unfunded entries appear as unavailable and cannot disappear when no raw sample exists. This records omissions honestly without adding calibration spending, reruns or campaign work.
+
+### R2-F004: bounded calibration output with explicit unsupported-shape handling
+
+Task4 records a calibration-only `modelSettings` profile before quoting or dispatch: exact fixture prompt/template version and hash, model ID, supported SDK maximum-output-token setting for each model round, effective speech segment cap and expected segment count. Use the actual frozen segmenter; do not change speech policy to fit a response. At the default CPS14, the segment cap is 84 characters; prompts use the actual computed cap if the accepted baseline differs.
+
+The initial bounded profiles are:
+
+| Fixture/round | Prompt instruction added to its synthetic use-case prompt | Maximum output tokens |
+| --- | --- | --- |
+| B1 or short B3 final answer | Return only one concise plain-text sentence, within the effective segment-character cap; no Markdown or preamble | 48 |
+| B2 initial tool decision | Perform the required project lookup with the declared native tool; after its result, return only one concise final sentence within the effective segment-character cap | 128 for the native tool-decision round |
+| B2 final answer after its one lookup continuation | Use the actual lookup result and return the one concise plain-text sentence within the effective cap | 48 |
+| Multi-segment B3 final answer | Return exactly two concise plain-text sentences, each within the effective cap, with a combined length greater than one cap and no greater than two caps; no Markdown or preamble | 96 |
+
+All caps are below the reference 1024-token per-round ceiling, affect only the explicitly recorded calibration profile, and do not alter default application/model settings. Task0/4 must verify that the real selected core adapter/SDK can express and honor each recorded request setting; if it cannot, record a calibration prerequisite and dispatch zero paid calls rather than silently using the default or bypassing the core. Preserve the real B2 tool result/continuation and normal model/STT/TTS pipeline. A token ceiling and prompt are guards, not guarantees of character count, sentence structure or actual segment count.
+
+Validate each actual stable-text segment before any TTS dispatch: its length must fit the effective cap and its ordinal must not exceed the fixture's expected one or two segments. Never send an extra/out-of-cap segment to TTS. When a violation is discovered, stop further TTS dispatch, retain any already completed/in-flight model or allowed speech operation and its billable/uncertain reservation, follow normal cancellation settlement, and mark the coherent calibration case unsupported with a bounded shape reason. A final token-limit/truncated answer, too few segments, extra segments or malformed/incomplete tool continuation is also unsupported. Preserve actual output/usage provenance; do not silently clip text, invent completion, count partial speech as a supported tuple, or retry to replace the failed sample. The original request/spend ceilings and the requirement for complete supported cases remain unchanged.
+
+Task4's fake-client calibration tests cover a token-limited/truncated answer, a segment exceeding the cap, a third segment on the two-segment fixture, a missing second segment, and an incomplete B2 tool block. Assert unsupported case status, zero TTS dispatch for invalid/extra segments, no new provider retry, and retention of already incurred/uncertain cost. Capture the exact prompt/token settings in the manifest and replay provenance; they must not be implied to characterize unconstrained long-answer latency. These are offline tests added to existing owning tasks, not new paid samples or benchmark families.
