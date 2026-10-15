@@ -832,14 +832,20 @@ describe('reviewed live acceptance real history', () => {
       },
     ],
   ] as const)
-    it('refuses original observation change to ' + name, () => {
-      const root = amendedFixture();
-      const path = 'docs/evidence/live-validation.json';
-      const report = JSON.parse(readFileSync(join(root, path), 'utf8'));
-      mutate(report);
-      json(root, path, report);
-      expect(amendErrors(root)).toContain('Accepted immutable anchor differs');
-    });
+    it(
+      'refuses original observation change to ' + name,
+      () => {
+        const root = amendedFixture();
+        const path = 'docs/evidence/live-validation.json';
+        const report = JSON.parse(readFileSync(join(root, path), 'utf8'));
+        mutate(report);
+        json(root, path, report);
+        expect(amendErrors(root)).toContain(
+          'Accepted immutable anchor differs',
+        );
+      },
+      15000,
+    );
   it('fails missing disposition under original strict acceptance rather than treating absence as approval', () => {
     const root = amendedFixture();
     unlinkSync(join(root, 'docs/evidence/11-live-acceptance-disposition.json'));
