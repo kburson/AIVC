@@ -12,6 +12,14 @@
 
 **Issue:** [#39](https://github.com/kburson/AIVC/issues/39). Date: October 15, 2026 (America/Chicago). Draft plan for owner review; exact review decisions and reviewed bytes are recorded in the peer-review archive. The earlier SAR/XPR accepted the identified predecessor spec, not this plan or its later owner-directed amendment.
 
+## Story Intent
+
+- **Beneficiary:** engineering and operations leaders planning voice-service capacity
+- **Capability:** measure portable orchestrator capacity and compare resource, replica and provider-cost tradeoffs
+- **Need:** local saturation and external-service waits lack separate reproducible evidence
+- **Value or failure prevented:** capacity investments follow measured bottlenecks without uncontrolled provider spending
+
+
 ## Global Constraints
 
 - Primary entry is the portable Fastify orchestrator; lookup-only throughput cannot be labeled voice-session capacity. Next.js serves React and delegates; it owns no provider orchestration.
@@ -160,6 +168,14 @@ If unchanged realistic replay fails the two-turn feasibility gate, the sole prop
 ## 4. Implementation tasks
 
 ### Task 0: Verify the real baseline and quote the execution environment
+#### Story Intent
+
+- **Beneficiary:** performance engineers
+- **Capability:** verify the real integrated services and quote a reproducible execution environment
+- **Need:** generated assets and guessed host limits cannot establish the research baseline
+- **Value or failure prevented:** invalid source or infrastructure assumptions block experiments before cost is incurred
+
+
 
 **Files:** Create `tools/performance/baseline.mjs`, `research/performance/baseline.json`, `tests/performance/baseline.test.mjs`; update this plan only with an exact verified path/API reconciliation if necessary.
 
@@ -188,6 +204,14 @@ test('an untracked route cannot satisfy the baseline', async () => {
 - [ ] Rerun the baseline test and the accepted application's existing toolchain/contract checks at that revision. Expected outcome: actual recorded evidence, or an explicit prerequisite blocker; no generic bootstrap `npm test` pass claim. Commit only these owned files with `[#<delivery issue>] Verify performance experiment baseline`.
 
 ### Task 1: Establish immutable records and read-only evidence verification
+#### Story Intent
+
+- **Beneficiary:** performance engineers and report reviewers
+- **Capability:** preserve immutable run records and detect altered or incomplete evidence
+- **Need:** partial or edited artifacts could otherwise be presented as complete measurements
+- **Value or failure prevented:** capacity claims remain reproducible and auditable
+
+
 
 **Files:** Create `tools/performance/{records,verify}.mjs`, `research/performance/schema/records.schema.json`, `tests/performance/records.test.mjs`, `tools/performance/cli.mjs` with only `verify` wired initially.
 
@@ -210,6 +234,14 @@ test('partial evidence is not a complete manifest', () => {
 - [ ] Run the records tests and `node tools/performance/cli.mjs verify research/performance/runs/does-not-exist`; expect tests pass and verifier nonzero with a missing-run reason. Commit only Task 1 files; the failing negative verifier is intentional evidence of refusal.
 
 ### Task 2: Instrument local APIs and expose bounded research configuration
+#### Story Intent
+
+- **Beneficiary:** service operators
+- **Capability:** observe bounded timing and resource signals across local service boundaries
+- **Need:** streaming completion and external wait time are not visible in response headers alone
+- **Value or failure prevented:** local bottlenecks can be distinguished from provider waits without leaking sensitive data
+
+
 
 **Files:** Create application timing/metrics modules from section 2; modify the verified routes for turn, speech, capabilities, errors, `sse-response.ts`, `run-turn.ts`, provider/tool boundaries, Fastify app/index and config/runtime/leases. Create `tests/contracts/performance-timing.test.ts`, `tests/contracts/research-config.test.ts`, `tests/integration/performance-streams.test.ts` and `tests/performance/collector.test.mjs`; create `tools/performance/collector.mjs`.
 
@@ -238,6 +270,14 @@ it('does not claim a future stream duration in a header', () => {
 - [ ] Run the new Vitest suites plus `node --test tests/performance/collector.test.mjs` and existing admission/deadline/streaming tests resolved by Task 0. Compare instrumentation on/off in later Task 10; unit tests do not establish zero overhead. Commit the exact instrumentation/config/test paths.
 
 ### Task 3: Build seeded network provider simulators and isolate paid egress
+#### Story Intent
+
+- **Beneficiary:** performance engineers
+- **Capability:** replay seeded provider protocols over isolated network simulators
+- **Need:** paid provider traffic is costly and provider variability obscures local saturation
+- **Value or failure prevented:** repeatable load tests measure local capacity without accidental external spending
+
+
 
 **Files:** Create simulator modules/fixtures from section 2, `apps/orchestrator/src/providers/network-mock.ts`, `tests/performance/simulators.test.mjs`, `tests/contracts/network-mock.test.ts`; modify runtime/config to select the narrow network mock only in explicit mock research mode.
 
@@ -264,6 +304,14 @@ test('replay keeps first output, completion and bytes from one tuple', () => {
 - [ ] Create a mock container network with explicit local allowlists, no paid credentials and no usable external route. From the actual application namespace attempt a paid-host connection and confirm denial, including SDK fallback/metadata routes; verify intended internal routes work. A test-only hostname interceptor alone does not establish egress isolation. Retain namespace/routing/firewall evidence, not secrets. Commit owned simulator, adapter, config and fixture files.
 
 ### Task 4: Add the separate bounded live calibration mode
+#### Story Intent
+
+- **Beneficiary:** engineering managers
+- **Capability:** capture a small coherent set of provider latency and usage observations within funded limits
+- **Need:** external latency and billing assumptions otherwise lack measured provenance
+- **Value or failure prevented:** mocks and financial forecasts have bounded empirical inputs without uncontrolled paid requests
+
+
 
 **Files:** Create calibration ledger/runner/casebook/rate card from section 2, `tests/performance/calibration.test.mjs`; extend CLI with `calibrate --casebook <file> --budget <agreed-budget-file>`.
 
@@ -287,6 +335,14 @@ test('unknown billing cannot become a zero-cost reservation', () => {
 - [ ] Re-run ledger/runner tests, interrupt/restart a fake calibration run and verify unresolved reservation persistence. Commit only sanitized casebook/rate-input schema, code and tests; never commit API keys or private audio.
 
 ### Task 5: Prove k6 can observe the real streaming conversation
+#### Story Intent
+
+- **Beneficiary:** performance engineers
+- **Capability:** prove the load client observes actual streaming answers and concurrent speech
+- **Need:** buffered or incompatible clients can hide first output and miss required audio
+- **Value or failure prevented:** later capacity tests count real protocol outcomes rather than client artifacts
+
+
 
 **Files:** Create client and k6 compatibility modules/client-lock from section 2, `tests/performance/stream-observer.test.mjs`; add bounded compatibility protocol fixture under `tools/performance/clients/fixture.mjs`. Modify no public application transport to accommodate a client limitation.
 
@@ -311,6 +367,14 @@ test('speech work does not stop answer event consumption', async () => {
 - [ ] After lock/proof exists run proposed `k6 run tools/performance/k6/compat.js` in mock isolation and retain the fixture report. Rerun Node tests; commit only client/proof/build-lock files. Capacity scenarios remain blocked if the core incremental/concurrent client fails.
 
 ### Task 6: Implement paced sessions, speech scheduling and complete outcomes
+#### Story Intent
+
+- **Beneficiary:** performance engineers
+- **Capability:** offer deterministic conversations and evaluate complete text, voice and cancellation outcomes
+- **Need:** busy turns or unfinished speech can otherwise disappear from the denominator
+- **Value or failure prevented:** reported session capacity includes every offered turn and required audio segment
+
+
 
 **Files:** Create portable schedule/oracle/playback modules, k6 scenario modules from section 2, `tests/performance/{schedule,oracle,playback}.test.mjs`; add declared expected segment/text/tool outcomes to `research/performance/fixtures/turns.json`. Reuse or build-test against the actual `SpeechText`/PCM policies verified by Task 0; do not import browser audio globals into k6.
 
@@ -342,6 +406,14 @@ test('20 seconds needs the separately agreed slower series', () => {
 - [ ] Prove every predeclared ordinary fixture/tuple/seed schedule passes load-one maximum-occupancy feasibility for the chosen profile. Use all declared tuples, not just a selected median. Run k6 mock smoke through real orchestrator/lookup and compare harness speech segmentation/history behavior with application fixture tests. Rerun the three Node suites and commit exact shared/scenario/test/fixture files.
 
 ### Task 7: Enforce resources and implement the finite campaign controller
+#### Story Intent
+
+- **Beneficiary:** service operators
+- **Capability:** enforce isolated resource allocations and a finite validated campaign
+- **Need:** peer saturation, partial fallback inputs and unbounded runs can invalidate measurements or exceed budgets
+- **Value or failure prevented:** orchestrator scaling curves remain attributable and execution stops at declared limits
+
+
 
 **Files:** Create campaign modules, container/balancer definitions and campaign config from section 2, `tests/performance/{matrix,controller,estimate,topology}.test.mjs`; extend CLI with `estimate`, `preflight` and `campaign`. Do not add Kubernetes manifests or a custom Next.js server.
 
@@ -369,6 +441,14 @@ test('primary orchestrator discovery retains the entire grid', () => {
 - [ ] Run tests plus proposed `node tools/performance/cli.mjs estimate --campaign research/performance/campaign.json` and `node tools/performance/cli.mjs preflight --campaign research/performance/campaign.json`. Estimate output must instantiate every row and finite parameter in section 8, reject omission of a mandatory family, reconcile family-by-tier subtotals with the campaign total, and include every fresh or explicitly reused control, failed/infeasible attempt, repeat/soak and stop ceiling. Preflight must fail on missing baseline/client-lock/budget evidence; a negative preflight is a successful refusal test, not campaign readiness. Commit exact campaign/container/test files.
 
 ### Task 8: Derive honest capacity curves and bottleneck attribution
+#### Story Intent
+
+- **Beneficiary:** engineering leaders
+- **Capability:** derive qualified capacity curves and identify the first binding layer
+- **Need:** independent percentiles and censored runs cannot support reliable scaling claims
+- **Value or failure prevented:** optimization and hardware decisions follow reproducible bottleneck evidence
+
+
 
 **Files:** Create `tools/performance/analysis/{screen,curves}.mjs`, `tests/performance/{screen,curves}.test.mjs`; extend CLI with `analyze --runs <index> --out <new-directory>`.
 
@@ -397,6 +477,14 @@ test('one confirmed session has no 25 percent headroom', () => {
 - [ ] Run tests and regenerate a clearly labeled synthetic analysis fixture twice; require stable CSV/figure content hashes excluding declared generation timestamps. Corrupt raw input and verify analysis fails read-only validation. Commit only analysis/tests and small labeled verification fixtures; no invented campaign result becomes a completed report.
 
 ### Task 9: Build the cost model and executive/technical report
+#### Story Intent
+
+- **Beneficiary:** engineering managers
+- **Capability:** compare measured service capacity and dated operating costs in an executive report
+- **Need:** unavailable provider cells and hidden shared costs can distort financial feasibility
+- **Value or failure prevented:** capacity choices expose uncertainty and marginal cost at each layer
+
+
 
 **Files:** Create `tools/performance/analysis/{cost,report}.mjs`, `docs/research/performance/{README,report-template}.md`, `tests/performance/{cost,report}.test.mjs`; add `research/performance/pricing.json` schema-conformant dated inputs with unknown values retained. Extend CLI with `report`.
 
@@ -420,6 +508,14 @@ test('continuations multiply model requests, not callers', () => {
 - [ ] Rerun tests; validate report fixture links, raw/source manifests, unpriced cells, incomplete coverage and reproducibility instructions. Commit report generator/template/tests. The template stays labeled unpopulated until Task10 supplies valid evidence.
 
 ### Task 10: Execute the agreed tiers and publish the evidence-backed report
+#### Story Intent
+
+- **Beneficiary:** research operators
+- **Capability:** execute only approved experiment tiers and publish a complete coverage ledger
+- **Need:** partial runs or exhausted budgets can otherwise be mistaken for completed research
+- **Value or failure prevented:** the final report preserves actual coverage, limitations and stop decisions
+
+
 
 **Files:** Create immutable run directories and indexes under `research/performance/runs/`, derived analysis artifacts, dated final report under `docs/research/performance/`; update operator README with actual pinned commands and storage/retention references. Large raw artifacts stay outside ordinary Git with accessible immutable hashes. No application source changes in this task unless a discovered defect gets its own governed fix and a new baseline.
 
