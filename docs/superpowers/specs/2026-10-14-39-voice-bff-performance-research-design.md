@@ -1,8 +1,8 @@
-# Voice BFF backend performance and cost research
+# Voice orchestrator backend performance and cost research
 
 Date: October 14, 2026 (America/Chicago).
 
-Tracking: [#39 — Specify backend performance and cost research for the voice BFF](https://github.com/kburson/AIVC/issues/39).
+Tracking: [#39 — Specify backend performance and cost research for the voice orchestrator](https://github.com/kburson/AIVC/issues/39).
 
 Status: draft specification for owner review. The owner authorized addressing both remaining XPR observations and creating the implementation plan on October 15, 2026. This amended draft is the planning source; implementation and research execution require their normal separate approvals. This document defines the research and report, not its implementation plan. No benchmark, paid API sample, capacity result, or deployment is established by authoring it.
 
@@ -18,11 +18,11 @@ The VP-level report must answer:
 4. How do external STT, model inference, TTS, and tool waits affect in-flight work, local capacity, bandwidth, and user-perceived response delay?
 5. What are the cost curves, provider allocation thresholds, and economically useful scaling choices? Which further optimizations are unlikely to repay their engineering cost?
 
-The measurement definitions, completion oracles, pacing rules, and evidence classifications in section 16 govern all experiments and report labels below. The main investment is repeatable local experimentation. External APIs receive only a small bounded calibration sample across reasonable use cases. Network simulators replace paid services for capacity, stress, scaling, and soak runs. Results distinguish measured local behavior, exploratory live samples, simulated behavior, and financial projections.
+The owner-directed architecture correction in section 18 and the measurement definitions, completion oracles, pacing rules, and evidence classifications in section 16 govern all experiments and report labels below. The main investment is repeatable local experimentation. External APIs receive only a small bounded calibration sample across reasonable use cases. Network simulators replace paid services for capacity, stress, scaling, and soak runs. Results distinguish measured local behavior, exploratory live samples, simulated behavior, and financial projections.
 
 ## 2. Governing architecture and source evidence
 
-The [reference specification](2026-10-12-voice-bff-reference-design.md) assigns the browser-facing BFF and provider orchestration to Next.js Node Route Handlers; Fastify owns the synthetic retrieval API. Provider calls do not all pass through Fastify. The [epic #2 plan](../plans/2026-10-12-2-voice-bff-reference.md) and its [Node 26 amendment](../plans/2026-10-13-2-node26-parallel-execution-amendment.md) describe the implementation boundary and superseding toolchain selection.
+The owner corrected the target architecture on October 15, 2026: there are three application services. Next.js serves the React UI and acts as a thin web BFF. A separate Node/Fastify orchestrator owns STT, model/agent and tool execution, lookup HTTP calls, TTS, admission, deadlines and cancellation settlement. A second independent Fastify service owns synthetic lookup only. Web requests follow UI → Next.js BFF → Fastify orchestrator → Fastify lookup/providers; future telephony adapters call the same portable orchestrator without Next.js. The earlier [reference specification](2026-10-12-voice-bff-reference-design.md) and [epic #2 plan](../plans/2026-10-12-2-voice-bff-reference.md) describe the superseded Next.js-owned orchestration baseline; preserve their historical acceptance evidence. This owner-directed target and section 18 govern research planning. The [Node 26 amendment](../plans/2026-10-13-2-node26-parallel-execution-amendment.md) remains the runtime selection, subject to integration verification.
 
 Authoring inspected the current checkout at `9e400ab` on `trunk`: governing documents are tracked, but the checkout does not contain a complete tracked application implementation. GitHub issue states and separate worktrees are not a substitute for inspecting the revision eventually tested. Before research implementation, resolve the accepted integrated application revision and verify the actual route, provider, cancellation, and speech contracts. Record any missing prerequisite as unavailable; do not fill it with a lookalike and call that the reference service.
 
@@ -34,28 +34,31 @@ Three approaches were considered:
 
 | Approach | Strength | Limitation | Decision |
 | --- | --- | --- | --- |
-| A. Protocol-level tests through the real BFF, local-service isolation, and calibrated network simulators | Measures the actual backend boundary with controlled cost and repeatability | Requires streaming-capable clients and simulator validation | Selected |
+| A. Protocol-level tests through the real orchestrator, local-service isolation, and calibrated network simulators | Measures the actual backend boundary with controlled cost and repeatability | Requires streaming-capable clients and simulator validation | Selected |
 | B. Browser-led performance tests | Includes capture, rendering, and physical playback behavior | Browser work obscures portable backend measurements | Separate future UX validation |
 | C. Sustained load against real speech/model APIs | Measures one provider deployment at one time | Expensive; quotas and provider variability hide local limits | Restricted to small calibration samples |
 
-Primary path:
+Primary and comparison paths:
 
 ```mermaid
 flowchart LR
-    K6[k6 headless conversation clients] --> BFF[Next.js Node BFF]
-    BFF --> Retrieval[Real Fastify retrieval service]
-    BFF --> STT[Network STT simulator]
-    BFF --> LLM[Network model simulator]
-    K6 -->|Speech requests to the same BFF| BFF
-    BFF --> TTS[Network TTS simulator]
-    Telemetry[Per-service timing and container measurements] --> Evidence[Raw results, curves, cost model and VP report]
-    BFF -.-> Telemetry
-    Retrieval -.-> Telemetry
+    K6[k6 portable backend clients] --> Core[Fastify orchestrator]
+    Web[React UI] --> Next[Next.js web BFF]
+    Compare[k6 web-path comparison] --> Next
+    Next --> Core
+    Phone[Future telephony adapter] -.-> Core
+    Core --> Lookup[Separate Fastify lookup service]
+    Core --> STT[Network STT simulator]
+    Core --> LLM[Network model simulator]
+    Core --> TTS[Network TTS simulator]
+    Core -.-> Metrics[Timing and resource evidence]
+    Lookup -.-> Metrics
+    Next -.-> Metrics
 ```
 
 In scope:
 
-- Backend API behavior, the actual BFF-to-retrieval boundary, provider adapters, stream consumption, cancellation, and request admission.
+- Backend API behavior, the actual orchestrator-to-retrieval boundary, provider adapters, stream consumption, cancellation, and request admission.
 - Timing instrumentation on every locally owned API service, including success, rejection, and error paths.
 - Controlled CPU/memory experiments, process and instance comparisons, k6 scenarios, calibration artifacts, reproducible analysis, and the management report.
 - Simulated headless conversations that submit audio or text, consume incremental answers, request speech when eligible, and enforce the existing queue/segment/cancellation policy.
@@ -63,7 +66,7 @@ In scope:
 Out of scope for the first report:
 
 - Browser rendering, React/VAD CPU, microphone devices, acoustic echo cancellation, and physical speaker playback.
-- Implementing Twilio call routing, production telephony, a new Fastify orchestration gateway, persistent accounts, or a database not present in the reference architecture.
+- Implementing Twilio call routing, production telephony, persistent accounts, or a database not present in the reference architecture.
 - Broad framework comparisons, self-hosted speech/model inference, autonomous per-call multi-agent fanout, or a new Kubernetes cluster.
 - Paid provider load/soak tests, deliberate paid rate-limit exhaustion, or hosted search by default.
 
@@ -75,14 +78,15 @@ Telephony remains a labeled forecast. A future Twilio-compatible WebSocket profi
 
 ## 4. Experiment topology and attribution
 
-Use two mandatory measurement paths:
+Use three mandatory measurement paths:
 
-- **BFF path:** k6 enters the actual Next.js APIs and exercises real orchestration, the real Fastify API when selected by a tool, and provider simulators over the network. This is the primary architecture result.
-- **Fastify isolation:** k6 calls the real retrieval routes directly with the same schemas, fixture mix, and response sizes. This identifies retrieval service limits and checks whether retrieval is constraining the BFF. Its RPS cannot be presented as voice-session capacity.
+- **orchestrator path:** k6 calls the Fastify orchestrator directly, exercising real STT/model/tool/TTS orchestration and the separate Fastify lookup service when selected by a tool. This direct backend path supplies the primary portable capacity, latency, resource and cost curves; Next.js is absent from it.
+- **Lookup isolation:** k6 calls the real retrieval routes directly with the same schemas, fixture mix, and response sizes. This identifies retrieval service limits and checks whether retrieval is constraining the orchestrator. Its RPS cannot be presented as voice-session capacity.
+- **Web BFF comparison:** the same headless workload enters Next.js, which forwards to the same orchestrator and lookup/provider topology. At the four orchestrator executive pairs, compare direct versus thin-BFF entry with fixed Next.js resources and matched profile, seed, payload, output policy and offered load. Attribute proxy latency, buffering, abort propagation, CPU/memory and bytes separately. This bounded comparison does not replace either Fastify grid.
 
-Within the BFF path, run separate resource sweeps with the BFF as the constrained service and with Fastify as the constrained service. Hold all peer-service resources constant at independently demonstrated nonbinding allocations. Record each service's cgroup, process count, and resource use. A run where a peer becomes limiting is an architecture result, not an isolated limit for the intended target.
+Within the orchestrator path, run separate resource sweeps with the orchestrator as the constrained service and with the separate Fastify lookup as the constrained service. Hold all peer-service resources constant at independently demonstrated nonbinding allocations. Record each service's cgroup, process count, and resource use. A run where a peer becomes limiting is an architecture result, not an isolated limit for the intended target.
 
-Do not place both application services inside one ambiguously budgeted container for the primary sweep. A shared-container experiment is supplementary and explicitly reports the combined budget. Do not send BFF-path traffic directly to Fastify to obtain a better result.
+Run the orchestrator, lookup and any measured Next.js BFF in separate processes and cgroups; never combine them in one ambiguously budgeted container for the primary sweep. A shared-container experiment is supplementary and explicitly reports the combined budget. Direct Fastify orchestration is the intended primary target. Never substitute direct lookup traffic for an orchestration workload or relabel a Next.js-path result as a direct-core measurement.
 
 Use production builds and pinned toolchains/images. Do not benchmark Next.js development compilation, HMR, debug builds, or an unreported profiler as steady production overhead. Record cold start separately from warmed operation. Pin Node and dependencies to the selected accepted revision; do not independently upgrade the runtime for this research.
 
@@ -115,7 +119,7 @@ After single-process sweeps, compare:
 - One process versus four workers with the same aggregate 4-CPU/12-GiB allocation.
 - Two and four single-process instances, each with the same selected per-instance allocation and enough aggregate host resources to honor it.
 
-Workers must preserve per-session ownership, cancellation, and contracts. Include connection distribution and duplicated memory/pool overhead. The implementation plan selects a supported worker mechanism; adding workers must not fabricate unsupported Next.js clustering behavior. If no supported worker configuration exists, report that comparison unavailable and use the instance comparison.
+Workers must preserve per-session ownership, cancellation, and contracts. Include connection distribution and duplicated memory/pool overhead. The worker and replica comparisons target the Fastify orchestrator; the implementation plan selects a supported worker mechanism; adding workers must not fabricate unsupported orchestrator worker behavior. If no supported worker configuration exists, report that comparison unavailable and use the instance comparison.
 
 Use one declared balancer configuration for instance comparisons and monitor each instance. Report allocation efficiency and new-connection skew. Do not claim seamless migration of an established stream or resilience of calls on a failed instance.
 
@@ -158,7 +162,7 @@ Profiles are versioned, seeded, and include:
 
 Preserve response generation rate separately from playback consumption. TTS may produce audio much faster than real time; simulate that burst so the application must enforce its actual backpressure and memory policy. Streaming audio fixtures, if used, are paced and sized for the selected protocol rather than sent as a single file upload.
 
-Record configured and actual simulator dispatch/output times. Simulator scheduling delay is a validity check: otherwise a saturated simulator can masquerade as a slow provider or a saturated BFF. Prove generators and simulators can exceed the highest accepted target load by at least 1.5 times in an independent control, or mark the capacity result censored at the tested load (see section 16.10 for the required pre-plateau validation sequence).
+Record configured and actual simulator dispatch/output times. Simulator scheduling delay is a validity check: otherwise a saturated simulator can masquerade as a slow provider or a saturated orchestrator. Prove generators and simulators can exceed the highest accepted target load by at least 1.5 times in an independent control, or mark the capacity result censored at the tested load (see section 16.10 for the required pre-plateau validation sequence).
 
 Mock-only runs start without paid credentials and restrict outbound connectivity to declared local test dependencies. SDK defaults, telemetry, and failover must not reach paid endpoints. Prove attempted paid endpoint access fails closed. Run artifacts state `mode: mock` and `externalSpend: 0` only when isolation evidence supports it.
 
@@ -171,11 +175,11 @@ Every local API service emits `Server-Timing` for completed measurements known w
 Use monotonic clocks and milliseconds. Metric names are bounded and namespaced, for example:
 
 ```http
-Server-Timing: bff.admit;dur=0.8, bff.preheaders;dur=1.4
+Server-Timing: orchestrator.admit;dur=0.8, orchestrator.preheaders;dur=1.4
 X-Request-Id: <correlation-id>
 ```
 
-A nonstreamed retrieval response can include `retrieval.handler` and `retrieval.preheaders`. A BFF may relay completed child timings under a distinct namespace if they are already available. Do not make every third-party API emit headers we do not control; measure those calls in the local adapter.
+A nonstreamed retrieval response can include `retrieval.handler` and `retrieval.preheaders`. An orchestrator may relay completed child timings under a distinct namespace if they are already available. Do not make every third-party API emit headers we do not control; measure those calls in the local adapter.
 
 `preheaders` ends immediately before header commitment; it is neither full stream duration nor client TTFB. The elapsed time before the handler is entered can include runtime/socket queueing that this header cannot explain. Client measurements, event-loop metrics, and correlated server records expose that gap.
 
@@ -187,7 +191,7 @@ For SSE, streamed PCM, and any later WebSocket path, headers cannot contain futu
 
 Final records contain route elapsed time, first answer delta/first audio write when applicable, stream end or abort, admission outcome, provider spans, lookup spans, cancellation settlement, status, and bytes. HTTP trailers are optional evidence only after verifying the exact runtime, proxy, and load client expose them; the baseline does not depend on trailers.
 
-Each span has run/trace/request/parent IDs, service/process identity, operation, start offset and duration on that process's monotonic clock, outcome, and relevant bounded byte/usage counters. Propagate trace context over internal calls without weakening existing Origin/Host admission. Do not subtract unsynchronized absolute timestamps across processes.
+Each span has run/trace/request/parent IDs, service/process identity, operation, start offset and duration on that process's monotonic clock, outcome, and relevant bounded byte/usage counters. Propagate trace context over internal calls without weakening core caller authentication or web Origin/Host admission. Do not subtract unsynchronized absolute timestamps across processes.
 
 Distinguish inclusive parent durations, child waits, overlapping calls, queue time, and CPU consumption. Do not sum parent and child durations or subtract independent p95s to obtain a local p95. Any wall-time residual based on the union of local child-wait intervals is labeled residual residence time, not CPU time. Use paired traces and client observations for critical-path analysis.
 
@@ -204,14 +208,14 @@ Use bounded asynchronous collection and fixed metric labels. High-rate raw trace
 
 ## 9. Backend-only k6 workloads and streaming clients
 
-All requests use the real documented contracts, permitted Origin/Host, body/history limits, synthetic data, and actual cancellation semantics. No browser UI or browser VUs are required. Redirects, admission failures, and skipped provider work are not successful turns.
+All requests use the real documented contracts, the entry-specific caller authentication or web Origin/Host protections, body/history limits, synthetic data, and actual cancellation semantics. No browser UI or browser VUs are required. Redirects, admission failures, and skipped provider work are not successful turns.
 
 | ID | Workload | Purpose |
 | --- | --- | --- |
 | F1 | Fastify health and project lookup with controlled names/payloads | Isolated route, validation, and serialization curve; health is not domain-work capacity |
-| B1 | Typed BFF answer without a tool | BFF/model-adapter and streaming overhead |
-| B2 | Typed BFF answer with one real retrieval tool round trip | Full local aggregation path |
-| B3 | Audio upload, prerecorded STT, answer/tool, and eligible speech through the BFF | Reference voice-backend workload |
+| B1 | Typed orchestrator answer without a tool | orchestrator/model-adapter and streaming overhead |
+| B2 | Typed orchestrator answer with one real retrieval tool round trip | Full local aggregation path |
+| B3 | Audio upload, prerecorded STT, answer/tool, and eligible speech through the orchestrator | Reference voice-backend workload |
 | B4 | Larger valid history, longest admitted utterance, and bounded long output | Allocation, byte-rate, and queue sensitivity |
 | B5 | Disconnect, cancellation, rapid replacement, slow consumer, and quota/error profiles | Cleanup, backpressure, and overload behavior |
 | M1 | Declared mixed conversation population | Primary capacity and cost curve |
@@ -233,7 +237,7 @@ Before any capacity result, a compatibility fixture must prove first-event obser
 
 Freeze scenario/profile versions, seeds, resource configuration, instrumentation, and decision thresholds before comparing cells. Run a low-load smoke and correctness check first. Separate cold starts from steady-state warmups.
 
-For each feasible resource cell, run F1 isolation and M1 discovery with the intended service constrained, subject to the explicit tier and Fastify reduction rules in section 16.9. Cover typed/voice/fault and pacing deep dives at the four paired executive configurations. The plan must estimate the campaign and schedule its declared tiers; a reduced-by-rule cell remains unmeasured.
+For each feasible resource cell, run F1 isolation and M1 discovery with the intended service constrained, subject to the explicit tier and lookup reduction rules in section 16.9. Cover typed/voice/fault and pacing deep dives at the four paired executive configurations. The plan must estimate the campaign and schedule its declared tiers; a reduced-by-rule cell remains unmeasured.
 
 Procedure (section 16.9 defines per-cell discovery versus confirmation and soak):
 
@@ -256,7 +260,7 @@ Do not call a short sparse run a statistically reliable p99. Report count, histo
 
 Stop a run on OOM, host swapping, telemetry loss that prevents attribution, generator/simulator saturation, or persistent unsafe queue growth. Record the stop cause and incomplete observations. Tests may continue through the first controlled overload point only while the environment remains bounded and recoverable.
 
-Classify the first binding limit from multiple measurements. Event-loop saturation is a hypothesis, not a required outcome. A configured two-turn semaphore, exhausted socket pool, CPU quota, or slow Fastify peer can limit throughput before the main loop saturates. Preserve a default-admission control, then use explicit mock-only research admission settings to find the hardware curve. Do not relax live spending, payload, deadline, or cancellation safeguards to obtain a higher result.
+Classify the first binding limit from multiple measurements. Event-loop saturation is a hypothesis, not a required outcome. A configured two-turn semaphore, exhausted socket pool, CPU quota, or slow lookup peer can limit throughput before the main loop saturates. Preserve a default-admission control, then use explicit mock-only research admission settings to find the hardware curve. Do not relax live spending, payload, deadline, or cancellation safeguards to obtain a higher result.
 
 ## 11. Analysis and scaling forecasts
 
@@ -267,7 +271,7 @@ Produce curves by workload, profile, target service, resources, and process coun
 - Event-loop delay/utilization, CPU/throttling/GC, RSS/heap/external memory, queue age/duration, connections, and receive/send bandwidth versus load.
 - Capacity versus CPU and versus RAM, plus resource-normalized goodput. Show the paired executive configurations and fixed-variable comparisons.
 - Single-process versus workers versus instances; scaling efficiency `C(n) / (n * C(1))` under identical per-instance workloads, with aggregate resources and balancer overhead disclosed.
-- Fastify isolation versus BFF-path results, identifying whether retrieval, orchestration, or another component binds first.
+- Lookup isolation versus orchestrator-path results, identifying whether retrieval, orchestration, or another component binds first.
 
 Use per-run raw observations to create uncertainty/range bands. Do not join independent service percentiles as if they were one end-to-end distribution. Replay paired calibration tuples and sensitivity profiles to show how provider delay changes occupancy and backlog under the same declared arrivals. Do not claim that more Node replicas make one remote inference or synthesis operation faster.
 
@@ -320,7 +324,7 @@ A report template or plot populated with invented numbers is not a completed res
 
 The research is complete only when:
 
-- The selected baseline revision and backend contracts are verified; instrumentation and streaming-client prerequisites pass without changing the request path.
+- The accepted integrated three-service baseline, portable Fastify orchestration ownership, thin Next.js delegation, and backend/auth contracts are verified; instrumentation and streaming-client prerequisites pass without changing the request path.
 - Paid calibration respects the recorded total/request ceilings, captures reasonable actual cases, and identifies unavailable samples honestly.
 - Mock-only capacity runs prove no paid access, simulator fidelity/throughput, generator headroom, and correlated timing through all local API levels.
 - All required tiers and confirmation comparisons have retained evidence; unavailable/invalid/censored/infeasible and reduced-by-rule cells remain explicit under section 16.9.
@@ -361,7 +365,7 @@ These definitions resolve the cross-request and statistical details of sections 
 
 Every record correlates conversation ID, `turnId`, generation, request ID, and `segmentId` where applicable. The client schedules speech from the actual stable text and records both intended and actual speech-request initiation. Use the first eligible segment once for turn-level first audio; later segments contribute request-local metrics and continuity checks, not additional first-audio samples.
 
-The BFF can serve turn and speech requests on different processes. Matching IDs do not make their monotonic clocks comparable. The same-client cross-request observer is mandatory for client turn first-audio claims; otherwise that metric is unavailable and request-local server measurements remain useful under their own names. Distinguish a first PCM byte from a complete valid sample; require valid format and sufficient bytes for a sample before recording first audio. Warmup, canceled generations, provider failures, and fixtures intentionally producing no speech have separately declared populations rather than being silently removed from ordinary outcome accounting.
+The orchestrator can serve turn and speech requests on different processes. Matching IDs do not make their monotonic clocks comparable. The same-client cross-request observer is mandatory for client turn first-audio claims; otherwise that metric is unavailable and request-local server measurements remain useful under their own names. Distinguish a first PCM byte from a complete valid sample; require valid format and sufficient bytes for a sample before recording first audio. Warmup, canceled generations, provider failures, and fixtures intentionally producing no speech have separately declared populations rather than being silently removed from ordinary outcome accounting.
 
 Client submission includes upload/STT/model/segmentation/client scheduling as exercised by the harness, but excludes earlier capture/VAD and physical playback. The exploratory three-second backend budget is not proof of the original speech-end-to-audible goal. Server first-write and endpoint latency cannot demonstrate either client-receipt or acoustic timing. No sample is created when its required observer or endpoint is missing.
 
@@ -408,8 +412,9 @@ Translate callers into RPM, bandwidth, and cost using actual achieved turn rates
 | Experiment family | Minimum-wait network control | Calibrated replay | Sensitivity/fault/pacing |
 | --- | --- | --- | --- |
 | F1 isolation, every feasible resource cell | Required; no external wait is injected into real retrieval | Not applicable to direct retrieval | Fault subset at the four paired executive configurations |
-| M1 BFF path, every feasible resource cell and both constrained-service sweeps, subject to section 16.9 | Required | One declared supported replay profile required when schedule-feasible, with the mandatory Tier 1 pacing fallback in section 16.7; if calibration is unavailable, use a clearly hypothetical profile and mark empirical replay unavailable | Four paired executive configurations |
+| M1 orchestrator path, every feasible resource cell and both constrained-service sweeps, subject to section 16.9 | Required | One declared supported replay profile required when schedule-feasible, with the mandatory Tier 1 pacing fallback in section 16.7; if calibration is unavailable, use a clearly hypothetical profile and mark empirical replay unavailable | Four paired executive configurations |
 | Worker and two/four-instance comparisons | Required | Same supported replay profile as single-instance comparison | Boundary, skew, and recovery subset |
+| Thin Next.js forwarding comparison | Matched direct-core and web-BFF entry at the four orchestrator executive pairs | Same supported replay and pacing as matching direct controls | Fixed Next.js allocation; early flush, abort/cleanup, bytes and per-service overhead; never substitute for the core grid |
 | B1/B2/B3 deep dives | Four paired executive configurations | Same profile at those configurations | Declared selected slow/tail cells |
 | B4/B5 interventions | Appropriate controlled profile | Not required | Four paired executive configurations; never pooled into ordinary M1 |
 
@@ -442,9 +447,9 @@ For closed-population initialization, stagger actual session starts across one 1
 
 ### 16.8 Research topology and provider configuration
 
-The reference's loopback defaults remain the application default. Research may use an isolated private test-network address as a **declared configuration deviation**, without public exposure. Record exact bind addresses, `RETRIEVAL_BASE_URL` for the real peer, BFF Origin/Host allowlists, and balancer header policy. Use explicit matching Origin and Host values for the BFF address the client targets; an allowlist names that BFF origin, not the generator's source IP. Preserve Host through the balancer or configure its one explicit target Host and matching client Origin. No wildcard, unchecked forwarded-header trust, or bypass of admission is permitted. Shared-network-namespace loopback is allowed only with separate recorded service cgroups and enforceable budgets.
+The reference's loopback defaults remain the application default. Research may use an isolated private test-network address as a **declared configuration deviation**, without public exposure. Record exact bind addresses, `RETRIEVAL_BASE_URL` for the separate lookup peer, `ORCHESTRATOR_BASE_URL` for the thin BFF, core caller-auth configuration, web BFF Origin/Host allowlists, and balancer header policy. Web clients use matching explicit Origin/Host values for Next.js. Direct backend clients use the approved private core credential and do not fabricate a browser Origin. The BFF supplies its own server-held core credential and never forwards an arbitrary browser Authorization header. No wildcard, unchecked forwarded-header trust, or bypass of admission is permitted. Shared-network-namespace loopback is allowed only with separate recorded service cgroups and enforceable budgets.
 
-Before each topology/configuration series, prove through both actual paid-capable routes that missing, malformed, `null`, disallowed, and mismatched Origin/Host requests still receive the reference 403 response with zero upstream work, while the permitted pair reaches the intended route. Failure blocks the series. These are measurements through the actual balancer/container/network path, not only module-level admission tests.
+Before each topology/configuration series, prove through both web BFF routes that missing, malformed, `null`, disallowed, and mismatched Origin/Host requests return 403 with zero core/provider work, while the permitted pair delegates correctly. Separately prove both direct core routes reject missing or invalid caller credentials before body/provider work and accept the configured test/service credential. Missing/invalid core credentials return 401. Keep core bearer credentials server-held and private-network-only; production telephony ingress authentication is outside this HTTP research contract. Failure blocks the series. These are measurements through the actual balancer/container/network path, not only module-level admission tests.
 
 Set and record `CLAUDE_WEB_SEARCH=disabled` for primary mock and calibration runs, and verify stable tool definitions throughout. Record Models API startup/first-use behavior: with search disabled no search-support check is needed; any independent model-validation call required by the selected SDK uses a deterministic supported simulator response in mock mode or a separately recorded real metadata request in calibration. Never silently enable search, count a denied startup check as successful calibration, or treat unpriced/ambiguous work as free. Hosted-search characterization is outside this primary campaign and requires separate scope and spend authorization. Retain fail-closed mock egress and account for permitted startup operations in the manifest.
 
@@ -454,15 +459,15 @@ This clause governs the coverage/procedure requirements in sections 10, 14, and 
 
 | Tier | Required scope and procedure | Publishable result |
 | --- | --- | --- |
-| 1 — decision baseline | F1 discovery at the four paired executive configurations; BFF-constrained M1 minimum-wait and feasible replay there, including the mandatory section 16.7 pacing fallback; default-admission M1 controls there. Section 10 steps 1–3 and 6 apply everywhere in this tier, then steps 4–5 apply to each feasible M1 series with a passing point. Complete profile/pacing feasibility and topology/observer/headroom prerequisites first. | Confirmed low-lag M1 candidates where evidence passes, admission-versus-hardware comparisons, F1 screened headroom; visibly partial matrix |
-| 2 — resource attribution | F1 discovery in the remaining 12 cells; BFF-constrained M1 discovery in those cells; Fastify-constrained M1 discovery in all cells unless the reduction rule below applies. Steps 1–3 and 6 apply to every executed cell/profile. Steps 4–5 additionally apply at the four paired executive configurations in the Fastify-constrained sweep, unless explicitly reduced by the rule. | Full required discovery curves, explicit reduced cells, additional confirmed paired candidates; no confirmed capacity labels on discovery-only cells |
-| 3 — scaling and robustness | Required worker/two/four-instance comparisons and paired B1/B2/B3, B4/B5, pacing, fault/recovery and instrumentation-overhead subsets. Steps 1–3 and 6 apply to capacity comparisons; steps 4–5 also apply to selected worker/instance configurations used for supported-session costs or efficiency. Intervention/correctness runs use their declared oracle rather than ordinary-capacity soaks. | Scaling and robustness conclusions limited to the tested comparisons; completed campaign only when all required tiers and evidence gates are satisfied |
+| 1 — decision baseline | F1 discovery at the four paired executive configurations; orchestrator-constrained M1 minimum-wait and feasible replay there, including the mandatory section 16.7 pacing fallback; default-admission M1 controls there. Section 10 steps 1–3 and 6 apply everywhere in this tier, then steps 4–5 apply to each feasible M1 series with a passing point. Complete profile/pacing feasibility and topology/observer/headroom prerequisites first. | Confirmed low-lag M1 candidates where evidence passes, admission-versus-hardware comparisons, F1 screened headroom; visibly partial matrix |
+| 2 — resource attribution | F1 discovery in the remaining 12 cells; orchestrator-constrained M1 discovery in those cells; lookup-constrained M1 discovery in all cells unless the reduction rule below applies. Steps 1–3 and 6 apply to every executed cell/profile. Steps 4–5 additionally apply at the four paired executive configurations in the lookup-constrained sweep, unless explicitly reduced by the rule. | Full required discovery curves, explicit reduced cells, additional confirmed paired candidates; no confirmed capacity labels on discovery-only cells |
+| 3 — scaling and robustness | Required orchestrator worker/two/four-instance comparisons, bounded direct-versus-Next.js forwarding controls, and paired B1/B2/B3, B4/B5, pacing, fault/recovery and instrumentation-overhead subsets. Steps 1–3 and 6 apply to capacity comparisons; steps 4–5 also apply to selected worker/instance configurations used for supported-session costs or efficiency. Intervention/correctness runs use their declared oracle rather than ordinary-capacity soaks. | Scaling, web-forwarding overhead and robustness conclusions limited to the tested comparisons; completed campaign only when all required tiers and evidence gates are satisfied |
 
 Every session plateau has at least a 180-second staggered-population ramp before its 120-second steady observation; retain setup, warmup, replacement, and drain overhead. Boundary repetition in step 4 covers baseline, last passing point, boundary, and first failure where reachable; unreached failure remains a lower bound. F1 discovery uses offered lookup RPS rather than conversation sessions, with an appropriate ramp and equivalent steady-duration/cleanup policy; it does not generate a voice-session candidate or voice soak. Confirm any F1 limit used as a quantitative hardware comparison with three independent repeats and applicable sample evidence; otherwise label it screened only.
 
 Discovery-only cells publish screened brackets/lower bounds and descriptive curves. They do not receive a confirmed capacity, 75% operating point, or measured supported-session cost label unless separately promoted through full confirmation and soak. The 20 ms event-loop-delay p99 rule in section 10 gates every confirmed low-lag capacity and its 75% candidate, together with all other outcome/latency/resource thresholds; curves beyond that rule are descriptive, not a second accepted operating point.
 
-Only the **Fastify-constrained BFF-path** sweep may be reduced. First retain F1 evidence at every feasible CPU/memory cell and show, with three matched repeats at relevant boundary controls, no memory-induced threshold crossing and no more than 10% goodput or p95 change across memory at each CPU, with uncertainty reported. At every retained CPU the lowest 2-GiB cell must also demonstrate passing lookup throughput at least 10 times the largest peak retrieval RPS actually observed in the BFF-constrained M1 campaign, using matched routes/payloads, with nonbinding retrieval resource/latency evidence. Include burst/peak demand, not only average lookup RPS. If evidence is sparse, mixed, or the target changes, the rule does not apply. Then the Fastify-constrained BFF path may retain a CPU-only sweep at 2 GiB and mark the other memory cells **reduced-by-rule**, linked to controls. These cells have no measured M1 result or inferred capacity. Recheck after higher-load worker/instance runs; restore omitted cells if retrieval demand or behavior invalidates the rule. Never reduce the BFF-constrained matrix or F1 matrix under this rule.
+Only the **lookup-constrained orchestrator-path** sweep may be reduced. First retain F1 evidence at every feasible CPU/memory cell and show, with three matched repeats at relevant boundary controls, no memory-induced threshold crossing and no more than 10% goodput or p95 change across memory at each CPU, with uncertainty reported. At every retained CPU the lowest 2-GiB cell must also demonstrate passing lookup throughput at least 10 times the largest peak retrieval RPS actually observed in the orchestrator-constrained M1 campaign, using matched routes/payloads, with nonbinding retrieval resource/latency evidence. Include burst/peak demand, not only average lookup RPS. If evidence is sparse, mixed, or the target changes, the rule does not apply. Then the lookup-constrained orchestrator path may retain a CPU-only sweep at 2 GiB and mark the other memory cells **reduced-by-rule**, linked to controls. These cells have no measured M1 result or inferred capacity. Recheck after higher-load worker/instance runs; restore omitted cells if retrieval demand or behavior invalidates the rule. Never reduce the orchestrator-constrained matrix or F1 matrix under this rule.
 
 Each completed tier is independently publishable with a coverage ledger and remaining work. A stopped tier may publish descriptive observations only for completed valid cells, listing missing comparisons; it cannot claim that tier or full research complete. Tier order prioritizes decisions without making an unexecuted tier optional. Final research completion requires all required tiers and confirmation comparisons, with unavailable, invalid, censored, infeasible, and reduced-by-rule cells explicit. Manifests include coverage tier, any reduction authority, and links to its measured controls.
 
@@ -475,3 +480,19 @@ Before each discovery plateau, independently validate generator/simulator infras
 On October 15, 2026 the owner instructed addressing both remaining optional XPR observations before creating the implementation plan. R2-F001 is addressed by the mandatory Tier 1 realistic-wait pacing fallback in section 16.7 and its coverage references in sections 16.5 and 16.9. R2-F002 is addressed by the explicit forward references in sections 7 and 10. No application contract, paid budget, primary four-turn workload, or acceptance threshold is relaxed.
 
 The accepted XPR applies to predecessor artifact commit `55d8d208d0a5c465fdec820b11688e112afa6865`, SHA-256 `2ee7b08cff5b8d5cf5f655bffc08a65219b0e9d0dc6e03b86e84654788a832e5`. This owner-directed amendment is a later revision, not a newly sealed SAR/XPR acceptance. Historical reports and the final manifest remain unchanged in [the review archive](../../peer-reviews/spec/voice-bff-performance-research-design-review-d0308a82e10640138be8eed7916011be/README.md).
+
+## 18. Owner-directed portable Fastify architecture correction
+
+On October 15, 2026, before plan review completed, the owner clarified that Next.js is the UI-specific BFF and that a separate Fastify orchestrator is the reusable application backend, alongside the independent Fastify lookup service. This section and the corrected sections above supersede the old two-process/Next.js-orchestration research premise. Earlier accepted application/spec collateral and plan SAR rounds remain historical evidence for their identified bytes, not acceptance of this new target. The original filenames retain story39 and their stable links.
+
+The orchestrator owns provider configuration and credentials, STT, the model/tool loop, lookup HTTP, TTS, input/history validation, per-process admission, deadlines, cancellation settlement and usage accounting. Keep provider/runtime modules independent of Next.js. The portable HTTP contract keeps `/api/turn` (POST JSON or multipart, SSE answer), `/api/speech` (POST JSON, streamed PCM), and `/api/capabilities`; these paths are served by the Fastify orchestrator as well as delegated by the web BFF. The separate lookup remains `/v1/projects` and `/health`. Route naming alone does not imply Next.js ownership.
+
+Next.js serves React and forwards requests to the orchestrator over HTTP. It owns web Origin/Host protection, a server-held core caller credential and a bounded forwarding deadline; it preserves content/status/stream/correlation and abort/backpressure propagation. It performs no STT, model/tool, retrieval orchestration, TTS, provider retry, paid lease or usage decision. It must not buffer an entire SSE/audio stream or expose provider/core credentials to browser code. Core authentication/admission and payload limits remain enforced independently; the thin BFF cannot bypass them. Both current routes and a future non-web adapter use the same core lifecycle contract.
+
+The minimum private research contract uses a configured server/test bearer credential, checked by the core before reading a paid-capable request body or acquiring a provider lease; absent/wrong credentials return401 and do zero provider work. Browser Origin is not a substitute for core caller identity. Credentials are redacted from all evidence; transport is isolated/private, with TLS policy recorded. This is not a production telephony authentication design or public deployment authorization. Future Twilio ingress must validate its own provider signature/call identity and delegate to the core rather than traverse Next.js.
+
+Implementing/migrating this application architecture is a separately governed prerequisite, not a research harness trick or permission to edit epic2 under docs-only story39. Before research code attaches to application modules, verify an accepted integrated three-service revision, transport/auth contract and real cancellation/streaming parity; otherwise record the prerequisite unavailable and stop. Moving only metrics labels while leaving paid orchestration in Next.js cannot satisfy this research.
+
+Primary resource/process/replica curves constrain the Fastify orchestrator directly. The lookup F1 grid and lookup-constrained full-path grid retain their separate attribution/reduction rules. Next.js has only the bounded matched forwarding-overhead family; it is excluded from portable core capacity and included only in the web deployment cost. Report core, lookup and optional web costs independently. An added second Fastify server is an independent deployable process/container, not a worker inside the lookup service and not an implied durable message broker.
+
+All paid ceilings, finite mock controls, complete speech/cancellation oracles, realistic-wait pacing fallback and empirical capacity labels remain binding. No actual Twilio/WebSocket call-count or acoustic latency result follows from HTTP/SSE tests. The implementation plan and both requested review stages must use this corrected architecture and preserve superseded review lineage explicitly.
