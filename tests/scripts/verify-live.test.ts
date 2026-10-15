@@ -13,7 +13,7 @@ import {
   unlinkSync,
 } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterEach, afterAll, expect, it } from 'vitest';
+import { afterEach, afterAll, beforeEach, describe, expect, it } from 'vitest';
 import {
   verifyLive,
   acceptanceProvenance,
@@ -528,444 +528,786 @@ it('rejects altered installed code despite a retained marker and recomputed repo
   expect(verifyLive({ root: f.root, log: () => {} }).ok).toBe(false);
 });
 
-it('consumes the fixed reviewed release disposition without relabelling original L4/L6 observations', () => {
-  const messages: string[] = [];
-  const root = amendedFixture();
-  const before = readFileSync(join(root, 'docs/evidence/live-validation.json'));
-  const result = verifyLive({ root, log: (message) => messages.push(message) });
-  expect(result.errors).toEqual([]);
-  expect(messages.join('\n')).toContain(
-    'Amended release acceptance with explicit limitations',
-  );
-  expect(messages.join('\n')).not.toContain('Live evidence is complete');
-  expect(
-    readFileSync(join(root, 'docs/evidence/live-validation.json')),
-  ).toEqual(before);
-  const report = JSON.parse(before.toString());
-  expect(
-    report.cases.find((item: { id: string }) => item.id === 'L4').status,
-  ).toBe('fail');
-  expect(
-    report.cases.find((item: { id: string }) => item.id === 'L6').status,
-  ).toBe('unverified');
-});
+describe('reviewed live acceptance real history', () => {
+  it('consumes the fixed reviewed release disposition without relabelling original L4/L6 observations', () => {
+    const messages: string[] = [];
+    const root = amendedFixture();
+    const before = readFileSync(
+      join(root, 'docs/evidence/live-validation.json'),
+    );
+    const result = verifyLive({
+      root,
+      log: (message) => messages.push(message),
+    });
+    expect(result.errors).toEqual([]);
+    expect(messages.join('\n')).toContain(
+      'Amended release acceptance with explicit limitations',
+    );
+    expect(messages.join('\n')).not.toContain('Live evidence is complete');
+    expect(
+      readFileSync(join(root, 'docs/evidence/live-validation.json')),
+    ).toEqual(before);
+    const report = JSON.parse(before.toString());
+    expect(
+      report.cases.find((item: { id: string }) => item.id === 'L4').status,
+    ).toBe('fail');
+    expect(
+      report.cases.find((item: { id: string }) => item.id === 'L6').status,
+    ).toBe('unverified');
+  });
 
-// Real shared Git history and actual captured evidence; no invented accepted authority.
-let amendmentRoot: string | undefined;
-function amendedFixture() {
-  if (!amendmentRoot) {
-    amendmentRoot = mkdtempSync(join(process.cwd(), '.scratch/amended-live-'));
-    execFileSync('git', [
-      'clone',
-      '--shared',
-      '--no-checkout',
-      '--quiet',
-      process.cwd(),
-      amendmentRoot,
-    ]);
+  // Real shared Git history and actual captured evidence; no invented accepted authority.
+  let amendmentRoot: string | undefined;
+  const deliveryBaseline = 'b4d5ff903f4965429a27f409cbd2bcac843fb324';
+  const deliveryConfig = '.ai-task-manager/task-tracker.json';
+  const deliveryPostBlob = '4c117bc9ffdd4cfbbaf2d6fa4ad758c4834affa3';
+  function deliveryFixtureTree() {
+    if (!amendmentRoot) {
+      amendmentRoot = mkdtempSync(
+        join(process.cwd(), '.scratch/amended-live-'),
+      );
+      execFileSync('git', [
+        'clone',
+        '--shared',
+        '--no-checkout',
+        '--quiet',
+        process.cwd(),
+        amendmentRoot,
+      ]);
+    }
+    const root = amendmentRoot;
+    for (const path of [
+      'docs/implementation',
+      'docs/superpowers/specs',
+      'docs/superpowers/plans',
+      'docs/evidence',
+      '.ai-task-manager',
+    ])
+      rmSync(join(root, path), { recursive: true, force: true });
+    git(root, 'reset', '--hard', '164e233a90e37dd9ea9c9356c6a5f5c6221b0edd');
+    git(root, 'clean', '-fd');
+    for (const path of [
+      'scripts/verify-live.mjs',
+      'scripts/format-check.mjs',
+      'scripts/lint-markdown.mjs',
+      'tests/scripts/verify-live.test.ts',
+      'tests/scripts/format-check.test.ts',
+      'tests/scripts/quality-scans.test.ts',
+      'docs/evidence/11-live-acceptance-disposition.json',
+      'docs/implementation/11-system-acceptance.md',
+      'docs/live-validation.md',
+      'README.md',
+    ])
+      put(root, path, readFileSync(path));
+    const finalReview = 'docs/evidence/11-astra-amended-pr-review.txt';
+    if (existsSync(finalReview))
+      put(root, finalReview, readFileSync(finalReview));
+    const packages = JSON.parse(
+      readFileSync('docs/evidence/live-validation.json', 'utf8'),
+    ).packages;
+    for (const [key, version] of Object.entries(packages)) {
+      const [context, name] = key.split(':');
+      json(
+        root,
+        (context === '.' ? '' : context + '/') +
+          'node_modules/' +
+          name +
+          '/package.json',
+        { name, version, main: 'index.js' },
+      );
+    }
+    json(root, 'node_modules/@ricky0123/vad-web/package.json', {
+      name: '@ricky0123/vad-web',
+      version: '0.0.31',
+      main: 'dist/index.js',
+    });
+    for (const suffix of ['js', 'd.ts']) {
+      const path =
+        'node_modules/@ricky0123/vad-web/dist/real-time-vad.' + suffix;
+      put(root, path, readFileSync(path));
+    }
+    const config = JSON.parse(
+      git(root, 'show', deliveryBaseline + ':' + deliveryConfig),
+    );
+    config.fullAutoMerge = {
+      mechanism: 'provider-action',
+      mergeMethod: 'merge',
+    };
+    put(root, deliveryConfig, JSON.stringify(config, null, 2) + '\n');
+    expect(git(root, 'hash-object', deliveryConfig)).toBe(deliveryPostBlob);
+    commit(root, 'Fixture exact reviewed delivery configuration');
+    expect(git(root, 'rev-parse', 'HEAD:' + deliveryConfig)).toBe(
+      deliveryPostBlob,
+    );
+    return root;
   }
-  const root = amendmentRoot;
-  rmSync(join(root, 'docs/implementation'), { recursive: true, force: true });
-  git(root, 'reset', '--hard', 'c529123d95e782acd962aa8276cd635616d59db9');
-  git(root, 'clean', '-fd');
+  let preparedRoot: string | undefined;
+  beforeEach(() => {
+    preparedRoot = undefined;
+    const root = deliveryFixtureTree();
+    let baseline!: ReturnType<typeof acceptanceProvenance>;
+    expect(() => {
+      baseline = acceptanceProvenance(root);
+    }).not.toThrow();
+    expect(baseline.deliveryConfiguration.after.blob).toBe(deliveryPostBlob);
+    json(root, 'docs/evidence/11-live-acceptance-disposition.json', baseline);
+    expect(amendErrors(root)).toBe('');
+    preparedRoot = root;
+  });
+  function amendedFixture() {
+    if (!preparedRoot)
+      throw Error('Real-history good baseline was not verified');
+    return preparedRoot;
+  }
+  it('accepts the genuine good delivery candidate before any targeted mutation', () => {
+    const root = amendedFixture();
+    expect(() => acceptanceProvenance(root)).not.toThrow();
+  }, 15000);
+  afterAll(() => {
+    if (amendmentRoot) rmSync(amendmentRoot, { recursive: true, force: true });
+  });
+  function amendErrors(root: string) {
+    return verifyLive({ root, log: () => {} }).errors.join('\n');
+  }
+  it('keeps the qualified profile and original observed failures separate in a fresh checkout without .next', () => {
+    const root = amendedFixture();
+    expect(amendErrors(root)).toBe('');
+  });
+  type AmendmentRecord = {
+    policy: string;
+    authority: { reviewStorageCommit: string };
+    currentSourceDigest: string;
+    changedFiles: unknown[];
+    runtimeProfile: { speechCharsPerSecond: number };
+    observations: { L4: string; pauseObserved: boolean };
+  };
+  for (const [name, mutate] of [
+    [
+      'arbitrary policy',
+      (d: AmendmentRecord) => {
+        d.policy = 'self-accepted';
+      },
+    ],
+    [
+      'self-asserted authority',
+      (d: AmendmentRecord) => {
+        d.authority.reviewStorageCommit = '0'.repeat(40);
+      },
+    ],
+    [
+      'forged current source digest',
+      (d: AmendmentRecord) => {
+        d.currentSourceDigest = 'a'.repeat(64);
+      },
+    ],
+    [
+      'caller path exception',
+      (d: AmendmentRecord) => {
+        d.changedFiles.push({ path: 'apps/web/server/config.ts', after: {} });
+      },
+    ],
+    [
+      'different runtime profile',
+      (d: AmendmentRecord) => {
+        d.runtimeProfile.speechCharsPerSecond = 14;
+      },
+    ],
+    [
+      'fabricated observed pass',
+      (d: AmendmentRecord) => {
+        d.observations.L4 = 'pass';
+      },
+    ],
+    [
+      'fabricated pause',
+      (d: AmendmentRecord) => {
+        d.observations.pauseObserved = true;
+      },
+    ],
+  ] as const)
+    it('rejects disposition ' + name, () => {
+      const root = amendedFixture();
+      const path = 'docs/evidence/11-live-acceptance-disposition.json';
+      const d = JSON.parse(readFileSync(join(root, path), 'utf8'));
+      mutate(d);
+      json(root, path, d);
+      expect(amendErrors(root)).toContain('Amended acceptance invalid');
+    });
   for (const path of [
-    'scripts/verify-live.mjs',
-    'scripts/format-check.mjs',
-    'scripts/lint-markdown.mjs',
-    'tests/scripts/verify-live.test.ts',
-    'tests/scripts/format-check.test.ts',
-    'tests/scripts/quality-scans.test.ts',
-    'docs/evidence/11-live-acceptance-disposition.json',
-    'docs/implementation/11-system-acceptance.md',
-    'docs/live-validation.md',
-    'README.md',
+    'apps/web/server/providers/claude.ts',
+    'apps/web/server/turns/run-turn.ts',
+    'apps/web/shared/contracts.ts',
+    'apps/web/server/config.ts',
+    'package-lock.json',
+    patch,
+    'docs/evidence/11-native-search-ordered-385d11b.json',
+    'docs/evidence/11-live-physical-2687b54.json',
+    'docs/superpowers/specs/2026-10-15-11-live-acceptance-amendment-design.md',
+    'docs/superpowers/specs/2026-10-15-11-sealed-review-formatting-addendum.md',
+    'docs/evidence/11-astra-full-pr-review-f2baab7.txt',
+    'docs/superpowers/specs/2026-10-15-11-sealed-review-lint-addendum.md',
+    'docs/evidence/11-astra-sealed-lint-assessment.txt',
   ])
-    put(root, path, readFileSync(path));
-  const finalReview = 'docs/evidence/11-astra-amended-pr-review.txt';
-  if (existsSync(finalReview))
-    put(root, finalReview, readFileSync(finalReview));
-  const packages = JSON.parse(
-    readFileSync('docs/evidence/live-validation.json', 'utf8'),
-  ).packages;
-  for (const [key, version] of Object.entries(packages)) {
-    const [context, name] = key.split(':');
+    it('rejects changed immutable component or collateral ' + path, () => {
+      const root = amendedFixture();
+      put(root, path, readFileSync(join(root, path), 'utf8') + '\nChanged\n');
+      expect(amendErrors(root)).toContain('Amended acceptance invalid');
+    });
+  it('does not accept an untracked application file or a deleted original runtime path', () => {
+    const root = amendedFixture();
+    put(root, 'apps/web/new.ts', 'export const hidden = 1;');
+    expect(amendErrors(root)).toContain('Amended acceptance invalid');
+    unlinkSync(join(root, 'apps/web/new.ts'));
+    unlinkSync(join(root, 'apps/web/server/config.ts'));
+    expect(amendErrors(root)).toContain('Amended acceptance invalid');
+  }, 15000);
+  it('still rejects changed installed code after the exact accepted source disposition', () => {
+    const root = amendedFixture();
+    put(
+      root,
+      modulePath,
+      readFileSync(join(root, modulePath), 'utf8') + '\n// changed',
+    );
+    expect(amendErrors(root)).toMatch(/module|postimage/);
+  });
+  for (const [name, mutate] of [
+    [
+      'cases',
+      (r: ReturnType<typeof fixture>['report']) => {
+        r.cases[0].status = 'fail';
+      },
+    ],
+    [
+      'timings',
+      (r: ReturnType<typeof fixture>['report']) => {
+        r.timings = [];
+      },
+    ],
+    [
+      'provider',
+      (r: ReturnType<typeof fixture>['report']) => {
+        r.providers.claudeModel = 'different';
+      },
+    ],
+    [
+      'usage',
+      (r: ReturnType<typeof fixture>['report']) => {
+        r.usage = [{ inputTokens: 20, outputTokens: 30, searchUses: 99 }];
+      },
+    ],
+  ] as const)
+    it('refuses original observation change to ' + name, () => {
+      const root = amendedFixture();
+      const path = 'docs/evidence/live-validation.json';
+      const report = JSON.parse(readFileSync(join(root, path), 'utf8'));
+      mutate(report);
+      json(root, path, report);
+      expect(amendErrors(root)).toContain('Accepted immutable anchor differs');
+    });
+  it('fails missing disposition under original strict acceptance rather than treating absence as approval', () => {
+    const root = amendedFixture();
+    unlinkSync(join(root, 'docs/evidence/11-live-acceptance-disposition.json'));
+    expect(amendErrors(root)).toContain(
+      'Incomplete required live case L4: fail',
+    );
+    expect(amendErrors(root)).toContain(
+      'Incomplete required live case L6: unverified',
+    );
+  });
+
+  it('does not apply the fixed disposition to a caller-selected report even in an allowed documentation path', () => {
+    const root = amendedFixture();
+    put(
+      root,
+      'README.md',
+      readFileSync(join(root, 'docs/evidence/live-validation.json')),
+    );
     json(
       root,
-      (context === '.' ? '' : context + '/') +
-        'node_modules/' +
-        name +
-        '/package.json',
-      { name, version, main: 'index.js' },
+      'docs/evidence/11-live-acceptance-disposition.json',
+      acceptanceProvenance(root),
     );
-  }
-  json(root, 'node_modules/@ricky0123/vad-web/package.json', {
-    name: '@ricky0123/vad-web',
-    version: '0.0.31',
-    main: 'dist/index.js',
-  });
-  for (const suffix of ['js', 'd.ts']) {
-    const path = 'node_modules/@ricky0123/vad-web/dist/real-time-vad.' + suffix;
-    put(root, path, readFileSync(path));
-  }
-  return root;
-}
-afterAll(() => {
-  if (amendmentRoot) rmSync(amendmentRoot, { recursive: true, force: true });
-});
-function amendErrors(root: string) {
-  return verifyLive({ root, log: () => {} }).errors.join('\n');
-}
-it('keeps the qualified profile and original observed failures separate in a fresh checkout without .next', () => {
-  const root = amendedFixture();
-  expect(amendErrors(root)).toBe('');
-});
-type AmendmentRecord = {
-  policy: string;
-  authority: { reviewStorageCommit: string };
-  currentSourceDigest: string;
-  changedFiles: unknown[];
-  runtimeProfile: { speechCharsPerSecond: number };
-  observations: { L4: string; pauseObserved: boolean };
-};
-for (const [name, mutate] of [
-  [
-    'arbitrary policy',
-    (d: AmendmentRecord) => {
-      d.policy = 'self-accepted';
-    },
-  ],
-  [
-    'self-asserted authority',
-    (d: AmendmentRecord) => {
-      d.authority.reviewStorageCommit = '0'.repeat(40);
-    },
-  ],
-  [
-    'forged current source digest',
-    (d: AmendmentRecord) => {
-      d.currentSourceDigest = 'a'.repeat(64);
-    },
-  ],
-  [
-    'caller path exception',
-    (d: AmendmentRecord) => {
-      d.changedFiles.push({ path: 'apps/web/server/config.ts', after: {} });
-    },
-  ],
-  [
-    'different runtime profile',
-    (d: AmendmentRecord) => {
-      d.runtimeProfile.speechCharsPerSecond = 14;
-    },
-  ],
-  [
-    'fabricated observed pass',
-    (d: AmendmentRecord) => {
-      d.observations.L4 = 'pass';
-    },
-  ],
-  [
-    'fabricated pause',
-    (d: AmendmentRecord) => {
-      d.observations.pauseObserved = true;
-    },
-  ],
-] as const)
-  it('rejects disposition ' + name, () => {
+    expect(
+      verifyLive({ root, reportPath: 'README.md', log: () => {} }).errors.join(
+        '\n',
+      ),
+    ).toContain('requires the fixed observed report path');
+  }, 15000);
+
+  it('rejects a committed protected change even after the working file is restored', () => {
     const root = amendedFixture();
-    const path = 'docs/evidence/11-live-acceptance-disposition.json';
-    const d = JSON.parse(readFileSync(join(root, path), 'utf8'));
-    mutate(d);
-    json(root, path, d);
-    expect(amendErrors(root)).toContain('Amended acceptance invalid');
-  });
-for (const path of [
-  'apps/web/server/providers/claude.ts',
-  'apps/web/server/turns/run-turn.ts',
-  'apps/web/shared/contracts.ts',
-  'apps/web/server/config.ts',
-  'package-lock.json',
-  patch,
-  'docs/evidence/11-native-search-ordered-385d11b.json',
-  'docs/evidence/11-live-physical-2687b54.json',
-  'docs/superpowers/specs/2026-10-15-11-live-acceptance-amendment-design.md',
-  'docs/superpowers/specs/2026-10-15-11-sealed-review-formatting-addendum.md',
-  'docs/evidence/11-astra-full-pr-review-f2baab7.txt',
-  'docs/superpowers/specs/2026-10-15-11-sealed-review-lint-addendum.md',
-  'docs/evidence/11-astra-sealed-lint-assessment.txt',
-])
-  it('rejects changed immutable component or collateral ' + path, () => {
+    const path = 'apps/web/server/config.ts';
+    const original = readFileSync(join(root, path));
+    put(
+      root,
+      path,
+      Buffer.concat([original, Buffer.from('\n// committed product change\n')]),
+    );
+    commit(root, 'Protected candidate change');
+    put(root, path, original);
+    expect(() => acceptanceProvenance(root)).toThrow(/candidate HEAD/i);
+  }, 15000);
+  it('rejects a committed runtime addition removed from both index and working tree', () => {
     const root = amendedFixture();
-    put(root, path, readFileSync(join(root, path), 'utf8') + '\nChanged\n');
-    expect(amendErrors(root)).toContain('Amended acceptance invalid');
-  });
-it('does not accept an untracked application file or a deleted original runtime path', () => {
-  const root = amendedFixture();
-  put(root, 'apps/web/new.ts', 'export const hidden = 1;');
-  expect(amendErrors(root)).toContain('Amended acceptance invalid');
-  unlinkSync(join(root, 'apps/web/new.ts'));
-  unlinkSync(join(root, 'apps/web/server/config.ts'));
-  expect(amendErrors(root)).toContain('Amended acceptance invalid');
-}, 15000);
-it('still rejects changed installed code after the exact accepted source disposition', () => {
-  const root = amendedFixture();
-  put(
-    root,
-    modulePath,
-    readFileSync(join(root, modulePath), 'utf8') + '\n// changed',
-  );
-  expect(amendErrors(root)).toMatch(/module|postimage/);
-});
-it('refuses original observation changes to cases, timings, citations or credentials rather than masking their failures', () => {
-  for (const mutate of [
-    (r: ReturnType<typeof fixture>['report']) => {
-      r.cases[0].status = 'fail';
-    },
-    (r: ReturnType<typeof fixture>['report']) => {
-      r.timings = [];
-    },
-    (r: ReturnType<typeof fixture>['report']) => {
-      r.providers.claudeModel = 'different';
-    },
-    (r: ReturnType<typeof fixture>['report']) => {
-      r.usage = [{ inputTokens: 20, outputTokens: 30, searchUses: 99 }];
-    },
-  ]) {
+    const path = 'apps/web/server/hidden-runtime.ts';
+    put(root, path, 'export const hidden=true;\n');
+    commit(root, 'Hidden committed runtime');
+    git(root, 'rm', '--cached', path);
+    unlinkSync(join(root, path));
+    expect(() => acceptanceProvenance(root)).toThrow(/candidate HEAD/i);
+  }, 15000);
+
+  it('accepts the actual target merge context in an isolated candidate', () => {
     const root = amendedFixture();
-    const path = 'docs/evidence/live-validation.json';
-    const r = JSON.parse(readFileSync(join(root, path), 'utf8'));
-    mutate(r);
-    json(root, path, r);
-    expect(amendErrors(root)).toContain('Accepted immutable anchor differs');
-  }
-}, 20000);
-it('fails missing disposition under original strict acceptance rather than treating absence as approval', () => {
-  const root = amendedFixture();
-  unlinkSync(join(root, 'docs/evidence/11-live-acceptance-disposition.json'));
-  expect(amendErrors(root)).toContain('Incomplete required live case L4: fail');
-  expect(amendErrors(root)).toContain(
-    'Incomplete required live case L6: unverified',
-  );
-});
-
-it('does not apply the fixed disposition to a caller-selected report even in an allowed documentation path', () => {
-  const root = amendedFixture();
-  put(
-    root,
-    'README.md',
-    readFileSync(join(root, 'docs/evidence/live-validation.json')),
-  );
-  json(
-    root,
-    'docs/evidence/11-live-acceptance-disposition.json',
-    acceptanceProvenance(root),
-  );
-  expect(
-    verifyLive({ root, reportPath: 'README.md', log: () => {} }).errors.join(
-      '\n',
-    ),
-  ).toContain('requires the fixed observed report path');
-}, 15000);
-
-it('rejects a committed protected change even after the working file is restored', () => {
-  const root = amendedFixture();
-  const path = 'apps/web/server/config.ts';
-  const original = readFileSync(join(root, path));
-  put(
-    root,
-    path,
-    Buffer.concat([original, Buffer.from('\n// committed product change\n')]),
-  );
-  commit(root, 'Protected candidate change');
-  put(root, path, original);
-  expect(() => acceptanceProvenance(root)).toThrow(/candidate HEAD/i);
-}, 15000);
-it('rejects a committed runtime addition removed from both index and working tree', () => {
-  const root = amendedFixture();
-  const path = 'apps/web/server/hidden-runtime.ts';
-  put(root, path, 'export const hidden=true;\n');
-  commit(root, 'Hidden committed runtime');
-  git(root, 'rm', '--cached', path);
-  unlinkSync(join(root, path));
-  expect(() => acceptanceProvenance(root)).toThrow(/candidate HEAD/i);
-}, 15000);
-
-it('accepts the actual target merge context in an isolated candidate', () => {
-  const root = amendedFixture();
-  const target = 'fe2a158c8f717aed43d604c3d7614dc18a3452e1';
-  const mergedTree = git(
-    root,
-    'merge-tree',
-    '--write-tree',
-    'HEAD',
-    target,
-  ).split('\n')[0];
-  const mergedHead = git(
-    root,
-    '-c',
-    'user.name=Evidence fixture',
-    '-c',
-    'user.email=fixture@example.test',
-    'commit-tree',
-    mergedTree,
-    '-p',
-    'HEAD',
-    '-p',
-    target,
-    '-m',
-    'Actual target merge fixture',
-  );
-  git(root, 'update-ref', 'HEAD', mergedHead);
-  git(
-    root,
-    'checkout',
-    mergedHead,
-    '--',
-    'docs/implementation/2-live-validation-handoff.md',
-  );
-  expect(() => acceptanceProvenance(root)).not.toThrow();
-}, 15000);
-
-const handoff = 'docs/implementation/2-live-validation-handoff.md';
-for (const kind of [
-  'missing',
-  'changed',
-  'mode',
-  'file alias',
-  'parent alias',
-] as const)
-  it(
-    'rejects ' + kind + ' immutable target handoff',
-    () => {
-      const root = amendedFixture();
-      const path = join(root, handoff);
-      if (kind === 'missing') unlinkSync(path);
-      if (kind === 'changed')
-        put(root, handoff, readFileSync(path, 'utf8') + '\nChanged\n');
-      if (kind === 'mode') chmodSync(path, 0o755);
-      if (kind === 'file alias') {
-        renameSync(path, path + '.original');
-        symlinkSync(path + '.original', path);
-      }
-      if (kind === 'parent alias') {
-        const dir = join(root, 'docs/implementation');
-        renameSync(dir, dir + '-original');
-        symlinkSync(dir + '-original', dir);
-      }
-      expect(() => acceptanceProvenance(root)).toThrow();
-    },
-    15000,
-  );
-it('pins target collateral in candidate HEAD even when working bytes are restored', () => {
-  const root = amendedFixture();
-  const original = readFileSync(join(root, handoff));
-  put(root, handoff, Buffer.concat([original, Buffer.from('\nChanged\n')]));
-  commit(root, 'Committed altered handoff');
-  put(root, handoff, original);
-  expect(() => acceptanceProvenance(root)).toThrow(/candidate HEAD/i);
-}, 15000);
-it('requires archival ancestry but not target ancestry for the unmerged child', () => {
-  const root = amendedFixture();
-  expect(() =>
+    const target = 'fe2a158c8f717aed43d604c3d7614dc18a3452e1';
+    const mergedTree = git(
+      root,
+      'merge-tree',
+      '--write-tree',
+      'HEAD',
+      target,
+    ).split('\n')[0];
+    const mergedHead = git(
+      root,
+      '-c',
+      'user.name=Evidence fixture',
+      '-c',
+      'user.email=fixture@example.test',
+      'commit-tree',
+      mergedTree,
+      '-p',
+      'HEAD',
+      '-p',
+      target,
+      '-m',
+      'Actual target merge fixture',
+    );
+    git(root, 'update-ref', 'HEAD', mergedHead);
     git(
       root,
-      'merge-base',
-      '--is-ancestor',
-      'fe2a158c8f717aed43d604c3d7614dc18a3452e1',
+      'checkout',
+      mergedHead,
+      '--',
+      'docs/implementation/2-live-validation-handoff.md',
+    );
+    expect(() => acceptanceProvenance(root)).not.toThrow();
+  }, 15000);
+
+  const handoff = 'docs/implementation/2-live-validation-handoff.md';
+  for (const kind of [
+    'missing',
+    'changed',
+    'mode',
+    'file alias',
+    'parent alias',
+  ] as const)
+    it(
+      'rejects ' + kind + ' immutable target handoff',
+      () => {
+        const root = amendedFixture();
+        const path = join(root, handoff);
+        if (kind === 'missing') unlinkSync(path);
+        if (kind === 'changed')
+          put(root, handoff, readFileSync(path, 'utf8') + '\nChanged\n');
+        if (kind === 'mode') chmodSync(path, 0o755);
+        if (kind === 'file alias') {
+          renameSync(path, path + '.original');
+          symlinkSync(path + '.original', path);
+        }
+        if (kind === 'parent alias') {
+          const dir = join(root, 'docs/implementation');
+          renameSync(dir, dir + '-original');
+          symlinkSync(dir + '-original', dir);
+        }
+        expect(() => acceptanceProvenance(root)).toThrow();
+      },
+      15000,
+    );
+  it('pins target collateral in candidate HEAD even when working bytes are restored', () => {
+    const root = amendedFixture();
+    const original = readFileSync(join(root, handoff));
+    put(root, handoff, Buffer.concat([original, Buffer.from('\nChanged\n')]));
+    commit(root, 'Committed altered handoff');
+    put(root, handoff, original);
+    expect(() => acceptanceProvenance(root)).toThrow(/candidate HEAD/i);
+  }, 15000);
+  it('requires the reviewed archives in actual candidate ancestry', () => {
+    const root = amendedFixture();
+    // The genuine issue54 archive already includes the earlier target merge.
+    expect(() => acceptanceProvenance(root)).not.toThrow();
+    git(root, 'update-ref', 'HEAD', '63fdb6911a87d2978551e0a86c7387a53cfc0461');
+    expect(() => acceptanceProvenance(root)).toThrow(/c529123/);
+  }, 15000);
+  it('refuses a different trusted-target storage blob despite correct working and archive bytes', () => {
+    const root = amendedFixture();
+    const target = 'fe2a158c8f717aed43d604c3d7614dc18a3452e1';
+    git(
+      root,
+      'update-ref',
+      'refs/replace/' + target,
+      '63fdb6911a87d2978551e0a86c7387a53cfc0461',
+    );
+    try {
+      expect(() => acceptanceProvenance(root)).toThrow(
+        /Target handoff storage/,
+      );
+    } finally {
+      git(root, 'replace', '-d', target);
+    }
+  }, 15000);
+  it('rejects an unrelated addition in an actual target merge tree even if absent from working files', () => {
+    const root = amendedFixture();
+    const target = 'fe2a158c8f717aed43d604c3d7614dc18a3452e1';
+    const mergedTree = git(
+      root,
+      'merge-tree',
+      '--write-tree',
       'HEAD',
-    ),
-  ).toThrow();
-  expect(() => acceptanceProvenance(root)).not.toThrow();
-  git(root, 'update-ref', 'HEAD', '63fdb6911a87d2978551e0a86c7387a53cfc0461');
-  expect(() => acceptanceProvenance(root)).toThrow(/c529123/);
-}, 15000);
-it('refuses a different trusted-target storage blob despite correct working and archive bytes', () => {
-  const root = amendedFixture();
-  const target = 'fe2a158c8f717aed43d604c3d7614dc18a3452e1';
-  git(
-    root,
-    'update-ref',
-    'refs/replace/' + target,
-    '63fdb6911a87d2978551e0a86c7387a53cfc0461',
-  );
-  try {
-    expect(() => acceptanceProvenance(root)).toThrow(/Target handoff storage/);
-  } finally {
-    git(root, 'replace', '-d', target);
+      target,
+    ).split('\n')[0];
+    const blob = execFileSync('git', ['hash-object', '-w', '--stdin'], {
+      cwd: root,
+      input: '# Unrelated target fixture\n',
+      encoding: 'utf8',
+    }).trim();
+    const badTree = execFileSync('git', ['mktree'], {
+      cwd: root,
+      input:
+        git(root, 'ls-tree', mergedTree) +
+        '\n100644 blob ' +
+        blob +
+        '\tunrelated-target.md\n',
+      encoding: 'utf8',
+    }).trim();
+    const head = git(
+      root,
+      '-c',
+      'user.name=Evidence fixture',
+      '-c',
+      'user.email=fixture@example.test',
+      'commit-tree',
+      badTree,
+      '-p',
+      'HEAD',
+      '-p',
+      target,
+      '-m',
+      'Unrelated target addition fixture',
+    );
+    git(root, 'update-ref', 'HEAD', head);
+    expect(() => acceptanceProvenance(root)).toThrow(
+      /candidate HEAD.*unrelated-target/,
+    );
+  }, 15000);
+  it('rejects removing the historical final archive required by the adopted delivery history', () => {
+    const root = amendedFixture();
+    const path = 'docs/evidence/11-astra-amended-pr-review.txt';
+    expect(existsSync(join(root, path))).toBe(true);
+    unlinkSync(join(root, path));
+    expect(() => acceptanceProvenance(root)).toThrow(path);
+  }, 15000);
+  it('retains authentic native bytes for post-archive fixture provenance', () => {
+    const root = amendedFixture();
+    const path = 'docs/evidence/11-astra-amended-pr-review.txt';
+    // If final review is not archived yet, use genuine existing assessment bytes
+    // ONLY as copied test-fixture content, never a production final-review placeholder.
+    const native = readFileSync(
+      existsSync(path)
+        ? path
+        : 'docs/evidence/11-astra-target-collateral-assessment.txt',
+    );
+    put(root, path, native);
+    json(
+      root,
+      'docs/evidence/11-live-acceptance-disposition.json',
+      acceptanceProvenance(root),
+    );
+    expect(amendErrors(root)).toBe('');
+    expect(readFileSync(join(root, path))).toEqual(native);
+  }, 15000);
+
+  const deliveryAnchors = [
+    'docs/superpowers/specs/2026-10-15-54-trunk-delivery-config-design.md',
+    'docs/superpowers/plans/2026-10-15-54-trunk-delivery-config.md',
+    'docs/evidence/54-astra-trunk-delivery-config-assessment.txt',
+  ];
+  it('records exact config provenance without rebinding physical observations', () => {
+    const root = amendedFixture();
+    const d = acceptanceProvenance(root);
+    expect(d.deliveryConfiguration).toMatchObject({
+      baselineCommit: deliveryBaseline,
+      storageCommit: '164e233a90e37dd9ea9c9356c6a5f5c6221b0edd',
+      path: deliveryConfig,
+      before: {
+        mode: '100644',
+        blob: 'c8263ac7233be6e8462805d0a1386f5919dd0ee6',
+        bytes: 2002,
+        sha256:
+          '269c2744e6ab4c59b131aeee53188197501e95f99e652d97c81a60f8337880b3',
+      },
+      after: {
+        mode: '100644',
+        blob: deliveryPostBlob,
+        bytes: 2091,
+        sha256:
+          '23500227004639e8708857bf2017b6eaeba8c0e0c427e339b8865f547b37885f',
+      },
+    });
+    expect(d.originalPhysical.gitHead).toBe(
+      '2687b5434377f423363be7d279dbcaf12279aa8f',
+    );
+    expect(d.observations).toMatchObject({
+      L4: 'fail',
+      L6: 'unverified',
+      pauseObserved: false,
+    });
+    expect(d.deliveryConfiguration.anchors.map((row) => row.path)).toEqual(
+      deliveryAnchors,
+    );
+  }, 15000);
+  for (const [name, mutate] of [
+    [
+      'missing',
+      (c: Record<string, unknown>) => {
+        delete c.fullAutoMerge;
+      },
+    ],
+    [
+      'null',
+      (c: Record<string, unknown>) => {
+        c.fullAutoMerge = null;
+      },
+    ],
+    [
+      'squash',
+      (c: Record<string, unknown>) => {
+        c.fullAutoMerge = {
+          mechanism: 'provider-action',
+          mergeMethod: 'squash',
+        };
+      },
+    ],
+    [
+      'rebase',
+      (c: Record<string, unknown>) => {
+        c.fullAutoMerge = {
+          mechanism: 'provider-action',
+          mergeMethod: 'rebase',
+        };
+      },
+    ],
+    [
+      'unknown method',
+      (c: Record<string, unknown>) => {
+        c.fullAutoMerge = {
+          mechanism: 'provider-action',
+          mergeMethod: 'unknown',
+        };
+      },
+    ],
+    [
+      'wrong mechanism',
+      (c: Record<string, unknown>) => {
+        c.fullAutoMerge = { mechanism: 'shell', mergeMethod: 'merge' };
+      },
+    ],
+    [
+      'extra property',
+      (c: Record<string, unknown>) => {
+        c.fullAutoMerge = {
+          mechanism: 'provider-action',
+          mergeMethod: 'merge',
+          extra: true,
+        };
+      },
+    ],
+    [
+      'another field',
+      (c: Record<string, unknown>) => {
+        c.repo = 'other/repository';
+      },
+    ],
+  ] as const)
+    it(
+      'rejects working delivery config ' + name,
+      () => {
+        const root = amendedFixture();
+        const c = JSON.parse(readFileSync(join(root, deliveryConfig), 'utf8'));
+        mutate(c);
+        put(root, deliveryConfig, JSON.stringify(c, null, 2) + '\n');
+        expect(() => acceptanceProvenance(root)).toThrow(
+          /Delivery configuration.*task-tracker[.]json/,
+        );
+      },
+      15000,
+    );
+  it('rejects config reserialization despite identical parsed values', () => {
+    const root = amendedFixture();
+    put(
+      root,
+      deliveryConfig,
+      JSON.stringify(
+        JSON.parse(readFileSync(join(root, deliveryConfig), 'utf8')),
+      ),
+    );
+    expect(() => acceptanceProvenance(root)).toThrow(
+      /Delivery configuration.*task-tracker[.]json/,
+    );
+  }, 15000);
+  it('rejects hidden committed config even when working bytes are restored', () => {
+    const root = amendedFixture();
+    const good = readFileSync(join(root, deliveryConfig));
+    const c = JSON.parse(good.toString());
+    expect(c.fullAutoMerge).toEqual({
+      mechanism: 'provider-action',
+      mergeMethod: 'merge',
+    });
+    c.fullAutoMerge.mergeMethod = 'squash';
+    put(root, deliveryConfig, JSON.stringify(c, null, 2) + '\n');
+    commit(root, 'Bad committed delivery config');
+    put(root, deliveryConfig, good);
+    expect(() => acceptanceProvenance(root)).toThrow(
+      /candidate HEAD.*task-tracker[.]json/,
+    );
+  }, 15000);
+  for (const path of [deliveryConfig, ...deliveryAnchors]) {
+    for (const kind of ['missing', 'changed', 'mode', 'alias'] as const)
+      it(
+        'rejects delivery ' + kind + ' ' + path,
+        () => {
+          const root = amendedFixture();
+          const file = join(root, path);
+          if (kind === 'missing') unlinkSync(file);
+          if (kind === 'changed')
+            put(root, path, readFileSync(file, 'utf8') + '\nChanged\n');
+          if (kind === 'mode') chmodSync(file, 0o755);
+          if (kind === 'alias') {
+            renameSync(file, file + '.original');
+            symlinkSync(file + '.original', file);
+          }
+          expect(() => acceptanceProvenance(root)).toThrow(path);
+        },
+        15000,
+      );
+    for (const kind of ['mode', 'bytes'] as const)
+      it(
+        'pins committed delivery ' + kind + ' for ' + path,
+        () => {
+          const root = amendedFixture();
+          const bytes = readFileSync(join(root, path));
+          if (kind === 'mode') chmodSync(join(root, path), 0o755);
+          if (kind === 'bytes')
+            put(root, path, bytes.toString() + '\nChanged\n');
+          commit(root, 'Hidden committed delivery collateral');
+          put(root, path, bytes);
+          chmodSync(join(root, path), 0o644);
+          expect(() => acceptanceProvenance(root)).toThrow(/candidate HEAD/);
+        },
+        15000,
+      );
   }
-}, 15000);
-it('rejects an unrelated addition in an actual target merge tree even if absent from working files', () => {
-  const root = amendedFixture();
-  const target = 'fe2a158c8f717aed43d604c3d7614dc18a3452e1';
-  const mergedTree = git(
-    root,
-    'merge-tree',
-    '--write-tree',
-    'HEAD',
-    target,
-  ).split('\n')[0];
-  const blob = execFileSync('git', ['hash-object', '-w', '--stdin'], {
-    cwd: root,
-    input: '# Unrelated target fixture\n',
-    encoding: 'utf8',
-  }).trim();
-  const badTree = execFileSync('git', ['mktree'], {
-    cwd: root,
-    input:
-      git(root, 'ls-tree', mergedTree) +
-      '\n100644 blob ' +
-      blob +
-      '\tunrelated-target.md\n',
-    encoding: 'utf8',
-  }).trim();
-  const head = git(
-    root,
-    '-c',
-    'user.name=Evidence fixture',
-    '-c',
-    'user.email=fixture@example.test',
-    'commit-tree',
-    badTree,
-    '-p',
-    'HEAD',
-    '-p',
-    target,
-    '-m',
-    'Unrelated target addition fixture',
-  );
-  git(root, 'update-ref', 'HEAD', head);
-  expect(() => acceptanceProvenance(root)).toThrow(
-    /candidate HEAD.*unrelated-target/,
-  );
-}, 15000);
-it('validates genuine pre-archive provenance without manufacturing a final-review file', () => {
-  const root = amendedFixture();
-  const path = 'docs/evidence/11-astra-amended-pr-review.txt';
-  if (existsSync(join(root, path))) unlinkSync(join(root, path));
-  json(
-    root,
-    'docs/evidence/11-live-acceptance-disposition.json',
-    acceptanceProvenance(root),
-  );
-  expect(amendErrors(root)).toBe('');
-  expect(existsSync(join(root, path))).toBe(false);
-}, 15000);
-it('retains authentic native bytes for post-archive fixture provenance', () => {
-  const root = amendedFixture();
-  const path = 'docs/evidence/11-astra-amended-pr-review.txt';
-  // If final review is not archived yet, use genuine existing assessment bytes
-  // ONLY as copied test-fixture content, never a production final-review placeholder.
-  const native = readFileSync(
-    existsSync(path)
-      ? path
-      : 'docs/evidence/11-astra-target-collateral-assessment.txt',
-  );
-  put(root, path, native);
-  json(
-    root,
-    'docs/evidence/11-live-acceptance-disposition.json',
-    acceptanceProvenance(root),
-  );
-  expect(amendErrors(root)).toBe('');
-  expect(readFileSync(join(root, path))).toEqual(native);
-}, 15000);
+  for (const directory of [
+    '.ai-task-manager',
+    'docs/superpowers/specs',
+    'docs/superpowers/plans',
+    'docs/evidence',
+  ])
+    it(
+      'rejects aliased delivery parent ' + directory,
+      () => {
+        const root = amendedFixture();
+        const path = join(root, directory);
+        renameSync(path, path + '.original');
+        symlinkSync(path + '.original', path);
+        expect(() => acceptanceProvenance(root)).toThrow(/regular paths/);
+      },
+      15000,
+    );
+  it('requires real reviewed delivery archive ancestry', () => {
+    const root = amendedFixture();
+    git(root, 'update-ref', 'HEAD', deliveryBaseline);
+    expect(() => acceptanceProvenance(root)).toThrow(/164e233/);
+  }, 15000);
+  it('rejects changed config preimage storage even when actual candidate is exact', () => {
+    const root = amendedFixture();
+    const good = readFileSync(join(root, deliveryConfig));
+    put(root, deliveryConfig, '{"fullAutoMerge":null}\n');
+    git(root, 'add', deliveryConfig);
+    const badTree = git(root, 'write-tree');
+    const badStorage = git(
+      root,
+      '-c',
+      'user.name=Evidence fixture',
+      '-c',
+      'user.email=fixture@example.test',
+      'commit-tree',
+      badTree,
+      ...git(root, 'show', '-s', '--format=%P', deliveryBaseline)
+        .split(' ')
+        .flatMap((parent) => ['-p', parent]),
+      '-m',
+      'Wrong preimage storage fixture',
+    );
+    put(root, deliveryConfig, good);
+    git(root, 'add', deliveryConfig);
+    git(root, 'replace', deliveryBaseline, badStorage);
+    try {
+      expect(() => acceptanceProvenance(root)).toThrow(
+        /Delivery configuration preimage/,
+      );
+    } finally {
+      git(root, 'replace', '-d', deliveryBaseline);
+    }
+  }, 15000);
+  it('rejects unrelated documentation rather than accepting a path supplied by evidence', () => {
+    const root = amendedFixture();
+    put(root, 'docs/evidence/54-self-approval.json', '{"approved":true}');
+    expect(() => acceptanceProvenance(root)).toThrow(
+      /working tree.*54-self-approval/,
+    );
+  }, 15000);
+
+  it('returned delivery snapshots cannot poison later fixed-policy validation', () => {
+    const root = amendedFixture();
+    const snapshot = acceptanceProvenance(root).deliveryConfiguration;
+    const saved = {
+      before: { ...snapshot.before },
+      after: { ...snapshot.after },
+      anchors: snapshot.anchors.map((anchor) => ({ ...anchor })),
+    };
+    try {
+      snapshot.before.blob = '0'.repeat(40);
+      snapshot.after.sha256 = '0'.repeat(64);
+      snapshot.anchors[0].blob = '0'.repeat(40);
+      // A returned data record cannot mutate the authority used by this later call.
+      expect(() => acceptanceProvenance(root)).not.toThrow();
+      const good = readFileSync(join(root, deliveryConfig));
+      const badConfig = Buffer.concat([good, Buffer.from('\n')]);
+      snapshot.after.bytes = badConfig.length;
+      snapshot.after.sha256 = sha(badConfig);
+      put(root, deliveryConfig, badConfig);
+      expect(() => acceptanceProvenance(root)).toThrow(
+        /Delivery configuration.*task-tracker[.]json/,
+      );
+      put(root, deliveryConfig, good);
+      const path = deliveryAnchors[0];
+      const badAnchor = Buffer.concat([
+        readFileSync(join(root, path)),
+        Buffer.from('\nChanged\n'),
+      ]);
+      snapshot.anchors[0].bytes = badAnchor.length;
+      snapshot.anchors[0].sha256 = sha(badAnchor);
+      put(root, path, badAnchor);
+      expect(() => acceptanceProvenance(root)).toThrow(
+        /Delivery collateral integrity/,
+      );
+    } finally {
+      // Old implementations expose private references; preserve safe RED isolation.
+      Object.assign(snapshot.before, saved.before);
+      Object.assign(snapshot.after, saved.after);
+      snapshot.anchors.forEach((anchor, index) =>
+        Object.assign(anchor, saved.anchors[index]),
+      );
+    }
+  }, 20000);
+});

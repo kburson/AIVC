@@ -250,6 +250,44 @@ const acceptedAnchors = [
     '4b0159c5d9594ac142bb3104e5ddf1de7a9bd1bca631e59a961da5ade88484c3',
   ],
 ];
+const deliveryBaseline = 'b4d5ff903f4965429a27f409cbd2bcac843fb324';
+const deliveryArchive = '164e233a90e37dd9ea9c9356c6a5f5c6221b0edd';
+const deliveryPath = '.ai-task-manager/task-tracker.json';
+const deliveryBefore = {
+  mode: '100644',
+  blob: 'c8263ac7233be6e8462805d0a1386f5919dd0ee6',
+  bytes: 2002,
+  sha256: '269c2744e6ab4c59b131aeee53188197501e95f99e652d97c81a60f8337880b3',
+};
+const deliveryAfter = {
+  mode: '100644',
+  blob: '4c117bc9ffdd4cfbbaf2d6fa4ad758c4834affa3',
+  bytes: 2091,
+  sha256: '23500227004639e8708857bf2017b6eaeba8c0e0c427e339b8865f547b37885f',
+};
+const deliveryAnchors = [
+  {
+    path: 'docs/superpowers/specs/2026-10-15-54-trunk-delivery-config-design.md',
+    mode: '100644',
+    blob: 'be5ed0d4bd985fc13e7080ece1051114e819d3f5',
+    bytes: 11642,
+    sha256: 'e6f7dee5362ebb9ddf84a4256a1549dff94c56991269c74ebb1ce3e39dd78e46',
+  },
+  {
+    path: 'docs/superpowers/plans/2026-10-15-54-trunk-delivery-config.md',
+    mode: '100644',
+    blob: 'adeaa19663fc4fcfacdc703b3d6107c5fd8b2c38',
+    bytes: 20846,
+    sha256: '599d0550b0d24ddafbee99a99419b9e3d8cf559516be13e61ad7c3d846110c0a',
+  },
+  {
+    path: 'docs/evidence/54-astra-trunk-delivery-config-assessment.txt',
+    mode: '100644',
+    blob: '91a583ae574385a528fe054ac9cd52833ffc18a9',
+    bytes: 2782,
+    sha256: '82a244a81858bde4b61b8154576e6b20fc947e66d4aeeec7c87df795bacfd689',
+  },
+];
 function tree(root, ref) {
   return new Map(
     git(root, ['ls-tree', '-rz', ref])
@@ -365,6 +403,55 @@ export function acceptanceProvenance(root = workspace) {
     )
       throw Error('Target handoff storage/blob differs');
   }
+  git(root, ['merge-base', '--is-ancestor', deliveryBaseline, deliveryArchive]);
+  git(root, ['merge-base', '--is-ancestor', deliveryArchive, 'HEAD']);
+  const deliveryStoredTree = tree(root, deliveryArchive);
+  const preimage = execFileSync(
+    'git',
+    ['show', deliveryBaseline + ':' + deliveryPath],
+    { cwd: root },
+  );
+  const expectedBefore = {
+    mode: deliveryBefore.mode,
+    blob: deliveryBefore.blob,
+  };
+  if (
+    !equal(tree(root, deliveryBaseline).get(deliveryPath), expectedBefore) ||
+    !equal(deliveryStoredTree.get(deliveryPath), expectedBefore) ||
+    preimage.length !== deliveryBefore.bytes ||
+    sha(preimage) !== deliveryBefore.sha256
+  )
+    throw Error(
+      'Delivery configuration preimage/archive differs: ' + deliveryPath,
+    );
+  const configured = regular(root, deliveryPath);
+  const configuredBytes = readFileSync(configured);
+  if (
+    lstatSync(configured).mode & 0o111 ||
+    configuredBytes.length !== deliveryAfter.bytes ||
+    sha(configuredBytes) !== deliveryAfter.sha256
+  )
+    throw Error('Delivery configuration differs: ' + deliveryPath);
+  for (const anchor of deliveryAnchors) {
+    const file = regular(root, anchor.path);
+    const bytes = readFileSync(file);
+    const stored = execFileSync(
+      'git',
+      ['show', deliveryArchive + ':' + anchor.path],
+      { cwd: root },
+    );
+    if (
+      lstatSync(file).mode & 0o111 ||
+      bytes.length !== anchor.bytes ||
+      sha(bytes) !== anchor.sha256 ||
+      !equal(deliveryStoredTree.get(anchor.path), {
+        mode: anchor.mode,
+        blob: anchor.blob,
+      }) ||
+      !bytes.equals(stored)
+    )
+      throw Error('Delivery collateral integrity differs: ' + anchor.path);
+  }
   const baseline = tree(root, acceptanceBase);
   const current = workingTree(root);
   const tested = tree(root, physicalHead);
@@ -385,6 +472,12 @@ export function acceptanceProvenance(root = workspace) {
   for (const [path] of lintAnchors) protectedTree.set(path, lintTree.get(path));
   for (const [path] of targetAnchors)
     protectedTree.set(path, archiveTree.get(path));
+  protectedTree.set(deliveryPath, {
+    mode: deliveryAfter.mode,
+    blob: deliveryAfter.blob,
+  });
+  for (const anchor of deliveryAnchors)
+    protectedTree.set(anchor.path, { mode: anchor.mode, blob: anchor.blob });
   const ordinaryHead = '385d11b2448dac5bf01400bb7c11834bfefbfbfd';
   git(root, ['merge-base', '--is-ancestor', ordinaryHead, acceptanceBase]);
   const oldSearch = tree(root, ordinaryHead);
@@ -445,6 +538,14 @@ export function acceptanceProvenance(root = workspace) {
       targetCollateralCommit: targetArchive,
       humanTurn: '01a13f63-b581-7f11-af49-fc567f7aa25b',
       authorityAssurance: 'unavailable',
+    },
+    deliveryConfiguration: {
+      baselineCommit: deliveryBaseline,
+      storageCommit: deliveryArchive,
+      path: deliveryPath,
+      before: { ...deliveryBefore },
+      after: { ...deliveryAfter },
+      anchors: deliveryAnchors.map((anchor) => ({ ...anchor })),
     },
     targetHandoff: {
       path: handoffPath,
