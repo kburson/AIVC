@@ -54,5 +54,6 @@
   "fullAutoMerge": {
     "mechanism": "provider-action",
     "mergeMethod": "merge"
-  }
+  },
+  "trunkRef": "origin/trunk"
 }
