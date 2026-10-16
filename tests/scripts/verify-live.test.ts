@@ -14,11 +14,29 @@ import {
   unlinkSync,
 } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { afterEach, afterAll, beforeEach, describe, expect, it } from 'vitest';
 import {
   verifyLive,
   acceptanceProvenance,
 } from '../../scripts/verify-live.mjs';
+
+const { loadConfig, setConfigValue } = await import(
+  pathToFileURL(
+    join(
+      process.cwd(),
+      'node_modules/@kburson/ai-task-manager/scripts/task-tracker/config.mjs',
+    ),
+  ).href
+);
+const { createDefaultDeliverDeps } = await import(
+  pathToFileURL(
+    join(
+      process.cwd(),
+      'node_modules/@kburson/ai-task-manager/scripts/task-tracker/verbs/deliver.mjs',
+    ),
+  ).href
+);
 
 const roots: string[] = [];
 const patch = 'patches/@ricky0123+vad-web+0.0.31.patch';
@@ -588,6 +606,14 @@ describe('reviewed live acceptance real history', () => {
   const deliveryBaseline = 'b4d5ff903f4965429a27f409cbd2bcac843fb324';
   const deliveryConfig = '.ai-task-manager/task-tracker.json';
   const deliveryPostBlob = '4c117bc9ffdd4cfbbaf2d6fa4ad758c4834affa3';
+  const trunkBaseline = '78429753cdeede058b0b279296b77d9f1c2bb246';
+  const trunkArchive = '72a937e7147018d02a3552400fa16f8d8c4e33ff';
+  const trunkPostBlob = 'fcdfc1f95c17b1e342b01325103274a3991077ea';
+  const trunkAnchors = [
+    'docs/superpowers/specs/2026-10-15-57-explicit-trunk-target-design.md',
+    'docs/superpowers/plans/2026-10-15-57-explicit-trunk-target.md',
+    'docs/evidence/57-astra-explicit-trunk-target-assessment.txt',
+  ];
   function deliveryFixtureTree() {
     if (!amendmentRoot) {
       amendmentRoot = mkdtempSync(
@@ -611,7 +637,7 @@ describe('reviewed live acceptance real history', () => {
       '.ai-task-manager',
     ])
       rmSync(join(root, path), { recursive: true, force: true });
-    git(root, 'reset', '--hard', '164e233a90e37dd9ea9c9356c6a5f5c6221b0edd');
+    git(root, 'reset', '--hard', trunkArchive);
     git(root, 'clean', '-fd');
     for (const path of [
       'scripts/verify-live.mjs',
@@ -653,18 +679,18 @@ describe('reviewed live acceptance real history', () => {
         'node_modules/@ricky0123/vad-web/dist/real-time-vad.' + suffix;
       put(root, path, readFileSync(path));
     }
-    const config = JSON.parse(
-      git(root, 'show', deliveryBaseline + ':' + deliveryConfig),
-    );
-    config.fullAutoMerge = {
-      mechanism: 'provider-action',
-      mergeMethod: 'merge',
-    };
-    put(root, deliveryConfig, JSON.stringify(config, null, 2) + '\n');
     expect(git(root, 'hash-object', deliveryConfig)).toBe(deliveryPostBlob);
-    commit(root, 'Fixture exact reviewed delivery configuration');
+    setConfigValue('trunkRef', 'origin/trunk', {
+      projectPath: join(root, deliveryConfig),
+    });
+    expect(readFileSync(join(root, deliveryConfig)).length).toBe(2121);
+    expect(sha(readFileSync(join(root, deliveryConfig)))).toBe(
+      '4b3c919cbae4dc9e6e225965ad420ba80405cb8e86f552bfc53bb06b32b450b9',
+    );
+    expect(git(root, 'hash-object', deliveryConfig)).toBe(trunkPostBlob);
+    commit(root, 'Fixture exact reviewed trunk configuration');
     expect(git(root, 'rev-parse', 'HEAD:' + deliveryConfig)).toBe(
-      deliveryPostBlob,
+      trunkPostBlob,
     );
     return root;
   }
@@ -695,9 +721,11 @@ describe('reviewed live acceptance real history', () => {
       throw Error('Real-history good baseline was not verified');
     return preparedRoot;
   }
-  it('accepts the genuine good delivery candidate before any targeted mutation', () => {
+  it('accepts the genuine good trunk candidate before any targeted mutation', () => {
     const root = amendedFixture();
-    expect(() => acceptanceProvenance(root)).not.toThrow();
+    expect(acceptanceProvenance(root).trunkConfiguration.after.blob).toBe(
+      trunkPostBlob,
+    );
   }, 15000);
   afterAll(() => {
     if (amendmentRoot) rmSync(amendmentRoot, { recursive: true, force: true });
@@ -761,14 +789,18 @@ describe('reviewed live acceptance real history', () => {
       },
     ],
   ] as const)
-    it('rejects disposition ' + name, () => {
-      const root = amendedFixture();
-      const path = 'docs/evidence/11-live-acceptance-disposition.json';
-      const d = JSON.parse(readFileSync(join(root, path), 'utf8'));
-      mutate(d);
-      json(root, path, d);
-      expect(amendErrors(root)).toContain('Amended acceptance invalid');
-    });
+    it(
+      'rejects disposition ' + name,
+      () => {
+        const root = amendedFixture();
+        const path = 'docs/evidence/11-live-acceptance-disposition.json';
+        const d = JSON.parse(readFileSync(join(root, path), 'utf8'));
+        mutate(d);
+        json(root, path, d);
+        expect(amendErrors(root)).toContain('Amended acceptance invalid');
+      },
+      15000,
+    );
   for (const path of [
     'apps/web/server/providers/claude.ts',
     'apps/web/server/turns/run-turn.ts',
@@ -1345,6 +1377,216 @@ describe('reviewed live acceptance real history', () => {
       );
     } finally {
       // Old implementations expose private references; preserve safe RED isolation.
+      Object.assign(snapshot.before, saved.before);
+      Object.assign(snapshot.after, saved.after);
+      snapshot.anchors.forEach((anchor, index) =>
+        Object.assign(anchor, saved.anchors[index]),
+      );
+    }
+  }, 20000);
+  it('resolves parent-null delivery through the actual default dependencies and supported trunk setter', async () => {
+    const root = amendedFixture();
+    const paths = {
+      projectPath: join(root, deliveryConfig),
+      userPath: join(root, '.scratch/absent-user-config.json'),
+    };
+    put(
+      root,
+      deliveryConfig,
+      git(root, 'show', trunkBaseline + ':' + deliveryConfig) + '\n',
+    );
+    expect(sha(readFileSync(paths.projectPath))).toBe(
+      '23500227004639e8708857bf2017b6eaeba8c0e0c427e339b8865f547b37885f',
+    );
+    const commands: Array<{ command: string; args: string[] }> = [];
+    const resolveDefault = async () => {
+      const cfg = loadConfig(paths);
+      const deps = createDefaultDeliverDeps(
+        { projectDir: root, cfg },
+        {
+          exec: async (command: string, args: string[]) => {
+            expect(command).toBe('gh');
+            expect(args.length).toBe(10);
+            expect(args.slice(0, 3)).toEqual(['api', 'graphql', '-f']);
+            expect(args[3]).toContain(
+              'issue(number: $issue) { parent { number } }',
+            );
+            expect(args.slice(4)).toEqual([
+              '-f',
+              'owner=kburson',
+              '-f',
+              'repo=AIVC',
+              '-F',
+              'issue=2',
+            ]);
+            commands.push({ command, args: [...args] });
+            return {
+              stdout: JSON.stringify({
+                data: { repository: { issue: { parent: null } } },
+              }),
+              stderr: '',
+            };
+          },
+        },
+      );
+      return deps.resolveLineage({ issueNumber: 2 });
+    };
+    expect(await resolveDefault()).toEqual({
+      parentIssueNumber: null,
+      deliveryTarget: '',
+    });
+    expect(loadConfig(paths)._sources.trunkRef).toBe('default');
+    setConfigValue('trunkRef', 'origin/trunk', paths);
+    expect(loadConfig(paths)._sources.trunkRef).toBe('project');
+    expect(sha(readFileSync(paths.projectPath))).toBe(
+      '4b3c919cbae4dc9e6e225965ad420ba80405cb8e86f552bfc53bb06b32b450b9',
+    );
+    expect(await resolveDefault()).toEqual({
+      parentIssueNumber: null,
+      deliveryTarget: 'trunk',
+    });
+    expect(commands).toHaveLength(2);
+  }, 15000);
+  for (const value of [undefined, '', 'trunk', 'origin/main', 'other/trunk'])
+    it(
+      'rejects trunk target ' + String(value),
+      () => {
+        const root = amendedFixture();
+        const config = JSON.parse(
+          readFileSync(join(root, deliveryConfig), 'utf8'),
+        );
+        if (value === undefined) delete config.trunkRef;
+        else config.trunkRef = value;
+        json(root, deliveryConfig, config);
+        expect(() => acceptanceProvenance(root)).toThrow(
+          /Delivery configuration.*task-tracker[.]json/,
+        );
+      },
+      15000,
+    );
+  it('rejects hidden committed trunk target restored in working files', () => {
+    const root = amendedFixture();
+    const good = readFileSync(join(root, deliveryConfig));
+    const config = JSON.parse(good.toString());
+    config.trunkRef = 'origin/main';
+    put(root, deliveryConfig, JSON.stringify(config, null, 2) + '\n');
+    commit(root, 'Hidden bad trunk target');
+    put(root, deliveryConfig, good);
+    expect(() => acceptanceProvenance(root)).toThrow(
+      /candidate HEAD.*task-tracker[.]json/,
+    );
+  }, 15000);
+  for (const path of trunkAnchors) {
+    for (const kind of ['missing', 'changed', 'mode', 'alias'] as const)
+      it(
+        'rejects trunk ' + kind + ' ' + path,
+        () => {
+          const root = amendedFixture();
+          const file = join(root, path);
+          if (kind === 'missing') unlinkSync(file);
+          if (kind === 'changed')
+            put(root, path, readFileSync(file, 'utf8') + '\nChanged\n');
+          if (kind === 'mode') chmodSync(file, 0o755);
+          if (kind === 'alias') {
+            renameSync(file, file + '.original');
+            symlinkSync(file + '.original', file);
+          }
+          expect(() => acceptanceProvenance(root)).toThrow(path);
+        },
+        15000,
+      );
+    for (const kind of ['mode', 'bytes'] as const)
+      it(
+        'pins committed trunk ' + kind + ' ' + path,
+        () => {
+          const root = amendedFixture();
+          const bytes = readFileSync(join(root, path));
+          if (kind === 'mode') chmodSync(join(root, path), 0o755);
+          if (kind === 'bytes')
+            put(root, path, bytes.toString() + '\nChanged\n');
+          commit(root, 'Hidden trunk authority change');
+          put(root, path, bytes);
+          chmodSync(join(root, path), 0o644);
+          expect(() => acceptanceProvenance(root)).toThrow(/candidate HEAD/);
+        },
+        15000,
+      );
+  }
+  it('requires real reviewed trunk archive ancestry', () => {
+    const root = amendedFixture();
+    git(root, 'update-ref', 'HEAD', trunkBaseline);
+    expect(() => acceptanceProvenance(root)).toThrow(/72a937e/);
+  }, 15000);
+  for (const ref of [trunkBaseline, trunkArchive])
+    it(
+      'rejects changed trunk preimage storage ' + ref,
+      () => {
+        const root = amendedFixture();
+        const good = readFileSync(join(root, deliveryConfig));
+        put(root, deliveryConfig, '{"trunkRef":"origin/main"}\n');
+        git(root, 'add', deliveryConfig);
+        const badTree = git(root, 'write-tree');
+        const bad = git(
+          root,
+          '-c',
+          'user.name=Evidence fixture',
+          '-c',
+          'user.email=fixture@example.test',
+          'commit-tree',
+          badTree,
+          ...git(root, 'show', '-s', '--format=%P', ref)
+            .split(' ')
+            .flatMap((parent) => ['-p', parent]),
+          '-m',
+          'Wrong trunk preimage',
+        );
+        put(root, deliveryConfig, good);
+        git(root, 'add', deliveryConfig);
+        git(root, 'replace', ref, bad);
+        try {
+          expect(() => acceptanceProvenance(root)).toThrow(
+            /Trunk configuration preimage/,
+          );
+        } finally {
+          git(root, 'replace', '-d', ref);
+        }
+      },
+      15000,
+    );
+  it('returned trunk snapshots cannot poison later fixed-policy validation', () => {
+    const root = amendedFixture();
+    const snapshot = acceptanceProvenance(root).trunkConfiguration;
+    const saved = {
+      before: { ...snapshot.before },
+      after: { ...snapshot.after },
+      anchors: snapshot.anchors.map((anchor) => ({ ...anchor })),
+    };
+    try {
+      snapshot.before.blob = '0'.repeat(40);
+      snapshot.after.sha256 = '0'.repeat(64);
+      snapshot.anchors[0].blob = '0'.repeat(40);
+      expect(() => acceptanceProvenance(root)).not.toThrow();
+      const good = readFileSync(join(root, deliveryConfig));
+      const bad = Buffer.concat([good, Buffer.from('\n')]);
+      snapshot.after.bytes = bad.length;
+      snapshot.after.sha256 = sha(bad);
+      put(root, deliveryConfig, bad);
+      expect(() => acceptanceProvenance(root)).toThrow(
+        /Delivery configuration.*task-tracker[.]json/,
+      );
+      put(root, deliveryConfig, good);
+      const path = trunkAnchors[0];
+      const badAnchor = Buffer.concat([
+        readFileSync(join(root, path)),
+        Buffer.from('\nChanged\n'),
+      ]);
+      snapshot.anchors[0].bytes = badAnchor.length;
+      snapshot.anchors[0].sha256 = sha(badAnchor);
+      put(root, path, badAnchor);
+      expect(() => acceptanceProvenance(root)).toThrow(
+        /Trunk collateral integrity/,
+      );
+    } finally {
       Object.assign(snapshot.before, saved.before);
       Object.assign(snapshot.after, saved.after);
       snapshot.anchors.forEach((anchor, index) =>

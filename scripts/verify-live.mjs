@@ -288,6 +288,38 @@ const deliveryAnchors = [
     sha256: '82a244a81858bde4b61b8154576e6b20fc947e66d4aeeec7c87df795bacfd689',
   },
 ];
+const trunkBaseline = '78429753cdeede058b0b279296b77d9f1c2bb246';
+const trunkArchive = '72a937e7147018d02a3552400fa16f8d8c4e33ff';
+const trunkBefore = { ...deliveryAfter };
+const trunkAfter = {
+  mode: '100644',
+  blob: 'fcdfc1f95c17b1e342b01325103274a3991077ea',
+  bytes: 2121,
+  sha256: '4b3c919cbae4dc9e6e225965ad420ba80405cb8e86f552bfc53bb06b32b450b9',
+};
+const trunkAnchors = [
+  {
+    path: 'docs/superpowers/specs/2026-10-15-57-explicit-trunk-target-design.md',
+    mode: '100644',
+    blob: '680a006998d718240bfee09e63632701ff88074e',
+    bytes: 11247,
+    sha256: '3e7057b4f4b4583d8053af501c1168b6969c677bf38e918c2c668488343d9378',
+  },
+  {
+    path: 'docs/superpowers/plans/2026-10-15-57-explicit-trunk-target.md',
+    mode: '100644',
+    blob: 'ca9366f75aa418d313f4ca15b3c1f70e7139ccd3',
+    bytes: 22203,
+    sha256: '6316442ee31227cd59df74df34e898cd9a41219349989a530aaf9c9d504f7fc8',
+  },
+  {
+    path: 'docs/evidence/57-astra-explicit-trunk-target-assessment.txt',
+    mode: '100644',
+    blob: '5cbc60b9316cec50c6caf1c932575d544941d942',
+    bytes: 4609,
+    sha256: 'b223a0f9037053aaf202aebeec09bd00c72b42d7c145ed941c366220bfdabb19',
+  },
+];
 function tree(root, ref) {
   return new Map(
     git(root, ['ls-tree', '-rz', ref])
@@ -428,8 +460,8 @@ export function acceptanceProvenance(root = workspace) {
   const configuredBytes = readFileSync(configured);
   if (
     lstatSync(configured).mode & 0o111 ||
-    configuredBytes.length !== deliveryAfter.bytes ||
-    sha(configuredBytes) !== deliveryAfter.sha256
+    configuredBytes.length !== trunkAfter.bytes ||
+    sha(configuredBytes) !== trunkAfter.sha256
   )
     throw Error('Delivery configuration differs: ' + deliveryPath);
   for (const anchor of deliveryAnchors) {
@@ -452,6 +484,47 @@ export function acceptanceProvenance(root = workspace) {
     )
       throw Error('Delivery collateral integrity differs: ' + anchor.path);
   }
+  // #54's accepted postimage remains historical authority; #57 alone advances it.
+  git(root, ['merge-base', '--is-ancestor', deliveryArchive, trunkBaseline]);
+  git(root, ['merge-base', '--is-ancestor', trunkBaseline, trunkArchive]);
+  git(root, ['merge-base', '--is-ancestor', trunkArchive, 'HEAD']);
+  const trunkStoredTree = tree(root, trunkArchive);
+  for (const ref of [trunkBaseline, trunkArchive]) {
+    const bytes = execFileSync('git', ['show', ref + ':' + deliveryPath], {
+      cwd: root,
+    });
+    if (
+      !equal(tree(root, ref).get(deliveryPath), {
+        mode: trunkBefore.mode,
+        blob: trunkBefore.blob,
+      }) ||
+      bytes.length !== trunkBefore.bytes ||
+      sha(bytes) !== trunkBefore.sha256
+    )
+      throw Error(
+        'Trunk configuration preimage/archive differs: ' + deliveryPath,
+      );
+  }
+  for (const anchor of trunkAnchors) {
+    const file = regular(root, anchor.path);
+    const bytes = readFileSync(file);
+    const stored = execFileSync(
+      'git',
+      ['show', trunkArchive + ':' + anchor.path],
+      { cwd: root },
+    );
+    if (
+      lstatSync(file).mode & 0o111 ||
+      bytes.length !== anchor.bytes ||
+      sha(bytes) !== anchor.sha256 ||
+      !equal(trunkStoredTree.get(anchor.path), {
+        mode: anchor.mode,
+        blob: anchor.blob,
+      }) ||
+      !bytes.equals(stored)
+    )
+      throw Error('Trunk collateral integrity differs: ' + anchor.path);
+  }
   const baseline = tree(root, acceptanceBase);
   const current = workingTree(root);
   const tested = tree(root, physicalHead);
@@ -473,9 +546,11 @@ export function acceptanceProvenance(root = workspace) {
   for (const [path] of targetAnchors)
     protectedTree.set(path, archiveTree.get(path));
   protectedTree.set(deliveryPath, {
-    mode: deliveryAfter.mode,
-    blob: deliveryAfter.blob,
+    mode: trunkAfter.mode,
+    blob: trunkAfter.blob,
   });
+  for (const anchor of trunkAnchors)
+    protectedTree.set(anchor.path, { mode: anchor.mode, blob: anchor.blob });
   for (const anchor of deliveryAnchors)
     protectedTree.set(anchor.path, { mode: anchor.mode, blob: anchor.blob });
   const ordinaryHead = '385d11b2448dac5bf01400bb7c11834bfefbfbfd';
@@ -546,6 +621,14 @@ export function acceptanceProvenance(root = workspace) {
       before: { ...deliveryBefore },
       after: { ...deliveryAfter },
       anchors: deliveryAnchors.map((anchor) => ({ ...anchor })),
+    },
+    trunkConfiguration: {
+      baselineCommit: trunkBaseline,
+      storageCommit: trunkArchive,
+      path: deliveryPath,
+      before: { ...trunkBefore },
+      after: { ...trunkAfter },
+      anchors: trunkAnchors.map((anchor) => ({ ...anchor })),
     },
     targetHandoff: {
       path: handoffPath,
