@@ -70,3 +70,7 @@ those three required status checks from GitHub Actions (app ID 15368), including
 administrators. Missing or failing checks prevent merging into either branch.
 Use a feature branch and PR for delivery. A new delivery branch must receive
 the same required checks before it becomes an integration target.
+
+## Research documentation preservation in story #39
+
+The [#39 original-byte archive](quality-evidence/2026-10-16-39-originals.json) extends the existing labeled-view process to the 32 performance-research documents pinned at b612108309811663ffad1e04ba2005621c68ea5f. The archive verifier independently pins that complete corpus; all four archives protect 122 originals. Existing original archives, acceptance hashes and historical reviews remain unchanged. Current views remain subject to every normal Markdownlint and Prettier rule. The corresponding real-Git tests retain tutorial-tamper coverage and reject recomputed-hash forgeries of performance research originals.
