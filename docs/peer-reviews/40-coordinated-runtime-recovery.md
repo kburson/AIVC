@@ -1,5 +1,31 @@
 # #40 coordinated runtime recovery
 
+## Current checkpoint
+
+The registered no-native runtime at source `fb922c4cabad5648ad71e467e9b602fa76dd41a4`
+passed all 39 required CI jobs and six installed handoff jobs. CLI entrypoints
+and user-owned wrappers now resolve that installation; original CLI targets and
+the previous verification launcher were privately backed up. Old package bytes
+remain intact. [PR #62](https://github.com/kburson/AIVC/pull/62) retains portable
+MCP timeouts while resolving the runner through account configuration.
+
+Actual primary-registration dry-run refused before its callback because the
+first-use primary admission root was absent. Its wrapper reported uncertain
+completion; no primary effect committed, cleanup discharged. Read-only inspection
+confirmed the old activation record and absent owned files. No AIVC non-dry
+registration, setup or activation followed. A disposable first-use test then
+exposed the separate legacy source-class prerequisite; no class or activation
+was fabricated.
+
+The runtime owner identified an existing #190 conformance defect: local MCP
+startup still enters legacy enrollment, despite the approved local workflow
+excluding that prerequisite. Correction is pending through normal source review
+and verification. Per-review authentication, locking, journal seals and legacy
+maintenance guards must remain intact. Both #40 artifacts still have native SAR
+acceptance only; neither sealed XPR has started and implementation remains stopped.
+
+## Earlier recovery findings
+
 The owner authorized coordination with the peer-review runtime-owner chat.
 It verified the selected runtime as healthy in its own primary checkout and
 reproduced AIVC's historical hook-inventory refusal. The selected installation
