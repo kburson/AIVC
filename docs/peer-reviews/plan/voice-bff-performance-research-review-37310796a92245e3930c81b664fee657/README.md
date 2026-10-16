@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/plan/voice-bff-performance-research-review-37310796a92245e3930c81b664fee657/README.md) and its exact bytes remain available in the [evidence archive](../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `99ad70ac90e46b4bccf751d69502efde3deede6fa25336f7bdf6a78deddd8444`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Story 39 performance implementation-plan review index
 
 Date: October15,2026 (America/Chicago).
@@ -16,11 +20,11 @@ Governing corrected [specification](../../../superpowers/specs/2026-10-14-39-voi
 
 The owner corrected the architecture during SAR. There are three application services:
 
-| Service | Responsibility and research treatment |
-| --- | --- |
-| Fastify orchestrator | Portable STT/model/tool/lookup/TTS orchestration, admission/deadline/cancellation/usage ownership; primary direct-core resource/process/replica curves |
-| Separate Fastify lookup | Independent retrieval API; isolated F1 and lookup-constrained attribution |
-| Next.js web BFF | React/UI and thin streaming delegation; bounded matched forwarding-overhead comparison, separate optional web cost |
+| Service                 | Responsibility and research treatment                                                                                                                  |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Fastify orchestrator    | Portable STT/model/tool/lookup/TTS orchestration, admission/deadline/cancellation/usage ownership; primary direct-core resource/process/replica curves |
+| Separate Fastify lookup | Independent retrieval API; isolated F1 and lookup-constrained attribution                                                                              |
+| Next.js web BFF         | React/UI and thin streaming delegation; bounded matched forwarding-overhead comparison, separate optional web cost                                     |
 
 Future telephony clients call the core without Next.js. Actual Twilio/WebSocket and acoustic capacity/latency remain unmeasured. The accepted integrated migration to this three-service architecture is an explicit prerequisite; existing Next.js-owned provider code cannot satisfy it by renaming metrics. The research plan does not authorize implementing that migration under docs-only story39.
 

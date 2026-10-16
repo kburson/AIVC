@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/plan/voice-bff-performance-research-review-37310796a92245e3930c81b664fee657/sar/predecessor-scope-status.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `8576d14ed714f5c05dc1161a864f25ce42650ba1cb1b0de3f91ff5638b94a971`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Story 39 plan SAR predecessor scope status
 
 Date: October15,2026 (America/Chicago).

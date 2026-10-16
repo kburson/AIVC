@@ -81,3 +81,9 @@ Each published view links to those exact historical bytes. The two earlier
 archives remain unchanged. The verifier checks all 90 originals against Git,
 including complete tutorial corpus coverage; a real Git fixture test rejects
 forged tutorial bytes even when their declared hash is recomputed.
+
+## Performance research documents in story #39
+
+The [performance research archive](2026-10-16-39-originals.json) preserves all 32 original #39 documents from independently pinned source commit b612108309811663ffad1e04ba2005621c68ea5f: 29 records in the exact performance-research specification and plan review groups, plus the specification and two #39 plans. Each record retains original path, byte length, SHA-256 and canonical base64 bytes. Current labeled views link to those originals; original acceptance hashes still identify the historical bytes. Later owner amendments are not retroactively covered by the sealed predecessor reviews.
+
+The verifier derives complete membership from those two fixed review groups and three exact artifact paths at the independently pinned Git source. It applies the same ancestry, encoding, hash/length, Git-blob equality and regular-path checks. All four archives now protect 122 originals; the earlier three archives and their 90 original records remain unchanged. Real-Git regressions prove a complete good baseline before rejecting forged tutorial and performance records, even when their declared hashes, lengths and encodings are recomputed.

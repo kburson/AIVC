@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/spec/voice-bff-performance-research-design-review-d0308a82e10640138be8eed7916011be/sar/sar-loop-summary.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `7a79e9b5d210e832b6f2b43f7cae4c447638f1bf44ff79ef3c22482162228964`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Voice BFF performance research SAR loop — completed
 
 Story: [#39](https://github.com/kburson/AIVC/issues/39).

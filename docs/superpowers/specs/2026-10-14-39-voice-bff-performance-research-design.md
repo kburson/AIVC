@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/superpowers/specs/2026-10-14-39-voice-bff-performance-research-design.md) and its exact bytes remain available in the [evidence archive](../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `bd1803bf8b3b1f6c70489c33a125ec4fd4dd9c8962b50023ae23a26945059919`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Voice orchestrator backend performance and cost research
 
 Date: October 14, 2026 (America/Chicago).
@@ -32,11 +36,11 @@ Preserve the original application specification and sealed peer-review collatera
 
 Three approaches were considered:
 
-| Approach | Strength | Limitation | Decision |
-| --- | --- | --- | --- |
-| A. Protocol-level tests through the real orchestrator, local-service isolation, and calibrated network simulators | Measures the actual backend boundary with controlled cost and repeatability | Requires streaming-capable clients and simulator validation | Selected |
-| B. Browser-led performance tests | Includes capture, rendering, and physical playback behavior | Browser work obscures portable backend measurements | Separate future UX validation |
-| C. Sustained load against real speech/model APIs | Measures one provider deployment at one time | Expensive; quotas and provider variability hide local limits | Restricted to small calibration samples |
+| Approach                                                                                                          | Strength                                                                    | Limitation                                                   | Decision                                |
+| ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------ | --------------------------------------- |
+| A. Protocol-level tests through the real orchestrator, local-service isolation, and calibrated network simulators | Measures the actual backend boundary with controlled cost and repeatability | Requires streaming-capable clients and simulator validation  | Selected                                |
+| B. Browser-led performance tests                                                                                  | Includes capture, rendering, and physical playback behavior                 | Browser work obscures portable backend measurements          | Separate future UX validation           |
+| C. Sustained load against real speech/model APIs                                                                  | Measures one provider deployment at one time                                | Expensive; quotas and provider variability hide local limits | Restricted to small calibration samples |
 
 Primary and comparison paths:
 
@@ -99,11 +103,11 @@ Use CPU units and GiB consistently. Enforce limits with actual container/cgroup 
 ### Primary resource matrix
 
 | CPU quota | Memory limits to test |
-| --- | --- |
-| 1 CPU | 2, 4, 8, 12 GiB |
-| 2 CPU | 2, 4, 8, 12 GiB |
-| 3 CPU | 2, 4, 8, 12 GiB |
-| 4 CPU | 2, 4, 8, 12 GiB |
+| --------- | --------------------- |
+| 1 CPU     | 2, 4, 8, 12 GiB       |
+| 2 CPU     | 2, 4, 8, 12 GiB       |
+| 3 CPU     | 2, 4, 8, 12 GiB       |
+| 4 CPU     | 2, 4, 8, 12 GiB       |
 
 The paired executive comparison is 1 CPU/2 GiB, 2 CPU/4 GiB, 3 CPU/8 GiB, and 4 CPU/12 GiB. The full 16-cell matrix separates CPU effects from memory effects. Unsupported or physically infeasible cells are reported unavailable, never inferred as measured.
 
@@ -133,11 +137,11 @@ The limit is an application-controlled estimated spend bound, not a guarantee of
 
 Reasonable calibration cases:
 
-| Provider | Initial cells | Measurements |
-| --- | --- | --- |
-| Model | Short answer; one project lookup with real tool continuation; longer bounded context | Connect/setup when visible, first answer token, tool decision/result, completion, tokens and status |
-| STT | Synthetic 2-, 5-, and 15-second utterances; prerecorded reference path | Submitted duration/bytes, request/response time, transcript correctness for fixtures, billable usage |
-| TTS | 40-, 120-, and 300-character approved text | First audio, completion, returned duration/bytes, generation rate and characters billed |
+| Provider | Initial cells                                                                        | Measurements                                                                                         |
+| -------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| Model    | Short answer; one project lookup with real tool continuation; longer bounded context | Connect/setup when visible, first answer token, tool decision/result, completion, tokens and status  |
+| STT      | Synthetic 2-, 5-, and 15-second utterances; prerecorded reference path               | Submitted duration/bytes, request/response time, transcript correctness for fixtures, billable usage |
+| TTS      | 40-, 120-, and 300-character approved text                                           | First audio, completion, returned duration/bytes, generation rate and characters billed              |
 
 Separate cold-connection and reused-connection observations within the request cap. Initially use concurrency one, then a small sample at concurrency three if the remaining budget permits. Every model request, including continuation, counts as a request. Record the exact actual sample counts by cell; do not pretend every Cartesian combination was exercised.
 
@@ -210,15 +214,15 @@ Use bounded asynchronous collection and fixed metric labels. High-rate raw trace
 
 All requests use the real documented contracts, the entry-specific caller authentication or web Origin/Host protections, body/history limits, synthetic data, and actual cancellation semantics. No browser UI or browser VUs are required. Redirects, admission failures, and skipped provider work are not successful turns.
 
-| ID | Workload | Purpose |
-| --- | --- | --- |
-| F1 | Fastify health and project lookup with controlled names/payloads | Isolated route, validation, and serialization curve; health is not domain-work capacity |
-| B1 | Typed orchestrator answer without a tool | orchestrator/model-adapter and streaming overhead |
-| B2 | Typed orchestrator answer with one real retrieval tool round trip | Full local aggregation path |
-| B3 | Audio upload, prerecorded STT, answer/tool, and eligible speech through the orchestrator | Reference voice-backend workload |
-| B4 | Larger valid history, longest admitted utterance, and bounded long output | Allocation, byte-rate, and queue sensitivity |
-| B5 | Disconnect, cancellation, rapid replacement, slow consumer, and quota/error profiles | Cleanup, backpressure, and overload behavior |
-| M1 | Declared mixed conversation population | Primary capacity and cost curve |
+| ID  | Workload                                                                                 | Purpose                                                                                 |
+| --- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| F1  | Fastify health and project lookup with controlled names/payloads                         | Isolated route, validation, and serialization curve; health is not domain-work capacity |
+| B1  | Typed orchestrator answer without a tool                                                 | orchestrator/model-adapter and streaming overhead                                       |
+| B2  | Typed orchestrator answer with one real retrieval tool round trip                        | Full local aggregation path                                                             |
+| B3  | Audio upload, prerecorded STT, answer/tool, and eligible speech through the orchestrator | Reference voice-backend workload                                                        |
+| B4  | Larger valid history, longest admitted utterance, and bounded long output                | Allocation, byte-rate, and queue sensitivity                                            |
+| B5  | Disconnect, cancellation, rapid replacement, slow consumer, and quota/error profiles     | Cleanup, backpressure, and overload behavior                                            |
+| M1  | Declared mixed conversation population                                                   | Primary capacity and cost curve                                                         |
 
 Initial M1 turn mix: 40% B1, 30% B2, and 30% B3. All ordinary M1 types are output-enabled and selected per intended turn under section 16.7. Initial conversation pacing follows the fixed schedule, residence policy and feasibility gate in sections 16.4 and 16.7 at four intended user turns/minute; report actual achieved pacing. B3 includes all required speech requests, not just `/api/turn`. Sweep pacing at two and eight turns/minute at the paired executive configurations; infeasible combinations are reported under section 16.7. Run B4/B5 as explicit interventions rather than silently changing the baseline mix. Preserve separate typed, voice, and mixed results; one scenario's capacity cannot label another.
 
@@ -353,15 +357,15 @@ These definitions resolve the cross-request and statistical details of sections 
 
 ### 16.1 Metric dictionary and clock ownership
 
-| Metric | Origin → end | Clock owner and eligible population |
-| --- | --- | --- |
-| Client first answer | Immediately before submitting `/api/turn` → first valid nonempty semantic answer delta received | One headless client monotonic clock; one observation per text-bearing turn, excluding admission/status events |
-| Speech-request first server audio | Entry to one `/api/speech` request → first valid PCM write for that request | One server process monotonic clock; per segment, not per conversation turn |
-| Client turn first audio | Immediately before submitting `/api/turn` → first valid PCM received for the first eligible speech segment of that turn | One validated headless client monotonic clock spanning both HTTP requests; one observation per ordinary voice-bearing turn |
-| Client text completion | Turn submission → valid terminal answer completion received | Same client clock; text oracle must pass |
-| Client voice delivery completion | Turn submission → receipt/draining of every required eligible segment and final pending-speech settlement | Same client clock; voice oracle must pass |
-| Virtual playback completion | Turn submission → virtual consumption of all required audio at its declared sample rate | Same client clock/model; includes virtual queue drain, not physical audible playback |
-| Request residence | Request entry → normal end or observed abort/settlement | Same server process; aborted/failed outcomes remain distinguishable |
+| Metric                            | Origin → end                                                                                                            | Clock owner and eligible population                                                                                        |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Client first answer               | Immediately before submitting `/api/turn` → first valid nonempty semantic answer delta received                         | One headless client monotonic clock; one observation per text-bearing turn, excluding admission/status events              |
+| Speech-request first server audio | Entry to one `/api/speech` request → first valid PCM write for that request                                             | One server process monotonic clock; per segment, not per conversation turn                                                 |
+| Client turn first audio           | Immediately before submitting `/api/turn` → first valid PCM received for the first eligible speech segment of that turn | One validated headless client monotonic clock spanning both HTTP requests; one observation per ordinary voice-bearing turn |
+| Client text completion            | Turn submission → valid terminal answer completion received                                                             | Same client clock; text oracle must pass                                                                                   |
+| Client voice delivery completion  | Turn submission → receipt/draining of every required eligible segment and final pending-speech settlement               | Same client clock; voice oracle must pass                                                                                  |
+| Virtual playback completion       | Turn submission → virtual consumption of all required audio at its declared sample rate                                 | Same client clock/model; includes virtual queue drain, not physical audible playback                                       |
+| Request residence                 | Request entry → normal end or observed abort/settlement                                                                 | Same server process; aborted/failed outcomes remain distinguishable                                                        |
 
 Every record correlates conversation ID, `turnId`, generation, request ID, and `segmentId` where applicable. The client schedules speech from the actual stable text and records both intended and actual speech-request initiation. Use the first eligible segment once for turn-level first audio; later segments contribute request-local metrics and continuity checks, not additional first-audio samples.
 
@@ -409,14 +413,14 @@ Translate callers into RPM, bandwidth, and cost using actual achieved turn rates
 
 ### 16.5 Mandatory coverage and hosting-price mapping
 
-| Experiment family | Minimum-wait network control | Calibrated replay | Sensitivity/fault/pacing |
-| --- | --- | --- | --- |
-| F1 isolation, every feasible resource cell | Required; no external wait is injected into real retrieval | Not applicable to direct retrieval | Fault subset at the four paired executive configurations |
-| M1 orchestrator path, every feasible resource cell and both constrained-service sweeps, subject to section 16.9 | Required | One declared supported replay profile required when schedule-feasible, with the mandatory Tier 1 pacing fallback in section 16.7; if calibration is unavailable, use a clearly hypothetical profile and mark empirical replay unavailable | Four paired executive configurations |
-| Worker and two/four-instance comparisons | Required | Same supported replay profile as single-instance comparison | Boundary, skew, and recovery subset |
-| Thin Next.js forwarding comparison | Matched direct-core and web-BFF entry at the four orchestrator executive pairs | Same supported replay and pacing as matching direct controls | Fixed Next.js allocation; early flush, abort/cleanup, bytes and per-service overhead; never substitute for the core grid |
-| B1/B2/B3 deep dives | Four paired executive configurations | Same profile at those configurations | Declared selected slow/tail cells |
-| B4/B5 interventions | Appropriate controlled profile | Not required | Four paired executive configurations; never pooled into ordinary M1 |
+| Experiment family                                                                                               | Minimum-wait network control                                                   | Calibrated replay                                                                                                                                                                                                                         | Sensitivity/fault/pacing                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| F1 isolation, every feasible resource cell                                                                      | Required; no external wait is injected into real retrieval                     | Not applicable to direct retrieval                                                                                                                                                                                                        | Fault subset at the four paired executive configurations                                                                 |
+| M1 orchestrator path, every feasible resource cell and both constrained-service sweeps, subject to section 16.9 | Required                                                                       | One declared supported replay profile required when schedule-feasible, with the mandatory Tier 1 pacing fallback in section 16.7; if calibration is unavailable, use a clearly hypothetical profile and mark empirical replay unavailable | Four paired executive configurations                                                                                     |
+| Worker and two/four-instance comparisons                                                                        | Required                                                                       | Same supported replay profile as single-instance comparison                                                                                                                                                                               | Boundary, skew, and recovery subset                                                                                      |
+| Thin Next.js forwarding comparison                                                                              | Matched direct-core and web-BFF entry at the four orchestrator executive pairs | Same supported replay and pacing as matching direct controls                                                                                                                                                                              | Fixed Next.js allocation; early flush, abort/cleanup, bytes and per-service overhead; never substitute for the core grid |
+| B1/B2/B3 deep dives                                                                                             | Four paired executive configurations                                           | Same profile at those configurations                                                                                                                                                                                                      | Declared selected slow/tail cells                                                                                        |
+| B4/B5 interventions                                                                                             | Appropriate controlled profile                                                 | Not required                                                                                                                                                                                                                              | Four paired executive configurations; never pooled into ordinary M1                                                      |
 
 A missing supported calibration remains explicit; a hypothetical replay cannot be counted as measured external behavior. This matrix defines minimum coverage, not permission to purchase more samples or invent support for an unimplemented protocol.
 
@@ -438,7 +442,6 @@ B1/B2 standalone isolation controls may explicitly select output-muted behavior,
 
 The fixed schedule is a controlled submission-demand model, not a claim about natural caller think time. Before load progression, run a **load-one feasibility control** for every workload/profile/pacing combination and all predeclared ordinary fixtures, replay tuples, and seed schedules. Measure maximum submission-to-virtual-playback-completion occupancy (text completion for muted controls). Require occupancy plus a margin of at least 20% of the minimum intended gap to fit that gap. Independent jitter makes the minimum gaps 24, 12, and 6 seconds at two, four, and eight turns/minute; occupancy limits are therefore 19.2, 9.6, and 4.8 seconds. Input fixtures are completed prerecorded uploads; capture duration stays outside HTTP submit latency and is still included in audio-usage costs. This profile does not claim that a natural caller could capture the next utterance during the remaining gap. A future realistic capture/think-time profile must account for that cycle separately.
 
-
 Any load-one busy-schedule-miss or failure of these bounds makes the combination **infeasible-by-workload/profile**, invalidating its capacity screen rather than establishing a service-capacity failure. Retain the observed pacing limit and achieved turn rate; no 99.9% capacity point is published for it. At higher loads, misses after a passing load-one control remain failed offers under section 16.4, so service slowdown cannot silently reduce demand.
 
 Primary minimum-wait four-turn M1 must select concise, declared fixtures and feasible seeded schedules, including its mandatory multi-segment B3 case whose speech outlives SSE, that pass without changing segmentation, sample rate, playback gating, or the margin. If that cannot be demonstrated the primary scenario is blocked. Longer realistic answers and utterances remain B4/pacing sensitivity cases, with their true costs and infeasibility visible. Calibrated slow profiles and eight-turn voice cells may legitimately be infeasible; report them instead of silently shortening fixtures, muting typed output, or changing pacing. If the declared realistic-wait replay is infeasible at four turns/minute, Tier 1 must test the same replay tuples, fixtures, output mode, and seed policy at two turns/minute at all four paired executive configurations. Run the load-one gate again with its 19.2-second occupancy ceiling before discovery. Label every result as a two-turn pacing substitute and retain the original four-turn infeasibility; it is not a four-turn capacity result. If two turns/minute is also infeasible, the implementation plan must predeclare a bounded slower schedule using the same 10-percent jitter, 20-percent gap margin, and unchanged workload, and obtain owner agreement before executing that additional series. Do not repeatedly search for a favorable pacing or shorten fixtures. If no agreed feasible replay series can be executed, publish the limitation and leave VP question 4 and the realistic-wait part of Tier 1 incomplete. A missing empirical calibration remains unavailable: a clearly labeled hypothetical-wait profile may exercise the same fallback and inform sensitivity, but cannot establish measured external behavior. These fallback requirements govern sections 16.5 and 16.9. Other separately named sensitivity profiles cannot replace an infeasible original profile.
@@ -457,10 +460,10 @@ Set and record `CLAUDE_WEB_SEARCH=disabled` for primary mock and calibration run
 
 This clause governs the coverage/procedure requirements in sections 10, 14, and 16.5. Before execution, the implementation plan supplies a machine-hour range by experiment family and tier, assumptions for bracket depth, 180-second ramps, steady observation, repetitions, drain, 30-minute soaks, and possible 60-minute sample extensions. Include host-hours and hosting cost separately when experiments run in parallel, plus setup/analysis effort and a maximum campaign-time budget for owner approval. This specification does not authorize execution or invent an estimate before a baseline machine and bracket policy exist. On reaching the accepted budget, stop, retain incomplete cells, and present a partial report; do not silently drop scope or buy more time.
 
-| Tier | Required scope and procedure | Publishable result |
-| --- | --- | --- |
-| 1 — decision baseline | F1 discovery at the four paired executive configurations; orchestrator-constrained M1 minimum-wait and feasible replay there, including the mandatory section 16.7 pacing fallback; default-admission M1 controls there. Section 10 steps 1–3 and 6 apply everywhere in this tier, then steps 4–5 apply to each feasible M1 series with a passing point. Complete profile/pacing feasibility and topology/observer/headroom prerequisites first. | Confirmed low-lag M1 candidates where evidence passes, admission-versus-hardware comparisons, F1 screened headroom; visibly partial matrix |
-| 2 — resource attribution | F1 discovery in the remaining 12 cells; orchestrator-constrained M1 discovery in those cells; lookup-constrained M1 discovery in all cells unless the reduction rule below applies. Steps 1–3 and 6 apply to every executed cell/profile. Steps 4–5 additionally apply at the four paired executive configurations in the lookup-constrained sweep, unless explicitly reduced by the rule. | Full required discovery curves, explicit reduced cells, additional confirmed paired candidates; no confirmed capacity labels on discovery-only cells |
+| Tier                       | Required scope and procedure                                                                                                                                                                                                                                                                                                                                                                                                                                        | Publishable result                                                                                                                                                              |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 — decision baseline      | F1 discovery at the four paired executive configurations; orchestrator-constrained M1 minimum-wait and feasible replay there, including the mandatory section 16.7 pacing fallback; default-admission M1 controls there. Section 10 steps 1–3 and 6 apply everywhere in this tier, then steps 4–5 apply to each feasible M1 series with a passing point. Complete profile/pacing feasibility and topology/observer/headroom prerequisites first.                    | Confirmed low-lag M1 candidates where evidence passes, admission-versus-hardware comparisons, F1 screened headroom; visibly partial matrix                                      |
+| 2 — resource attribution   | F1 discovery in the remaining 12 cells; orchestrator-constrained M1 discovery in those cells; lookup-constrained M1 discovery in all cells unless the reduction rule below applies. Steps 1–3 and 6 apply to every executed cell/profile. Steps 4–5 additionally apply at the four paired executive configurations in the lookup-constrained sweep, unless explicitly reduced by the rule.                                                                          | Full required discovery curves, explicit reduced cells, additional confirmed paired candidates; no confirmed capacity labels on discovery-only cells                            |
 | 3 — scaling and robustness | Required orchestrator worker/two/four-instance comparisons, bounded direct-versus-Next.js forwarding controls, and paired B1/B2/B3, B4/B5, pacing, fault/recovery and instrumentation-overhead subsets. Steps 1–3 and 6 apply to capacity comparisons; steps 4–5 also apply to selected worker/instance configurations used for supported-session costs or efficiency. Intervention/correctness runs use their declared oracle rather than ordinary-capacity soaks. | Scaling, web-forwarding overhead and robustness conclusions limited to the tested comparisons; completed campaign only when all required tiers and evidence gates are satisfied |
 
 Every session plateau has at least a 180-second staggered-population ramp before its 120-second steady observation; retain setup, warmup, replacement, and drain overhead. Boundary repetition in step 4 covers baseline, last passing point, boundary, and first failure where reachable; unreached failure remains a lower bound. F1 discovery uses offered lookup RPS rather than conversation sessions, with an appropriate ramp and equivalent steady-duration/cleanup policy; it does not generate a voice-session candidate or voice soak. Confirm any F1 limit used as a quantitative hardware comparison with three independent repeats and applicable sample evidence; otherwise label it screened only.

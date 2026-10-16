@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/spec/voice-bff-performance-research-design-review-d0308a82e10640138be8eed7916011be/README.md) and its exact bytes remain available in the [evidence archive](../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `27025b7de18a57640ef23b595f2ac3b2fb1878ef846cc92bf29e65d05f711b8c`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Voice BFF performance research specification review index
 
 Date: October 15, 2026 (America/Chicago).
@@ -10,11 +14,11 @@ Specification: [2026-10-14-39-voice-bff-performance-research-design.md](../../..
 
 ## Review chain
 
-| Stage | Requested selections | Result | Artifact evidence |
-| --- | --- | --- | --- |
-| Initial draft | Coordinator author | Committed before reviews | `49126847bf74f09064ea38ca04f401d8fd8960ab`; SHA-256 `e0e95479c33a44c0a74b72ed239faa735a3bf4ef7d1e80c6ca92da2c22c32255` |
-| Native SAR | Codex `gpt-6-astra` / `high`, same native reviewer across rounds | Accepted after two rounds and one author revision; no required or optional revision remained at that stage | Revised artifact `52ec46fa8dcf37dd250133be314541f2f4fb9407`; SHA-256 `28a34d9d29bdfcc3effd59e8c85231073316cb25b3725dc353c34255aaca1438` |
-| XPR | Codex author `gpt-6.1-sol` / `high`; Claude reviewer `claude-opus-5-5` / `high` | Accepted after two reviewer rounds and one author revision; normal author finalization completed | Revised artifact `55d8d208d0a5c465fdec820b11688e112afa6865`; SHA-256 `2ee7b08cff5b8d5cf5f655bffc08a65219b0e9d0dc6e03b86e84654788a832e5` |
+| Stage         | Requested selections                                                            | Result                                                                                                     | Artifact evidence                                                                                                                       |
+| ------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Initial draft | Coordinator author                                                              | Committed before reviews                                                                                   | `49126847bf74f09064ea38ca04f401d8fd8960ab`; SHA-256 `e0e95479c33a44c0a74b72ed239faa735a3bf4ef7d1e80c6ca92da2c22c32255`                  |
+| Native SAR    | Codex `gpt-6-astra` / `high`, same native reviewer across rounds                | Accepted after two rounds and one author revision; no required or optional revision remained at that stage | Revised artifact `52ec46fa8dcf37dd250133be314541f2f4fb9407`; SHA-256 `28a34d9d29bdfcc3effd59e8c85231073316cb25b3725dc353c34255aaca1438` |
+| XPR           | Codex author `gpt-6.1-sol` / `high`; Claude reviewer `claude-opus-5-5` / `high` | Accepted after two reviewer rounds and one author revision; normal author finalization completed           | Revised artifact `55d8d208d0a5c465fdec820b11688e112afa6865`; SHA-256 `2ee7b08cff5b8d5cf5f655bffc08a65219b0e9d0dc6e03b86e84654788a832e5` |
 
 The SAR acceptance applies to its identified revision, not retrospectively to the later XPR changes. The XPR independently reviewed the full revised specification and retained SAR chain. Its final response has no required changes and retains two nonblocking optional observations for owner consideration. Those observations were not silently applied after sealed acceptance.
 

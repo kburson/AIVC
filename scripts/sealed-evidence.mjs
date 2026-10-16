@@ -31,6 +31,15 @@ export const tutorialEvidenceCommit =
   '89fc7a6125cd4b2be6f0f338dea928bd81bcea45';
 export const tutorialArchivePath =
   'docs/quality-evidence/2026-10-14-25-tutorial-originals.json';
+
+export const performanceEvidenceCommit =
+  'b612108309811663ffad1e04ba2005621c68ea5f';
+export const performanceArchivePath =
+  'docs/quality-evidence/2026-10-16-39-originals.json';
+const performanceCorpus = new RegExp(
+  '^(?:docs/peer-reviews/(?:plan/voice-bff-performance-research-review-37310796a92245e3930c81b664fee657|spec/voice-bff-performance-research-design-review-d0308a82e10640138be8eed7916011be)/.+[.]md|docs/superpowers/(?:plans/(?:2026-10-15-39-performance-documentation-delivery|2026-10-15-39-voice-bff-performance-research)|specs/2026-10-14-39-voice-bff-performance-research-design)[.]md)$',
+);
+
 function verifySnapshot(
   root,
   expectedSourceCommit,
@@ -145,6 +154,12 @@ export function verifyEvidenceArchive({
       new RegExp(
         '^docs/(?:peer-reviews/spec/aivc-interactive-tutorial-design-review-cb28e9fe5863446ca5d949d96998909c/.+[.]md|superpowers/specs/2026-10-13-15-aivc-interactive-tutorial-design[.]md)$',
       ),
+    ) +
+    verifySnapshot(
+      root,
+      performanceEvidenceCommit,
+      performanceArchivePath,
+      performanceCorpus,
     )
   );
 }

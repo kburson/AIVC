@@ -1,6 +1,10 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/plan/voice-bff-performance-research-review-37310796a92245e3930c81b664fee657/sar/author-response-round-2-architecture-correction.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `b634ed63d868a30640ba00277a5512a820a06b4d8cc25b20765758fd3e0bc9b6`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Story 39 plan — round2 dispositions and owner architecture correction
 
-The coordinator read the complete same-session Astra round2 report before revising. Date: October15,2026 (America/Chicago). Issue: https://github.com/kburson/AIVC/issues/39.
+The coordinator read the complete same-session Astra round2 report before revising. Date: October15,2026 (America/Chicago). Issue: <https://github.com/kburson/AIVC/issues/39>.
 
 Revised plan SHA-256:8c74c0533d3debe88f3f4f475361b2d3df87a3752b9df6aa25c903cf0ff52d66. Governing corrected spec: commit3e96c9e5734e2e940d849c3e1339bcb0f0592c97, SHA-2567146781add44a11ba5f90371482901a645ffc4b14c8e8fa50ef23f3361270db4.
 

@@ -1,6 +1,10 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/plan/voice-bff-performance-research-review-37310796a92245e3930c81b664fee657/sar/fastify-architecture-amendment/review-request.md) and its exact bytes remain available in the [evidence archive](../../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `1a14f53a7bf08c84310a415360f8d8370ab72aa19f4486a30caf471848967b75`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Story39 corrected Fastify architecture — native SAR scoped request
 
-Date: October15,2026 (America/Chicago). Tracked issue: https://github.com/kburson/AIVC/issues/39.
+Date: October15,2026 (America/Chicago). Tracked issue: <https://github.com/kburson/AIVC/issues/39>.
 
 Artifact: docs/superpowers/plans/2026-10-15-39-voice-bff-performance-research.md.
 Artifact commit:200bb8c4680d22a1315e357ccf70dda19b7e451a.

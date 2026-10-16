@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/superpowers/plans/2026-10-15-39-performance-documentation-delivery.md) and its exact bytes remain available in the [evidence archive](../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `da6ee0563cf0da4d66ca162f3573c6299f6f91792b8dc228ed65e7e8508ef582`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Story 39 documentation delivery and implementation backlog
 
 ## Scope
@@ -21,19 +25,19 @@ Complete documentation story [#39](https://github.com/kburson/AIVC/issues/39): p
 
 [Migration #40](https://github.com/kburson/AIVC/issues/40) establishes the three separate stateless service containers and accepted integrated contract. It is a separate application prerequisite, not a research child. [Implementation epic #41](https://github.com/kburson/AIVC/issues/41) is natively blocked by #40. The eleven research children are native sub-issues of #41, and each carries #39/source-plan provenance. The conservative serial chain below preserves the plan's integration order; any future parallelization requires explicit dependency review. Task 0 is directly blocked by #40, so the chain inherits that prerequisite.
 
-| Plan task | Story | Scope | Native blocker |
-| --- | --- | --- | --- |
-| 0 | [#42](https://github.com/kburson/AIVC/issues/42) | Verify the real baseline and quote the execution environment | #40 |
-| 1 | [#43](https://github.com/kburson/AIVC/issues/43) | Establish immutable records and read-only evidence verification | #42 |
-| 2 | [#44](https://github.com/kburson/AIVC/issues/44) | Instrument local APIs and expose bounded research configuration | #43 |
-| 3 | [#45](https://github.com/kburson/AIVC/issues/45) | Build seeded network provider simulators and isolate paid egress | #44 |
-| 4 | [#46](https://github.com/kburson/AIVC/issues/46) | Add the separate bounded live calibration mode | #45 |
-| 5 | [#47](https://github.com/kburson/AIVC/issues/47) | Prove k6 can observe the real streaming conversation | #46 |
-| 6 | [#48](https://github.com/kburson/AIVC/issues/48) | Implement paced sessions, speech scheduling and complete outcomes | #47 |
-| 7 | [#49](https://github.com/kburson/AIVC/issues/49) | Enforce resources and implement the finite campaign controller | #48 |
-| 8 | [#50](https://github.com/kburson/AIVC/issues/50) | Derive honest capacity curves and bottleneck attribution | #49 |
-| 9 | [#51](https://github.com/kburson/AIVC/issues/51) | Build the cost model and executive/technical report | #50 |
-| 10 | [#52](https://github.com/kburson/AIVC/issues/52) | Execute the agreed tiers and publish the evidence-backed report | #51 |
+| Plan task | Story                                            | Scope                                                             | Native blocker |
+| --------- | ------------------------------------------------ | ----------------------------------------------------------------- | -------------- |
+| 0         | [#42](https://github.com/kburson/AIVC/issues/42) | Verify the real baseline and quote the execution environment      | #40            |
+| 1         | [#43](https://github.com/kburson/AIVC/issues/43) | Establish immutable records and read-only evidence verification   | #42            |
+| 2         | [#44](https://github.com/kburson/AIVC/issues/44) | Instrument local APIs and expose bounded research configuration   | #43            |
+| 3         | [#45](https://github.com/kburson/AIVC/issues/45) | Build seeded network provider simulators and isolate paid egress  | #44            |
+| 4         | [#46](https://github.com/kburson/AIVC/issues/46) | Add the separate bounded live calibration mode                    | #45            |
+| 5         | [#47](https://github.com/kburson/AIVC/issues/47) | Prove k6 can observe the real streaming conversation              | #46            |
+| 6         | [#48](https://github.com/kburson/AIVC/issues/48) | Implement paced sessions, speech scheduling and complete outcomes | #47            |
+| 7         | [#49](https://github.com/kburson/AIVC/issues/49) | Enforce resources and implement the finite campaign controller    | #48            |
+| 8         | [#50](https://github.com/kburson/AIVC/issues/50) | Derive honest capacity curves and bottleneck attribution          | #49            |
+| 9         | [#51](https://github.com/kburson/AIVC/issues/51) | Build the cost model and executive/technical report               | #50            |
+| 10        | [#52](https://github.com/kburson/AIVC/issues/52) | Execute the agreed tiers and publish the evidence-backed report   | #51            |
 
 All delivery issues were created/tethered through the sanctioned wrapper after preflight. All remain open in Backlog with no implementation started. Filing these issues is not a spending or execution approval. #39's completion does not require completing its separately scoped implementation successors.
 
@@ -91,3 +95,13 @@ Run: `gh issue view 52 --repo kburson/AIVC --json blockedBy`
 These read-only command outputs require comparison to the explicit source/count/dependency expectations above; a successful API read alone is not proof of the relationship. The coordinator independently read and checked all twelve native edges before recording the handoff.
 
 These checks validate this documentation/backlog delivery, not application behavior or performance. Future application and research test commands belong to their unstarted delivery stories. Publication/merge and final issue state require separate live readback; no result is predeclared here.
+
+## Bounded delivery quality-preservation repair
+
+The owner requested PR #53 delivery and synchronization with current trunk. The resulting lint/format findings are repaired through the existing original-byte archive and labeled-view policy. This operational addition extends only the earlier owned-documentation path limitation: it also permits scripts/sealed-evidence.mjs and tests/scripts/evidence-archive.test.mjs to enroll and verify the new fixed archive. It does not authorize application, migration or research implementation.
+
+Preserve all 32 original documents from b612108309811663ffad1e04ba2005621c68ea5f in docs/quality-evidence/2026-10-16-39-originals.json before creating these views. Independently pin that source and derive complete corpus membership from the two exact performance-research review groups and the three exact #39 specification/plan paths. Keep the three previous archives and their 90 originals unchanged; all four archives contain 122 originals. Preserve ancestry, canonical encoding, hash/length, original Git-blob equality and regular-path checks.
+
+Each current document is a formatting view linked to its original bytes. Original reviewer identities, findings, dispositions and acceptance hashes remain historical authority; formatting creates no new sealed SAR/XPR acceptance for later owner amendments. Render original protocol metadata as YAML code, as in the existing views. Strict Markdownlint and Prettier still scan every current view.
+
+Verify the complete good real-Git fixture before each tamper assertion. Retain tutorial-tamper coverage and add a #39-original forgery with recomputed declared hash, length and base64 that must fail against the historical Git blob. Follow RED/GREEN before enrolling the archive in executable verification. The real diff now includes quality code: retain required owning/full/canonical Test, current CI, independent whole-PR review, approval, expected-head delivery, verified receipt and Close gates. Do not use the historical docs-only label to suppress code verification. Preserve all research budgets and keep migration #40, epic #41 and children #42–#52 unstarted.

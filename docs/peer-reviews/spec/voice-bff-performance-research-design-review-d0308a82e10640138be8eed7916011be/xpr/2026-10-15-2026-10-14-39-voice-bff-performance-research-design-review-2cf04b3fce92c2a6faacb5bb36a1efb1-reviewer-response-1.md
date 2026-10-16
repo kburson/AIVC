@@ -1,31 +1,46 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/spec/voice-bff-performance-research-design-review-d0308a82e10640138be8eed7916011be/xpr/2026-10-15-2026-10-14-39-voice-bff-performance-research-design-review-2cf04b3fce92c2a6faacb5bb36a1efb1-reviewer-response-1.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `d7a05aa89266c09f754628940e57456c10ce2e517eae69c6b7e4f8ae55a7367c`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-2cf04b3fce92c2a6faacb5bb36a1efb1"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-2cf04b3fce92c2a6faacb5bb36a1efb1'
+role: 'reviewer'
 turn: 1
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/specs/2026-10-14-39-voice-bff-performance-research-design.md"
-artifact_commit: "07301c9c720a199850d0e8720316940575ddd1ae"
-artifact_blob: "8c0099734220fc899fb9a70d7843df2ad7a9c18f"
-artifact_digest: "sha256:28a34d9d29bdfcc3effd59e8c85231073316cb25b3725dc353c34255aaca1438"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/specs/2026-10-14-39-voice-bff-performance-research-design.md'
+artifact_commit: '07301c9c720a199850d0e8720316940575ddd1ae'
+artifact_blob: '8c0099734220fc899fb9a70d7843df2ad7a9c18f'
+artifact_digest: 'sha256:28a34d9d29bdfcc3effd59e8c85231073316cb25b3725dc353c34255aaca1438'
 agent:
-  host: "claude-code"
-  provider: "anthropic"
-  model_id: "claude-opus-5-5"
-  model_display: "claude-opus-5-5"
-  session_fingerprint: "sha256:fa258c7fab72affedc1cbbed003c94c72e90757978a36794cea76dfb997ec052"
-  identity_source: "runtime"
-started_at: "2026-10-15T05:00:22.224Z"
-submitted_at: "2026-10-15T05:04:13.312Z"
-finding_ids: ["R1-F001","R1-F002","R1-F003","R1-F004","R1-F005","R1-F006","R1-F007","R1-F008","R1-F009"]
+  host: 'claude-code'
+  provider: 'anthropic'
+  model_id: 'claude-opus-5-5'
+  model_display: 'claude-opus-5-5'
+  session_fingerprint: 'sha256:fa258c7fab72affedc1cbbed003c94c72e90757978a36794cea76dfb997ec052'
+  identity_source: 'runtime'
+started_at: '2026-10-15T05:00:22.224Z'
+submitted_at: '2026-10-15T05:04:13.312Z'
+finding_ids:
+  [
+    'R1-F001',
+    'R1-F002',
+    'R1-F003',
+    'R1-F004',
+    'R1-F005',
+    'R1-F006',
+    'R1-F007',
+    'R1-F008',
+    'R1-F009',
+  ]
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 

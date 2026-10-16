@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/plan/voice-bff-performance-research-review-37310796a92245e3930c81b664fee657/sar/astra-sar-report-round-2.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `87abbc146b59bba269741f4b0adcb888820e102f5ea020c3723217f14d06b09b`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Story 39 performance research plan — native SAR round 2
 
 Decision: **changes-requested**. Two required P2 corrections remain in the new finite inventory. No P0 or P1 finding. Both prior optional observations are addressed. This is round 2 of the maximum three rounds, in the same native reviewer session.
@@ -12,11 +16,11 @@ Decision: **changes-requested**. Two required P2 corrections remain in the new f
 
 ## Prior finding dispositions
 
-| Prior ID | Reviewer disposition | Evidence |
-| --- | --- | --- |
-| R1-F001 | Substantially addressed, but inventory correction still required | Section 8 now supplies bounded families, controls, context/tuple counts, tier attribution and explicit evidence reuse. Task 7 validates inventory and reconciliation. The broad missing-policy problem is repaired. The new concrete inventory exposes the two remaining defects below; do not claim complete closure until corrected. |
-| R1-O001 | Addressed | Task 8, line 375 and section 9, lines 571–579, preserve independent-session count, percentile method/precision and descriptive repeat ranges, with missing-provenance refusal even at high pooled volume. The range is explicitly not a confidence interval. |
-| R1-O002 | Addressed | Task 1, lines 195–209, and section 9, lines 553–568, establish an exclusive run before work, durable offered records, bounded append-only collection, separate terminal sealing and interruption recovery that cannot invent successful outcomes. |
+| Prior ID | Reviewer disposition                                             | Evidence                                                                                                                                                                                                                                                                                                                               |
+| -------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1-F001  | Substantially addressed, but inventory correction still required | Section 8 now supplies bounded families, controls, context/tuple counts, tier attribution and explicit evidence reuse. Task 7 validates inventory and reconciliation. The broad missing-policy problem is repaired. The new concrete inventory exposes the two remaining defects below; do not claim complete closure until corrected. |
+| R1-O001  | Addressed                                                        | Task 8, line 375 and section 9, lines 571–579, preserve independent-session count, percentile method/precision and descriptive repeat ranges, with missing-provenance refusal even at high pooled volume. The range is explicitly not a confidence interval.                                                                           |
+| R1-O002  | Addressed                                                        | Task 1, lines 195–209, and section 9, lines 553–568, establish an exclusive run before work, durable offered records, bounded append-only collection, separate terminal sealing and interruption recovery that cannot invent successful outcomes.                                                                                      |
 
 ## Required findings
 

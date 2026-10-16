@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/spec/voice-bff-performance-research-design-review-d0308a82e10640138be8eed7916011be/sar/review-request.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `29cbfea1f67ca4d44d7aa8681e8c992c3c73518af446f30779641c0d51a435a6`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Voice BFF performance research specification SAR request
 
 Date: October 14, 2026 (America/Chicago).

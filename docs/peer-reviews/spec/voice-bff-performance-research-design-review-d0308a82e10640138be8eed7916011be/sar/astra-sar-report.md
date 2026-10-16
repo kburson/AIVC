@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/spec/voice-bff-performance-research-design-review-d0308a82e10640138be8eed7916011be/sar/astra-sar-report.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `c3a5077d596ea6bd1a7d747b6f45b60e670b7ac749b0c6ff360d4b3fbbe7f27a`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Astra SAR report — round 1
 
 Date: October 14, 2026 (America/Chicago).

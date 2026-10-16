@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/spec/voice-bff-performance-research-design-review-d0308a82e10640138be8eed7916011be/xpr/2026-10-15-2026-10-14-39-voice-bff-performance-research-design-review-2cf04b3fce92c2a6faacb5bb36a1efb1-review-manifest.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `a1b3a27203d3f0e8d443a244a14fc1485cec7d4f946e27319f962a20e2b8d183`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:e53bf4d9991ae94a699fede1d62fd90324e45923de951babcb8d9ad237900bd9" -->
 
 # Review manifest
@@ -159,9 +163,7 @@ Mode: `normal`
   },
   "record_id": "review-2cf04b3fce92c2a6faacb5bb36a1efb1",
   "recoveries": [],
-  "residual_risk": [
-    "human-authority-unavailable"
-  ],
+  "residual_risk": ["human-authority-unavailable"],
   "review_id": "review-2cf04b3fce92c2a6faacb5bb36a1efb1",
   "runtime": {
     "adapter_version": "1.0.0",
@@ -226,10 +228,7 @@ Mode: `normal`
       "author_response": null,
       "commit": null,
       "decision": "accepted",
-      "finding_ids": [
-        "R2-F001",
-        "R2-F002"
-      ],
+      "finding_ids": ["R2-F001", "R2-F002"],
       "reviewer_response": {
         "digest": "sha256:42c950356818344345450ef31039ff460062b9a93ae4b25beaf82c19503cbb20",
         "path": "docs/peer-reviews/spec/voice-bff-performance-research-design-review-d0308a82e10640138be8eed7916011be/xpr/2026-10-15-2026-10-14-39-voice-bff-performance-research-design-review-2cf04b3fce92c2a6faacb5bb36a1efb1-reviewer-response-2.md"

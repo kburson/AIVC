@@ -1,6 +1,10 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/plan/voice-bff-performance-research-review-37310796a92245e3930c81b664fee657/sar/sar-loop-summary.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `ce6ff9b406418296d366a804af6d69f446e37ca1810115a1186b9b5b2dbe79a8`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Story39 implementation-plan native SAR lineage
 
-Date: October15,2026 (America/Chicago). Issue:https://github.com/kburson/AIVC/issues/39.
+Date: October15,2026 (America/Chicago). Issue:<https://github.com/kburson/AIVC/issues/39>.
 
 Requested reviewer: native Codex gpt-6-astra/high, same genuine session retained. Dispatch/session evidence is not provider-certified per-turn attestation. This native SAR is not sealed two-party consensus.
 

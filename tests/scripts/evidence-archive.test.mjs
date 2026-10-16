@@ -213,8 +213,8 @@ it('excludes generated VAD dependency assets from scans and refuses formatting t
   );
 });
 
-it('rejects tutorial original tampering even when its declared hash is recomputed', () => {
-  const root = mkdtempSync(join(process.cwd(), '.scratch/tutorial-evidence-'));
+function completeEvidenceFixture() {
+  const root = mkdtempSync(join(process.cwd(), '.scratch/complete-evidence-'));
   roots.push(root);
   execFileSync('git', ['clone', '--shared', '--no-checkout', '.', root], {
     stdio: 'pipe',
@@ -228,6 +228,7 @@ it('rejects tutorial original tampering even when its declared hash is recompute
     'docs/quality-evidence/2026-10-13-25-originals.json',
     'docs/quality-evidence/2026-10-14-25-integration-originals.json',
     'docs/quality-evidence/2026-10-14-25-tutorial-originals.json',
+    'docs/quality-evidence/2026-10-16-39-originals.json',
   ];
   for (const path of archivePaths) {
     const bytes = readFileSync(path);
@@ -245,10 +246,30 @@ it('rejects tutorial original tampering even when its declared hash is recompute
       [join(root, 'scripts/sealed-evidence.mjs')],
       { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
     );
-  assert.match(verify(), new RegExp('Verified 90 original documents'));
+  return { root, archivePaths, verify };
+}
+
+it('rejects tutorial original tampering even when its declared hash is recomputed', () => {
+  const { root, archivePaths, verify } = completeEvidenceFixture();
+  assert.match(verify(), /^Verified 122 original documents/);
   const path = join(root, archivePaths[2]);
   const archive = JSON.parse(readFileSync(path, 'utf8'));
   const forged = Buffer.from('# Forged tutorial review\n');
+  archive.documents[0].base64 = forged.toString('base64');
+  archive.documents[0].byteLength = forged.length;
+  archive.documents[0].sha256 = createHash('sha256')
+    .update(forged)
+    .digest('hex');
+  writeFileSync(path, JSON.stringify(archive));
+  assert.throws(verify, new RegExp('historical Git blob'));
+});
+
+it('rejects performance research original tampering even when its declared hash is recomputed', () => {
+  const { root, archivePaths, verify } = completeEvidenceFixture();
+  assert.match(verify(), /^Verified 122 original documents/);
+  const path = join(root, archivePaths[3]);
+  const archive = JSON.parse(readFileSync(path, 'utf8'));
+  const forged = Buffer.from('# Forged performance research review\n');
   archive.documents[0].base64 = forged.toString('base64');
   archive.documents[0].byteLength = forged.length;
   archive.documents[0].sha256 = createHash('sha256')

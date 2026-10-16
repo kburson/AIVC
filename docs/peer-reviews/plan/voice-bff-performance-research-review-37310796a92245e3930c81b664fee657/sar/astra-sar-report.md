@@ -1,10 +1,14 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/plan/voice-bff-performance-research-review-37310796a92245e3930c81b664fee657/sar/astra-sar-report.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `c07e7015ff47c7f484e57356ceae6ea7bcae4b9249ca361cf22c3bd9cd56f81d`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Story 39 performance research plan — native SAR round 1
 
 Decision: **changes-requested**. One required P2 finding remains. No P0 or P1 defect was identified. The required change concerns executable campaign scope and tier budgeting; it does not require implementation or experiment execution.
 
 ## Reviewed authority and scope
 
-- Tracking: https://github.com/kburson/AIVC/issues/39.
+- Tracking: <https://github.com/kburson/AIVC/issues/39>.
 - Artifact: `docs/superpowers/plans/2026-10-15-39-voice-bff-performance-research.md`, all 492 lines; SHA-256 `8829f19c9c3f8dc845d900216b0cfbfd46d8658d2198986509980e7f81a97721`.
 - Governing amended specification: `docs/superpowers/specs/2026-10-14-39-voice-bff-performance-research-design.md`, all 477 lines; SHA-256 `76c5bc37359cecc3b2dda0cd32fd409771d36c7d639876021b2e3a6c2eebc38d`.
 - Both byte hashes were verified locally and match the exact SAR request. Commit identifiers are request provenance, not independently checked Git evidence; no Git commands were run.

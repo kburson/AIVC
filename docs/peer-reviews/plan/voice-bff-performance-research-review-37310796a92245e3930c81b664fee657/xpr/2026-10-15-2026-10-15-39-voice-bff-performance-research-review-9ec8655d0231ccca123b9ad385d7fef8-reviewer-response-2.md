@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/peer-reviews/plan/voice-bff-performance-research-review-37310796a92245e3930c81b664fee657/xpr/2026-10-15-2026-10-15-39-voice-bff-performance-research-review-9ec8655d0231ccca123b9ad385d7fef8-reviewer-response-2.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `558c9950f05f28abd32200c3cfc4725345f9191c36d4e466839bd40717f2693b`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-9ec8655d0231ccca123b9ad385d7fef8"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-9ec8655d0231ccca123b9ad385d7fef8'
+role: 'reviewer'
 turn: 2
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-15-39-voice-bff-performance-research.md"
-artifact_commit: "8109522128c13412f8333d0029d5382011a3feb3"
-artifact_blob: "09df0a348162042e02efb81c890d47ecb573942e"
-artifact_digest: "sha256:4e9f4e00b671e461e0a66951246441bf29e2ed5a0939fd58bfd4be10f8a6b018"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-15-39-voice-bff-performance-research.md'
+artifact_commit: '8109522128c13412f8333d0029d5382011a3feb3'
+artifact_blob: '09df0a348162042e02efb81c890d47ecb573942e'
+artifact_digest: 'sha256:4e9f4e00b671e461e0a66951246441bf29e2ed5a0939fd58bfd4be10f8a6b018'
 agent:
-  host: "claude-code"
-  provider: "anthropic"
-  model_id: "claude-opus-5-5"
-  model_display: "claude-opus-5-5"
-  session_fingerprint: "sha256:e05027dbc00897fc6a3e980f19c2de7bbe9c8eba3dda27db6159a5d026df83c0"
-  identity_source: "runtime"
-started_at: "2026-10-15T06:15:55.566Z"
-submitted_at: "2026-10-15T06:27:53.033Z"
-finding_ids: ["R2-F001","R2-F002","R2-F003","R2-F004"]
+  host: 'claude-code'
+  provider: 'anthropic'
+  model_id: 'claude-opus-5-5'
+  model_display: 'claude-opus-5-5'
+  session_fingerprint: 'sha256:e05027dbc00897fc6a3e980f19c2de7bbe9c8eba3dda27db6159a5d026df83c0'
+  identity_source: 'runtime'
+started_at: '2026-10-15T06:15:55.566Z'
+submitted_at: '2026-10-15T06:27:53.033Z'
+finding_ids: ['R2-F001', 'R2-F002', 'R2-F003', 'R2-F004']
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
@@ -34,6 +38,7 @@ Mode: `normal`
 This is the round-2 independent XPR of the revised plan. The commit, blob and digest are bound in the frontmatter above. I re-read the entire revised artifact (all 718 lines, including the new normative section 11) against the governing spec. The spec's sections 2–18 were read in full across both rounds, and this round I specifically re-read sections 10–15 and 16–18, as the author requested. I read author response 1 for context only; every disposition below was checked against the artifact text, not against the author's summary. No harness code, tests, k6 builds, benchmarks or paid calls were run.
 
 **R1-F001 (mixed per-pair fallback): resolved.**
+
 - `chooseReplayPacing({contexts,oneApproved})` now takes all eight Tier 1 replay contexts as separate records.
 - Any four-turn failure triggers two-turn replay at all four pairs in both admission modes, which matches spec 16.7.
 - A feasible four-turn package is kept and gains a two-turn package. An infeasible one is replaced.
@@ -43,18 +48,21 @@ This is the round-2 independent XPR of the revised plan. The commit, blob and di
 - These figures are consistent across sections 3, 8 and 11 and the Task 7 fixture.
 
 **R1-F002 (topology preflight): resolved.**
+
 - Section 11 lists, for each family, the measured topology and the auxiliary protection targets.
 - An off-path web BFF and the F1 reference core each run at a fixed 1 CPU/2 GiB, in separate cgroups on helper infrastructure. They never use the constrained target's quota, and they are charged once, by lifetime.
 - The full 18-request proof is kept. "Actual-path" is redefined as each entry's real deployed path.
 - Preflight traffic has its own journal, denominator and usage ledger. All settlement and the collection flush must finish inside the preflight bound, before counters reset and warmup begins.
 
 **R1-F003 (calibration tuples): resolved.**
+
 - The primary paid casebook is now five coherent end-to-end replicates of each of the four ordinary fixtures, with ordered operation IDs and no splicing of samples from different runs.
 - Maximum requests are 25 model, 10 STT and 25 TTS, within the 30-per-provider cap. Segments fit the 84-character cap.
 - Secondary characterization cells are unfunded and are dropped first. The order in which cells are given up is declared in advance.
 - A pre-dispatch whole-casebook quote must prove both the count caps and the USD 10 ceiling. Otherwise it returns `unfunded-casebook` and dispatches zero requests.
 
 **R1-F004 (record schema): resolved.**
+
 - `TurnRecord` now additionally requires `inputMode`, `outputMode`, `oracleId`, `requestId`, `offerClassification` (including `busy-schedule-miss`), a bounded `reason`, and a `speech` array.
 - A busy miss is recorded as a failed offer with no latency sample, and is treated differently at load one than at higher loads.
 - A full `SpeechRequestRecord` provides segment correlation on the client clock, and the server duration is named separately.

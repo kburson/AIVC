@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/b612108309811663ffad1e04ba2005621c68ea5f/docs/superpowers/plans/2026-10-15-39-voice-bff-performance-research.md) and its exact bytes remain available in the [evidence archive](../../quality-evidence/2026-10-16-39-originals.json).
+> Original SHA-256: `23bae15f1cde2d54d8c78994170739a46f05bb3405f259e5815204323d7f289b`. Review acceptance and protocol hashes apply to those original bytes.
+
 # Voice orchestrator Performance Research Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans (recommended native inline method) or superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. This draft authorizes neither implementation nor experiment execution; preserve the owner's selected execution method and applicable AITM approvals.
@@ -18,7 +22,6 @@
 - **Capability:** measure portable orchestrator capacity and compare resource, replica and provider-cost tradeoffs
 - **Need:** local saturation and external-service waits lack separate reproducible evidence
 - **Value or failure prevented:** capacity investments follow measured bottlenecks without uncontrolled provider spending
-
 
 ## Global Constraints
 
@@ -69,43 +72,72 @@ The migration itself belongs to separately governed application architecture wor
 
 All paths below are repository-relative. Paths marked application are conditional on Task 0 matching the integrated revision. Research `.mjs` modules use explicit imports and Node's built-in test runner; portable k6 modules use `.js` without Node builtins. Keep a small exported API per module. Do not introduce a database, dashboard service, root workspace or plotting dependency merely to hold results.
 
-| Boundary | New or modified paths | Responsibility |
-| --- | --- | --- |
-| Baseline and manifest | `tools/performance/{baseline,records,verify}.mjs`; `research/performance/{baseline.json,schema/records.schema.json}` | Source/toolchain/path authority, schema, hashes and read-only verification |
-| Timing (application) | `apps/orchestrator/src/observability/{timing,metrics}.ts`; `apps/retrieval/src/http/timing.ts`; core route/error/SSE/provider/lookup integration points; `apps/web/server/observability/timing.ts` and `apps/web/server/orchestrator-client.ts` for thin forwarding only | Early headers, streaming spans, process samples, bounded export |
-| Research configuration (application) | `apps/orchestrator/src/{config,runtime}.ts`; `apps/orchestrator/src/turns/leases.ts`; `apps/retrieval/src/index.ts` | Default-preserving mock-only network adapters/admission/bind configuration |
-| Network mocks | `tools/performance/simulators/{server,profiles,model,speech}.mjs`; `research/performance/fixtures/{turns,replay,hypothetical}.json` | Versioned protocol fixtures and observed simulator scheduling |
-| Calibration | `tools/performance/calibration/{ledger,run}.mjs`; `research/performance/calibration/{casebook,rate-card}.json` | Separate paid command, durable reservations and sanitized observations |
-| Streaming proof | `tools/performance/clients/{probe,observer}.mjs`; `tools/performance/k6/{compat,transport}.js`; `research/performance/client-lock.json` | Actual k6 protocol support and separately validated audio observer |
-| Conversation model | `tools/performance/shared/{schedule,oracle,playback}.js`; `tools/performance/k6/{f1,b1-b5,m1,open}.js` | Per-session pacing, generation/history/speech state, all-work outcomes |
-| Campaign | `tools/performance/campaign/{matrix,controller,estimate,runner,topology}.mjs`; `tools/performance/containers/{compose.yaml,Dockerfile,balancer.cfg}`; `research/performance/campaign.json` | Enforced isolation, discovery/confirmation/soak/cleanup and finite budgets |
-| Analysis | `tools/performance/analysis/{screen,curves,cost,report}.mjs` | Reconcile counts, classify evidence, cost scenarios, SVG/CSV/HTML output |
-| Operator entry | `tools/performance/cli.mjs`; `docs/research/performance/{README,report-template}.md` | Explicit commands/modes and decision report |
-| Tests | `tests/performance/*.test.mjs`; application timing/config tests in `tests/contracts/` and `tests/integration/` | Deterministic controls and genuine network/streaming integration |
-| Generated evidence | `research/performance/runs/<run-id>/`, `research/performance/analysis/` | Immutable manifests, index, summaries and raw artifact references |
+| Boundary                             | New or modified paths                                                                                                                                                                                                                                                    | Responsibility                                                             |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| Baseline and manifest                | `tools/performance/{baseline,records,verify}.mjs`; `research/performance/{baseline.json,schema/records.schema.json}`                                                                                                                                                     | Source/toolchain/path authority, schema, hashes and read-only verification |
+| Timing (application)                 | `apps/orchestrator/src/observability/{timing,metrics}.ts`; `apps/retrieval/src/http/timing.ts`; core route/error/SSE/provider/lookup integration points; `apps/web/server/observability/timing.ts` and `apps/web/server/orchestrator-client.ts` for thin forwarding only | Early headers, streaming spans, process samples, bounded export            |
+| Research configuration (application) | `apps/orchestrator/src/{config,runtime}.ts`; `apps/orchestrator/src/turns/leases.ts`; `apps/retrieval/src/index.ts`                                                                                                                                                      | Default-preserving mock-only network adapters/admission/bind configuration |
+| Network mocks                        | `tools/performance/simulators/{server,profiles,model,speech}.mjs`; `research/performance/fixtures/{turns,replay,hypothetical}.json`                                                                                                                                      | Versioned protocol fixtures and observed simulator scheduling              |
+| Calibration                          | `tools/performance/calibration/{ledger,run}.mjs`; `research/performance/calibration/{casebook,rate-card}.json`                                                                                                                                                           | Separate paid command, durable reservations and sanitized observations     |
+| Streaming proof                      | `tools/performance/clients/{probe,observer}.mjs`; `tools/performance/k6/{compat,transport}.js`; `research/performance/client-lock.json`                                                                                                                                  | Actual k6 protocol support and separately validated audio observer         |
+| Conversation model                   | `tools/performance/shared/{schedule,oracle,playback}.js`; `tools/performance/k6/{f1,b1-b5,m1,open}.js`                                                                                                                                                                   | Per-session pacing, generation/history/speech state, all-work outcomes     |
+| Campaign                             | `tools/performance/campaign/{matrix,controller,estimate,runner,topology}.mjs`; `tools/performance/containers/{compose.yaml,Dockerfile,balancer.cfg}`; `research/performance/campaign.json`                                                                               | Enforced isolation, discovery/confirmation/soak/cleanup and finite budgets |
+| Analysis                             | `tools/performance/analysis/{screen,curves,cost,report}.mjs`                                                                                                                                                                                                             | Reconcile counts, classify evidence, cost scenarios, SVG/CSV/HTML output   |
+| Operator entry                       | `tools/performance/cli.mjs`; `docs/research/performance/{README,report-template}.md`                                                                                                                                                                                     | Explicit commands/modes and decision report                                |
+| Tests                                | `tests/performance/*.test.mjs`; application timing/config tests in `tests/contracts/` and `tests/integration/`                                                                                                                                                           | Deterministic controls and genuine network/streaming integration           |
+| Generated evidence                   | `research/performance/runs/<run-id>/`, `research/performance/analysis/`                                                                                                                                                                                                  | Immutable manifests, index, summaries and raw artifact references          |
 
 Use these shared record shapes, refined only additively under schema versioning. JS functions below accept plain objects matching these TypeScript-style declarations; JSON schema and runtime validation are authoritative:
 
 ```ts
-type Evidence = 'screened'|'confirmed'|'inconclusive'|'failed'|'invalid'|
-  'censored'|'unavailable'|'infeasible-by-workload/profile'|'reduced-by-rule';
-type Outcome = 'success'|'failed'|'rejected'|'dropped'|'unfinished'|'planned-cancel';
+type Evidence =
+  | 'screened'
+  | 'confirmed'
+  | 'inconclusive'
+  | 'failed'
+  | 'invalid'
+  | 'censored'
+  | 'unavailable'
+  | 'infeasible-by-workload/profile'
+  | 'reduced-by-rule';
+type Outcome =
+  | 'success'
+  | 'failed'
+  | 'rejected'
+  | 'dropped'
+  | 'unfinished'
+  | 'planned-cancel';
 type TurnRecord = {
-  schema: 'aivc.perf.turn/v1'; runId: string; sessionId: string; turnId: string;
-  generation: number; type: 'B1'|'B2'|'B3'|'B4'|'B5'; profile: string;
-  offeredAtMs: number; startedAtMs: number|null; outcome: Outcome;
-  textOutcome: Outcome; voiceOutcome: Outcome; cancellationOutcome: Outcome|null;
-  timingsMs: Record<string, number|null>; requiredSegments: number;
-  deliveredSegments: number; usage: Record<string, number>;
+  schema: 'aivc.perf.turn/v1';
+  runId: string;
+  sessionId: string;
+  turnId: string;
+  generation: number;
+  type: 'B1' | 'B2' | 'B3' | 'B4' | 'B5';
+  profile: string;
+  offeredAtMs: number;
+  startedAtMs: number | null;
+  outcome: Outcome;
+  textOutcome: Outcome;
+  voiceOutcome: Outcome;
+  cancellationOutcome: Outcome | null;
+  timingsMs: Record<string, number | null>;
+  requiredSegments: number;
+  deliveredSegments: number;
+  usage: Record<string, number>;
 };
 type RunManifest = {
-  schema: 'aivc.perf.run/v1'; runId: string; mode: 'mock'|'calibration';
-  source: { head: string; sourceDigest: string; dirtyDigest: string|null };
-  inputs: Record<string,string>; // scenario/profile/fixture/tool/image hashes
-  config: Record<string,unknown>; // allocations, seeds, admission, clocks, thresholds
-  infrastructure: Record<string,unknown>; // headroom controls, host inventory, telemetry
-  intervals: Record<string,unknown>; stopReason: string|null;
-  evidence: Evidence; artifacts: { path:string; sha256:string }[];
+  schema: 'aivc.perf.run/v1';
+  runId: string;
+  mode: 'mock' | 'calibration';
+  source: { head: string; sourceDigest: string; dirtyDigest: string | null };
+  inputs: Record<string, string>; // scenario/profile/fixture/tool/image hashes
+  config: Record<string, unknown>; // allocations, seeds, admission, clocks, thresholds
+  infrastructure: Record<string, unknown>; // headroom controls, host inventory, telemetry
+  intervals: Record<string, unknown>;
+  stopReason: string | null;
+  evidence: Evidence;
+  artifacts: { path: string; sha256: string }[];
 };
 ```
 
@@ -115,20 +147,20 @@ Numeric counter zero is not missing evidence. Unavailable metrics use null plus 
 
 Execution order: 0 → 1 → 2 → 3; Task 4 follows 1 and 3; Task 5 follows 2 and 3; Task 6 follows 5; Task 7 follows 1–6; Task 8 follows 7's synthetic evidence fixtures; Task 9 follows 8; Task 10 executes the accepted campaign only after all gates. Application manifest/config changes have one serial owner. Parallel execution, if later selected, must respect these dependencies and distinct file ownership.
 
-| Task | Engineering estimate | Principal uncertainty |
-| --- | --- | --- |
-| 0 Baseline and prerequisites | 3–5 h | Accepted integrated application availability |
-| 1 Evidence contracts | 3–5 h | Existing source-digest conventions |
-| 2 Application instrumentation/admission | 8–14 h | Framework error/stream completion ownership |
-| 3 Network simulators | 6–10 h | Actual provider protocol/SDK redirect support |
-| 4 Paid calibration and ledger | 4–7 h | Usage/rate visibility and continuation accounting |
-| 5 k6 streaming compatibility | 5–10 h | POST/multipart support and concurrent speech |
-| 6 Headless workload/oracle | 8–14 h | Conformance to actual segment/playback behavior |
-| 7 Resource and campaign runner | 9–16 h | Host entitlements, finite controller and cleanup |
-| 8 Validity and capacity analysis | 5–8 h | Sparse strata and attribution |
-| 9 Cost model/report | 6–9 h | Purchasable SKU/contract inputs |
-| 10 Campaign operations/interpretation | 4–8 h active effort | Measured boundaries and repeat length |
-| **Total** | **61–106 h active effort** | Excludes the separately governed orchestration migration, blocked integration time and unattended experiment runtime |
+| Task                                    | Engineering estimate       | Principal uncertainty                                                                                                |
+| --------------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| 0 Baseline and prerequisites            | 3–5 h                      | Accepted integrated application availability                                                                         |
+| 1 Evidence contracts                    | 3–5 h                      | Existing source-digest conventions                                                                                   |
+| 2 Application instrumentation/admission | 8–14 h                     | Framework error/stream completion ownership                                                                          |
+| 3 Network simulators                    | 6–10 h                     | Actual provider protocol/SDK redirect support                                                                        |
+| 4 Paid calibration and ledger           | 4–7 h                      | Usage/rate visibility and continuation accounting                                                                    |
+| 5 k6 streaming compatibility            | 5–10 h                     | POST/multipart support and concurrent speech                                                                         |
+| 6 Headless workload/oracle              | 8–14 h                     | Conformance to actual segment/playback behavior                                                                      |
+| 7 Resource and campaign runner          | 9–16 h                     | Host entitlements, finite controller and cleanup                                                                     |
+| 8 Validity and capacity analysis        | 5–8 h                      | Sparse strata and attribution                                                                                        |
+| 9 Cost model/report                     | 6–9 h                      | Purchasable SKU/contract inputs                                                                                      |
+| 10 Campaign operations/interpretation   | 4–8 h active effort        | Measured boundaries and repeat length                                                                                |
+| **Total**                               | **61–106 h active effort** | Excludes the separately governed orchestration migration, blocked integration time and unattended experiment runtime |
 
 These are planning estimates, not executed measurements or delivery promises. A new k6 extension or alternate streaming implementation is outside the 5–10-hour compatibility gate: if no available pinned build passes, record a blocked prerequisite and propose a separately estimated client change before capacity work.
 
@@ -141,17 +173,17 @@ Use sequential target experiments initially. A target-environment hour means one
 - F1 uses route-matched arrival rates, a 60-second warmup and >=120-second observation per point; budget **0.3–1.1 hours per series** with up to twelve points. Choose the initial F1 rate from a recorded pilot and freeze it.
 - Confirmation allowance per series: baseline/last-pass/boundary/first-fail three times, plus three independent 75% candidate checks and one 30-minute soak. At minimum five minutes/window and up to 60 minutes of steady sampling plus ramp/drain, budget **2–17 hours per confirmed series**. Reuse a baseline only with identical profile/stratum/config and proven noncontention, recording its ID; failed or sparse repeats cannot be repaired by reuse.
 
-| Experiment family | Initial count before infeasibility/reduction | Target-environment hours |
-| --- | --- | --- |
-| F1 grid discovery | 16 | 4.8–17.6 |
-| orchestrator-constrained M1 discovery, minimum-wait + replay | 32 | 16–51.2 |
-| lookup-constrained M1 discovery, same profiles | 32 | 16–51.2 |
-| Default-admission M1 discovery at four pairs | 8 | 4–12.8 |
-| Worker/instance discovery, four deployments × two profiles | 8 | 4–12.8 |
-| Paired and scaling M1 confirmation packages | Up to 34 base; conditional additions are priced separately below: 8 orchestrator + 8 lookup-constrained + 8 default + 8 scaling + 2 matched worker baselines | 68–578 |
-| Mixed-feasibility additional replay packages | At most7 additional two-turn discovery/confirmation packages; section11 | 0–130.2 |
-| Mandatory controls and interventions | Finite inventory and tier attribution in section 8 | Added separately below |
-| **Core discovery/confirmation subtotal** | Controls excluded here; section 8 supplies the complete envelope | **112.8–853.8 target-environment hours** |
+| Experiment family                                            | Initial count before infeasibility/reduction                                                                                                                 | Target-environment hours                 |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------- |
+| F1 grid discovery                                            | 16                                                                                                                                                           | 4.8–17.6                                 |
+| orchestrator-constrained M1 discovery, minimum-wait + replay | 32                                                                                                                                                           | 16–51.2                                  |
+| lookup-constrained M1 discovery, same profiles               | 32                                                                                                                                                           | 16–51.2                                  |
+| Default-admission M1 discovery at four pairs                 | 8                                                                                                                                                            | 4–12.8                                   |
+| Worker/instance discovery, four deployments × two profiles   | 8                                                                                                                                                            | 4–12.8                                   |
+| Paired and scaling M1 confirmation packages                  | Up to 34 base; conditional additions are priced separately below: 8 orchestrator + 8 lookup-constrained + 8 default + 8 scaling + 2 matched worker baselines | 68–578                                   |
+| Mixed-feasibility additional replay packages                 | At most7 additional two-turn discovery/confirmation packages; section11                                                                                      | 0–130.2                                  |
+| Mandatory controls and interventions                         | Finite inventory and tier attribution in section 8                                                                                                           | Added separately below                   |
+| **Core discovery/confirmation subtotal**                     | Controls excluded here; section 8 supplies the complete envelope                                                                                             | **112.8–853.8 target-environment hours** |
 
 The table above is a core subtotal, not the full campaign estimate. Section 8 defines the mandatory controls, finite count parameters, family-by-tier estimates and full envelope; its inventory governs Task 7 and Task 10. Actual discovery failures, statistical insufficiency, validated lookup reductions and unavailable workers can reduce completed work; extra profiles or infrastructure retesting can increase it. Do not count reduced/unavailable cells as measured. Section11 defines the all-pair fallback trigger: replace only an infeasible four-turn package, retain a feasible four-turn package and add its required two-turn package. Results retain separate pacing labels. Section 16.9's lookup reduction applies only with all its measured prerequisites; no resource matrix is silently dropped to meet this estimate.
 
@@ -168,14 +200,13 @@ If unchanged realistic replay fails the two-turn feasibility gate, the sole prop
 ## 4. Implementation tasks
 
 ### Task 0: Verify the real baseline and quote the execution environment
+
 #### Story Intent
 
 - **Beneficiary:** performance engineers
 - **Capability:** verify the real integrated services and quote a reproducible execution environment
 - **Need:** generated assets and guessed host limits cannot establish the research baseline
 - **Value or failure prevented:** invalid source or infrastructure assumptions block experiments before cost is incurred
-
-
 
 **Files:** Create `tools/performance/baseline.mjs`, `research/performance/baseline.json`, `tests/performance/baseline.test.mjs`; update this plan only with an exact verified path/API reconciliation if necessary.
 
@@ -193,8 +224,15 @@ test('an untracked route cannot satisfy the baseline', async () => {
     if (file === 'git' && args[0] === 'rev-parse') return 'a'.repeat(40);
     throw new Error('unexpected command');
   };
-  await assert.rejects(verifyBaseline({root: process.cwd(), expectedHead: 'a'.repeat(40),
-    requiredPaths: ['apps/orchestrator/src/http/app.ts'], exec}), /missing tracked source/);
+  await assert.rejects(
+    verifyBaseline({
+      root: process.cwd(),
+      expectedHead: 'a'.repeat(40),
+      requiredPaths: ['apps/orchestrator/src/http/app.ts'],
+      exec,
+    }),
+    /missing tracked source/,
+  );
 });
 ```
 
@@ -204,14 +242,13 @@ test('an untracked route cannot satisfy the baseline', async () => {
 - [ ] Rerun the baseline test and the accepted application's existing toolchain/contract checks at that revision. Expected outcome: actual recorded evidence, or an explicit prerequisite blocker; no generic bootstrap `npm test` pass claim. Commit only these owned files with `[#<delivery issue>] Verify performance experiment baseline`.
 
 ### Task 1: Establish immutable records and read-only evidence verification
+
 #### Story Intent
 
 - **Beneficiary:** performance engineers and report reviewers
 - **Capability:** preserve immutable run records and detect altered or incomplete evidence
 - **Need:** partial or edited artifacts could otherwise be presented as complete measurements
 - **Value or failure prevented:** capacity claims remain reproducible and auditable
-
-
 
 **Files:** Create `tools/performance/{records,verify}.mjs`, `research/performance/schema/records.schema.json`, `tests/performance/records.test.mjs`, `tools/performance/cli.mjs` with only `verify` wired initially.
 
@@ -224,8 +261,15 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { validateManifest } from '../../tools/performance/records.mjs';
 test('partial evidence is not a complete manifest', () => {
-  assert.throws(() => validateManifest({schema:'aivc.perf.run/v1',runId:'r1',mode:'mock'}),
-    /source|inputs|config/);
+  assert.throws(
+    () =>
+      validateManifest({
+        schema: 'aivc.perf.run/v1',
+        runId: 'r1',
+        mode: 'mock',
+      }),
+    /source|inputs|config/,
+  );
 });
 ```
 
@@ -234,14 +278,13 @@ test('partial evidence is not a complete manifest', () => {
 - [ ] Run the records tests and `node tools/performance/cli.mjs verify research/performance/runs/does-not-exist`; expect tests pass and verifier nonzero with a missing-run reason. Commit only Task 1 files; the failing negative verifier is intentional evidence of refusal.
 
 ### Task 2: Instrument local APIs and expose bounded research configuration
+
 #### Story Intent
 
 - **Beneficiary:** service operators
 - **Capability:** observe bounded timing and resource signals across local service boundaries
 - **Need:** streaming completion and external wait time are not visible in response headers alone
 - **Value or failure prevented:** local bottlenecks can be distinguished from provider waits without leaking sensitive data
-
-
 
 **Files:** Create application timing/metrics modules from section 2; modify the verified routes for turn, speech, capabilities, errors, `sse-response.ts`, `run-turn.ts`, provider/tool boundaries, Fastify app/index and config/runtime/leases. Create `tests/contracts/performance-timing.test.ts`, `tests/contracts/research-config.test.ts`, `tests/integration/performance-streams.test.ts` and `tests/performance/collector.test.mjs`; create `tools/performance/collector.mjs`.
 
@@ -253,12 +296,23 @@ test('partial evidence is not a complete manifest', () => {
 it('does not claim a future stream duration in a header', () => {
   let ms = 0;
   const records: unknown[] = [];
-  const ctx = beginTiming({requestId:'r', service:'orchestrator', now:()=>ms,
-    exporter:{emit:(record:unknown)=>{ records.push(record); return true; }}});
+  const ctx = beginTiming({
+    requestId: 'r',
+    service: 'orchestrator',
+    now: () => ms,
+    exporter: {
+      emit: (record: unknown) => {
+        records.push(record);
+        return true;
+      },
+    },
+  });
   const model = ctx.span('orchestrator.model');
   const early = ctx.headers();
   expect(early.get('Server-Timing') ?? '').not.toContain('orchestrator.model');
-  ms = 250; model.end('success'); ctx.finish('success');
+  ms = 250;
+  model.end('success');
+  ctx.finish('success');
   expect(records.length).toBeGreaterThan(0);
   expect(early.get('Server-Timing') ?? '').not.toContain('250');
 });
@@ -270,14 +324,13 @@ it('does not claim a future stream duration in a header', () => {
 - [ ] Run the new Vitest suites plus `node --test tests/performance/collector.test.mjs` and existing admission/deadline/streaming tests resolved by Task 0. Compare instrumentation on/off in later Task 10; unit tests do not establish zero overhead. Commit the exact instrumentation/config/test paths.
 
 ### Task 3: Build seeded network provider simulators and isolate paid egress
+
 #### Story Intent
 
 - **Beneficiary:** performance engineers
 - **Capability:** replay seeded provider protocols over isolated network simulators
 - **Need:** paid provider traffic is costly and provider variability obscures local saturation
 - **Value or failure prevented:** repeatable load tests measure local capacity without accidental external spending
-
-
 
 **Files:** Create simulator modules/fixtures from section 2, `apps/orchestrator/src/providers/network-mock.ts`, `tests/performance/simulators.test.mjs`, `tests/contracts/network-mock.test.ts`; modify runtime/config to select the narrow network mock only in explicit mock research mode.
 
@@ -290,11 +343,13 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { selectTuple } from '../../tools/performance/simulators/profiles.mjs';
 test('replay keeps first output, completion and bytes from one tuple', () => {
-  const tuples=[{id:'a',firstMs:20,endMs:40,bytes:100},
-    {id:'b',firstMs:80,endMs:300,bytes:900}];
-  const tuple=selectTuple({tuples}, 7, 'short');
-  assert.deepEqual(selectTuple({tuples}, 7, 'short'),tuple);
-  assert.ok(tuples.some(t=>JSON.stringify(t)===JSON.stringify(tuple)));
+  const tuples = [
+    { id: 'a', firstMs: 20, endMs: 40, bytes: 100 },
+    { id: 'b', firstMs: 80, endMs: 300, bytes: 900 },
+  ];
+  const tuple = selectTuple({ tuples }, 7, 'short');
+  assert.deepEqual(selectTuple({ tuples }, 7, 'short'), tuple);
+  assert.ok(tuples.some((t) => JSON.stringify(t) === JSON.stringify(tuple)));
 });
 ```
 
@@ -304,14 +359,13 @@ test('replay keeps first output, completion and bytes from one tuple', () => {
 - [ ] Create a mock container network with explicit local allowlists, no paid credentials and no usable external route. From the actual application namespace attempt a paid-host connection and confirm denial, including SDK fallback/metadata routes; verify intended internal routes work. A test-only hostname interceptor alone does not establish egress isolation. Retain namespace/routing/firewall evidence, not secrets. Commit owned simulator, adapter, config and fixture files.
 
 ### Task 4: Add the separate bounded live calibration mode
+
 #### Story Intent
 
 - **Beneficiary:** engineering managers
 - **Capability:** capture a small coherent set of provider latency and usage observations within funded limits
 - **Need:** external latency and billing assumptions otherwise lack measured provenance
 - **Value or failure prevented:** mocks and financial forecasts have bounded empirical inputs without uncontrolled paid requests
-
-
 
 **Files:** Create calibration ledger/runner/casebook/rate card from section 2, `tests/performance/calibration.test.mjs`; extend CLI with `calibrate --casebook <file> --budget <agreed-budget-file>`.
 
@@ -324,8 +378,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { estimateReservation } from '../../tools/performance/calibration/ledger.mjs';
 test('unknown billing cannot become a zero-cost reservation', () => {
-  assert.throws(()=>estimateReservation({provider:'tts',maxCharacters:120,rate:null}),
-    /unpriced/);
+  assert.throws(
+    () =>
+      estimateReservation({ provider: 'tts', maxCharacters: 120, rate: null }),
+    /unpriced/,
+  );
 });
 ```
 
@@ -335,14 +392,13 @@ test('unknown billing cannot become a zero-cost reservation', () => {
 - [ ] Re-run ledger/runner tests, interrupt/restart a fake calibration run and verify unresolved reservation persistence. Commit only sanitized casebook/rate-input schema, code and tests; never commit API keys or private audio.
 
 ### Task 5: Prove k6 can observe the real streaming conversation
+
 #### Story Intent
 
 - **Beneficiary:** performance engineers
 - **Capability:** prove the load client observes actual streaming answers and concurrent speech
 - **Need:** buffered or incompatible clients can hide first output and miss required audio
 - **Value or failure prevented:** later capacity tests count real protocol outcomes rather than client artifacts
-
-
 
 **Files:** Create client and k6 compatibility modules/client-lock from section 2, `tests/performance/stream-observer.test.mjs`; add bounded compatibility protocol fixture under `tools/performance/clients/fixture.mjs`. Modify no public application transport to accommodate a client limitation.
 
@@ -355,7 +411,10 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { runCompatibilityFixture } from '../../tools/performance/clients/probe.mjs';
 test('speech work does not stop answer event consumption', async () => {
-  const r=await runCompatibilityFixture({speechDelayMs:100,secondDeltaDelayMs:20});
+  const r = await runCompatibilityFixture({
+    speechDelayMs: 100,
+    secondDeltaDelayMs: 20,
+  });
   assert.ok(r.secondDeltaAtMs < r.firstSpeechEndAtMs);
   assert.ok(r.firstDeltaAtMs < r.turnEndAtMs);
 });
@@ -367,14 +426,13 @@ test('speech work does not stop answer event consumption', async () => {
 - [ ] After lock/proof exists run proposed `k6 run tools/performance/k6/compat.js` in mock isolation and retain the fixture report. Rerun Node tests; commit only client/proof/build-lock files. Capacity scenarios remain blocked if the core incremental/concurrent client fails.
 
 ### Task 6: Implement paced sessions, speech scheduling and complete outcomes
+
 #### Story Intent
 
 - **Beneficiary:** performance engineers
 - **Capability:** offer deterministic conversations and evaluate complete text, voice and cancellation outcomes
 - **Need:** busy turns or unfinished speech can otherwise disappear from the denominator
 - **Value or failure prevented:** reported session capacity includes every offered turn and required audio segment
-
-
 
 **Files:** Create portable schedule/oracle/playback modules, k6 scenario modules from section 2, `tests/performance/{schedule,oracle,playback}.test.mjs`; add declared expected segment/text/tool outcomes to `research/performance/fixtures/turns.json`. Reuse or build-test against the actual `SpeechText`/PCM policies verified by Task 0; do not import browser audio globals into k6.
 
@@ -385,17 +443,63 @@ test('speech work does not stop answer event consumption', async () => {
 ```js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checkFeasibility, mapReplayContext } from '../../tools/performance/shared/schedule.js';
+import {
+  checkFeasibility,
+  mapReplayContext,
+} from '../../tools/performance/shared/schedule.js';
 test('10 seconds does not fit four turns but fits two', () => {
-  assert.equal(checkFeasibility({maxOccupancyMs:10000,turnsPerMinute:4,busyMisses:0}).feasible,false);
-  assert.equal(checkFeasibility({maxOccupancyMs:10000,turnsPerMinute:2,busyMisses:0}).feasible,true);
-  assert.deepEqual(mapReplayContext({context:{id:"c1",pair:"1CPU-2GiB",admissionMode:"research",fourFeasible:false,twoFeasible:true},oneApproved:false}),
-    {id:"c1",action:'run',pacing:2,label:'two-turn-pacing-substitute'});
+  assert.equal(
+    checkFeasibility({
+      maxOccupancyMs: 10000,
+      turnsPerMinute: 4,
+      busyMisses: 0,
+    }).feasible,
+    false,
+  );
+  assert.equal(
+    checkFeasibility({
+      maxOccupancyMs: 10000,
+      turnsPerMinute: 2,
+      busyMisses: 0,
+    }).feasible,
+    true,
+  );
+  assert.deepEqual(
+    mapReplayContext({
+      context: {
+        id: 'c1',
+        pair: '1CPU-2GiB',
+        admissionMode: 'research',
+        fourFeasible: false,
+        twoFeasible: true,
+      },
+      oneApproved: false,
+    }),
+    { id: 'c1', action: 'run', pacing: 2, label: 'two-turn-pacing-substitute' },
+  );
 });
 test('20 seconds needs the separately agreed slower series', () => {
-  assert.equal(checkFeasibility({maxOccupancyMs:20000,turnsPerMinute:2,busyMisses:0}).feasible,false);
-  assert.equal(mapReplayContext({context:{id:"c1",pair:"1CPU-2GiB",admissionMode:"research",fourFeasible:false,twoFeasible:false},oneApproved:false}).action,
-    'owner-agreement-required');
+  assert.equal(
+    checkFeasibility({
+      maxOccupancyMs: 20000,
+      turnsPerMinute: 2,
+      busyMisses: 0,
+    }).feasible,
+    false,
+  );
+  assert.equal(
+    mapReplayContext({
+      context: {
+        id: 'c1',
+        pair: '1CPU-2GiB',
+        admissionMode: 'research',
+        fourFeasible: false,
+        twoFeasible: false,
+      },
+      oneApproved: false,
+    }).action,
+    'owner-agreement-required',
+  );
 });
 ```
 
@@ -406,14 +510,13 @@ test('20 seconds needs the separately agreed slower series', () => {
 - [ ] Prove every predeclared ordinary fixture/tuple/seed schedule passes load-one maximum-occupancy feasibility for the chosen profile. Use all declared tuples, not just a selected median. Run k6 mock smoke through real orchestrator/lookup and compare harness speech segmentation/history behavior with application fixture tests. Rerun the three Node suites and commit exact shared/scenario/test/fixture files.
 
 ### Task 7: Enforce resources and implement the finite campaign controller
+
 #### Story Intent
 
 - **Beneficiary:** service operators
 - **Capability:** enforce isolated resource allocations and a finite validated campaign
 - **Need:** peer saturation, partial fallback inputs and unbounded runs can invalidate measurements or exceed budgets
 - **Value or failure prevented:** orchestrator scaling curves remain attributable and execution stops at declared limits
-
-
 
 **Files:** Create campaign modules, container/balancer definitions and campaign config from section 2, `tests/performance/{matrix,controller,estimate,topology}.test.mjs`; extend CLI with `estimate`, `preflight` and `campaign`. Do not add Kubernetes manifests or a custom Next.js server.
 
@@ -426,10 +529,15 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { buildMatrix } from '../../tools/performance/campaign/matrix.mjs';
 test('primary orchestrator discovery retains the entire grid', () => {
-  const cells=buildMatrix({family:'orchestrator-grid',profiles:['minimum-wait'],
-    cpus:[1,2,3,4],memoryGiB:[2,4,8,12],processes:1});
-  assert.equal(cells.length,16);
-  assert.equal(new Set(cells.map(c=>`${c.cpu}/${c.memoryGiB}`)).size,16);
+  const cells = buildMatrix({
+    family: 'orchestrator-grid',
+    profiles: ['minimum-wait'],
+    cpus: [1, 2, 3, 4],
+    memoryGiB: [2, 4, 8, 12],
+    processes: 1,
+  });
+  assert.equal(cells.length, 16);
+  assert.equal(new Set(cells.map((c) => `${c.cpu}/${c.memoryGiB}`)).size, 16);
 });
 ```
 
@@ -441,14 +549,13 @@ test('primary orchestrator discovery retains the entire grid', () => {
 - [ ] Run tests plus proposed `node tools/performance/cli.mjs estimate --campaign research/performance/campaign.json` and `node tools/performance/cli.mjs preflight --campaign research/performance/campaign.json`. Estimate output must instantiate every row and finite parameter in section 8, reject omission of a mandatory family, reconcile family-by-tier subtotals with the campaign total, and include every fresh or explicitly reused control, failed/infeasible attempt, repeat/soak and stop ceiling. Preflight must fail on missing baseline/client-lock/budget evidence; a negative preflight is a successful refusal test, not campaign readiness. Commit exact campaign/container/test files.
 
 ### Task 8: Derive honest capacity curves and bottleneck attribution
+
 #### Story Intent
 
 - **Beneficiary:** engineering leaders
 - **Capability:** derive qualified capacity curves and identify the first binding layer
 - **Need:** independent percentiles and censored runs cannot support reliable scaling claims
 - **Value or failure prevented:** optimization and hardware decisions follow reproducible bottleneck evidence
-
-
 
 **Files:** Create `tools/performance/analysis/{screen,curves}.mjs`, `tests/performance/{screen,curves}.test.mjs`; extend CLI with `analyze --runs <index> --out <new-directory>`.
 
@@ -459,14 +566,25 @@ test('primary orchestrator discovery retains the entire grid', () => {
 ```js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { confirmPoint, selectCandidate } from '../../tools/performance/analysis/screen.mjs';
+import {
+  confirmPoint,
+  selectCandidate,
+} from '../../tools/performance/analysis/screen.mjs';
 test('one failed repeat cannot be hidden by two passes', () => {
-  assert.equal(confirmPoint([{evidence:'confirmed'},{evidence:'failed'},
-    {evidence:'confirmed'}]).evidence,'failed');
+  assert.equal(
+    confirmPoint([
+      { evidence: 'confirmed' },
+      { evidence: 'failed' },
+      { evidence: 'confirmed' },
+    ]).evidence,
+    'failed',
+  );
 });
 test('one confirmed session has no 25 percent headroom', () => {
-  assert.deepEqual(selectCandidate([{id:'p1',sessions:1,evidence:'confirmed'}]),
-    {sessions:1,noHeadroom:true,sourcePointId:'p1'});
+  assert.deepEqual(
+    selectCandidate([{ id: 'p1', sessions: 1, evidence: 'confirmed' }]),
+    { sessions: 1, noHeadroom: true, sourcePointId: 'p1' },
+  );
 });
 ```
 
@@ -477,14 +595,13 @@ test('one confirmed session has no 25 percent headroom', () => {
 - [ ] Run tests and regenerate a clearly labeled synthetic analysis fixture twice; require stable CSV/figure content hashes excluding declared generation timestamps. Corrupt raw input and verify analysis fails read-only validation. Commit only analysis/tests and small labeled verification fixtures; no invented campaign result becomes a completed report.
 
 ### Task 9: Build the cost model and executive/technical report
+
 #### Story Intent
 
 - **Beneficiary:** engineering managers
 - **Capability:** compare measured service capacity and dated operating costs in an executive report
 - **Need:** unavailable provider cells and hidden shared costs can distort financial feasibility
 - **Value or failure prevented:** capacity choices expose uncertainty and marginal cost at each layer
-
-
 
 **Files:** Create `tools/performance/analysis/{cost,report}.mjs`, `docs/research/performance/{README,report-template}.md`, `tests/performance/{cost,report}.test.mjs`; add `research/performance/pricing.json` schema-conformant dated inputs with unknown values retained. Extend CLI with `report`.
 
@@ -497,7 +614,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { providerDemand } from '../../tools/performance/analysis/cost.mjs';
 test('continuations multiply model requests, not callers', () => {
-  assert.equal(providerDemand({sessions:100,turnsPerMinute:4,requestsPerTurn:2}).rpm,800);
+  assert.equal(
+    providerDemand({ sessions: 100, turnsPerMinute: 4, requestsPerTurn: 2 })
+      .rpm,
+    800,
+  );
 });
 ```
 
@@ -508,14 +629,13 @@ test('continuations multiply model requests, not callers', () => {
 - [ ] Rerun tests; validate report fixture links, raw/source manifests, unpriced cells, incomplete coverage and reproducibility instructions. Commit report generator/template/tests. The template stays labeled unpopulated until Task10 supplies valid evidence.
 
 ### Task 10: Execute the agreed tiers and publish the evidence-backed report
+
 #### Story Intent
 
 - **Beneficiary:** research operators
 - **Capability:** execute only approved experiment tiers and publish a complete coverage ledger
 - **Need:** partial runs or exhausted budgets can otherwise be mistaken for completed research
 - **Value or failure prevented:** the final report preserves actual coverage, limitations and stop decisions
-
-
 
 **Files:** Create immutable run directories and indexes under `research/performance/runs/`, derived analysis artifacts, dated final report under `docs/research/performance/`; update operator README with actual pinned commands and storage/retention references. Large raw artifacts stay outside ordinary Git with accessible immutable hashes. No application source changes in this task unless a discovered defect gets its own governed fix and a new baseline.
 
@@ -557,24 +677,24 @@ Task7 owns `estimate/preflight/campaign`; Task4 owns `calibrate`; Task1 owns `ve
 
 ## 6. Requirement-to-delivery map
 
-| Spec requirements | Owner tasks | Required evidence |
-| --- | --- | --- |
-| 1–4 intent, actual backend, topology, attribution | 0,3,7,10 | Integrated source/path record, real orchestrator/lookup/network calls, independently nonbinding peers |
-| 5 full resource/process/instance matrix | 7,10 | Effective cgroups, one-process grids, supported workers, balanced replicas and coverage ledger |
-| 6 bounded calibration | 4,10 | Reservations/request counts/rate sources, per-case actual samples, unknown outcomes |
-| 7 network simulation and egress | 3,7 | Tuple/stream conformance, denied paid access, scheduling/headroom controls |
-| 8 Server-Timing and completion telemetry | 2,5,8 | Normal/error headers, no future durations, correlated spans, observer clocks, collection overhead |
-| 9 workloads and streaming client | 5,6,10 | Pinned compatibility proof, all eligible speech, open/closed scenarios, cancellation |
-| 10 screening/repeats/candidate/soak/cleanup | 6–8,10 | Failed offers, all-three pass, empirical labels, loop/memory gates, bounded settlement |
-| 11 curves and scale attribution | 7–8 | Resource/byte/latency curves, first-binding evidence, correct efficiency formulas |
-| 12 price/quotas/financial feasibility | 0,4,9 | Actual SKU mapping and units, usage provenance, variable/fixed/unknown costs |
-| 13–14 reproducibility, report, completion | 1,8–10 | Immutable raw manifests, regenerated tables/plots, explicit coverage and limitations |
-| 16.1–16.4 metric/oracle/statistics/schedule | 1–2,5–6,8 | Same-clock observations, multi-segment regressions, sample counts, no suppressed offers |
-| 16.5–16.6 coverage and admission | 2,7–10 | Default versus nonbinding research modes, hardware versus semaphore attribution |
-| 16.7 and owner amendment R2-F001 | 6–7,9–10 | Mandatory unchanged two-turn substitute; bounded one-turn agreement; Q4 incomplete if unavailable |
-| 16.8 private topology/search | 2–3,7 | Actual core caller-auth and web Origin/Host conformance through both routes, disabled search and metadata behavior |
-| 16.9 finite tiers and reduction | 7–10 | Complete cost/hour estimate, stop budget, full orchestrator/F1 grids, measured reduction authority |
-| 16.10 and R2-F002 forward references | 3,7 | Independent pre-plateau 1.5× proof and explicit governing-spec links |
+| Spec requirements                                 | Owner tasks | Required evidence                                                                                                  |
+| ------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| 1–4 intent, actual backend, topology, attribution | 0,3,7,10    | Integrated source/path record, real orchestrator/lookup/network calls, independently nonbinding peers              |
+| 5 full resource/process/instance matrix           | 7,10        | Effective cgroups, one-process grids, supported workers, balanced replicas and coverage ledger                     |
+| 6 bounded calibration                             | 4,10        | Reservations/request counts/rate sources, per-case actual samples, unknown outcomes                                |
+| 7 network simulation and egress                   | 3,7         | Tuple/stream conformance, denied paid access, scheduling/headroom controls                                         |
+| 8 Server-Timing and completion telemetry          | 2,5,8       | Normal/error headers, no future durations, correlated spans, observer clocks, collection overhead                  |
+| 9 workloads and streaming client                  | 5,6,10      | Pinned compatibility proof, all eligible speech, open/closed scenarios, cancellation                               |
+| 10 screening/repeats/candidate/soak/cleanup       | 6–8,10      | Failed offers, all-three pass, empirical labels, loop/memory gates, bounded settlement                             |
+| 11 curves and scale attribution                   | 7–8         | Resource/byte/latency curves, first-binding evidence, correct efficiency formulas                                  |
+| 12 price/quotas/financial feasibility             | 0,4,9       | Actual SKU mapping and units, usage provenance, variable/fixed/unknown costs                                       |
+| 13–14 reproducibility, report, completion         | 1,8–10      | Immutable raw manifests, regenerated tables/plots, explicit coverage and limitations                               |
+| 16.1–16.4 metric/oracle/statistics/schedule       | 1–2,5–6,8   | Same-clock observations, multi-segment regressions, sample counts, no suppressed offers                            |
+| 16.5–16.6 coverage and admission                  | 2,7–10      | Default versus nonbinding research modes, hardware versus semaphore attribution                                    |
+| 16.7 and owner amendment R2-F001                  | 6–7,9–10    | Mandatory unchanged two-turn substitute; bounded one-turn agreement; Q4 incomplete if unavailable                  |
+| 16.8 private topology/search                      | 2–3,7       | Actual core caller-auth and web Origin/Host conformance through both routes, disabled search and metadata behavior |
+| 16.9 finite tiers and reduction                   | 7–10        | Complete cost/hour estimate, stop budget, full orchestrator/F1 grids, measured reduction authority                 |
+| 16.10 and R2-F002 forward references              | 3,7         | Independent pre-plateau 1.5× proof and explicit governing-spec links                                               |
 
 ## 7. Plan author self-review and handoff
 
@@ -606,29 +726,29 @@ This section replaces the former undifferentiated 15–60-hour control allowance
 
 Durations below include their stated observation and bounded drain; independent headroom and topology checks are additional rows. Where a series has already met an identical required control, retain both coverage references but charge its actual execution once. The conservative upper estimate assumes fresh controls and no lookup reduction. Normal unavailable/infeasible cases consume their attempted time and stay visible.
 
-| Family | Tier and finite count | Window/repeat policy | Planning target-environment hours |
-| --- | --- | --- | --- |
-| Core F1 discovery | T1 four; T2 twelve series | Section3 maximum12 points/series,0.3–1.1h/series | T1 1.2–4.4; T2 3.6–13.2 |
-| Core research/default M1 discovery | T1 sixteen; T2 fifty-six; T3 eight series | Maximum12 points/series,0.5–1.6h/series; infeasible replay goes to its bounded substitute, not an invented pass | T1 8–25.6; T2 28–89.6; T3 4–12.8 |
-| Core M1 confirmation/candidate/soak packages | T1 sixteen; T2 eight; T3 ten (includes two matched worker baselines) |15 check windows plus one30-minute soak/package; per-window <=60-minute steady limit and bounded ramp/drain; section3 approximate2–17h/package | T1 32–272; T2 16–136; T3 20–170 |
-| Primary load-one exhaustive probes plus seeded schedules | T1 eight; T2 twenty-eight; T3 four contexts, both profiles | Per context:3*4*(1+K) case probes at0–2.5min each, plus six full schedules at3–5.5min each. Freeze K; conservative per-context0.3–3.55h | T1 2.4–28.4; T2 8.4–99.4; T3 1.2–14.2 |
-| Mandatory two-turn replay fallback feasibility | T1 at most eight contexts | Only if four-turn replay fails;3*4*K probes at0–2.5min plus three full schedules at3–5.5min; failed four-turn contexts use replacement packages; feasible contexts require section11 additional packages | T1 additional0–22.2 |
-| Mixed-feasibility additive replay work | T1 at most7 contexts whose four-turn package remains feasible when any other replay context fails | One two-turn discovery plus confirmation/candidate/soak package per eligible context,2.5–18.6h; replacement contexts add no second package. Up to196 additional infrastructure windows are charged in the infrastructure row; existing eight fallback topology series already cover all substitutes | T1 additional0–130.2 |
-| F1 quantitative/reduction controls | T2 all16 resource cells; four matched points/cell; three seeds =192 windows | Points: low-load, common comparable load across memory at that CPU, discovered last pass, first fail if reachable. Observe2–10min after1min warmup; up to2.5min drain/settlement. If no first failure, retain lower bound, not an exact limit. Inadequate counts are inconclusive; no automatic extension. Retain3–13.5min/window | T2 9.6–43.2 |
-| B1/B2/B3 deep dives | T3 four pairs*three types*two profiles*three offered-load points*three seeds =216 windows | B1/B2 explicitly muted text controls, B3 output-enabled; load points1,half the corresponding M1 candidate,that candidate, deduplicating equal loads. Without a confirmed candidate, use the corresponding screened last pass and label descriptive. Each window3min ramp+2min steady+up to2.5min drain | T3 18–27 |
-| Deep-dive feasibility | T3 24 type/profile/pair cells | Three full schedules/cell =72 at3–5.5min. Exhaustive probes cover one fixture each for muted B1/B2 and both B3 fixtures:48*(1+K) probes at0–2.5min. Reuse only exact matching output-mode evidence | T3 3.6–18.6 |
-| Two/eight pacing sensitivity | T3 four pairs*two profiles*two pacings =16 discovery series | Up to12 plateaus/series,0.5–1.6h; three full load-one seed schedules per new pacing, reusing only equivalent case probes. At most48 feasibility schedules at3–5.5min. A two-turn baseline substitute can satisfy an identical pacing cell by reference. These are screened/descriptive intervention curves unless separately quoted for confirmation | T3 10.4–30 (8–25.6 discovery plus2.4–4.4 schedules) |
-| Mandatory open-conversation arrivals | T3 four pairs*two profiles*three arrival rates*three seeds =72 windows | Each arrival iteration owns a new180-second conversation. Rates are0.5,1,1.5 times N/L, where N is matching confirmed M1 candidate (otherwise screened last pass) and L its observed mean session residence seconds. Freeze rates before running; unavailable N/L leaves that cell unavailable. Stop new starts after3min population ramp+2min steady, then allow the last accepted conversation its remaining180-second residence before up to120-second request drain and30-second cancellation settlement. Budget8–10.5min/window and k6 gracefulStop at least330seconds after the new-start cutoff. Count late/dropped starts and actual population; no overlapping turns | T3 9.6–12.6 |
-| B4/B5 paired policy interventions | T3 four pairs*five scripts*three seeds =60 windows | Scripts: B4 largest valid body/history/utterance with bounded long output; B5 disconnect with delayed settlement; rapid replacement/stale generation; slow PCM consumer; provider error script with declared429,500 and malformed-result stages. One minimum-wait/fault profile each,3min setup/ramp+2min observation+up to2.5min drain; separate expected outcomes | T3 5–7.5 |
-| F1 fault subset | T3 four pairs*two scripts*three seeds =24 windows | Malformed query and interrupted/slow-read client;1min warmup+2min observation+up to2.5min drain; check schema/status/cleanup, not ordinary voice goodput | T3 1.2–2.2 |
-| Worker/instance skew and recovery | T3 four deployments*two scripts*three seeds =24 windows | Scripts: one slowed worker/instance and one terminated worker/instance; use matching feasible replay at declared candidate or screened load.3min ramp+2min observation+up to2.5min drain. Capture per-instance skew, failed established streams and new-connection redistribution; no seamless migration claim. Unsupported workers unavailable | T3 2–3 |
-| Instrumentation on/off pairs | T3 four pairs*two profiles*two states*three matched seeds =48 windows | Same source except explicit instrumentation flag, profile, workload and offered load; use matching M1 candidate or screened last pass.3min ramp+2min observation+up to2.5min drain. Compare paired descriptive latency/resource deltas, not a new capacity label | T3 4–6 |
-| Selected ordinary slow/tail sensitivity | T3 two orchestrator allocations (1CPU/2GiB and4CPU/12GiB)*B1/B2/B3*two named hypothetical profiles*two loads*three seeds =72 windows | B1/B2 muted, B3 output-enabled. Profiles slow2x and tail4x each use one source tuple per fixture, chosen by maximum observed completion with stable-ID ties, and multiply its first-output/completion/chunk waits by2/4 while preserving bytes/text/tool shape; fallback source is the explicitly hypothetical profile when empirical replay is absent. Fixed four-turn pacing; load1 and half matching ordinary candidate or screened last pass, deduplicating equal loads. Use ordinary success oracle,5–7.5min/window; infeasible cells stay infeasible, no fixture/pacing substitution | T3 6–9 |
-| Slow/tail feasibility | T3 twelve type/profile/allocation cells | Three full schedules/cell =36 at3–5.5min, plus48 bounded fixture/tuple/seed probes at0–2.5min (one fixed slow/tail tuple per ordinary fixture). Verify transformed durations against actual deadlines; a violation is an infeasible/failed observation, never a manufactured ordinary pass. No extra paid samples | T3 1.8–5.3 |
-| Thin Next.js forwarding overhead | T3 four orchestrator executive pairs*two profiles*three offered-load points*three seeds*two entry modes =144 windows | Next.js fixed1CPU/2GiB on independently provisioned helper infrastructure, outside the orchestrator target host and cgroup; lookup/simulators fixed proven nonbinding. Compare direct core versus Next.js-to-core at load1,half matching M1 candidate,and candidate (screened last pass if unconfirmed). Same fixtures/output/seed/core resources;5–7.5min/window. Descriptive paired latency/bytes/CPU/memory/abort/flush deltas, no new confirmed capacity label. A binding BFF is a web-path limit, never a lower portable-core limit | T3 12–18 |
-| Web-path feasibility | T3 four allocations*two profiles =eight web contexts | Exhaustive probes3*4*(1+K) per allocation at0–2.5min, plus24 full seed schedules at3–5.5min. Direct-core feasibility may reuse only identical earlier direct controls; web observations are fresh and retain their own clock/path. If the matched core profile needs declared replay fallback, use exactly that pacing for both entries | T3 1.2–14.2 |
-| Actual-path topology protection checks | T1 28; T2 84; T3 138 series, maximum250 | Each30–120sec. Counts: T1 four F1+sixteen M1+eight possible fallback; T2 twelve F1+fifty-six M1+sixteen F1 control series; T3 eight scaling+two matched baselines+24 deep+16 pacing+eight open+20 B4/B5+eight F1 fault+eight recovery+16 instrumentation+12 slow/tail+16 web-forwarding | T1 0.233–0.933; T2 0.7–2.8; T3 1.15–4.6 |
-| Independent1.5-times infrastructure proofs | T1 maximum716; T2 1192; T3 1176 windows, total3084 before exact reuse | Each60sec same-profile demand observation plus at most60sec warm/drain. Count a fresh proof for every discovery, confirmation/soak or intervention window and one load-one envelope per new context/profile/pacing. Case probes within the exact proven envelope reuse that proof; this row does not recursively require proofs of proof drivers. Record attempted/valid/reused separately | T1 8.667–23.8667; T2 19.867–39.733; T3 19.6–39.2 |
+| Family                                                   | Tier and finite count                                                                                                                | Window/repeat policy                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Planning target-environment hours                   |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| Core F1 discovery                                        | T1 four; T2 twelve series                                                                                                            | Section3 maximum12 points/series,0.3–1.1h/series                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | T1 1.2–4.4; T2 3.6–13.2                             |
+| Core research/default M1 discovery                       | T1 sixteen; T2 fifty-six; T3 eight series                                                                                            | Maximum12 points/series,0.5–1.6h/series; infeasible replay goes to its bounded substitute, not an invented pass                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | T1 8–25.6; T2 28–89.6; T3 4–12.8                    |
+| Core M1 confirmation/candidate/soak packages             | T1 sixteen; T2 eight; T3 ten (includes two matched worker baselines)                                                                 | 15 check windows plus one30-minute soak/package; per-window <=60-minute steady limit and bounded ramp/drain; section3 approximate2–17h/package                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | T1 32–272; T2 16–136; T3 20–170                     |
+| Primary load-one exhaustive probes plus seeded schedules | T1 eight; T2 twenty-eight; T3 four contexts, both profiles                                                                           | Per context:3*4*(1+K) case probes at0–2.5min each, plus six full schedules at3–5.5min each. Freeze K; conservative per-context0.3–3.55h                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | T1 2.4–28.4; T2 8.4–99.4; T3 1.2–14.2               |
+| Mandatory two-turn replay fallback feasibility           | T1 at most eight contexts                                                                                                            | Only if four-turn replay fails;3*4*K probes at0–2.5min plus three full schedules at3–5.5min; failed four-turn contexts use replacement packages; feasible contexts require section11 additional packages                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | T1 additional0–22.2                                 |
+| Mixed-feasibility additive replay work                   | T1 at most7 contexts whose four-turn package remains feasible when any other replay context fails                                    | One two-turn discovery plus confirmation/candidate/soak package per eligible context,2.5–18.6h; replacement contexts add no second package. Up to196 additional infrastructure windows are charged in the infrastructure row; existing eight fallback topology series already cover all substitutes                                                                                                                                                                                                                                                                                                                                                                           | T1 additional0–130.2                                |
+| F1 quantitative/reduction controls                       | T2 all16 resource cells; four matched points/cell; three seeds =192 windows                                                          | Points: low-load, common comparable load across memory at that CPU, discovered last pass, first fail if reachable. Observe2–10min after1min warmup; up to2.5min drain/settlement. If no first failure, retain lower bound, not an exact limit. Inadequate counts are inconclusive; no automatic extension. Retain3–13.5min/window                                                                                                                                                                                                                                                                                                                                             | T2 9.6–43.2                                         |
+| B1/B2/B3 deep dives                                      | T3 four pairs*three types*two profiles*three offered-load points*three seeds =216 windows                                            | B1/B2 explicitly muted text controls, B3 output-enabled; load points1,half the corresponding M1 candidate,that candidate, deduplicating equal loads. Without a confirmed candidate, use the corresponding screened last pass and label descriptive. Each window3min ramp+2min steady+up to2.5min drain                                                                                                                                                                                                                                                                                                                                                                        | T3 18–27                                            |
+| Deep-dive feasibility                                    | T3 24 type/profile/pair cells                                                                                                        | Three full schedules/cell =72 at3–5.5min. Exhaustive probes cover one fixture each for muted B1/B2 and both B3 fixtures:48*(1+K) probes at0–2.5min. Reuse only exact matching output-mode evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | T3 3.6–18.6                                         |
+| Two/eight pacing sensitivity                             | T3 four pairs*two profiles*two pacings =16 discovery series                                                                          | Up to12 plateaus/series,0.5–1.6h; three full load-one seed schedules per new pacing, reusing only equivalent case probes. At most48 feasibility schedules at3–5.5min. A two-turn baseline substitute can satisfy an identical pacing cell by reference. These are screened/descriptive intervention curves unless separately quoted for confirmation                                                                                                                                                                                                                                                                                                                          | T3 10.4–30 (8–25.6 discovery plus2.4–4.4 schedules) |
+| Mandatory open-conversation arrivals                     | T3 four pairs*two profiles*three arrival rates*three seeds =72 windows                                                               | Each arrival iteration owns a new180-second conversation. Rates are0.5,1,1.5 times N/L, where N is matching confirmed M1 candidate (otherwise screened last pass) and L its observed mean session residence seconds. Freeze rates before running; unavailable N/L leaves that cell unavailable. Stop new starts after3min population ramp+2min steady, then allow the last accepted conversation its remaining180-second residence before up to120-second request drain and30-second cancellation settlement. Budget8–10.5min/window and k6 gracefulStop at least330seconds after the new-start cutoff. Count late/dropped starts and actual population; no overlapping turns | T3 9.6–12.6                                         |
+| B4/B5 paired policy interventions                        | T3 four pairs*five scripts*three seeds =60 windows                                                                                   | Scripts: B4 largest valid body/history/utterance with bounded long output; B5 disconnect with delayed settlement; rapid replacement/stale generation; slow PCM consumer; provider error script with declared429,500 and malformed-result stages. One minimum-wait/fault profile each,3min setup/ramp+2min observation+up to2.5min drain; separate expected outcomes                                                                                                                                                                                                                                                                                                           | T3 5–7.5                                            |
+| F1 fault subset                                          | T3 four pairs*two scripts*three seeds =24 windows                                                                                    | Malformed query and interrupted/slow-read client;1min warmup+2min observation+up to2.5min drain; check schema/status/cleanup, not ordinary voice goodput                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | T3 1.2–2.2                                          |
+| Worker/instance skew and recovery                        | T3 four deployments*two scripts*three seeds =24 windows                                                                              | Scripts: one slowed worker/instance and one terminated worker/instance; use matching feasible replay at declared candidate or screened load.3min ramp+2min observation+up to2.5min drain. Capture per-instance skew, failed established streams and new-connection redistribution; no seamless migration claim. Unsupported workers unavailable                                                                                                                                                                                                                                                                                                                               | T3 2–3                                              |
+| Instrumentation on/off pairs                             | T3 four pairs*two profiles*two states*three matched seeds =48 windows                                                                | Same source except explicit instrumentation flag, profile, workload and offered load; use matching M1 candidate or screened last pass.3min ramp+2min observation+up to2.5min drain. Compare paired descriptive latency/resource deltas, not a new capacity label                                                                                                                                                                                                                                                                                                                                                                                                              | T3 4–6                                              |
+| Selected ordinary slow/tail sensitivity                  | T3 two orchestrator allocations (1CPU/2GiB and4CPU/12GiB)*B1/B2/B3*two named hypothetical profiles*two loads*three seeds =72 windows | B1/B2 muted, B3 output-enabled. Profiles slow2x and tail4x each use one source tuple per fixture, chosen by maximum observed completion with stable-ID ties, and multiply its first-output/completion/chunk waits by2/4 while preserving bytes/text/tool shape; fallback source is the explicitly hypothetical profile when empirical replay is absent. Fixed four-turn pacing; load1 and half matching ordinary candidate or screened last pass, deduplicating equal loads. Use ordinary success oracle,5–7.5min/window; infeasible cells stay infeasible, no fixture/pacing substitution                                                                                    | T3 6–9                                              |
+| Slow/tail feasibility                                    | T3 twelve type/profile/allocation cells                                                                                              | Three full schedules/cell =36 at3–5.5min, plus48 bounded fixture/tuple/seed probes at0–2.5min (one fixed slow/tail tuple per ordinary fixture). Verify transformed durations against actual deadlines; a violation is an infeasible/failed observation, never a manufactured ordinary pass. No extra paid samples                                                                                                                                                                                                                                                                                                                                                             | T3 1.8–5.3                                          |
+| Thin Next.js forwarding overhead                         | T3 four orchestrator executive pairs*two profiles*three offered-load points*three seeds*two entry modes =144 windows                 | Next.js fixed1CPU/2GiB on independently provisioned helper infrastructure, outside the orchestrator target host and cgroup; lookup/simulators fixed proven nonbinding. Compare direct core versus Next.js-to-core at load1,half matching M1 candidate,and candidate (screened last pass if unconfirmed). Same fixtures/output/seed/core resources;5–7.5min/window. Descriptive paired latency/bytes/CPU/memory/abort/flush deltas, no new confirmed capacity label. A binding BFF is a web-path limit, never a lower portable-core limit                                                                                                                                      | T3 12–18                                            |
+| Web-path feasibility                                     | T3 four allocations*two profiles =eight web contexts                                                                                 | Exhaustive probes3*4*(1+K) per allocation at0–2.5min, plus24 full seed schedules at3–5.5min. Direct-core feasibility may reuse only identical earlier direct controls; web observations are fresh and retain their own clock/path. If the matched core profile needs declared replay fallback, use exactly that pacing for both entries                                                                                                                                                                                                                                                                                                                                       | T3 1.2–14.2                                         |
+| Actual-path topology protection checks                   | T1 28; T2 84; T3 138 series, maximum250                                                                                              | Each30–120sec. Counts: T1 four F1+sixteen M1+eight possible fallback; T2 twelve F1+fifty-six M1+sixteen F1 control series; T3 eight scaling+two matched baselines+24 deep+16 pacing+eight open+20 B4/B5+eight F1 fault+eight recovery+16 instrumentation+12 slow/tail+16 web-forwarding                                                                                                                                                                                                                                                                                                                                                                                       | T1 0.233–0.933; T2 0.7–2.8; T3 1.15–4.6             |
+| Independent1.5-times infrastructure proofs               | T1 maximum716; T2 1192; T3 1176 windows, total3084 before exact reuse                                                                | Each60sec same-profile demand observation plus at most60sec warm/drain. Count a fresh proof for every discovery, confirmation/soak or intervention window and one load-one envelope per new context/profile/pacing. Case probes within the exact proven envelope reuse that proof; this row does not recursively require proofs of proof drivers. Record attempted/valid/reused separately                                                                                                                                                                                                                                                                                    | T1 8.667–23.8667; T2 19.867–39.733; T3 19.6–39.2    |
 
 The F1 control row supplies the measured data for the spec16.9 reduction test: at every CPU compare memory using matched payload/routes/load, no memory-induced threshold crossing, <=10% goodput/p95 difference with uncertainty; each retained2-GiB point must show >=10 times the largest peak retrieval RPS from the orchestrator campaign. A first-fail point that is unreachable is explicitly absent, not retried beyond the quoted bracket. A failed/sparse reduction control leaves the full lookup-constrained sweep required. Recheck after worker/instance demand; new invalidating demand restores omitted cells through a revised quote, never inferred results.
 
@@ -636,12 +756,12 @@ Infrastructure window count reconciliation: T1=48 F1 discovery+192 M1 discovery+
 
 ### Tier totals, approvals and estimator tests
 
-| Tier | Core discovery/confirmation | Controls/interventions | Total target-environment hours |
-| --- | --- | --- | --- |
-|1 decision baseline |41.2–432.2 |11.3–75.4 |**52.5–507.6** |
-|2 resource attribution |47.6–238.8 |38.567–185.133 |**86.167–423.933** |
-|3 scaling/robustness |24–182.8 |96.75–211.4 |**120.75–394.2** |
-|**Whole campaign** |**112.8–853.8** |**146.6167–471.9333** |**259.4167–1325.7333** |
+| Tier                   | Core discovery/confirmation | Controls/interventions | Total target-environment hours |
+| ---------------------- | --------------------------- | ---------------------- | ------------------------------ |
+| 1 decision baseline    | 41.2–432.2                  | 11.3–75.4              | **52.5–507.6**                 |
+| 2 resource attribution | 47.6–238.8                  | 38.567–185.133         | **86.167–423.933**             |
+| 3 scaling/robustness   | 24–182.8                    | 96.75–211.4            | **120.75–394.2**               |
+| **Whole campaign**     | **112.8–853.8**             | **146.6167–471.9333**  | **259.4167–1325.7333**         |
 
 Values are rounded planning intervals, not confidence intervals. They assume both profiles, supported deployments and the conservative control inventory; unavailable/infeasible cells, exact reuse and validated reduction can lower actual executed time while preserving coverage labels. Extra one-turn fallback feasibility/series is excluded until separately agreed and requoted; add at most eight Tier1 substitute series with the same finite probe/window policy, without adding a second primary capacity package for an infeasible four/two-turn result. Defect repairs/reruns are also outside this initial inventory. The exact quote derives CPU/GiB-hours and helper-host hours from each window's allocations/lifetime; parallel scheduling never converts target-environment hours directly into elapsed wall hours or double-counts a host price.
 
@@ -656,16 +776,27 @@ Task1's `Journal.append(event):Promise<void>` accepts bounded `{runId,sequence,t
 Add this negative integration fixture to Task1's records tests, using the exported openRun/recoverRun contract (test imports `mkdtemp`/`rm` from node:fs/promises and `join` from node:path; scratch parent must exist):
 
 ```js
-test('interruption before terminal publication keeps offered work incomplete', async t => {
-  const root=await mkdtemp('.scratch/performance-interrupt-');
-  t.after(()=>rm(root,{recursive:true,force:true}));
-  const journal=await openRun(root,'interrupted');
-  await journal.append({runId:'interrupted',sequence:1,type:'started',sourceDigest:'a'.repeat(64),inputs:{scenario:'b'.repeat(64)}});
-  await journal.append({runId:'interrupted',sequence:2,type:'offered',turnId:'t1'});
+test('interruption before terminal publication keeps offered work incomplete', async (t) => {
+  const root = await mkdtemp('.scratch/performance-interrupt-');
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const journal = await openRun(root, 'interrupted');
+  await journal.append({
+    runId: 'interrupted',
+    sequence: 1,
+    type: 'started',
+    sourceDigest: 'a'.repeat(64),
+    inputs: { scenario: 'b'.repeat(64) },
+  });
+  await journal.append({
+    runId: 'interrupted',
+    sequence: 2,
+    type: 'offered',
+    turnId: 't1',
+  });
   await journal.flush(); // no terminal writeRun call, simulating interruption
-  const result=await recoverRun(join(root,'interrupted'));
-  assert.equal(result.evidence,'inconclusive');
-  assert.equal(result.unfinished,1);
+  const result = await recoverRun(join(root, 'interrupted'));
+  assert.equal(result.evidence, 'inconclusive');
+  assert.equal(result.unfinished, 1);
 });
 ```
 
@@ -673,9 +804,13 @@ Task8 adds `requireEvidenceInputs({timingsCount,sessionCount,precisionMs,method}
 
 ```js
 test('large pooled volume does not replace session provenance', () => {
-  const result=requireEvidenceInputs({timingsCount:10000,sessionCount:null,
-    precisionMs:1,method:'empirical-nearest-rank'});
-  assert.equal(result.evidence,'inconclusive');
+  const result = requireEvidenceInputs({
+    timingsCount: 10000,
+    sessionCount: null,
+    precisionMs: 1,
+    method: 'empirical-nearest-rank',
+  });
+  assert.equal(result.evidence, 'inconclusive');
   assert.ok(result.reasons.includes('missing-session-count'));
 });
 ```
@@ -703,15 +838,19 @@ The section8 open window now separates start cutoff, residual residence and requ
 
 ```js
 test('a final accepted conversation retains late turns after new starts stop', () => {
-  const newStartCutoffMs=300000;
-  const startMs=newStartCutoffMs-1;
-  const cutoffs=conversationCutoffs({startMs,residenceMs:180000,
-    drainMs:120000,settlementMs:30000});
-  assert.equal(cutoffs.residenceEndMs,479999);
-  assert.equal(cutoffs.drainEndMs,599999);
-  assert.equal(cutoffs.settlementEndMs,629999);
-  assert.ok(startMs+165000 < cutoffs.residenceEndMs); // late scheduled offer is retained
-  assert.ok(startMs+165000 > newStartCutoffMs+150000); // old graceful cutoff was too early
+  const newStartCutoffMs = 300000;
+  const startMs = newStartCutoffMs - 1;
+  const cutoffs = conversationCutoffs({
+    startMs,
+    residenceMs: 180000,
+    drainMs: 120000,
+    settlementMs: 30000,
+  });
+  assert.equal(cutoffs.residenceEndMs, 479999);
+  assert.equal(cutoffs.drainEndMs, 599999);
+  assert.equal(cutoffs.settlementEndMs, 629999);
+  assert.ok(startMs + 165000 < cutoffs.residenceEndMs); // late scheduled offer is retained
+  assert.ok(startMs + 165000 > newStartCutoffMs + 150000); // old graceful cutoff was too early
 });
 ```
 
@@ -743,12 +882,12 @@ Task6 tests include eight mixed contexts, with only the smallest research pair f
 
 The full18-request proof remains mandatory before every declared series. “Actual-path topology protection” means the real deployed balancer/container/network path for each entry being tested, rather than asserting that every entry lies on the measured workload path.
 
-| Family | Measured topology | Auxiliary protection targets |
-| --- | --- | --- |
-| F1 lookup isolation | Generator → independently constrained lookup | A reference core, web BFF and web balancer on helper infrastructure; core uses the actual lookup under test and the declared simulators |
-| Direct core and lookup-constrained M1 | Generator → core → lookup/providers, with only the named service constrained | Web BFF/balancer on helper infrastructure; they delegate to the same measured core for preflight only |
-| Workers/replicas | Generator → declared core deployment/balancer → lookup/providers | Helper-host web BFF delegates through the actual declared core balancer; record per-instance routing and admission |
-| Web-forwarding comparison | Both matched direct entry and web BFF → same core → lookup/providers | The measured BFF runs on independently provisioned helper infrastructure with fixed1CPU/2GiB in its own cgroup, outside the target host; record its actual network hop and charge its helper lifetime once; no second web implementation is substituted |
+| Family                                | Measured topology                                                            | Auxiliary protection targets                                                                                                                                                                                                                            |
+| ------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F1 lookup isolation                   | Generator → independently constrained lookup                                 | A reference core, web BFF and web balancer on helper infrastructure; core uses the actual lookup under test and the declared simulators                                                                                                                 |
+| Direct core and lookup-constrained M1 | Generator → core → lookup/providers, with only the named service constrained | Web BFF/balancer on helper infrastructure; they delegate to the same measured core for preflight only                                                                                                                                                   |
+| Workers/replicas                      | Generator → declared core deployment/balancer → lookup/providers             | Helper-host web BFF delegates through the actual declared core balancer; record per-instance routing and admission                                                                                                                                      |
+| Web-forwarding comparison             | Both matched direct entry and web BFF → same core → lookup/providers         | The measured BFF runs on independently provisioned helper infrastructure with fixed1CPU/2GiB in its own cgroup, outside the target host; record its actual network hop and charge its helper lifetime once; no second web implementation is substituted |
 
 An auxiliary web BFF always has fixed1CPU/2GiB and an F1 auxiliary core fixed1CPU/2GiB, in separate cgroups on an independently provisioned helper host. Auxiliary balancer resources are fixed, finite and recorded by Task0. They never share the constrained target's quota or silently consume reserved target-host CPU/RAM. Their effective allocations, process/image/source/configuration, placement and helper-host lifetime enter the baseline/manifests/quote. If a helper cannot supply these resources plus validated generator/simulator/collector headroom, expand the concrete quote or stop; do not place them unaccounted on the target. The web path is absent from primary measured direct-core traffic; an off-target protection service does not make it part of that traffic.
 
@@ -760,11 +899,11 @@ Target-environment intervals already include these protection windows; they are 
 
 Task4's **primary paid casebook** is five coherent end-to-end replicates of each of the four ordinary fixtures. For each replicate, preserve the actual STT (where applicable), model rounds/tool continuation, stable text segmentation and every TTS operation as one parent case with ordered operation IDs. A tuple is the complete observed case, with operation offsets/durations/bytes and output relationships; do not independently splice provider medians or pair unrelated runs. B1/B2/short B3 require exactly one eligible segment and multi-segment B3 exactly two, all within the actual effective cap (default84characters). Task0/fixtures must demonstrate these bounded shapes; a case that exceeds them fails support and is retained, rather than spending on undeclared extra calls. Freeze replay fixture expected text/tool/audio shape from these supported observations before mock execution; this does not turn real model output into a preclaimed correctness result.
 
-| Provider | B1 five cases | B2 five cases | B3 short five cases | B3 multi five cases | Maximum primary requests |
-| --- | --- | --- | --- | --- | --- |
-| Model |5 initial |5 initial+5 continuation |5 initial |5 initial |25 |
-| STT |0 |0 |5 prerecorded |5 prerecorded |10 |
-| TTS |5 actual single segments |5 actual single segments |5 actual single segments |10 actual two segments |25 |
+| Provider | B1 five cases            | B2 five cases            | B3 short five cases      | B3 multi five cases    | Maximum primary requests |
+| -------- | ------------------------ | ------------------------ | ------------------------ | ---------------------- | ------------------------ |
+| Model    | 5 initial                | 5 initial+5 continuation | 5 initial                | 5 initial              | 25                       |
+| STT      | 0                        | 0                        | 5 prerecorded            | 5 prerecorded          | 10                       |
+| TTS      | 5 actual single segments | 5 actual single segments | 5 actual single segments | 10 actual two segments | 25                       |
 
 These five replicates supply target K=5 complete tuples per fixture. They are the selected funded use-case cells and their five repetitions; no extra warmup is required. Connection-cold/reused labels characterize operations within these same cases, never extra requests; concurrency remains1. A provider metadata/model-validation request, if required, has its own pre-reserved request and dollar entry and must fit the remaining five model/TTS or twenty STT slots; unknown requirements block the quote. Paid failures/cancellations count within the totals and remain charged/uncertain; no automatic retry or replacement is permitted. If even one fixture lacks five supported complete cases, empirical replay coverage is unavailable/incomplete for that fixture; preserve every chronological sample and do not search for a favorable replacement. Mock work may use a labeled hypothetical profile, which cannot complete empirical requirements.
 
@@ -791,13 +930,25 @@ A `busy-schedule-miss` is `outcome:'failed'`, `startedAtMs:null`, `requestId:nul
 
 ```ts
 type SpeechRequestRecord = {
-  schema:'aivc.perf.speech/v1'; runId:string; sessionId:string; turnId:string;
-  generation:number; segmentId:string; requestId:string;
-  oracleId:string; inputMode:'typed'|'audio'; outputMode:'enabled';
-  intendedInitiationMs:number; actualInitiationMs:number|null;
-  firstValidPcmMs:number|null; deliveryCompleteMs:number|null;
-  bytes:number; validSamples:number; outcome:Outcome; reason:string|null;
-  serverRequestFirstAudioMs:number|null; // request-local server duration only
+  schema: 'aivc.perf.speech/v1';
+  runId: string;
+  sessionId: string;
+  turnId: string;
+  generation: number;
+  segmentId: string;
+  requestId: string;
+  oracleId: string;
+  inputMode: 'typed' | 'audio';
+  outputMode: 'enabled';
+  intendedInitiationMs: number;
+  actualInitiationMs: number | null;
+  firstValidPcmMs: number | null;
+  deliveryCompleteMs: number | null;
+  bytes: number;
+  validSamples: number;
+  outcome: Outcome;
+  reason: string | null;
+  serverRequestFirstAudioMs: number | null; // request-local server duration only
 };
 ```
 
@@ -844,17 +995,36 @@ Add these cases to Task6's schedule tests, alongside the existing complete mixed
 
 ```js
 test('campaign refuses partial contexts even with successful subset mapping', () => {
-  const pairs=['1CPU-2GiB','2CPU-4GiB','3CPU-8GiB','4CPU-12GiB'];
-  const expectedContextIds=pairs.flatMap(pair=>['research','default'].map(mode=>`${mode}:${pair}`));
-  const contexts=[{id:'research:1CPU-2GiB',pair:'1CPU-2GiB',admissionMode:'research',
-    fourFeasible:false,twoFeasible:true}];
-  const result=chooseReplayPacing({contexts,expectedContextIds,oneApproved:false});
-  assert.equal(result.status,'blocked');
-  assert.equal(result.triggered,null);
-  assert.deepEqual(result.actions,[]);
-  assert.deepEqual(result.additionalPackages,[]);
-  assert.equal(chooseReplayPacing({contexts,expectedContextIds:[contexts[0].id],
-    oneApproved:false}).status,'blocked');
+  const pairs = ['1CPU-2GiB', '2CPU-4GiB', '3CPU-8GiB', '4CPU-12GiB'];
+  const expectedContextIds = pairs.flatMap((pair) =>
+    ['research', 'default'].map((mode) => `${mode}:${pair}`),
+  );
+  const contexts = [
+    {
+      id: 'research:1CPU-2GiB',
+      pair: '1CPU-2GiB',
+      admissionMode: 'research',
+      fourFeasible: false,
+      twoFeasible: true,
+    },
+  ];
+  const result = chooseReplayPacing({
+    contexts,
+    expectedContextIds,
+    oneApproved: false,
+  });
+  assert.equal(result.status, 'blocked');
+  assert.equal(result.triggered, null);
+  assert.deepEqual(result.actions, []);
+  assert.deepEqual(result.additionalPackages, []);
+  assert.equal(
+    chooseReplayPacing({
+      contexts,
+      expectedContextIds: [contexts[0].id],
+      oneApproved: false,
+    }).status,
+    'blocked',
+  );
 });
 ```
 
@@ -874,12 +1044,12 @@ Task4 records a calibration-only `modelSettings` profile before quoting or dispa
 
 The initial bounded profiles are:
 
-| Fixture/round | Prompt instruction added to its synthetic use-case prompt | Maximum output tokens |
-| --- | --- | --- |
-| B1 or short B3 final answer | Return only one concise plain-text sentence, within the effective segment-character cap; no Markdown or preamble | 48 |
-| B2 initial tool decision | Perform the required project lookup with the declared native tool; after its result, return only one concise final sentence within the effective segment-character cap | 128 for the native tool-decision round |
-| B2 final answer after its one lookup continuation | Use the actual lookup result and return the one concise plain-text sentence within the effective cap | 48 |
-| Multi-segment B3 final answer | Return exactly two concise plain-text sentences, each within the effective cap, with a combined length greater than one cap and no greater than two caps; no Markdown or preamble | 96 |
+| Fixture/round                                     | Prompt instruction added to its synthetic use-case prompt                                                                                                                         | Maximum output tokens                  |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| B1 or short B3 final answer                       | Return only one concise plain-text sentence, within the effective segment-character cap; no Markdown or preamble                                                                  | 48                                     |
+| B2 initial tool decision                          | Perform the required project lookup with the declared native tool; after its result, return only one concise final sentence within the effective segment-character cap            | 128 for the native tool-decision round |
+| B2 final answer after its one lookup continuation | Use the actual lookup result and return the one concise plain-text sentence within the effective cap                                                                              | 48                                     |
+| Multi-segment B3 final answer                     | Return exactly two concise plain-text sentences, each within the effective cap, with a combined length greater than one cap and no greater than two caps; no Markdown or preamble | 96                                     |
 
 All caps are below the reference 1024-token per-round ceiling, affect only the explicitly recorded calibration profile, and do not alter default application/model settings. Task0/4 must verify that the real selected core adapter/SDK can express and honor each recorded request setting; if it cannot, record a calibration prerequisite and dispatch zero paid calls rather than silently using the default or bypassing the core. Preserve the real B2 tool result/continuation and normal model/STT/TTS pipeline. A token ceiling and prompt are guards, not guarantees of character count, sentence structure or actual segment count.
 
