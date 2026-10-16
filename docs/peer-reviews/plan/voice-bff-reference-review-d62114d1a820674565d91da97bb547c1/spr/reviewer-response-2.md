@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/spr/reviewer-response-2.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `c55bd9e74f4300b4d586f338f6b78bd31e1328df9eafc8e56a2a3ee6ea19b809`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-d62114d1a820674565d91da97bb547c1"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-d62114d1a820674565d91da97bb547c1'
+role: 'reviewer'
 turn: 2
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md"
-artifact_commit: "859174f5c5db919072807bba2ef017f5a7755cd1"
-artifact_blob: "5e0d124a0cbef5b811604f408dbe72600315a889"
-artifact_digest: "sha256:db3c6df40ac34588bbb73e321dfa58610a13ef08cc03edf9fa66dd4f3c23b300"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md'
+artifact_commit: '859174f5c5db919072807bba2ef017f5a7755cd1'
+artifact_blob: '5e0d124a0cbef5b811604f408dbe72600315a889'
+artifact_digest: 'sha256:db3c6df40ac34588bbb73e321dfa58610a13ef08cc03edf9fa66dd4f3c23b300'
 agent:
-  host: "codex"
-  provider: "openai"
-  model_id: "gpt-6-astra"
-  model_display: "gpt-6-astra"
-  session_fingerprint: "sha256:26905761b314a738f4c13fa256f8a1bdc358ab76086141b9761e701741329250"
-  identity_source: "declared"
-started_at: "2026-10-13T05:22:27.904Z"
-submitted_at: "2026-10-13T05:38:54.625Z"
-finding_ids: ["R2-F001","R2-F002"]
+  host: 'codex'
+  provider: 'openai'
+  model_id: 'gpt-6-astra'
+  model_display: 'gpt-6-astra'
+  session_fingerprint: 'sha256:26905761b314a738f4c13fa256f8a1bdc358ab76086141b9761e701741329250'
+  identity_source: 'declared'
+started_at: '2026-10-13T05:22:27.904Z'
+submitted_at: '2026-10-13T05:38:54.625Z'
+finding_ids: ['R2-F001', 'R2-F002']
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
@@ -35,7 +39,7 @@ The author addressed the three original design gaps and the optional MIME sugges
 
 The existing authentic reviewer handoff wait returned `delivered` at sequence 10, delivery `author-turn-1-to-reviewer`, digest `sha256:ea32971b0334ef1e04daa3d8c4d5c7c71b3694903ce6272c0577dcc9853b0f40`. I read the complete author response, pending protected reviewer response and complete revised plan in four contiguous chunks. The current artifact digest matches protected metadata, and the accepted-spec digest remains `8512daa8c456af00628a16471d4b13526c7585172c223c8bfa0f2323bee4fff6`.
 
-**Original finding disposition assessment**
+### Original finding disposition assessment
 
 - R1-F001: resolved at planning level. Task 7 explicitly owns a narrow version-bound installed-package patch, deterministic installation failure, disposal cancellation guards, waiting for admitted inference, idempotent public destroy and actual-module release instrumentation. It no longer claims the unmodified API handles never-started instances. The patch and tests remain future implementation obligations. The one-hour estimate increase is disclosed, making the total 39 hours, range 28–57, while retaining the eight-hour checkpoint and owner authorization boundary.
 - R1-F002: resolved. Immutable capture epoch/utterance/intent identity is distinct from an optional old answer token. Confirmed end uses capture ownership after deliberate answer invalidation, consumes once, and is revoked by explicit user/capture actions. Initial Listening and the full interruption-to-next-turn path now have required tests.
@@ -75,7 +79,7 @@ Task 7 now changes runtime behavior through `patches/@ricky0123+vad-web+0.0.31.p
 
 None beyond the already adopted MIME check. The maintenance burden of the VAD patch is now explicit and has a task owner; runtime correctness must be established by the planned actual-module and real-browser checks.
 
-**Primary-source verification**
+### Primary-source verification
 
 I retained the round-one pinned MicVAD/API evidence and additionally inspected [pinned Silero release](https://github.com/ricky0123/vad/blob/de9b3ff83fd44cd7a2b3e07e9454e6b6f0bc249d/packages/web/src/models/silero.ts). Its release method calls session release and then disposes state/sample-rate tensors, supporting the proposed instrumentation boundary. The [patch-package project documentation](https://github.com/ds300/patch-package#readme) confirms committed patch files and postinstall application as the mechanism. That mechanism makes patch bytes runtime-affecting inputs, which is why Task 9 must bind them. Neither source proves the proposed local patch works before it exists.
 

@@ -1,0 +1,21 @@
+{
+  "sourceBase": "68103a59be2bc040d0c288daf7c24928911bdf0d",
+  "status": "uncommitted-proposal-not-reviewed-or-installed",
+  "files": [
+    {
+      "file": "epic-rank-wave-source.mjs",
+      "sha256": "18e364af853e1f540d37715fd78552f258492242efed1d324f535448f3ed7dda",
+      "size": 25749
+    },
+    {
+      "file": "epic-rank-wave-source-deferred-pause.test.mjs",
+      "sha256": "168f3175868404f45cd93780446f9676946ac6c3b050e1133bb195c1c35d959a",
+      "size": 7951
+    },
+    {
+      "file": "2026-10-13-2012-deferred-wave-pause.md",
+      "sha256": "c9eac779ec42a4375fb690ad2a5ca9242a5fe7a68907ed51778c44f700d4d9f7",
+      "size": 4157
+    }
+  ]
+}

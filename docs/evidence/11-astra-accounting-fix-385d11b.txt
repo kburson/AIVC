@@ -1,0 +1,34 @@
+Scoped Spec/Quality verdict: PASS. The prior P2 accounting defect is resolved; no new actionable finding in this seven-file correction. Whole-live acceptance remains incomplete, and this review grants no lifecycle or merge approval.
+
+Reviewed HEAD: `385d11b2448dac5bf01400bb7c11834bfefbfbfd`  
+Independently computed source digest: `cfa3cca0d676f4e98545aa965c6526f7c098ddbbaca6de6c3784a3b1262707bf`  
+Reviewer: native Astra6/high, same genuine SID `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`.
+
+The correction at [claude.ts:44](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/apps/web/server/providers/claude.ts:44) addresses the observed defect precisely. Without an authoritative counter, numeric usage now requires distinct, valid completed use/result pairs covering every observed search ID. Pending IDs, stream-only IDs, incomplete combinations, duplicate final uses/results, orphan results and malformed pairings return unknown. An empty successful result array still establishes one completed request. Streaming and final projections deduplicate without inventing consumption.
+
+Supplied-counter handling at [claude.ts:34](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/apps/web/server/providers/claude.ts:34) is unchanged: valid counter-only values, including zero, remain usable; malformed values and count/ID contradictions remain unknown. An authoritative matching counter can establish consumption even when result blocks remain pending. The existing [run-turn.ts:117](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/apps/web/server/turns/run-turn.ts:117) path sets remaining search to zero and removes public `searchUses` when consumption is unknown. Later known rounds neither restore search budget nor reconstruct an unknown total. No interface, pin, tool policy, retry rule or budget changed.
+
+Independent verification completed:
+
+- `npx vitest run tests/contracts/search-budget.test.ts`: **63/63 passed**.
+- `npm run typecheck`: both workspaces passed.
+- `npm run verify:docs`: passed.
+- `git diff --check 3e0303686e550c166d4958f19d3c29123830494c HEAD`: passed.
+- `npm run verify:live`: **exit 1 as expected**, reporting stale source, missing observed runtime marker and outstanding failed/unverified live requirements.
+- Tracked tree/index remained clean.
+
+The regressions exercise the pinned Anthropic SDK against synthetic transport through the actual adapter and turn loop. The captured mixed pending-search shape produces truncated fallback with token usage but no invented `searchUses`, retains native assistant content, omits search on continuation and makes exactly two Messages requests. Separate cases establish that later counters cannot restore unknown totals or exhausted permission. These are meaningful offline integration checks, not live provider acceptance.
+
+Evidence preservation is sound. The committed native records and browser observation deep-equal their original ignored artifacts; committed posthoc analysis deep-equals its original analysis projection. All four recorded provenance file lengths/hashes match. The prior assessment remains exactly **6269 bytes**, SHA256 `853a85effcbf79109a6fe8c7ee689ef49e9c047b68e072e31cf6ad8e70e0f61f`.
+
+The preserved diagnostic establishes the cause of **bfe61c51-f8f8-429e-92f2-153275fe894c** specifically: `tool_use`, two pending search IDs, no completed search results or authoritative search counter, followed by search omission and the original HTTP 400 naming an unmatched search use without its tool. This proves the mixed pending-tool rejection. It does not establish an actual `pause_turn`, the earlier 69e8 request’s native cause, or impossibility of every completed-result omission. The mutable summary appropriately omits the earlier unverified usage while preserving the original application-reported `2` as historical observation. No evidence is rebound to corrected source.
+
+The proposed next diagnostic is justified within unchanged scope:
+
+1. Perform at most one deliberately initiated fresh diagnostic using the stronger instruction to wait for **both completed search results before calling `lookup_projects`**, with existing limits/tools and the unchanged passive observer.
+2. Classify the actual native sequence. The relevant discriminator is two matched completed results before the client lookup, followed by the actual omitted-search continuation with native prior content preserved. If the model again parallelizes pending searches, the completed-result hypothesis remains untested; that outcome does not justify automatic retries.
+3. Record a genuine pause only if native `stop_reason` actually reports it. Successful ordinary continuation would resolve only that observed boundary, not the required pause case or all L6 acceptance. Observer-assisted latency remains excluded from baseline timing.
+
+I did not rerun the full suite, independently inspect current CI, launch paid calls, repeat physical observations, or judge whole-live completion. Historical physical sub-observations retain their original boundaries; this fix does not authorize relabeling them as current-source acceptance. The owner’s retained full scope and whole-source evidence gate remain binding.
+
+Normal own `stop 11 --allow-foreign-worktree` completed with exit 0. AITM reported `Unknown active min (wall 4)`; no timing repair was attempted. All reviewer commands have ended; I own no servers, browser sessions, microphone resources or remaining execution processes. No source/evidence edits, scratch report, commit, push or lifecycle transition was performed.

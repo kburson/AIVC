@@ -1,31 +1,45 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/spec/voice-bff-reference-design-review-6e1eb912f8ea1307f0464d76a1501a3b/xpr/review-0905b6c7c8f1d7f6f479e1ba143799d3-author-response-1.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `832bb34b64f610ce2aca441b18a2fc1e60603406e915eeb9d329b2464e632886`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:f81da1894a46ceb20866070833b4e99ef536ef633542b418783d29e6a981dbd8" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-0905b6c7c8f1d7f6f479e1ba143799d3"
-role: "author"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-0905b6c7c8f1d7f6f479e1ba143799d3'
+role: 'author'
 turn: 1
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/specs/2026-10-12-voice-bff-reference-design.md"
-artifact_commit: "cd745923c83e7b45d1a795ffcf4e87a193d4771a"
-artifact_blob: "fcde53a12d5e49cb1b02a957a18d7d6f2fe660f3"
-artifact_digest: "sha256:44e70b02d0cac27217b805f387bdb6d8677a5f79ce136c33f2ebf4fd51d5422a"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/specs/2026-10-12-voice-bff-reference-design.md'
+artifact_commit: 'cd745923c83e7b45d1a795ffcf4e87a193d4771a'
+artifact_blob: 'fcde53a12d5e49cb1b02a957a18d7d6f2fe660f3'
+artifact_digest: 'sha256:44e70b02d0cac27217b805f387bdb6d8677a5f79ce136c33f2ebf4fd51d5422a'
 agent:
-  host: "codex"
-  provider: "openai"
-  model_id: "gpt-6.1-sol"
-  model_display: "gpt-6.1-sol"
-  session_fingerprint: "sha256:303babcc83e3373412fb6bcb163feb218ba76be7f97adb90927d06ffe0b09903"
-  identity_source: "runtime"
-started_at: "2026-10-13T03:12:28.570Z"
-submitted_at: "2026-10-13T03:24:29.217Z"
+  host: 'codex'
+  provider: 'openai'
+  model_id: 'gpt-6.1-sol'
+  model_display: 'gpt-6.1-sol'
+  session_fingerprint: 'sha256:303babcc83e3373412fb6bcb163feb218ba76be7f97adb90927d06ffe0b09903'
+  identity_source: 'runtime'
+started_at: '2026-10-13T03:12:28.570Z'
+submitted_at: '2026-10-13T03:24:29.217Z'
 finding_ids: []
-answered_finding_ids: ["R1-F001","R1-F002","R1-F003","R1-F004","R1-F005","R1-F006","R1-F007","R1-F008"]
+answered_finding_ids:
+  [
+    'R1-F001',
+    'R1-F002',
+    'R1-F003',
+    'R1-F004',
+    'R1-F005',
+    'R1-F006',
+    'R1-F007',
+    'R1-F008',
+  ]
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 

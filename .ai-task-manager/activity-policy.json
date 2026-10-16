@@ -1,7 +1,34 @@
 {
   "codeGlobs": ["src/**", "lib/**", "bin/**", "scripts/**", ".github/**"],
+  "codeGlobsExtra": [
+    "apps/**",
+    "packages/**",
+    "services/**",
+    "tests/**",
+    "*.ts",
+    "*.tsx",
+    "*.mts",
+    "*.cts"
+  ],
   "codeGlobExcludes": ["scripts/task-tracker/**", "scripts/gh/**"],
-  "docGlobs": ["docs/**", ".claude/plans/**", "docs/plans/**", "**/*.md", "CLAUDE.md"],
-  "testRunners": ["npm test", "npm run test", "node --test", "pytest", "cargo test", "go test"],
-  "buildCommands": ["npm run build", "tsc", "cargo build", "go build"]
+  "docGlobs": [
+    "docs/**",
+    ".claude/plans/**",
+    "docs/plans/**",
+    "**/*.md",
+    "CLAUDE.md"
+  ],
+  "testRunners": [
+    "npm test",
+    "npm run test",
+    "node --test",
+    "pytest",
+    "cargo test",
+    "go test"
+  ],
+  "buildCommands": ["npm run build", "tsc", "cargo build", "go build"],
+  "configGlobsExtra": [
+    ".scratch/gh/2-successor-wave-prepare.json",
+    ".scratch/gh/2-successor-wave-record.json"
+  ]
 }

@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/89fc7a6125cd4b2be6f0f338dea928bd81bcea45/docs/peer-reviews/spec/aivc-interactive-tutorial-design-review-cb28e9fe5863446ca5d949d96998909c/xpr/2026-10-14-2026-10-13-15-aivc-interactive-tutorial-design-review-f90cbcd8ed4a948d618a58f5eca85979-review-manifest.md) and its exact bytes remain available in the [tutorial evidence archive](../../../../quality-evidence/2026-10-14-25-tutorial-originals.json).
+> Original SHA-256: `fed82a0ee5ed6f09e3f9ae29c8e00ea08dcd0ad87f75b8a40ef80c032abbfd75`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:e53bf4d9991ae94a699fede1d62fd90324e45923de951babcb8d9ad237900bd9" -->
 
 # Review manifest
@@ -167,9 +171,7 @@ Mode: `normal`
   },
   "record_id": "review-f90cbcd8ed4a948d618a58f5eca85979",
   "recoveries": [],
-  "residual_risk": [
-    "human-authority-unavailable"
-  ],
+  "residual_risk": ["human-authority-unavailable"],
   "review_id": "review-f90cbcd8ed4a948d618a58f5eca85979",
   "runtime": {
     "adapter_version": "1.0.0",
@@ -243,10 +245,7 @@ Mode: `normal`
       },
       "commit": "88710da8b264773f6d91202da53a01f69c06bdda",
       "decision": "revisions-requested",
-      "finding_ids": [
-        "R2-F001",
-        "R2-F002"
-      ],
+      "finding_ids": ["R2-F001", "R2-F002"],
       "reviewer_response": {
         "digest": "sha256:573a0ccc716a72d48200df7c327a65e385f8d155a160195ac5e9546ec73ed5ee",
         "path": "docs/peer-reviews/spec/aivc-interactive-tutorial-design-review-cb28e9fe5863446ca5d949d96998909c/xpr/2026-10-14-2026-10-13-15-aivc-interactive-tutorial-design-review-f90cbcd8ed4a948d618a58f5eca85979-reviewer-response-2.md"

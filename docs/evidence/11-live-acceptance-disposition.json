@@ -1,0 +1,341 @@
+{
+  "policy": "aivc.issue11.accepted-live-limitations/v1",
+  "authority": {
+    "amendmentCommit": "75ffee8031203efec513b589daf74f2f2ab4453d",
+    "reviewStorageCommit": "71fc7115200bd94e7872c3e2f5dc3e15fd10bbce",
+    "adoptionCommit": "fc51a548e73dc74bb14cfb9805eb381182fb8ad8",
+    "lintAdoptionCommit": "63fdb6911a87d2978551e0a86c7387a53cfc0461",
+    "targetCollateralCommit": "c529123d95e782acd962aa8276cd635616d59db9",
+    "humanTurn": "01a13f63-b581-7f11-af49-fc567f7aa25b",
+    "authorityAssurance": "unavailable"
+  },
+  "deliveryConfiguration": {
+    "baselineCommit": "b4d5ff903f4965429a27f409cbd2bcac843fb324",
+    "storageCommit": "164e233a90e37dd9ea9c9356c6a5f5c6221b0edd",
+    "path": ".ai-task-manager/task-tracker.json",
+    "before": {
+      "mode": "100644",
+      "blob": "c8263ac7233be6e8462805d0a1386f5919dd0ee6",
+      "bytes": 2002,
+      "sha256": "269c2744e6ab4c59b131aeee53188197501e95f99e652d97c81a60f8337880b3"
+    },
+    "after": {
+      "mode": "100644",
+      "blob": "4c117bc9ffdd4cfbbaf2d6fa4ad758c4834affa3",
+      "bytes": 2091,
+      "sha256": "23500227004639e8708857bf2017b6eaeba8c0e0c427e339b8865f547b37885f"
+    },
+    "anchors": [
+      {
+        "path": "docs/superpowers/specs/2026-10-15-54-trunk-delivery-config-design.md",
+        "mode": "100644",
+        "blob": "be5ed0d4bd985fc13e7080ece1051114e819d3f5",
+        "bytes": 11642,
+        "sha256": "e6f7dee5362ebb9ddf84a4256a1549dff94c56991269c74ebb1ce3e39dd78e46"
+      },
+      {
+        "path": "docs/superpowers/plans/2026-10-15-54-trunk-delivery-config.md",
+        "mode": "100644",
+        "blob": "adeaa19663fc4fcfacdc703b3d6107c5fd8b2c38",
+        "bytes": 20846,
+        "sha256": "599d0550b0d24ddafbee99a99419b9e3d8cf559516be13e61ad7c3d846110c0a"
+      },
+      {
+        "path": "docs/evidence/54-astra-trunk-delivery-config-assessment.txt",
+        "mode": "100644",
+        "blob": "91a583ae574385a528fe054ac9cd52833ffc18a9",
+        "bytes": 2782,
+        "sha256": "82a244a81858bde4b61b8154576e6b20fc947e66d4aeeec7c87df795bacfd689"
+      }
+    ]
+  },
+  "trunkConfiguration": {
+    "baselineCommit": "78429753cdeede058b0b279296b77d9f1c2bb246",
+    "storageCommit": "72a937e7147018d02a3552400fa16f8d8c4e33ff",
+    "path": ".ai-task-manager/task-tracker.json",
+    "before": {
+      "mode": "100644",
+      "blob": "4c117bc9ffdd4cfbbaf2d6fa4ad758c4834affa3",
+      "bytes": 2091,
+      "sha256": "23500227004639e8708857bf2017b6eaeba8c0e0c427e339b8865f547b37885f"
+    },
+    "after": {
+      "mode": "100644",
+      "blob": "fcdfc1f95c17b1e342b01325103274a3991077ea",
+      "bytes": 2121,
+      "sha256": "4b3c919cbae4dc9e6e225965ad420ba80405cb8e86f552bfc53bb06b32b450b9"
+    },
+    "anchors": [
+      {
+        "path": "docs/superpowers/specs/2026-10-15-57-explicit-trunk-target-design.md",
+        "mode": "100644",
+        "blob": "680a006998d718240bfee09e63632701ff88074e",
+        "bytes": 11247,
+        "sha256": "3e7057b4f4b4583d8053af501c1168b6969c677bf38e918c2c668488343d9378"
+      },
+      {
+        "path": "docs/superpowers/plans/2026-10-15-57-explicit-trunk-target.md",
+        "mode": "100644",
+        "blob": "ca9366f75aa418d313f4ca15b3c1f70e7139ccd3",
+        "bytes": 22203,
+        "sha256": "6316442ee31227cd59df74df34e898cd9a41219349989a530aaf9c9d504f7fc8"
+      },
+      {
+        "path": "docs/evidence/57-astra-explicit-trunk-target-assessment.txt",
+        "mode": "100644",
+        "blob": "5cbc60b9316cec50c6caf1c932575d544941d942",
+        "bytes": 4609,
+        "sha256": "b223a0f9037053aaf202aebeec09bd00c72b42d7c145ed941c366220bfdabb19"
+      }
+    ]
+  },
+  "targetHandoff": {
+    "path": "docs/implementation/2-live-validation-handoff.md",
+    "targetCommit": "fe2a158c8f717aed43d604c3d7614dc18a3452e1",
+    "storageCommit": "c529123d95e782acd962aa8276cd635616d59db9",
+    "blob": "bd64361def52c6ce512bad6ac90deb96f2a8e406"
+  },
+  "originalPhysical": {
+    "gitHead": "2687b5434377f423363be7d279dbcaf12279aa8f",
+    "sourceDigest": "14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63"
+  },
+  "currentSourceDigest": "d3232d655b813aba3aa6a0b18ac157237c169d9228b2be270fbc152798e40b19",
+  "changedFiles": [
+    {
+      "path": ".ai-task-manager/task-tracker.json",
+      "before": {
+        "mode": "100644",
+        "blob": "c8263ac7233be6e8462805d0a1386f5919dd0ee6"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "fcdfc1f95c17b1e342b01325103274a3991077ea"
+      }
+    },
+    {
+      "path": "README.md",
+      "before": {
+        "mode": "100644",
+        "blob": "8df8574eb61c778a49d0bb8e44a41e69ee7b224c"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "de947d828f0b3b2ba73e0e8f3313a8e42ce75d80"
+      }
+    },
+    {
+      "path": "docs/evidence/11-astra-amended-pr-review.txt",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "74fcf61d24b55cd93c6c34181b5a9ef18f0a0f8f"
+      }
+    },
+    {
+      "path": "docs/evidence/11-astra-sealed-lint-assessment.txt",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "905232a1a3b460b8a0952fc54ff2f38180354668"
+      }
+    },
+    {
+      "path": "docs/evidence/11-astra-target-collateral-assessment.txt",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "f06456f630d86d3351e216aefbb0c1f7eeba23e4"
+      }
+    },
+    {
+      "path": "docs/evidence/54-astra-trunk-delivery-config-assessment.txt",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "91a583ae574385a528fe054ac9cd52833ffc18a9"
+      }
+    },
+    {
+      "path": "docs/evidence/57-astra-explicit-trunk-target-assessment.txt",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "5cbc60b9316cec50c6caf1c932575d544941d942"
+      }
+    },
+    {
+      "path": "docs/implementation/11-system-acceptance.md",
+      "before": {
+        "mode": "100644",
+        "blob": "41ed104b50584899d28e10ff8986d673ea83536f"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "9045911486842efefe187f103dcb5ea43b882748"
+      }
+    },
+    {
+      "path": "docs/implementation/2-live-validation-handoff.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "bd64361def52c6ce512bad6ac90deb96f2a8e406"
+      }
+    },
+    {
+      "path": "docs/live-validation.md",
+      "before": {
+        "mode": "100644",
+        "blob": "13d15597342596fd131831f661bb5a26927cea2c"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "50618c9c79f4778dc197b6b18c2c6788efad00eb"
+      }
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-15-54-trunk-delivery-config.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "adeaa19663fc4fcfacdc703b3d6107c5fd8b2c38"
+      }
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-15-57-explicit-trunk-target.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "ca9366f75aa418d313f4ca15b3c1f70e7139ccd3"
+      }
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-15-11-sealed-review-lint-addendum.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "e7cfc4a2f6c8eb8d52de2d7de1d77a41e0dfbb03"
+      }
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-15-11-target-collateral-addendum.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "c0770608b7ba1e64e23042970d9b3ac589ff9f99"
+      }
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-15-54-trunk-delivery-config-design.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "be5ed0d4bd985fc13e7080ece1051114e819d3f5"
+      }
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-15-57-explicit-trunk-target-design.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "680a006998d718240bfee09e63632701ff88074e"
+      }
+    },
+    {
+      "path": "scripts/format-check.mjs",
+      "before": {
+        "mode": "100644",
+        "blob": "94bb4093154c7fe8b14e1fa6243a6555322a99df"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "4cc6db13584cd41b2f4f38a97e025bc2a83da0ac"
+      }
+    },
+    {
+      "path": "scripts/lint-markdown.mjs",
+      "before": {
+        "mode": "100644",
+        "blob": "16b420f6fba8627a22b784d07d7df3471c3da51a"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "3db867ac7f17ce164962b00d2d7fc8e8b7193e7c"
+      }
+    },
+    {
+      "path": "scripts/verify-live.mjs",
+      "before": {
+        "mode": "100644",
+        "blob": "5a7dea3a30a5dcdd0b0bb9156e93154bb063b48b"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "2b6f22660cbb184df864e796d1549c9f6d6410eb"
+      }
+    },
+    {
+      "path": "tests/scripts/format-check.test.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "dd2e60cc14808b88d22c1b9c02fa6bb0c7343a3a"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "4137e4755ff0135eb3f6a8f216363bc168cda8f6"
+      }
+    },
+    {
+      "path": "tests/scripts/quality-scans.test.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "ab9368947dfe0e0675a4539df7e84e0cc83517a9"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "11188988f6ba4760a270bbc2dda0a0c4af81a74b"
+      }
+    },
+    {
+      "path": "tests/scripts/verify-live.test.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "efe5e5abef1e6abfa0ea68b770ea88c57c939d43"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "96ccb152c0fd594f6252b0e3e827a745324df3d1"
+      }
+    }
+  ],
+  "ordinarySearch": {
+    "testedHead": "385d11b2448dac5bf01400bb7c11834bfefbfbfd",
+    "storageCommit": "eddb4722584cda6137d0e456c87f4a560f90e117",
+    "artifact": "docs/evidence/11-native-search-ordered-385d11b.json",
+    "sha256": "4b0159c5d9594ac142bb3104e5ddf1de7a9bd1bca631e59a961da5ade88484c3"
+  },
+  "runtimeProfile": {
+    "speechCharsPerSecond": 12,
+    "segmentChars": 72,
+    "defaultUnchanged": 14,
+    "backlogChars": 2400,
+    "highWaterSeconds": 10,
+    "lowWaterSeconds": 2,
+    "speechTimeoutMs": 20000,
+    "turnTimeoutMs": 60000,
+    "retrievalTimeoutMs": 5000
+  },
+  "observations": {
+    "L4": "fail",
+    "L6": "unverified",
+    "durationSeconds": 6.6,
+    "pauseObserved": false
+  },
+  "dispositions": {
+    "duration": "accepted-measured-limitation",
+    "ordinaryContinuation": "component-equality-qualified",
+    "providerPause": "deferred-unverified",
+    "physical": "unchanged-components-carried-forward"
+  },
+  "verdict": "amended-release-accepted-with-explicit-limitations"
+}

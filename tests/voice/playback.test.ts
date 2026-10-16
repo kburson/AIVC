@@ -1,0 +1,128 @@
+import { expect, it } from 'vitest';
+import { Playback } from '../../apps/web/client/voice/playback';
+import { AudioClock, token, settle } from './audio-fixture';
+it('uses 24kHz source buffers on a 48kHz device and counts current and future audio once', async () => {
+  const c = new AudioClock();
+  const p = new Playback(c.context(), () => true);
+  p.enqueue(token, new Float32Array(24000));
+  p.enqueue(token, new Float32Array(48000));
+  expect(c.buffers.map((b) => b.sampleRate)).toEqual([24000, 24000]);
+  expect(c.sources.map((s) => s.startAt)).toEqual([0.01, 1.01]);
+  expect(p.outstandingSeconds()).toBeCloseTo(3);
+  c.currentTime = 0.51;
+  expect(p.outstandingSeconds()).toBeCloseTo(2.5);
+  c.currentTime = 3.01;
+  expect(p.outstandingSeconds()).toBeCloseTo(0);
+  await p.dispose();
+});
+it('retains audio budget until actual audio-clock progress and stops every canceled handle', async () => {
+  const c = new AudioClock();
+  const p = new Playback(c.context(), () => true);
+  p.enqueue(token, new Float32Array(240000));
+  c.sources[0].onended?.();
+  expect(p.outstandingSeconds()).toBe(10);
+  expect(() => p.enqueue(token, new Float32Array(1))).toThrow(/AUDIO_OVERFLOW/);
+  c.state = 'suspended';
+  expect(p.outstandingSeconds()).toBe(10);
+  p.cancel(token);
+  expect(c.sources.every((s) => s.stopped)).toBe(true);
+  expect(p.outstandingSeconds()).toBe(0);
+  await p.dispose();
+});
+it('rejects stale scheduling and serializes resume after pending suspend', async () => {
+  const c = new AudioClock();
+  let current = true;
+  const p = new Playback(c.context(), () => current);
+  current = false;
+  p.enqueue(token, new Float32Array(24));
+  expect(c.sources).toHaveLength(0);
+  current = true;
+  let release!: () => void;
+  c.suspendGate = new Promise((r) => (release = r));
+  const suspended = p.suspend();
+  const resumed = p.resume();
+  await settle();
+  expect(c.resumes).toBe(0);
+  release();
+  await suspended;
+  await resumed;
+  expect(p.isRunning()).toBe(true);
+  await p.dispose();
+  expect(c.closed).toBe(true);
+});
+it('recovers the empty context only after a pending suspension settles', async () => {
+  const c = new AudioClock();
+  const p = new Playback(c.context(), () => true);
+  let release!: () => void;
+  c.suspendGate = new Promise((r) => (release = r));
+  p.enqueue(token, new Float32Array(24));
+  const suspended = p.suspend();
+  p.cancel(token);
+  const recovered = p.resetAfterCancel();
+  await settle();
+  expect(c.resumes).toBe(0);
+  release();
+  await suspended;
+  await recovered;
+  expect(p.isRunning()).toBe(true);
+  expect(p.outstandingSeconds()).toBe(0);
+  await p.dispose();
+});
+it('calls native resume synchronously when no earlier operation is pending so typed gestures unlock reused output', async () => {
+  const c = new AudioClock();
+  const p = new Playback(c.context(), () => true);
+  await settle();
+  const resumed = p.resume();
+  expect(c.resumes).toBe(1);
+  await resumed;
+  await p.dispose();
+});
+
+it('empty-context recovery waits for pending suspension and returns running before the next generation', async () => {
+  const clock = new AudioClock();
+  let release!: () => void;
+  clock.suspendGate = new Promise<void>((r) => {
+    release = r;
+  });
+  const replacement = new AudioClock();
+  replacement.state = 'suspended';
+  const playback = new Playback(
+    clock.context(),
+    () => true,
+    Promise.resolve(),
+    () => replacement.context(),
+  );
+  const pending = playback.suspend();
+  await settle();
+  let recovered = false;
+  const reset = playback.resetAfterCancel().then(() => {
+    recovered = true;
+  });
+  await settle();
+  expect(recovered).toBe(false);
+  release();
+  await pending;
+  await reset;
+  expect(playback.isRunning()).toBe(true);
+  await playback.dispose();
+});
+it('empty-context replacement resumes and rejects a native resume that never reaches running', async () => {
+  const clock = new AudioClock();
+  clock.state = 'suspended';
+  clock.resumeGate = new Promise(() => {});
+  const replacement = new AudioClock();
+  replacement.state = 'suspended';
+  replacement.resume = async () => {};
+  const playback = new Playback(
+    clock.context(),
+    () => true,
+    Promise.resolve(),
+    () => replacement.context(),
+  );
+  void playback.resume();
+  await settle();
+  await expect(playback.resetAfterCancel()).rejects.toThrow(
+    'SPEECH_RESUME_FAILED',
+  );
+  await playback.dispose();
+});

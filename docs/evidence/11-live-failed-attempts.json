@@ -1,0 +1,64 @@
+{
+  "purpose": "Preserve actual failed qualification; these are not passing L1-L8 observations.",
+  "attempts": [
+    {
+      "kind": "deliberate typed Atlas browser qualification",
+      "gitHead": "dec0d2295f03277624614ce990ff9efbe04caf26",
+      "sourceDigest": "72074dde94ba9256aabe29034fb3f90fd4e25d1cd233a3b02365866dcea8bfcf",
+      "build": { "mode": "production", "buildId": "Soa4spEgarqjCkidWLdt3" },
+      "browser": {
+        "name": "Chrome",
+        "version": "155.0.8059.40",
+        "os": "darwin"
+      },
+      "models": {
+        "claudeModel": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en"
+      },
+      "turnId": "d208cb50-ea14-41f3-a0ea-32ac78a12090",
+      "localHttpStatus": 200,
+      "terminal": {
+        "type": "turn.failed",
+        "code": "MODEL_FAILED",
+        "message": "Model request failed."
+      },
+      "capabilityReasonAfterFailure": "Hosted search model support could not be verified.",
+      "qualification": "failed; no STT/TTS/physical/search success claimed; cause established by the separate diagnostic attempt"
+    },
+    {
+      "kind": "one deliberate diagnostic Atlas request with temporary sanitized local server diagnostics",
+      "gitHead": "dec0d2295f03277624614ce990ff9efbe04caf26",
+      "workingTreeSourceDigest": "db7190c9de9b05bd1cabe24e529202b4ae660ed21db778a3e00c236c333e6753",
+      "turnId": "bedea632-7fb9-4543-a74a-f3fc39f60931",
+      "localHttpStatus": 200,
+      "terminal": {
+        "type": "turn.failed",
+        "code": "MODEL_FAILED",
+        "message": "Model request failed."
+      },
+      "originalErrors": [
+        {
+          "stage": "models.retrieve",
+          "name": "Error",
+          "message": "timeout must be an integer",
+          "status": null,
+          "code": null
+        },
+        {
+          "stage": "messages.stream",
+          "name": "Error",
+          "message": "timeout must be an integer",
+          "status": null,
+          "code": null
+        }
+      ],
+      "qualification": "diagnostic only; not source-freeze acceptance; temporary instrumentation restored before the permanent fix"
+    }
+  ],
+  "rootCause": "The existing monotonic deadline has fractional remaining milliseconds. Anthropic SDK validates its timeout as an integer before sending an HTTP request. Plain-Node metadata qualification used an integer timeout, explaining the difference.",
+  "limitations": [
+    "No automatic retry or account/search incompatibility classification is claimed.",
+    "Neither failed attempt establishes hands-free capture, generated voice, citations, physical echo or latency acceptance."
+  ]
+}

@@ -1,0 +1,589 @@
+{
+  "purpose": "Offline preparation only; no call/server/browser/profile change",
+  "sourceDigest": "14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63",
+  "intendedCps": 12,
+  "intendedCap": 72,
+  "oldCfa3Artifact": {
+    "path": "docs/evidence/11-live-baseline-eddb472.json",
+    "bytes": 2791079,
+    "sha256": "47882820530f38aeef221aa8f022a4e8dcee3946be8ff8ae3788215d2c48c630"
+  },
+  "originalCap84Unchanged": true,
+  "replays": [
+    {
+      "turnId": "341a124a-5b19-447d-b2d9-d987b6a5d777",
+      "sourceKind": "captured SSE answer deltas exactly as archived",
+      "chunks": [
+        "Here",
+        " is",
+        " the current status of the",
+        " **",
+        "Atlas** project:\n\n-",
+        " **Status:** Active ",
+        "âœ…",
+        "\n- **Owner Team:** North",
+        "\n- **Open Items:** ",
+        "3",
+        "\n- **Summary:** Atlas",
+        " is a synthetic active",
+        " project owned by the",
+        " North team with three open items currently",
+        " pending",
+        ".\n\nLet",
+        " me know if you'd",
+        " like more",
+        " details",
+        " or",
+        " want",
+        " to take",
+        " action",
+        " on any",
+        " of the",
+        " open items!"
+      ],
+      "segments": [
+        "Here is the current status of the Atlas project: - Status:",
+        "Active âœ… - Owner Team: North - Open Items: 3 - Summary:",
+        "Atlas is a synthetic active project owned by the North team with three",
+        "open items currently pending.",
+        "Let me know if you'd like more details or want to take action on any of",
+        "the open items!"
+      ],
+      "limitations": [
+        "Known capture encoding mismatch: SSE has mojibake where actual queued speech/UI shows emoji. No text repaired or normalized to hide this mismatch."
+      ]
+    },
+    {
+      "turnId": "341a124a-5b19-447d-b2d9-d987b6a5d777",
+      "sourceKind": "SECONDARY reconstruction of complete actually submitted speech text",
+      "actualSegmentIds": ["1", "2", "3", "4", "5", "6"],
+      "chunks": [
+        "Here is the current status of the Atlas project: - Status: Active ✅ - Owner Team: North - Open Items: 3 - Summary: Atlas is a synthetic active project owned by the North team with three open items currently pending. Let me know if you'd like more details or want to take action on any of the open items!"
+      ],
+      "segments": [
+        "Here is the current status of the Atlas project: - Status:",
+        "Active ✅ - Owner Team: North - Open Items: 3 - Summary:",
+        "Atlas is a synthetic active project owned by the North team with three",
+        "open items currently pending.",
+        "Let me know if you'd like more details or want to take action on any of",
+        "the open items!"
+      ],
+      "limitations": [
+        "Joined with single spaces; original whitespace/line boundaries and Markdown are lost. Does not prove display/final-answer equality. Used only as exact queued-word coverage analysis.",
+        "Owner reported these complete Atlas replies heard; original body text preserved in archived source, not rewritten."
+      ]
+    },
+    {
+      "turnId": "0f7a9c10-f99b-41ee-a8f6-103af053246c",
+      "sourceKind": "captured SSE answer deltas exactly as archived",
+      "chunks": [
+        "Let",
+        " me look",
+        " that",
+        " up for you!",
+        "\n\n",
+        "Here is",
+        " the current status of the",
+        " **Atlas** project:\n\n-",
+        " **Status:** Active âœ…",
+        "\n- **Owner Team:** North",
+        "\n- **Open Items:** ",
+        "3\n- **Summary:**",
+        " Synthetic active project owned by North with",
+        " three open items.\n\nLet me",
+        " know if you need any further",
+        " information!"
+      ],
+      "segments": [
+        "Let me look that up for you!",
+        "Here is the current status of the Atlas project: - Status:",
+        "Active âœ… - Owner Team: North - Open Items: 3 - Summary:",
+        "Synthetic active project owned by North with three open items.",
+        "Let me know if you need any further information!"
+      ],
+      "limitations": [
+        "Known capture encoding mismatch: SSE has mojibake where actual queued speech/UI shows emoji. No text repaired or normalized to hide this mismatch."
+      ]
+    },
+    {
+      "turnId": "0f7a9c10-f99b-41ee-a8f6-103af053246c",
+      "sourceKind": "SECONDARY reconstruction of complete actually submitted speech text",
+      "actualSegmentIds": ["1", "2", "3", "4", "5"],
+      "chunks": [
+        "Let me look that up for you! Here is the current status of the Atlas project: - Status: Active ✅ - Owner Team: North - Open Items: 3 - Summary: Synthetic active project owned by North with three open items. Let me know if you need any further information!"
+      ],
+      "segments": [
+        "Let me look that up for you!",
+        "Here is the current status of the Atlas project: - Status:",
+        "Active ✅ - Owner Team: North - Open Items: 3 - Summary:",
+        "Synthetic active project owned by North with three open items.",
+        "Let me know if you need any further information!"
+      ],
+      "limitations": [
+        "Joined with single spaces; original whitespace/line boundaries and Markdown are lost. Does not prove display/final-answer equality. Used only as exact queued-word coverage analysis.",
+        "Owner reported these complete Atlas replies heard; original body text preserved in archived source, not rewritten."
+      ]
+    },
+    {
+      "turnId": "ed177ff4-a9cf-47f9-a0d6-c0d090590f12",
+      "sourceKind": "captured SSE answer deltas exactly as archived",
+      "chunks": [
+        "Here",
+        "'s a brief",
+        " explanation",
+        " of **",
+        "Nova-3**",
+        " based",
+        " on",
+        " Deepgram's official documentation:",
+        "\n\n1",
+        ". ",
+        "Nova",
+        "-3 is Deepg",
+        "ram's highest-performing general-",
+        "purpose ASR (",
+        "Automatic Speech Recognition) model,",
+        " recommended",
+        " for meetings, event captioning,",
+        " multi-speaker,",
+        " multilingual, no",
+        "isy, or",
+        " far-field audio",
+        " in",
+        " both",
+        " batch and streaming modes",
+        ".",
+        "\n\n2. ",
+        "It",
+        " represents",
+        " a significant",
+        " leap",
+        " forward",
+        " in",
+        " speech",
+        " AI",
+        " technology,",
+        " delivering",
+        " industry",
+        "-leading performance with",
+        " a",
+        " **",
+        "53",
+        ".",
+        "4",
+        "% reduction",
+        " in word",
+        " error rate (WER)**",
+        " for",
+        " streaming",
+        " and",
+        " **",
+        "47.4%",
+        "** for batch processing compared",
+        " to competitors.",
+        "\n\n3. ",
+        "Nova",
+        "-3 offers",
+        " model",
+        " options such",
+        " as **",
+        "general** (optimized for everyday",
+        " audio processing) and **medical**",
+        " (optimized for audio with med",
+        "ically oriented vocabulary,",
+        " available in English and multilingual)",
+        ".",
+        "\n\n4. ",
+        "To",
+        " access",
+        " the",
+        " model",
+        ", you simply",
+        " use",
+        " **",
+        "`",
+        "model=nova-3`",
+        "** in your API calls",
+        "."
+      ],
+      "segments": [
+        "Here's a brief explanation of Nova-3 based on Deepgram's official",
+        "documentation:",
+        "1. Nova-3 is Deepgram's highest-performing general-purpose ASR",
+        "(Automatic Speech Recognition) model, recommended for meetings,",
+        "event captioning, multi-speaker, multilingual, noisy,",
+        "or far-field audio in both batch and streaming modes.",
+        "2. It represents a significant leap forward in speech AI technology,",
+        "delivering industry-leading performance with a 53.4% reduction in word",
+        "error rate (WER) for streaming and 47.4% for batch processing compared",
+        "to competitors.",
+        "3. Nova-3 offers model options such as general (optimized for everyday",
+        "audio processing) and medical (optimized for audio with medically",
+        "oriented vocabulary, available in English and multilingual).",
+        "4. To access the model, you simply use model=nova-3 in your API calls."
+      ],
+      "limitations": []
+    }
+  ],
+  "coverage": [
+    {
+      "oldTurnId": "341a124a-5b19-447d-b2d9-d987b6a5d777",
+      "oldSegmentId": "1",
+      "oldDurationSeconds": 6.0800000000000045,
+      "oldText": "Here is the current status of the Atlas project: - Status: Active ✅ - Owner Team:",
+      "replayKind": "captured SSE answer deltas exactly as archived",
+      "exactOldTextLocated": false,
+      "overlap": [],
+      "withImmediateNeighbors": [],
+      "status": "unknown: exact old queued words differ from this captured source variant"
+    },
+    {
+      "oldTurnId": "341a124a-5b19-447d-b2d9-d987b6a5d777",
+      "oldSegmentId": "1",
+      "oldDurationSeconds": 6.0800000000000045,
+      "oldText": "Here is the current status of the Atlas project: - Status: Active ✅ - Owner Team:",
+      "replayKind": "SECONDARY reconstruction of complete actually submitted speech text",
+      "exactOldTextLocated": true,
+      "overlap": [
+        {
+          "index": 0,
+          "text": "Here is the current status of the Atlas project: - Status:",
+          "start": 0,
+          "end": 58
+        },
+        {
+          "index": 1,
+          "text": "Active ✅ - Owner Team: North - Open Items: 3 - Summary:",
+          "start": 59,
+          "end": 114
+        }
+      ],
+      "withImmediateNeighbors": [
+        {
+          "index": 0,
+          "text": "Here is the current status of the Atlas project: - Status:",
+          "start": 0,
+          "end": 58
+        },
+        {
+          "index": 1,
+          "text": "Active ✅ - Owner Team: North - Open Items: 3 - Summary:",
+          "start": 59,
+          "end": 114
+        },
+        {
+          "index": 2,
+          "text": "Atlas is a synthetic active project owned by the North team with three",
+          "start": 115,
+          "end": 185
+        }
+      ],
+      "status": "offline recut coverage only; not live duration acceptance"
+    },
+    {
+      "oldTurnId": "0f7a9c10-f99b-41ee-a8f6-103af053246c",
+      "oldSegmentId": "2",
+      "oldDurationSeconds": 6.400000000000005,
+      "oldText": "Here is the current status of the Atlas project: - Status: Active ✅ - Owner Team:",
+      "replayKind": "captured SSE answer deltas exactly as archived",
+      "exactOldTextLocated": false,
+      "overlap": [],
+      "withImmediateNeighbors": [],
+      "status": "unknown: exact old queued words differ from this captured source variant"
+    },
+    {
+      "oldTurnId": "0f7a9c10-f99b-41ee-a8f6-103af053246c",
+      "oldSegmentId": "2",
+      "oldDurationSeconds": 6.400000000000005,
+      "oldText": "Here is the current status of the Atlas project: - Status: Active ✅ - Owner Team:",
+      "replayKind": "SECONDARY reconstruction of complete actually submitted speech text",
+      "exactOldTextLocated": true,
+      "overlap": [
+        {
+          "index": 1,
+          "text": "Here is the current status of the Atlas project: - Status:",
+          "start": 29,
+          "end": 87
+        },
+        {
+          "index": 2,
+          "text": "Active ✅ - Owner Team: North - Open Items: 3 - Summary:",
+          "start": 88,
+          "end": 143
+        }
+      ],
+      "withImmediateNeighbors": [
+        {
+          "index": 0,
+          "text": "Let me look that up for you!",
+          "start": 0,
+          "end": 28
+        },
+        {
+          "index": 1,
+          "text": "Here is the current status of the Atlas project: - Status:",
+          "start": 29,
+          "end": 87
+        },
+        {
+          "index": 2,
+          "text": "Active ✅ - Owner Team: North - Open Items: 3 - Summary:",
+          "start": 88,
+          "end": 143
+        },
+        {
+          "index": 3,
+          "text": "Synthetic active project owned by North with three open items.",
+          "start": 144,
+          "end": 206
+        }
+      ],
+      "status": "offline recut coverage only; not live duration acceptance"
+    },
+    {
+      "oldTurnId": "ed177ff4-a9cf-47f9-a0d6-c0d090590f12",
+      "oldSegmentId": "2",
+      "oldDurationSeconds": 6.1200000000000045,
+      "oldText": "1. Nova-3 is Deepgram's highest-performing general-purpose ASR (Automatic Speech",
+      "replayKind": "captured SSE answer deltas exactly as archived",
+      "exactOldTextLocated": true,
+      "overlap": [
+        {
+          "index": 2,
+          "text": "1. Nova-3 is Deepgram's highest-performing general-purpose ASR",
+          "start": 81,
+          "end": 143
+        },
+        {
+          "index": 3,
+          "text": "(Automatic Speech Recognition) model, recommended for meetings,",
+          "start": 144,
+          "end": 207
+        }
+      ],
+      "withImmediateNeighbors": [
+        {
+          "index": 1,
+          "text": "documentation:",
+          "start": 66,
+          "end": 80
+        },
+        {
+          "index": 2,
+          "text": "1. Nova-3 is Deepgram's highest-performing general-purpose ASR",
+          "start": 81,
+          "end": 143
+        },
+        {
+          "index": 3,
+          "text": "(Automatic Speech Recognition) model, recommended for meetings,",
+          "start": 144,
+          "end": 207
+        },
+        {
+          "index": 4,
+          "text": "event captioning, multi-speaker, multilingual, noisy,",
+          "start": 208,
+          "end": 261
+        }
+      ],
+      "status": "offline recut coverage only; not live duration acceptance"
+    },
+    {
+      "oldTurnId": "ed177ff4-a9cf-47f9-a0d6-c0d090590f12",
+      "oldSegmentId": "4",
+      "oldDurationSeconds": 6.0400000000000045,
+      "oldText": "multilingual, noisy, or far-field audio in both batch and streaming modes.",
+      "replayKind": "captured SSE answer deltas exactly as archived",
+      "exactOldTextLocated": true,
+      "overlap": [
+        {
+          "index": 4,
+          "text": "event captioning, multi-speaker, multilingual, noisy,",
+          "start": 208,
+          "end": 261
+        },
+        {
+          "index": 5,
+          "text": "or far-field audio in both batch and streaming modes.",
+          "start": 262,
+          "end": 315
+        }
+      ],
+      "withImmediateNeighbors": [
+        {
+          "index": 3,
+          "text": "(Automatic Speech Recognition) model, recommended for meetings,",
+          "start": 144,
+          "end": 207
+        },
+        {
+          "index": 4,
+          "text": "event captioning, multi-speaker, multilingual, noisy,",
+          "start": 208,
+          "end": 261
+        },
+        {
+          "index": 5,
+          "text": "or far-field audio in both batch and streaming modes.",
+          "start": 262,
+          "end": 315
+        },
+        {
+          "index": 6,
+          "text": "2. It represents a significant leap forward in speech AI technology,",
+          "start": 316,
+          "end": 384
+        }
+      ],
+      "status": "offline recut coverage only; not live duration acceptance"
+    },
+    {
+      "oldTurnId": "ed177ff4-a9cf-47f9-a0d6-c0d090590f12",
+      "oldSegmentId": "6",
+      "oldDurationSeconds": 6.200000000000005,
+      "oldText": "delivering industry-leading performance with a 53.4% reduction in word error rate",
+      "replayKind": "captured SSE answer deltas exactly as archived",
+      "exactOldTextLocated": true,
+      "overlap": [
+        {
+          "index": 7,
+          "text": "delivering industry-leading performance with a 53.4% reduction in word",
+          "start": 385,
+          "end": 455
+        },
+        {
+          "index": 8,
+          "text": "error rate (WER) for streaming and 47.4% for batch processing compared",
+          "start": 456,
+          "end": 526
+        }
+      ],
+      "withImmediateNeighbors": [
+        {
+          "index": 6,
+          "text": "2. It represents a significant leap forward in speech AI technology,",
+          "start": 316,
+          "end": 384
+        },
+        {
+          "index": 7,
+          "text": "delivering industry-leading performance with a 53.4% reduction in word",
+          "start": 385,
+          "end": 455
+        },
+        {
+          "index": 8,
+          "text": "error rate (WER) for streaming and 47.4% for batch processing compared",
+          "start": 456,
+          "end": 526
+        },
+        {
+          "index": 9,
+          "text": "to competitors.",
+          "start": 527,
+          "end": 542
+        }
+      ],
+      "status": "offline recut coverage only; not live duration acceptance"
+    }
+  ],
+  "distinctOverlapCandidates": [
+    {
+      "text": "Here is the current status of the Atlas project: - Status:",
+      "chars": 58
+    },
+    {
+      "text": "Active ✅ - Owner Team: North - Open Items: 3 - Summary:",
+      "chars": 55
+    },
+    {
+      "text": "1. Nova-3 is Deepgram's highest-performing general-purpose ASR",
+      "chars": 62
+    },
+    {
+      "text": "(Automatic Speech Recognition) model, recommended for meetings,",
+      "chars": 63
+    },
+    {
+      "text": "event captioning, multi-speaker, multilingual, noisy,",
+      "chars": 53
+    },
+    {
+      "text": "or far-field audio in both batch and streaming modes.",
+      "chars": 53
+    },
+    {
+      "text": "delivering industry-leading performance with a 53.4% reduction in word",
+      "chars": 70
+    },
+    {
+      "text": "error rate (WER) for streaming and 47.4% for batch processing compared",
+      "chars": 70
+    }
+  ],
+  "distinctCandidatesIncludingImmediateNeighbors": [
+    {
+      "text": "Here is the current status of the Atlas project: - Status:",
+      "chars": 58
+    },
+    {
+      "text": "Active ✅ - Owner Team: North - Open Items: 3 - Summary:",
+      "chars": 55
+    },
+    {
+      "text": "Atlas is a synthetic active project owned by the North team with three",
+      "chars": 70
+    },
+    {
+      "text": "Let me look that up for you!",
+      "chars": 28
+    },
+    {
+      "text": "Synthetic active project owned by North with three open items.",
+      "chars": 62
+    },
+    {
+      "text": "documentation:",
+      "chars": 14
+    },
+    {
+      "text": "1. Nova-3 is Deepgram's highest-performing general-purpose ASR",
+      "chars": 62
+    },
+    {
+      "text": "(Automatic Speech Recognition) model, recommended for meetings,",
+      "chars": 63
+    },
+    {
+      "text": "event captioning, multi-speaker, multilingual, noisy,",
+      "chars": 53
+    },
+    {
+      "text": "or far-field audio in both batch and streaming modes.",
+      "chars": 53
+    },
+    {
+      "text": "2. It represents a significant leap forward in speech AI technology,",
+      "chars": 68
+    },
+    {
+      "text": "delivering industry-leading performance with a 53.4% reduction in word",
+      "chars": 70
+    },
+    {
+      "text": "error rate (WER) for streaming and 47.4% for batch processing compared",
+      "chars": 70
+    },
+    {
+      "text": "to competitors.",
+      "chars": 15
+    }
+  ],
+  "overlapCandidateCount": 8,
+  "withNeighborsCandidateCount": 14,
+  "probeBudget": 10,
+  "probeExecution": "NOT RELEASED OR EXECUTED",
+  "coverageLimit": "Atlas SSE/actual-queued encoding difference and reconstructed whitespace/line boundary loss must be assessed by Astra; raw variant retained. If ambiguity changes selected recut, coverage is unknown, not silently repaired.",
+  "researchInlineValueRetained": true
+}

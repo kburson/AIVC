@@ -92,7 +92,7 @@ checkbox is checked.
 
 Before reporting `CODE_COMPLETE`, record your final word count:
 
-```
+```text
 node node_modules/ai-task-manager/scripts/task-tracker/task-tracker.mjs words-count
 ```
 

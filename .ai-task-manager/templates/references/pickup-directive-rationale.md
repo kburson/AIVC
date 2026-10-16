@@ -238,7 +238,7 @@ design.
 Branch `<this-issue-#>-<short-slug>`, then use this commit-message shape so
 the close-time rollup can link the work to its issue and epic:
 
-```
+```text
 <scope>: short summary
 
 Closes #<this-issue-#>

@@ -1,0 +1,12 @@
+node_modules/
+**/.next/
+**/dist/
+**/build/
+**/coverage/
+**/public/vendor/
+.superpowers/
+.scratch/
+.tmp/
+vendors/
+package-lock.json
+apps/web/public/vad/

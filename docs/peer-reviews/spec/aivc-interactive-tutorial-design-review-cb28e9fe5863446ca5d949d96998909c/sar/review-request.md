@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/89fc7a6125cd4b2be6f0f338dea928bd81bcea45/docs/peer-reviews/spec/aivc-interactive-tutorial-design-review-cb28e9fe5863446ca5d949d96998909c/sar/review-request.md) and its exact bytes remain available in the [tutorial evidence archive](../../../../quality-evidence/2026-10-14-25-tutorial-originals.json).
+> Original SHA-256: `ad486abf9b6efc210048c566ad612706ae51fd60e100f17d9266370ed0490e59`. Review acceptance and protocol hashes apply to those original bytes.
+
 # AIVC tutorial specification SAR request
 
 Date: October 13, 2026.

@@ -1,31 +1,35 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/spr/reviewer-response-1.md) and its exact bytes remain available in the [evidence archive](../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `fa7e356e7ceac50871365e9c07b6b4d6d428bc06043a07afe6988221d82c5957`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
 
----
-schema: "ai-peer-review.response/v1"
-review_id: "review-d62114d1a820674565d91da97bb547c1"
-role: "reviewer"
+```yaml
+schema: 'ai-peer-review.response/v1'
+review_id: 'review-d62114d1a820674565d91da97bb547c1'
+role: 'reviewer'
 turn: 1
-commit_mode: "normal"
-authority_assurance: "unavailable"
-artifact_path: "docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md"
-artifact_commit: "f0a4971adf76da1db1b4d4efd626faf4842089a3"
-artifact_blob: "e2b2bf28e5287e4416e676409002d7745c1f48f6"
-artifact_digest: "sha256:810b1f1a18964fa185fe2e92b358cab9d2a259d5b43fbbc56ab03577c91483f1"
+commit_mode: 'normal'
+authority_assurance: 'unavailable'
+artifact_path: 'docs/superpowers/plans/2026-10-12-2-voice-bff-reference.md'
+artifact_commit: 'f0a4971adf76da1db1b4d4efd626faf4842089a3'
+artifact_blob: 'e2b2bf28e5287e4416e676409002d7745c1f48f6'
+artifact_digest: 'sha256:810b1f1a18964fa185fe2e92b358cab9d2a259d5b43fbbc56ab03577c91483f1'
 agent:
-  host: "codex"
-  provider: "openai"
-  model_id: "gpt-6-astra"
-  model_display: "gpt-6-astra"
-  session_fingerprint: "sha256:26905761b314a738f4c13fa256f8a1bdc358ab76086141b9761e701741329250"
-  identity_source: "declared"
-started_at: "2026-10-13T05:22:27.904Z"
-submitted_at: "2026-10-13T05:27:47.521Z"
-finding_ids: ["R1-F001","R1-F002","R1-F003"]
+  host: 'codex'
+  provider: 'openai'
+  model_id: 'gpt-6-astra'
+  model_display: 'gpt-6-astra'
+  session_fingerprint: 'sha256:26905761b314a738f4c13fa256f8a1bdc358ab76086141b9761e701741329250'
+  identity_source: 'declared'
+started_at: '2026-10-13T05:22:27.904Z'
+submitted_at: '2026-10-13T05:27:47.521Z'
+finding_ids: ['R1-F001', 'R1-F002', 'R1-F003']
 answered_finding_ids: []
 acknowledged_supplement_ids: []
----
+```
 
 Mode: `normal`
 
@@ -35,20 +39,20 @@ Revisions requested for three implementation-contract gaps in the browser voice 
 
 This is independent plan review, not implementation verification or Plan approval. I read the complete 717-line sealed artifact and complete accepted specification; checked their SHA-256 values; inspected the existing package manifest and the installed epic-verifier export; and checked relevant upstream primary sources. The plan hash matches the protected frontmatter. The specification hash is `8512daa8c456af00628a16471d4b13526c7585172c223c8bfa0f2323bee4fff6`, matching the plan's provenance. No Git command, artifact edit, application execution, dependency installation or provider call was performed. Authority assurance is unavailable as recorded by the protocol.
 
-**Coverage and feasibility assessment**
+### Coverage and feasibility assessment
 
-| Area | Assessment |
-|---|---|
-| Task 1 and command ownership | Workspace/retrieval contracts, exact fixtures, script runner, formatter exclusions and epic wrapper have concrete files and verifiers. The installed verifier exports `main` and recognizes the proposed issue override. No missing final command is silently waived. |
-| Task 2 admission and leases | Explicit pre-body origin/host rejection, measured body limits, WAV/history validation and upstream-settlement leases address spec cases 9, 14 and 15. Slow tests distinguish response deadline from actual cancellation settlement. |
-| Task 3 model/retrieval/search/SSE | Native blocks and IDs, actual retrieval HTTP, bounded rounds/tools/search, no replay, normalized incremental SSE and search availability cover cases 1, 3, 7, 11 and 13. Exhausted-tool continuation remains live evidence, not an assumed provider guarantee. |
-| Task 4 UI/history | Whole-pair history, current-generation gates, safe rendering, truthful incomplete states and typed browser tests cover cases 4, 7, 14 and 15. |
-| Task 5 speech provider | Pinned SDK methods, raw streaming response, zero retries and lease/deadline ownership are supported by the checked API source. Optional metadata-hardening suggestion appears below. |
-| Task 6 playback | Exact 24 kHz PCM ledger, split-sample handling, request backpressure, active-response draining and emergency teardown address cases 3, 6 and 10. Streaming text stabilization needs the correction in R1-F003. |
-| Task 7 capture | Asset provenance, real browser asset check, bounded utterances, gesture startup and resource tests cover cases 5 and 8. The prescribed partial-start cleanup conflicts with the pinned library in R1-F001. |
-| Task 8 interruption | Tentative pause, no paid replay, stale event guards and slow-settlement concurrency address cases 4, 12 and 15. Confirmed utterance ownership needs the explicit distinction in R1-F002. |
-| Task 9 delivery evidence | All 15 cases and eight live scenarios are mapped; real search/STT/TTS/browser evidence, missing-capability outcomes, sample counts and source-bound read-only verification are explicit. Speaker failures and unavailable pause evidence stay nonpassing. |
-| Scope and estimate | Nine sequential tasks total 38 expected hours with a 27–55-hour range. The eight-hour checkpoint requires reporting open scope and further owner authorization; it does not rebrand a partial mock as the completed baseline. Approval/decomposition remain root-owned. |
+| Area                              | Assessment                                                                                                                                                                                                                                                              |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Task 1 and command ownership      | Workspace/retrieval contracts, exact fixtures, script runner, formatter exclusions and epic wrapper have concrete files and verifiers. The installed verifier exports `main` and recognizes the proposed issue override. No missing final command is silently waived.   |
+| Task 2 admission and leases       | Explicit pre-body origin/host rejection, measured body limits, WAV/history validation and upstream-settlement leases address spec cases 9, 14 and 15. Slow tests distinguish response deadline from actual cancellation settlement.                                     |
+| Task 3 model/retrieval/search/SSE | Native blocks and IDs, actual retrieval HTTP, bounded rounds/tools/search, no replay, normalized incremental SSE and search availability cover cases 1, 3, 7, 11 and 13. Exhausted-tool continuation remains live evidence, not an assumed provider guarantee.          |
+| Task 4 UI/history                 | Whole-pair history, current-generation gates, safe rendering, truthful incomplete states and typed browser tests cover cases 4, 7, 14 and 15.                                                                                                                           |
+| Task 5 speech provider            | Pinned SDK methods, raw streaming response, zero retries and lease/deadline ownership are supported by the checked API source. Optional metadata-hardening suggestion appears below.                                                                                    |
+| Task 6 playback                   | Exact 24 kHz PCM ledger, split-sample handling, request backpressure, active-response draining and emergency teardown address cases 3, 6 and 10. Streaming text stabilization needs the correction in R1-F003.                                                          |
+| Task 7 capture                    | Asset provenance, real browser asset check, bounded utterances, gesture startup and resource tests cover cases 5 and 8. The prescribed partial-start cleanup conflicts with the pinned library in R1-F001.                                                              |
+| Task 8 interruption               | Tentative pause, no paid replay, stale event guards and slow-settlement concurrency address cases 4, 12 and 15. Confirmed utterance ownership needs the explicit distinction in R1-F002.                                                                                |
+| Task 9 delivery evidence          | All 15 cases and eight live scenarios are mapped; real search/STT/TTS/browser evidence, missing-capability outcomes, sample counts and source-bound read-only verification are explicit. Speaker failures and unavailable pause evidence stay nonpassing.               |
+| Scope and estimate                | Nine sequential tasks total 38 expected hours with a 27–55-hour range. The eight-hour checkpoint requires reporting open scope and further owner authorization; it does not rebrand a partial mock as the completed baseline. Approval/decomposition remain root-owned. |
 
 ## Findings
 
@@ -76,7 +80,7 @@ The retained candidate has only an answer `token`, phase and candidate ID. The i
 
 **Priority:** P2. **Location:** Task 6 sentence detection, lines 511–512. **Affected contract:** meaningful numbers and URLs remain intact; early stable speech in spec case 6.
 
-The planned punctuation predicate accepts whitespace or end after punctuation, but `SpeechText.push(delta)` sees arbitrary provider chunks. End of the current accumulated chunk is not end of the answer. For example, pushes containing `The value is 3.` and then `5 today. ` can prematurely enqueue a sentence before the decimal exception is knowable. Splitting `https://example.` from `com/path` similarly risks speaking or stripping incomplete pieces incorrectly. Testing complete strings containing `3.5`, abbreviations and URLs does not establish this streaming behavior. Once the first segment has been sent for synthesis, a later chunk cannot repair it.
+The planned punctuation predicate accepts whitespace or end after punctuation, but `SpeechText.push(delta)` sees arbitrary provider chunks. End of the current accumulated chunk is not end of the answer. For example, pushes containing `The value is 3.` and then `5 today.` can prematurely enqueue a sentence before the decimal exception is knowable. Splitting `https://example.` from `com/path` similarly risks speaking or stripping incomplete pieces incorrectly. Testing complete strings containing `3.5`, abbreviations and URLs does not establish this streaming behavior. Once the first segment has been sent for synthesis, a later chunk cannot repair it.
 
 **Required change:** Define buffering/lookahead for ambiguous trailing punctuation and partial formatting/URL tokens across `push` calls; reserve actual end-of-answer flushing for `finish()` or the explicitly allowed terminal status. State that a transport/delta boundary alone never proves a stable sentence boundary.
 
@@ -94,7 +98,7 @@ The requested changes are plan corrections. Application tests and actual live be
 
 - Task 5 currently checks `contentType.toLowerCase().startsWith('audio/l16')` and then advertises fixed 24 kHz mono PCM. Consider parsing the MIME type and checking supplied rate/channel parameters, rejecting contradictory metadata such as `audio/l16;rate=16000`. A prefix match also accepts a distinct type beginning with that text. The fixed request parameters are correct, but a precise response boundary would make the normalized format claim stronger. Add controlled-fetch cases if adopted.
 
-**Primary-source verification**
+### Primary-source verification
 
 - [Pinned MicVAD implementation](https://github.com/ricky0123/vad/blob/de9b3ff83fd44cd7a2b3e07e9454e6b6f0bc249d/packages/web/src/real-time-vad.ts): confirms caller-owned audio context, deferred start, real-start callbacks and 16 kHz end samples. Model construction precedes optional start; destroy obtains complete audio instances before releasing the model. This supports R1-F001. The public method order, rather than a live memory measurement, establishes the uncovered path.
 - [Pinned VAD package metadata](https://github.com/ricky0123/vad/blob/de9b3ff83fd44cd7a2b3e07e9454e6b6f0bc249d/packages/web/package.json): identifies version 0.0.31 and its ORT dependency. Actual asset/build compatibility still needs the planned browser test.

@@ -1,0 +1,28 @@
+**Design: PASS. Plan: PASS. No critical, important, or minor finding requiring correction.**
+
+Reviewer: the same genuine native Astra6/high session, `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`.
+
+I reviewed both artifacts completely at clean planning head **`6d0edd8a506101a5a00a12dcaeb178b05a39d06b`**:
+
+| Artifact | Bytes | Git blob | SHA-256 |
+|---|---:|---|---|
+| `docs/superpowers/specs/2026-10-15-57-explicit-trunk-target-design.md` | 11247 | `680a006998d718240bfee09e63632701ff88074e` | `3e7057b4f4b4583d8053af501c1168b6969c677bf38e918c2c668488343d9378` |
+| `docs/superpowers/plans/2026-10-15-57-explicit-trunk-target.md` | 22203 | `ca9366f75aa418d313f4ca15b3c1f70e7139ccd3` | `6316442ee31227cd59df74df34e898cd9a41219349989a530aaf9c9d504f7fc8` |
+
+I independently verified these identities, the docs-only two-path comparison from `78429753cdeede058b0b279296b77d9f1c2bb246`, and live issue #57’s Scope, four ACs, and eight verification commands. The issue remains in Refine; this assessment grants no rank admission, Plan approval, implementation, or delivery authority.
+
+The proposal addresses the actual missed prerequisite without changing the application. It adds only the exact project-local `trunkRef: origin/trunk` postimage through the supported setter. The bounded precedence is explicit: #54’s 2091-byte image remains mandatory historical authority, while only the new 2121-byte image may satisfy the current candidate. The old #54 documents, tuples, and returned transition record remain unchanged; the new record separately identifies the trunk-target transition.
+
+The integrity design is appropriately narrow. It requires actual archival ancestry, three mandatory immutable collateral anchors, exact regular paths/modes/blobs/lengths/hashes, and independent complete candidate-HEAD and working-tree inventories. The new entries are protected expectations, not exemptions. The authentic assessment is archived before its resulting storage identity is fixed in implementation, avoiding a self-hash cycle or invented authority.
+
+The fixture and TDD sequence are executable. They install and commit the exact good configuration in an isolated real-history checkout before either baseline API runs. Both producer and independent consumer must pass before every targeted mutation. The explicit good-candidate RED is separated from meaningful negative coverage, and the plan rejects incidental bootstrap failures as evidence. Existing regressions, readiness clearing, failure recording, and scoped 15-second observation-case allowances remain preserved.
+
+The proposed lineage regression exercises the actual default resolver through the public loader, setter, and `createDefaultDeliverDeps`, with only its external command transport scripted. It does not inject the desired lineage result. The before/after assertions directly cover the omitted-field defect. The implementation should enforce the plan’s stated rejection of unexpected transport commands, including the intended repository and issue variables, and retain the actual command ledger.
+
+I also inspected the relevant installed implementation and compared it with admitted runtime 2012. Their `config.mjs`, `verbs/deliver.mjs`, and `lib/fetch-parent-issue.mjs` files currently have matching SHA-256 identities. This supports the portable owning-test approach. The separately required admitted-runtime RED/GREEN proof still matters; matching source hashes are not execution evidence. Both package manifests report version `0.1.0`, so the planned script/runtime identities should accompany that version rather than relying on it alone.
+
+The production ordering is correct: commit the actual postimage before regenerating the real disposition. Neither fixture setup nor transport may relax committed-HEAD validation. The plan retains focused author checks, root-owned final clean-source verification, exact-head CI, independent implementation/full-PR review, child integration, and subsequent parent qualification.
+
+This review does **not** establish that implementation works or that later delivery gates will pass. No tests or provider actions were executed. The original `7842975` Test/Review successes and `deliver:lineage` refusal remain historical. Original L4 failure at 6.60 seconds, genuine provider pause unverified/deferred, qualified CPS12/cap72, and unchanged unqualified default14 remain explicit.
+
+The design and plan are suitable for genuine assessment archival and governed adoption, followed by the required admission and lifecycle steps. No source, evidence, issue, timer, or custody state was changed during this review.

@@ -1,0 +1,1914 @@
+{
+  "schemaVersion": 1,
+  "mode": "live",
+  "purpose": "Immutable pre-correction native compatibility/accounting diagnostic; not whole-live acceptance or baseline latency.",
+  "gitHead": "3e0303686e550c166d4958f19d3c29123830494c",
+  "sourceDigest": "ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51",
+  "nodeVersion": "v26.8.1",
+  "packages": {
+    ".:@eslint/js": "9.39.1",
+    ".:@kburson/ai-task-manager": "0.1.0",
+    ".:@playwright/test": "1.64.0",
+    ".:@testing-library/react": "16.3.3",
+    ".:@types/node": "26.6.5",
+    ".:@types/react": "19.3.0",
+    ".:@types/react-dom": "19.3.0",
+    ".:eslint": "9.39.1",
+    ".:eslint-config-next": "16.4.0",
+    ".:eslint-config-prettier": "10.1.8",
+    ".:globals": "16.4.0",
+    ".:jsdom": "26.1.0",
+    ".:markdownlint-cli2": "0.23.3",
+    ".:patch-package": "8.0.1",
+    ".:prettier": "3.9.10",
+    ".:tsx": "4.20.6",
+    ".:typescript": "5.9.3",
+    ".:typescript-eslint": "8.71.2",
+    ".:vitest": "4.0.18",
+    "apps/web:@anthropic-ai/sdk": "0.133.0",
+    "apps/web:@deepgram/sdk": "5.15.0",
+    "apps/web:@ricky0123/vad-web": "0.0.31",
+    "apps/web:next": "16.4.0",
+    "apps/web:onnxruntime-web": "1.30.0",
+    "apps/web:react": "19.3.0",
+    "apps/web:react-dom": "19.3.0",
+    "apps/web:react-markdown": "10.1.0",
+    "apps/retrieval:ajv": "8.17.1",
+    "apps/retrieval:fastify": "5.12.5"
+  },
+  "providers": {
+    "claudeModel": "claude-sonnet-4-6",
+    "sttModel": "nova-3",
+    "ttsModel": "aura-2-thalia-en"
+  },
+  "browser": {
+    "name": "Chrome",
+    "version": "155.0.8059.40",
+    "os": "darwin"
+  },
+  "build": {
+    "mode": "production",
+    "buildId": "TzhULPOKXYtfOVmaSLSFY"
+  },
+  "preflight": {
+    "gitHead": "3e0303686e550c166d4958f19d3c29123830494c",
+    "sourceDigest": "ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51",
+    "nodeVersion": "v26.8.1",
+    "packages": {
+      ".:@eslint/js": "9.39.1",
+      ".:@kburson/ai-task-manager": "0.1.0",
+      ".:@playwright/test": "1.64.0",
+      ".:@testing-library/react": "16.3.3",
+      ".:@types/node": "26.6.5",
+      ".:@types/react": "19.3.0",
+      ".:@types/react-dom": "19.3.0",
+      ".:eslint": "9.39.1",
+      ".:eslint-config-next": "16.4.0",
+      ".:eslint-config-prettier": "10.1.8",
+      ".:globals": "16.4.0",
+      ".:jsdom": "26.1.0",
+      ".:markdownlint-cli2": "0.23.3",
+      ".:patch-package": "8.0.1",
+      ".:prettier": "3.9.10",
+      ".:tsx": "4.20.6",
+      ".:typescript": "5.9.3",
+      ".:typescript-eslint": "8.71.2",
+      ".:vitest": "4.0.18",
+      "apps/web:@anthropic-ai/sdk": "0.133.0",
+      "apps/web:@deepgram/sdk": "5.15.0",
+      "apps/web:@ricky0123/vad-web": "0.0.31",
+      "apps/web:next": "16.4.0",
+      "apps/web:onnxruntime-web": "1.30.0",
+      "apps/web:react": "19.3.0",
+      "apps/web:react-dom": "19.3.0",
+      "apps/web:react-markdown": "10.1.0",
+      "apps/retrieval:ajv": "8.17.1",
+      "apps/retrieval:fastify": "5.12.5"
+    },
+    "patchPath": "patches/@ricky0123+vad-web+0.0.31.patch",
+    "patchDigest": "44485e484f4f0223b720e0e02e12e8e498ce6354bf24a21c71e7c60a9f5d9137",
+    "modulePath": "node_modules/@ricky0123/vad-web/dist/real-time-vad.js",
+    "appliedModuleDigest": "37b55cc57c1463624857ad65a9ceaf9cc073327bc9ed07fd34d0ecbe564eaa2a",
+    "postimages": {
+      "dist/real-time-vad.js": "4213050c5a6b73b500c03d693108e62c1cfb161f",
+      "dist/real-time-vad.d.ts": "97ec3f408602bd1e0d478c0671f3fd7bb788843b"
+    },
+    "lifecycleRevision": "aivc-vad-lifecycle-v1"
+  },
+  "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+  "observedNative": {
+    "stopReason": "tool_use",
+    "pendingServerToolIds": [
+      "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+      "srvtoolu_01WajtxmwAnaoMN3PtzjvDff"
+    ],
+    "serverResultPairIds": [],
+    "clientToolIds": ["toolu_01XCuJQTs8Gcgh748GtSmZzS"],
+    "nativeUsage": {
+      "input_tokens": 2387,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 154,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    },
+    "authoritativeSearchCounterPresent": false,
+    "authoritativeSearchUses": null,
+    "originalError": {
+      "observedAt": "2026-10-15T04:13:07.437Z",
+      "type": "provider-error",
+      "requestId": 2,
+      "status": 400,
+      "bodyBytes": 283,
+      "bodySha256": "2bd4ebd28f506d613c0a3fdb6e3ea6f8cd4e8c41d1293acb50a03ee6d9ef9392",
+      "errorType": "invalid_request_error",
+      "errorMessage": "`web_search` tool use with id `srvtoolu_019KsvNdUVHuraps8V9GHzjb` was found without a corresponding `web_search_tool_result` block, but no `web_search` tool was provided",
+      "rawErrorBodyStored": false
+    }
+  },
+  "observedPublicTerminal": {
+    "schemaVersion": 1,
+    "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+    "seq": 13,
+    "type": "turn.completed",
+    "data": {
+      "text": "I'll kick off all three lookups simultaneously right away!\n\n[Answer truncated: hosted search continuation is incompatible.]",
+      "status": "truncated",
+      "usage": {
+        "inputTokens": 2387,
+        "outputTokens": 154,
+        "searchUses": 2
+      }
+    }
+  },
+  "classification": {
+    "compatibility": "Observed mixed pending server/client-tool continuation, not pause_turn. Missing pending web_search definition caused the captured HTTP400.",
+    "usage": "Public searchUses:2 was computed from pending native IDs despite no authoritative usage counter and no completed search results; executed search usage remains unknown.",
+    "enforcement": "Inspected pre-correction source-rule replay derives budget 2 to 0 from pending-ID fallback. This is derived internal accounting, not actual executed search consumption.",
+    "priorContent": "Native content and each of 4 blocks match the exact next outgoing assistant content by JSON and canonical hashes.",
+    "earlierRun": "The 69e8e493 request remains separately preserved at docs/evidence/11-live-search-continuation-d98.json; this diagnostic does not retroactively establish its exact native cause."
+  },
+  "posthocAnalysis": [
+    {
+      "requestId": 1,
+      "stopReason": "tool_use",
+      "pendingServerToolIds": [
+        "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+        "srvtoolu_01WajtxmwAnaoMN3PtzjvDff"
+      ],
+      "tools": [
+        {
+          "name": "lookup_projects",
+          "description": "Look up synthetic project facts from the project service.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        {
+          "type": "web_search_20250305",
+          "name": "web_search",
+          "max_uses": 2
+        }
+      ],
+      "priorBlockComparison": null,
+      "accounting": {
+        "derivedRemainingBefore": 2,
+        "derivedRemainingAfter": 0,
+        "observed": {
+          "actualCounterPresent": false,
+          "actualCounter": null,
+          "distinctNativeSearchIds": [
+            "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+            "srvtoolu_01WajtxmwAnaoMN3PtzjvDff"
+          ],
+          "contradiction": false,
+          "conservativeAccountSearchResult": 2,
+          "derivation": "Source-rule replay of accountSearch(final content/usage); pending native IDs are not relabeled as executed searches."
+        },
+        "note": "Offline replay of inspected unchanged run-turn accounting, not a read of private variables. Native IDs/pending IDs do not prove executed provider searches; absent native-final leaves derivation unknown."
+      }
+    },
+    {
+      "requestId": 2,
+      "stopReason": null,
+      "pendingServerToolIds": null,
+      "tools": [
+        {
+          "name": "lookup_projects",
+          "description": "Look up synthetic project facts from the project service.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      ],
+      "priorBlockComparison": {
+        "previousRequestId": 1,
+        "nextAssistantIndex": 1,
+        "previousNative": {
+          "kind": "blocks",
+          "jsonSha256": "cbef3bd8ebc0d3ccd0c48961f96cb6e86f167f1540e3e9c2bef36c812a1b38c5",
+          "canonicalSha256": "20cc25a160b892d11d945a6f7dd36e049b1815bc5f8184e11c463c7dea85f495",
+          "blocks": [
+            {
+              "index": 0,
+              "type": "text",
+              "id": null,
+              "toolUseId": null,
+              "name": null,
+              "jsonSha256": "70e0d17218af442416f711ee4926b43a8254f64833dca39c69e3189f637a3005",
+              "canonicalSha256": "963e37f9577ff92f5ac79264a2b6f29d5dcc219e1abf0dd36d5ee1df1712c045",
+              "opaqueFields": []
+            },
+            {
+              "index": 1,
+              "type": "server_tool_use",
+              "id": "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+              "toolUseId": null,
+              "name": "web_search",
+              "jsonSha256": "73ec0b88f9224e8fe65350f7aa9c6727756cc22494a4b7525822039630e44e37",
+              "canonicalSha256": "e92a378df252e80bd5be3bd0cc87d86cf1c9a615dbd66e92831a869ae1f26907",
+              "opaqueFields": []
+            },
+            {
+              "index": 2,
+              "type": "server_tool_use",
+              "id": "srvtoolu_01WajtxmwAnaoMN3PtzjvDff",
+              "toolUseId": null,
+              "name": "web_search",
+              "jsonSha256": "210ae81ae0ce1ea6025370a89e9dd3364496b9ece7f0e13dc6c2a4d2143919d9",
+              "canonicalSha256": "f438f177447b0e1d114ff0f3a0e59a85599b29e740719ec3d2bce98652161c1b",
+              "opaqueFields": []
+            },
+            {
+              "index": 3,
+              "type": "tool_use",
+              "id": "toolu_01XCuJQTs8Gcgh748GtSmZzS",
+              "toolUseId": null,
+              "name": "lookup_projects",
+              "jsonSha256": "70d43e7eff8a3512687f7cf65dc26bbfa5c36a3b65ce2738ba24391c0c6121bb",
+              "canonicalSha256": "5033abcc82d4b03b1ac0d667b4ecd99735bbedeb0bbb5bf6998a52f1aae2f646",
+              "opaqueFields": []
+            }
+          ]
+        },
+        "nextOutgoing": {
+          "kind": "blocks",
+          "jsonSha256": "cbef3bd8ebc0d3ccd0c48961f96cb6e86f167f1540e3e9c2bef36c812a1b38c5",
+          "canonicalSha256": "20cc25a160b892d11d945a6f7dd36e049b1815bc5f8184e11c463c7dea85f495",
+          "blocks": [
+            {
+              "index": 0,
+              "type": "text",
+              "id": null,
+              "toolUseId": null,
+              "name": null,
+              "jsonSha256": "70e0d17218af442416f711ee4926b43a8254f64833dca39c69e3189f637a3005",
+              "canonicalSha256": "963e37f9577ff92f5ac79264a2b6f29d5dcc219e1abf0dd36d5ee1df1712c045",
+              "opaqueFields": []
+            },
+            {
+              "index": 1,
+              "type": "server_tool_use",
+              "id": "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+              "toolUseId": null,
+              "name": "web_search",
+              "jsonSha256": "73ec0b88f9224e8fe65350f7aa9c6727756cc22494a4b7525822039630e44e37",
+              "canonicalSha256": "e92a378df252e80bd5be3bd0cc87d86cf1c9a615dbd66e92831a869ae1f26907",
+              "opaqueFields": []
+            },
+            {
+              "index": 2,
+              "type": "server_tool_use",
+              "id": "srvtoolu_01WajtxmwAnaoMN3PtzjvDff",
+              "toolUseId": null,
+              "name": "web_search",
+              "jsonSha256": "210ae81ae0ce1ea6025370a89e9dd3364496b9ece7f0e13dc6c2a4d2143919d9",
+              "canonicalSha256": "f438f177447b0e1d114ff0f3a0e59a85599b29e740719ec3d2bce98652161c1b",
+              "opaqueFields": []
+            },
+            {
+              "index": 3,
+              "type": "tool_use",
+              "id": "toolu_01XCuJQTs8Gcgh748GtSmZzS",
+              "toolUseId": null,
+              "name": "lookup_projects",
+              "jsonSha256": "70d43e7eff8a3512687f7cf65dc26bbfa5c36a3b65ce2738ba24391c0c6121bb",
+              "canonicalSha256": "5033abcc82d4b03b1ac0d667b4ecd99735bbedeb0bbb5bf6998a52f1aae2f646",
+              "opaqueFields": []
+            }
+          ]
+        },
+        "jsonEqual": true,
+        "canonicalEqual": true,
+        "perBlock": [
+          {
+            "index": 0,
+            "prior": {
+              "index": 0,
+              "type": "text",
+              "id": null,
+              "toolUseId": null,
+              "name": null,
+              "jsonSha256": "70e0d17218af442416f711ee4926b43a8254f64833dca39c69e3189f637a3005",
+              "canonicalSha256": "963e37f9577ff92f5ac79264a2b6f29d5dcc219e1abf0dd36d5ee1df1712c045",
+              "opaqueFields": []
+            },
+            "next": {
+              "index": 0,
+              "type": "text",
+              "id": null,
+              "toolUseId": null,
+              "name": null,
+              "jsonSha256": "70e0d17218af442416f711ee4926b43a8254f64833dca39c69e3189f637a3005",
+              "canonicalSha256": "963e37f9577ff92f5ac79264a2b6f29d5dcc219e1abf0dd36d5ee1df1712c045",
+              "opaqueFields": []
+            },
+            "jsonEqual": true,
+            "canonicalEqual": true
+          },
+          {
+            "index": 1,
+            "prior": {
+              "index": 1,
+              "type": "server_tool_use",
+              "id": "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+              "toolUseId": null,
+              "name": "web_search",
+              "jsonSha256": "73ec0b88f9224e8fe65350f7aa9c6727756cc22494a4b7525822039630e44e37",
+              "canonicalSha256": "e92a378df252e80bd5be3bd0cc87d86cf1c9a615dbd66e92831a869ae1f26907",
+              "opaqueFields": []
+            },
+            "next": {
+              "index": 1,
+              "type": "server_tool_use",
+              "id": "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+              "toolUseId": null,
+              "name": "web_search",
+              "jsonSha256": "73ec0b88f9224e8fe65350f7aa9c6727756cc22494a4b7525822039630e44e37",
+              "canonicalSha256": "e92a378df252e80bd5be3bd0cc87d86cf1c9a615dbd66e92831a869ae1f26907",
+              "opaqueFields": []
+            },
+            "jsonEqual": true,
+            "canonicalEqual": true
+          },
+          {
+            "index": 2,
+            "prior": {
+              "index": 2,
+              "type": "server_tool_use",
+              "id": "srvtoolu_01WajtxmwAnaoMN3PtzjvDff",
+              "toolUseId": null,
+              "name": "web_search",
+              "jsonSha256": "210ae81ae0ce1ea6025370a89e9dd3364496b9ece7f0e13dc6c2a4d2143919d9",
+              "canonicalSha256": "f438f177447b0e1d114ff0f3a0e59a85599b29e740719ec3d2bce98652161c1b",
+              "opaqueFields": []
+            },
+            "next": {
+              "index": 2,
+              "type": "server_tool_use",
+              "id": "srvtoolu_01WajtxmwAnaoMN3PtzjvDff",
+              "toolUseId": null,
+              "name": "web_search",
+              "jsonSha256": "210ae81ae0ce1ea6025370a89e9dd3364496b9ece7f0e13dc6c2a4d2143919d9",
+              "canonicalSha256": "f438f177447b0e1d114ff0f3a0e59a85599b29e740719ec3d2bce98652161c1b",
+              "opaqueFields": []
+            },
+            "jsonEqual": true,
+            "canonicalEqual": true
+          },
+          {
+            "index": 3,
+            "prior": {
+              "index": 3,
+              "type": "tool_use",
+              "id": "toolu_01XCuJQTs8Gcgh748GtSmZzS",
+              "toolUseId": null,
+              "name": "lookup_projects",
+              "jsonSha256": "70d43e7eff8a3512687f7cf65dc26bbfa5c36a3b65ce2738ba24391c0c6121bb",
+              "canonicalSha256": "5033abcc82d4b03b1ac0d667b4ecd99735bbedeb0bbb5bf6998a52f1aae2f646",
+              "opaqueFields": []
+            },
+            "next": {
+              "index": 3,
+              "type": "tool_use",
+              "id": "toolu_01XCuJQTs8Gcgh748GtSmZzS",
+              "toolUseId": null,
+              "name": "lookup_projects",
+              "jsonSha256": "70d43e7eff8a3512687f7cf65dc26bbfa5c36a3b65ce2738ba24391c0c6121bb",
+              "canonicalSha256": "5033abcc82d4b03b1ac0d667b4ecd99735bbedeb0bbb5bf6998a52f1aae2f646",
+              "opaqueFields": []
+            },
+            "jsonEqual": true,
+            "canonicalEqual": true
+          }
+        ],
+        "blockCountEqual": true
+      },
+      "accounting": {
+        "derivedRemainingBefore": 0,
+        "derivedRemainingAfter": null,
+        "observed": null,
+        "note": "Offline replay of inspected unchanged run-turn accounting, not a read of private variables. Native IDs/pending IDs do not prove executed provider searches; absent native-final leaves derivation unknown."
+      }
+    }
+  ],
+  "nativeRecords": [
+    {
+      "type": "observer-installed",
+      "pid": 20084,
+      "method": "original input/init forwarded, original Response returned; bounded background response.clone parsed using pinned SDK; clone read-ahead/timing overhead excludes diagnostic latency from baseline",
+      "observerPath": "file:///Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/.scratch/11-anthropic-passive-preload.mjs",
+      "endpoint": "https://api.anthropic.com/v1/messages",
+      "maxObservations": 3,
+      "maxResponseBytes": 524288
+    },
+    {
+      "observedAt": "2026-10-15T04:13:04.829Z",
+      "type": "outgoing",
+      "requestId": 1,
+      "bodyBytes": 905,
+      "bodySha256": "ff99aec990d6227c9ba1ac08f74ca7adabf0299f8846e59657a599953265bba5",
+      "model": "claude-sonnet-4-6",
+      "maxTokens": 1024,
+      "stream": true,
+      "tools": [
+        {
+          "name": "lookup_projects",
+          "description": "Look up synthetic project facts from the project service.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        {
+          "type": "web_search_20250305",
+          "name": "web_search",
+          "max_uses": 2
+        }
+      ],
+      "toolsHashes": {
+        "jsonSha256": "2c6c39cb2261f0ad3d20494a189b74177bf706ac7b94fbe6de1146eaa7595414",
+        "canonicalSha256": "64bf0433a9633be79c1a3619f02c7e1cb7a964b40fa47d3e402c40f1db52b963"
+      },
+      "messages": [
+        {
+          "index": 0,
+          "role": "user",
+          "content": {
+            "kind": "string",
+            "jsonSha256": "03ca6c675daee6ea5b9903e0c2e81023a11783dabc3e48a1a00c0bce798391d6",
+            "canonicalSha256": "03ca6c675daee6ea5b9903e0c2e81023a11783dabc3e48a1a00c0bce798391d6",
+            "blocks": []
+          }
+        }
+      ],
+      "headersInspected": false,
+      "requestBodyStored": false,
+      "asynchronousObservationNote": "No live chain/equality/budget conclusion is drawn. Ordinal records must be joined offline after all clone observations settle."
+    },
+    {
+      "observedAt": "2026-10-15T04:13:07.225Z",
+      "type": "native-final",
+      "requestId": 1,
+      "messageId": "msg_011Cg3NWJc1jesRCWC38w8sY",
+      "stopReason": "tool_use",
+      "content": {
+        "kind": "blocks",
+        "jsonSha256": "cbef3bd8ebc0d3ccd0c48961f96cb6e86f167f1540e3e9c2bef36c812a1b38c5",
+        "canonicalSha256": "20cc25a160b892d11d945a6f7dd36e049b1815bc5f8184e11c463c7dea85f495",
+        "blocks": [
+          {
+            "index": 0,
+            "type": "text",
+            "id": null,
+            "toolUseId": null,
+            "name": null,
+            "jsonSha256": "70e0d17218af442416f711ee4926b43a8254f64833dca39c69e3189f637a3005",
+            "canonicalSha256": "963e37f9577ff92f5ac79264a2b6f29d5dcc219e1abf0dd36d5ee1df1712c045",
+            "opaqueFields": []
+          },
+          {
+            "index": 1,
+            "type": "server_tool_use",
+            "id": "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+            "toolUseId": null,
+            "name": "web_search",
+            "jsonSha256": "73ec0b88f9224e8fe65350f7aa9c6727756cc22494a4b7525822039630e44e37",
+            "canonicalSha256": "e92a378df252e80bd5be3bd0cc87d86cf1c9a615dbd66e92831a869ae1f26907",
+            "opaqueFields": []
+          },
+          {
+            "index": 2,
+            "type": "server_tool_use",
+            "id": "srvtoolu_01WajtxmwAnaoMN3PtzjvDff",
+            "toolUseId": null,
+            "name": "web_search",
+            "jsonSha256": "210ae81ae0ce1ea6025370a89e9dd3364496b9ece7f0e13dc6c2a4d2143919d9",
+            "canonicalSha256": "f438f177447b0e1d114ff0f3a0e59a85599b29e740719ec3d2bce98652161c1b",
+            "opaqueFields": []
+          },
+          {
+            "index": 3,
+            "type": "tool_use",
+            "id": "toolu_01XCuJQTs8Gcgh748GtSmZzS",
+            "toolUseId": null,
+            "name": "lookup_projects",
+            "jsonSha256": "70d43e7eff8a3512687f7cf65dc26bbfa5c36a3b65ce2738ba24391c0c6121bb",
+            "canonicalSha256": "5033abcc82d4b03b1ac0d667b4ecd99735bbedeb0bbb5bf6998a52f1aae2f646",
+            "opaqueFields": []
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 2387,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 154,
+        "service_tier": "standard",
+        "inference_geo": "global"
+      },
+      "serverToolIds": [
+        "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+        "srvtoolu_01WajtxmwAnaoMN3PtzjvDff"
+      ],
+      "serverResultPairIds": [],
+      "pendingServerToolIds": [
+        "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+        "srvtoolu_01WajtxmwAnaoMN3PtzjvDff"
+      ],
+      "clientToolIds": ["toolu_01XCuJQTs8Gcgh748GtSmZzS"],
+      "accounting": {
+        "actualCounterPresent": false,
+        "actualCounter": null,
+        "distinctNativeSearchIds": [
+          "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+          "srvtoolu_01WajtxmwAnaoMN3PtzjvDff"
+        ],
+        "contradiction": false,
+        "conservativeAccountSearchResult": 2,
+        "derivation": "Source-rule replay of accountSearch(final content/usage); pending native IDs are not relabeled as executed searches."
+      }
+    },
+    {
+      "observedAt": "2026-10-15T04:13:07.249Z",
+      "type": "outgoing",
+      "requestId": 2,
+      "bodyBytes": 1779,
+      "bodySha256": "23d1a75d543f29f20cc4b6aa4ff0a484234000ef9e649a0c68687fb5035dc186",
+      "model": "claude-sonnet-4-6",
+      "maxTokens": 1024,
+      "stream": true,
+      "tools": [
+        {
+          "name": "lookup_projects",
+          "description": "Look up synthetic project facts from the project service.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      ],
+      "toolsHashes": {
+        "jsonSha256": "a05bb352e0572bd1bda23b873b93663ee18583d85ede0d4ce654daa306c619ca",
+        "canonicalSha256": "4de8adee32d8c53f277551a380124df442e77e7ae6cccfd02d97d3e5afb8fad8"
+      },
+      "messages": [
+        {
+          "index": 0,
+          "role": "user",
+          "content": {
+            "kind": "string",
+            "jsonSha256": "03ca6c675daee6ea5b9903e0c2e81023a11783dabc3e48a1a00c0bce798391d6",
+            "canonicalSha256": "03ca6c675daee6ea5b9903e0c2e81023a11783dabc3e48a1a00c0bce798391d6",
+            "blocks": []
+          }
+        },
+        {
+          "index": 1,
+          "role": "assistant",
+          "content": {
+            "kind": "blocks",
+            "jsonSha256": "cbef3bd8ebc0d3ccd0c48961f96cb6e86f167f1540e3e9c2bef36c812a1b38c5",
+            "canonicalSha256": "20cc25a160b892d11d945a6f7dd36e049b1815bc5f8184e11c463c7dea85f495",
+            "blocks": [
+              {
+                "index": 0,
+                "type": "text",
+                "id": null,
+                "toolUseId": null,
+                "name": null,
+                "jsonSha256": "70e0d17218af442416f711ee4926b43a8254f64833dca39c69e3189f637a3005",
+                "canonicalSha256": "963e37f9577ff92f5ac79264a2b6f29d5dcc219e1abf0dd36d5ee1df1712c045",
+                "opaqueFields": []
+              },
+              {
+                "index": 1,
+                "type": "server_tool_use",
+                "id": "srvtoolu_019KsvNdUVHuraps8V9GHzjb",
+                "toolUseId": null,
+                "name": "web_search",
+                "jsonSha256": "73ec0b88f9224e8fe65350f7aa9c6727756cc22494a4b7525822039630e44e37",
+                "canonicalSha256": "e92a378df252e80bd5be3bd0cc87d86cf1c9a615dbd66e92831a869ae1f26907",
+                "opaqueFields": []
+              },
+              {
+                "index": 2,
+                "type": "server_tool_use",
+                "id": "srvtoolu_01WajtxmwAnaoMN3PtzjvDff",
+                "toolUseId": null,
+                "name": "web_search",
+                "jsonSha256": "210ae81ae0ce1ea6025370a89e9dd3364496b9ece7f0e13dc6c2a4d2143919d9",
+                "canonicalSha256": "f438f177447b0e1d114ff0f3a0e59a85599b29e740719ec3d2bce98652161c1b",
+                "opaqueFields": []
+              },
+              {
+                "index": 3,
+                "type": "tool_use",
+                "id": "toolu_01XCuJQTs8Gcgh748GtSmZzS",
+                "toolUseId": null,
+                "name": "lookup_projects",
+                "jsonSha256": "70d43e7eff8a3512687f7cf65dc26bbfa5c36a3b65ce2738ba24391c0c6121bb",
+                "canonicalSha256": "5033abcc82d4b03b1ac0d667b4ecd99735bbedeb0bbb5bf6998a52f1aae2f646",
+                "opaqueFields": []
+              }
+            ]
+          }
+        },
+        {
+          "index": 2,
+          "role": "user",
+          "content": {
+            "kind": "blocks",
+            "jsonSha256": "9737f4e10077cb3469c62f88d2fe92c8030ac0c4d19f028ec92b011583a2fcf5",
+            "canonicalSha256": "bdce93ea4114fa835b3ef8a5f06c1651478129f9af47e66b2493c5bca25dabe2",
+            "blocks": [
+              {
+                "index": 0,
+                "type": "tool_result",
+                "id": null,
+                "toolUseId": "toolu_01XCuJQTs8Gcgh748GtSmZzS",
+                "name": null,
+                "jsonSha256": "13a46fc659215c9af21d4a888e7335d751ebccd31ef31f47807037eaf4389fb8",
+                "canonicalSha256": "9a7d64b01b34ebc4e6e3e34d127953eba578d22043c3e3eb56bf595e48b9d3df",
+                "opaqueFields": []
+              }
+            ]
+          }
+        }
+      ],
+      "headersInspected": false,
+      "requestBodyStored": false,
+      "asynchronousObservationNote": "No live chain/equality/budget conclusion is drawn. Ordinal records must be joined offline after all clone observations settle."
+    },
+    {
+      "observedAt": "2026-10-15T04:13:07.437Z",
+      "type": "provider-error",
+      "requestId": 2,
+      "status": 400,
+      "bodyBytes": 283,
+      "bodySha256": "2bd4ebd28f506d613c0a3fdb6e3ea6f8cd4e8c41d1293acb50a03ee6d9ef9392",
+      "errorType": "invalid_request_error",
+      "errorMessage": "`web_search` tool use with id `srvtoolu_019KsvNdUVHuraps8V9GHzjb` was found without a corresponding `web_search_tool_result` block, but no `web_search` tool was provided",
+      "rawErrorBodyStored": false
+    }
+  ],
+  "browserObservation": {
+    "observedAt": "2026-10-15T04:12:11.832Z",
+    "gitHead": "3e0303686e550c166d4958f19d3c29123830494c",
+    "sourceDigest": "ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51",
+    "nodeVersion": "v26.8.1",
+    "browser": {
+      "name": "Chrome",
+      "version": "155.0.8059.40",
+      "os": "darwin"
+    },
+    "capabilities": [
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "TzhULPOKXYtfOVmaSLSFY"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      }
+    ],
+    "network": [
+      {
+        "requestId": "20153.26",
+        "path": "/api/turn",
+        "type": "request",
+        "timestamp": 3836981.549571
+      },
+      {
+        "requestId": "20153.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3836981.595862,
+        "bytes": 292
+      },
+      {
+        "requestId": "20153.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3836983.254815,
+        "bytes": 153
+      },
+      {
+        "requestId": "20153.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3836983.599185,
+        "bytes": 152
+      },
+      {
+        "requestId": "20153.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3836983.608086,
+        "bytes": 617
+      },
+      {
+        "requestId": "20153.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3836984.81004,
+        "bytes": 325
+      },
+      {
+        "requestId": "20153.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3836984.832446,
+        "bytes": 515
+      },
+      {
+        "requestId": "20153.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3836985.020548,
+        "bytes": 570
+      },
+      {
+        "requestId": "20153.26",
+        "path": "/api/turn",
+        "type": "finished",
+        "timestamp": 3836985.020572
+      }
+    ],
+    "turns": [
+      {
+        "status": 200,
+        "contentType": "text/event-stream",
+        "events": [
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 0,
+            "type": "turn.accepted",
+            "data": {
+              "mode": "live"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 1,
+            "type": "stage",
+            "data": {
+              "stage": "researching"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 2,
+            "type": "answer.delta",
+            "data": {
+              "text": "I'll kick"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 3,
+            "type": "answer.delta",
+            "data": {
+              "text": " off all"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 4,
+            "type": "answer.delta",
+            "data": {
+              "text": " three look"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 5,
+            "type": "answer.delta",
+            "data": {
+              "text": "ups simultaneously"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 6,
+            "type": "answer.delta",
+            "data": {
+              "text": " right"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 7,
+            "type": "answer.delta",
+            "data": {
+              "text": " away!"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 8,
+            "type": "tool.started",
+            "data": {
+              "name": "lookup_projects",
+              "summary": "Lookup Atlas"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 9,
+            "type": "stage",
+            "data": {
+              "stage": "retrieving"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 10,
+            "type": "tool.completed",
+            "data": {
+              "result": {
+                "schemaVersion": 1,
+                "source": "synthetic-project-catalog",
+                "records": [
+                  {
+                    "id": "atlas",
+                    "name": "Atlas",
+                    "status": "active",
+                    "ownerTeam": "North",
+                    "openItems": 3,
+                    "summary": "Synthetic active project owned by North with three open items."
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 11,
+            "type": "stage",
+            "data": {
+              "stage": "answering"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 12,
+            "type": "answer.delta",
+            "data": {
+              "text": "\n\n[Answer truncated: hosted search continuation is incompatible.]"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c",
+            "seq": 13,
+            "type": "turn.completed",
+            "data": {
+              "text": "I'll kick off all three lookups simultaneously right away!\n\n[Answer truncated: hosted search continuation is incompatible.]",
+              "status": "truncated",
+              "usage": {
+                "inputTokens": 2387,
+                "outputTokens": 154,
+                "searchUses": 2
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "marks": [
+      {
+        "label": "turn-response-1",
+        "entries": [
+          {
+            "name": "aivc.turn-created:1",
+            "startTime": 52029.90000009537,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.turn-request:2",
+            "startTime": 52058.300000190735,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.turn-headers:3",
+            "startTime": 52089.90000009537,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.turn.accepted:4",
+            "startTime": 52106.199999809265,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.stage-researching:5",
+            "startTime": 52107.699999809265,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:6",
+            "startTime": 53765.199999809265,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:7",
+            "startTime": 54108.40000009537,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:8",
+            "startTime": 54117.59999990463,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:9",
+            "startTime": 54131.199999809265,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:10",
+            "startTime": 54132.5,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:11",
+            "startTime": 54135.800000190735,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.tool.started:12",
+            "startTime": 55319.300000190735,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.stage-retrieving:13",
+            "startTime": 55320,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.tool.completed:14",
+            "startTime": 55341.59999990463,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.stage-answering:15",
+            "startTime": 55342.300000190735,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:16",
+            "startTime": 55529.699999809265,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.turn.completed:17",
+            "startTime": 55531.09999990463,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          }
+        ]
+      },
+      {
+        "label": "bounded-native-diagnostic-terminal-no-baseline-timing",
+        "entries": [
+          {
+            "name": "aivc.turn-created:1",
+            "startTime": 52029.90000009537,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.turn-request:2",
+            "startTime": 52058.300000190735,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.turn-headers:3",
+            "startTime": 52089.90000009537,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.turn.accepted:4",
+            "startTime": 52106.199999809265,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.stage-researching:5",
+            "startTime": 52107.699999809265,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:6",
+            "startTime": 53765.199999809265,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:7",
+            "startTime": 54108.40000009537,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:8",
+            "startTime": 54117.59999990463,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:9",
+            "startTime": 54131.199999809265,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:10",
+            "startTime": 54132.5,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:11",
+            "startTime": 54135.800000190735,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.tool.started:12",
+            "startTime": 55319.300000190735,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.stage-retrieving:13",
+            "startTime": 55320,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.tool.completed:14",
+            "startTime": 55341.59999990463,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.stage-answering:15",
+            "startTime": 55342.300000190735,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:16",
+            "startTime": 55529.699999809265,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          },
+          {
+            "name": "aivc.turn.completed:17",
+            "startTime": 55531.09999990463,
+            "detail": {
+              "turnId": "bfe61c51-f8f8-429e-92f2-153275fe894c"
+            }
+          }
+        ]
+      }
+    ],
+    "devices": [
+      {
+        "method": "Pass-through diagnostic records only streams actually requested by the app; no additional getUserMedia call, constraints change, or track mutation.",
+        "observedAt": 5377.199999809265,
+        "tracks": [],
+        "deviceLabels": [
+          {
+            "kind": "audioinput",
+            "label": "",
+            "isDefault": false
+          },
+          {
+            "kind": "audiooutput",
+            "label": "",
+            "isDefault": false
+          }
+        ]
+      },
+      {
+        "method": "Pass-through diagnostic records only streams actually requested by the app; no additional getUserMedia call, constraints change, or track mutation.",
+        "observedAt": 77524.69999980927,
+        "tracks": [],
+        "deviceLabels": [
+          {
+            "kind": "audioinput",
+            "label": "",
+            "isDefault": false
+          },
+          {
+            "kind": "audiooutput",
+            "label": "",
+            "isDefault": false
+          }
+        ]
+      }
+    ],
+    "audioDiagnostics": [
+      {
+        "method": "Pass-through native AudioContext constructor, createBufferSource and source.start observation; original arguments, returned context/source, samples, start schedule and native result are unchanged. Read-only per-buffer amplitude summary records no raw audio.",
+        "contexts": [],
+        "starts": [],
+        "ended": [],
+        "truncated": false
+      }
+    ],
+    "limitations": [
+      "Browser observations alone do not establish physical echo or acoustic measurements."
+    ],
+    "ui": [
+      {
+        "at": 5369.099999904633,
+        "viewport": {
+          "width": 1200,
+          "height": 919,
+          "scrollX": 0,
+          "scrollY": 0,
+          "outerWidth": 1200,
+          "outerHeight": 1006
+        },
+        "status": "Ready",
+        "mutes": [
+          {
+            "label": "Mute microphone",
+            "checked": true
+          },
+          {
+            "label": "Mute output",
+            "checked": true
+          }
+        ],
+        "latest": null
+      },
+      {
+        "at": 77512.09999990463,
+        "viewport": {
+          "width": 1200,
+          "height": 919,
+          "scrollX": 0,
+          "scrollY": 0,
+          "outerWidth": 1200,
+          "outerHeight": 1006
+        },
+        "status": "Ready",
+        "mutes": [
+          {
+            "label": "Mute microphone",
+            "checked": true
+          },
+          {
+            "label": "Mute output",
+            "checked": true
+          }
+        ],
+        "latest": {
+          "label": "Turn 1",
+          "text": "First perform two separate web searches: (1) official Anthropic documentation for the web search API; (2) official Deepgram documentation for Nova-3. After both searches, look up Atlas in the project catalog. Then give at most three short sentences with sources and Atlas status/owner.I'll kick off all three lookups simultaneously right away!\n[Answer truncated: hosted search continuation is incompatible.]Atlasactive · North · 3 open itemsSynthetic active project owned by North with three open items.The answer was truncated. This turn was not added to context.Speech: muted · Output muted. Answer text is retained.Transcript / detailsFirst perform two separate web searches: (1) official Anthropic documentation for the web search API; (2) official Deepgram documentation for Nova-3. After both searches, look up Atlas in the project catalog. Then give at most three short sentences with sources and Atlas status/owner.Turn status: truncatedRequest traceTurn acceptedResearchingProject lookup startedRetrieving projectsProject lookup completedAnsweringAnswer truncatedInput tokens: 2387 · Output tokens: 154 · Search uses: 2",
+          "rect": {
+            "top": 378,
+            "bottom": 907.09375,
+            "left": 136,
+            "right": 1064
+          },
+          "display": "block",
+          "visibility": "visible",
+          "ariaHidden": null,
+          "intersectsViewport": true
+        }
+      }
+    ]
+  },
+  "observer": {
+    "path": ".scratch/11-anthropic-passive-preload.mjs",
+    "sha256": "1d65f669a9f59446ab49932a2b091cba2172546bac1574f6c34027c0a71c3266",
+    "sdkVersion": "0.133.0",
+    "method": "Original fetch input/init forwarded once; original Response returned. Bounded background response.clone parsed with the pinned SDK; authoritative equality/accounting joins run offline after settle. Only exact Anthropic Messages URL observed; no request headers persisted; opaque native values hashed.",
+    "offlineProof": {
+      "path": ".scratch/11-passive-observer-offline-proof.json",
+      "sha256": "4b2b1db060707349b3301a4168bf5cffc9c8dc88e87da1df8315fe956099f45a",
+      "twoSdkCallsOriginalFetchCount": 2,
+      "observerReconstructionExtraNetworkCalls": 0,
+      "originalInputIdentity": true,
+      "originalInitIdentity": true,
+      "originalResponseIdentity": true,
+      "originalBodyBytesAndOrderUnchanged": true,
+      "delayedCloneNextRequestPrecededNativeObservation": true,
+      "offlineOrdinalComparisonAndBudgetDerivation": true,
+      "actualMismatchPreserved": true,
+      "headersOrCredentialSentinelPersisted": false,
+      "opaquePlaintextPersisted": false,
+      "failures": [
+        {
+          "label": "malformed-response",
+          "originalBodyUnchanged": true,
+          "originalInputInitIdentity": true,
+          "originalResponseIdentity": true,
+          "originalFetchCalls": 1,
+          "observerFailureContained": true
+        },
+        {
+          "label": "capped-response",
+          "originalBodyUnchanged": true,
+          "originalInputInitIdentity": true,
+          "originalResponseIdentity": true,
+          "originalFetchCalls": 1,
+          "observerFailureContained": true
+        },
+        {
+          "label": "writer-failed",
+          "originalBodyUnchanged": true,
+          "originalInputInitIdentity": true,
+          "originalResponseIdentity": true,
+          "originalFetchCalls": 1,
+          "observerFailureContained": true
+        },
+        {
+          "label": "observation-cap",
+          "originalBodyUnchanged": true,
+          "originalInputInitIdentity": true,
+          "originalResponseIdentity": true,
+          "originalFetchCalls": 1,
+          "observerFailureContained": true
+        },
+        {
+          "label": "malformed-request-shape",
+          "originalBodyUnchanged": true,
+          "originalInputInitIdentity": true,
+          "originalResponseIdentity": true,
+          "originalFetchCalls": 1,
+          "observerFailureContained": true
+        },
+        {
+          "label": "malformed-request-json",
+          "originalBodyUnchanged": true,
+          "originalInputInitIdentity": true,
+          "originalResponseIdentity": true,
+          "originalFetchCalls": 1,
+          "observerFailureContained": true
+        }
+      ]
+    }
+  },
+  "provenance": [
+    {
+      "path": ".scratch/11-native-3e030368-observations.jsonl",
+      "bytes": 7413,
+      "sha256": "720078090a8c682e6af15ad27295e9608708f654df60ba76df1ce1a210091831"
+    },
+    {
+      "path": ".scratch/11-native-3e030368-analysis.json",
+      "bytes": 22512,
+      "sha256": "411f949305c189f6d8aa0072eedabb6539bf4ccf66328f5c5f06ac2da33c7b31"
+    },
+    {
+      "path": ".scratch/11-live-3e030368-session-01a13d81-observations.json",
+      "bytes": 29550,
+      "sha256": "a9e0051cfb44cea898cd983b7f3f1c4e68ea250d29b691dbf853b1e4e6a45a2f"
+    },
+    {
+      "path": ".scratch/11-live-3e030368-preflight.json",
+      "bytes": 1729,
+      "sha256": "13c1fe943b93a20a9a43a338493f5d9fbcbfdfd8dc250e9a73cea5a8f84e047d"
+    }
+  ],
+  "cleanup": {
+    "browserExit": 0,
+    "serverExit": 130,
+    "signal": "SIGINT",
+    "ports3000and3001": "no listeners after shutdown"
+  },
+  "limitations": [
+    "Exactly one separately authorized diagnostic app turn; two native Messages requests followed existing production logic. No retry, budget reset/increase, new endpoint, production instrumentation patch or API change.",
+    "Response clone tee may change read-ahead/memory/timing. All diagnostic latency is excluded from baseline timing acceptance.",
+    "Both microphone and output remained muted; zero acquired microphone tracks, speech requests and native audio sources. No browser MicVAD marker or physical acceptance obtained.",
+    "No provider pause observed. Correct compatibility fallback is not successful omitted-tool/pause acceptance.",
+    "Public computed searchUses:2 is preserved as the actual pre-correction bug observation; native search counter remains absent/unknown.",
+    "No raw provider opaque/encrypted fields, credentials, request headers or private audio are stored.",
+    "Source correction and independent recheck occur separately; this artifact retains 3e/source ce046 provenance."
+  ]
+}

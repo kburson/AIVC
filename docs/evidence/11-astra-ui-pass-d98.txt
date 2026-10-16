@@ -1,0 +1,22 @@
+Scoped UI correction: **Spec PASS; Quality PASS. No remaining scoped findings.**
+
+Reviewer: native Astra6/high, SID `01a13c7c-c4a4-7760-8b80-278687d46e54`. Ordinary code review.
+
+Reviewed exact HEAD `d98fcd99ffea8c2b8266a9fde7c34f664b88e7c8` against `0e06ef473d67b8211f0b79ad2d853634e64a2179`; whole-story base `31948e8d40ce11bf36a1ca74cc4363a9643f7757`.
+
+The prior P2 is resolved. The controls region can shrink and scroll independently, while the response pane retains at least100px. Chromium reproductions at900×400,640×360, and390×500 now keep responses usable and Stop, mute, and status reachable. At900×613, the controls region needs no scrolling. Visual inspection confirms the corrected640×360 layout.
+
+Newest-first display, original Turn numbers, chronological history, new-turn scroll reset, and preservation of deliberate scrolling during later response updates remain intact.
+
+Independent checks:
+
+- `node node_modules/vitest/vitest.mjs run tests/ui/conversation.test.tsx tests/contracts/history.test.ts tests/contracts/turn-controller.test.ts` — **42 passed**, three files.
+- `PLAYWRIGHT_LAST_RUN_OUTPUT_FILE=.tmp/playwright-last-run.json npm run test:browser -- tests/browser/typed-system.spec.ts` — **6 passed**, actual joined mock Next/Fastify routes.
+- Additional inline Chromium probe against `node --import tsx tests/browser/system-server.ts` verified all three original failing sizes after a completed mock Atlas response.
+- [Corrected short-window screenshot](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/.tmp/reviewer-ui-short-fixed-d98.png).
+
+Working-tree and HEAD source digests both match `ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51`. Retained initial FAIL report matches2759bytes and SHA256 `cbef9a0c46ed4afa67e8bd342a8771fe052de3dec92cbc1abbe26febae1198f3`.
+
+Cleanup complete: Chromium closed; owned mock server exited0; no listeners on3000/3001. Own normal `npx aitm stop 11` exited0. Exact HEAD unchanged, tracked worktree clean, and resources released.
+
+This PASS covers the UI correction only. No paid/provider, microphone, or physical-device checks were performed; whole-story L1–L8 acceptance remains unfinished.

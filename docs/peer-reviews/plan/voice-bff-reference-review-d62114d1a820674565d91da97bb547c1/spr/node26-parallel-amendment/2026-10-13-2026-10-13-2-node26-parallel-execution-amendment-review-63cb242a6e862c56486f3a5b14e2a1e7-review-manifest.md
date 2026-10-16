@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/0d1a9d1c352933bcd18922a2a0fc7a06dd60fd3c/docs/peer-reviews/plan/voice-bff-reference-review-d62114d1a820674565d91da97bb547c1/spr/node26-parallel-amendment/2026-10-13-2026-10-13-2-node26-parallel-execution-amendment-review-63cb242a6e862c56486f3a5b14e2a1e7-review-manifest.md) and its exact bytes remain available in the [evidence archive](../../../../../quality-evidence/2026-10-13-25-originals.json).
+> Original SHA-256: `88ade6a2f2c47e8fd7b02665e2a82a6cb8a21a7a771932cbae0e1c57ddfce4a1`. Review acceptance and protocol hashes apply to those original bytes.
+
 <!-- ai-peer-review-template version="1" digest="sha256:e53bf4d9991ae94a699fede1d62fd90324e45923de951babcb8d9ad237900bd9" -->
 
 # Review manifest
@@ -151,9 +155,7 @@ Mode: `normal`
   },
   "record_id": "review-63cb242a6e862c56486f3a5b14e2a1e7",
   "recoveries": [],
-  "residual_risk": [
-    "human-authority-unavailable"
-  ],
+  "residual_risk": ["human-authority-unavailable"],
   "review_id": "review-63cb242a6e862c56486f3a5b14e2a1e7",
   "runtime": {
     "adapter_version": "1.0.0",

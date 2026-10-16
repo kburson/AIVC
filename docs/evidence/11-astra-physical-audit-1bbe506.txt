@@ -1,0 +1,42 @@
+Scoped verdict: the new evidence supports substantial current-source functional qualification, but Spec/Quality requires one speech-content correction. L4 duration tuning remains failed; L6 genuine provider-pause continuation remains unverified. Whole-live acceptance and merge readiness are not established.
+
+Reviewed HEAD: `1bbe506259cfd48b208925faacd268033da713b7`  
+Verified source digest: `cfa3cca0d676f4e98545aa965c6526f7c098ddbbaca6de6c3784a3b1262707bf`  
+Reviewer: same native Astra6/high SID `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`.
+
+**P2 — Preserve meaningful inline-code content in spoken answers.** At [speech-text.ts:23](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/apps/web/client/voice/speech-text.ts:23), `clean()` removes the entire backtick-delimited span. The current live answer contains essential `model=nova-3`, but its actual eleventh synthesis request says: “4. To access the model, you simply use in your API calls.” My read-only source probe independently reproduced the same omission.
+
+[Specification line 158](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/docs/specification.md:158) requires speech derived from the same answer with formatting converted for reading aloud. The accepted scanner plan requires careful code-token boundaries and conservative handling of dangling tokens; it does not authorize deleting meaningful closed inline content. Existing tests prove implementation consistency, not permission for semantic deletion.
+
+The smallest correction is to remove closed inline-code delimiters while retaining their readable content, preserving chunk invariance and existing caps/backpressure. Add regressions for the captured sentence, split delimiters, numeric/code values, unmatched delimiters and the separate fenced-code path. Distinguish inline spans from fences explicitly; the inline fix should not accidentally start speaking fence markers or language tags. Longer fenced listings may remain visual under the specification’s longer-explanation allowance, but their omission policy must be deliberate and documented, not inferred from today’s blanket backtick deletion.
+
+The source-excerpt complaint is a separate matter. The final answer ends at point 4; the subsequent Sources bullets are metadata. Exact scanner replay covers the eleven requested research segments, and the owner subsequently confirmed hearing all four points. That supports no dropped eligible answer tail under the existing scanner. It does not excuse the missing inline value or prove audibility solely from synthesis completion.
+
+Evidence checks passed:
+
+- The selected artifact is exactly **2,791,079 bytes**, SHA256 `47882820530f38aeef221aa8f022a4e8dcee3946be8ff8ae3788215d2c48c630`.
+- All three ignored original snapshots match their recorded byte counts and hashes.
+- All 670 selected marks and selected UI observations occur unchanged in those originals. Native audio records equal the stopped snapshot; all eleven selected event streams equal their originals.
+- All 48 recorded segment durations independently recompute from native PCM frames/sample rates. The five overruns are exactly **6.08, 6.40, 6.12, 6.04 and 6.20 seconds**.
+- Atlas, follow-up and research end-to-end timing rows independently recompute within rounding.
+- `verify:docs` passes. `verify:live` exits 1 with exactly **L4 fail, L6 unverified and required provider-pause continuation unverified**.
+- Tracked tree/index remained clean. Fresh Explain correctly remains blocked on incomplete acceptance.
+
+L1, L2, L3, L5 and L7 are supported within their stated bounded observations. In particular, the two Speaking candidates now have nonquiet native PCM overlap, frozen context clocks and same-context resumption without confirmation/new turns. The third reported human sound remains uncorrelated. Working preservation and confirmed Beacon cancellation are separately evidenced.
+
+L8 supports actual Stop resource release and actual capture followed by owned document/process closure, supplemented by controlled React-unmount tests. It does not establish direct live React-effect execution or remote provider cessation. The report preserves that distinction adequately.
+
+Atlas first-audio values **6.5148/4.4196/4.1792 seconds** miss the stated target. They measure speech-frame proxy to scheduled audio, including scheduling offset—not acoustic onset or an SLA. Functional L1 pass is compatible with retaining these target failures. The 13.415-second speaker quiet interval and owner testimony support the tested setup, not general echo immunity. Human-report custody is explicitly attributed rather than presented as an authenticated transcript export.
+
+For the proposed CPS profile, I recommend this bounded sequence:
+
+1. **Resolve inline-content preservation first**, then replay the full captured answers through the corrected scanner at CPS 12/cap 72. Select distinct resulting segments that cover all five prior overrun regions, including changed neighboring boundaries. Preserve the original cap-84 observations unchanged.
+2. Run at most ten deliberate, sequential existing `/api/speech` duration probes with the final intended SDK/voice/profile, correct Origin/Host, unchanged admission/deadlines and no retries. Record exact text, cap, PCM frames, status and duration. If ten cannot cover the selected cases, report incomplete coverage rather than silently expanding the budget or dropping difficult samples.
+3. Treat those probes as a focused engineering screen. CPS 13/cap 78 would leave the observed 74-character overrun eligible unchanged; cap 72 is a reasonable candidate, not a duration guarantee. Any new overrun remains evidence against that candidate.
+4. If the screen is acceptable, **at least one joined multi-sentence listening/backlog check is still needed** at the intended final profile. Endpoint durations alone cannot establish sequential browser admission, queue draining, audible continuity, complete spoken content or absence of playback cutoff.
+
+The observed maximum scheduled outstanding audio of 6.3447 seconds is below the emergency bound, but does not inspect every unscheduled internal queue field. It therefore cannot replace segment/backlog requalification.
+
+A scanner correction changes the whole-source digest. Runtime CPS changes also require explicit profile/cap provenance even where an environment value is outside that digest. Earlier cfa3/cap-84 observations remain valid historical evidence for their tested boundaries; they cannot be rebound to corrected source/cap 72. This targeted proposal supplies affected-boundary evidence, not a waiver of the owner’s retained whole-source acceptance gate. Genuine provider pause remains a separate mandatory gap.
+
+Normal own `stop 11 --allow-foreign-worktree` completed with exit 0; AITM reported `Unknown active min (wall 3)`. All reviewer commands have ended. I own no browser, server, microphone or execution resources. No source/evidence edits, paid calls, UI actions, physical trials or lifecycle transitions were performed.

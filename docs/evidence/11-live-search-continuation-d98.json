@@ -1,0 +1,1308 @@
+{
+  "schemaVersion": 1,
+  "mode": "live",
+  "gitHead": "d98fcd99ffea8c2b8266a9fde7c34f664b88e7c8",
+  "sourceDigest": "ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51",
+  "nodeVersion": "v26.8.1",
+  "providers": {
+    "claudeModel": "claude-sonnet-4-6",
+    "sttModel": "nova-3",
+    "ttsModel": "aura-2-thalia-en"
+  },
+  "browser": {
+    "name": "Chrome",
+    "version": "155.0.8059.40",
+    "os": "darwin"
+  },
+  "build": {
+    "mode": "production",
+    "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+  },
+  "observedLifecycleRevision": null,
+  "preflight": {
+    "gitHead": "d98fcd99ffea8c2b8266a9fde7c34f664b88e7c8",
+    "sourceDigest": "ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51",
+    "nodeVersion": "v26.8.1",
+    "packages": {
+      ".:@eslint/js": "9.39.1",
+      ".:@kburson/ai-task-manager": "0.1.0",
+      ".:@playwright/test": "1.64.0",
+      ".:@testing-library/react": "16.3.3",
+      ".:@types/node": "26.6.5",
+      ".:@types/react": "19.3.0",
+      ".:@types/react-dom": "19.3.0",
+      ".:eslint": "9.39.1",
+      ".:eslint-config-next": "16.4.0",
+      ".:eslint-config-prettier": "10.1.8",
+      ".:globals": "16.4.0",
+      ".:jsdom": "26.1.0",
+      ".:markdownlint-cli2": "0.23.3",
+      ".:patch-package": "8.0.1",
+      ".:prettier": "3.9.10",
+      ".:tsx": "4.20.6",
+      ".:typescript": "5.9.3",
+      ".:typescript-eslint": "8.71.2",
+      ".:vitest": "4.0.18",
+      "apps/web:@anthropic-ai/sdk": "0.133.0",
+      "apps/web:@deepgram/sdk": "5.15.0",
+      "apps/web:@ricky0123/vad-web": "0.0.31",
+      "apps/web:next": "16.4.0",
+      "apps/web:onnxruntime-web": "1.30.0",
+      "apps/web:react": "19.3.0",
+      "apps/web:react-dom": "19.3.0",
+      "apps/web:react-markdown": "10.1.0",
+      "apps/retrieval:ajv": "8.17.1",
+      "apps/retrieval:fastify": "5.12.5"
+    },
+    "patchPath": "patches/@ricky0123+vad-web+0.0.31.patch",
+    "patchDigest": "44485e484f4f0223b720e0e02e12e8e498ce6354bf24a21c71e7c60a9f5d9137",
+    "modulePath": "node_modules/@ricky0123/vad-web/dist/real-time-vad.js",
+    "appliedModuleDigest": "37b55cc57c1463624857ad65a9ceaf9cc073327bc9ed07fd34d0ecbe564eaa2a",
+    "postimages": {
+      "dist/real-time-vad.js": "4213050c5a6b73b500c03d693108e62c1cfb161f",
+      "dist/real-time-vad.d.ts": "97ec3f408602bd1e0d478c0671f3fd7bb788843b"
+    },
+    "lifecycleRevision": "aivc-vad-lifecycle-v1",
+    "installedLifecycleRevision": "aivc-vad-lifecycle-v1"
+  },
+  "measurementMethod": {
+    "clock": "Same-document browser performance.now() User Timing marks; CDP monotonic timestamps are retained separately.",
+    "description": "Browser request, streamed answer-delta and terminal marks are observed on one clock. Typed request has no speech-end, STT or playback sample. Historical microphone timings use the VAD last-positive-frame estimate, not acoustic speech end; provider-only durations remain unavailable.",
+    "acousticReason": "No independent physical acoustic recording or calibrated onset measurement was taken. Scheduled sample and callback timings do not establish acoustic onset."
+  },
+  "devices": {
+    "headset": "unverified",
+    "speakers": "unverified",
+    "microphoneTracks": []
+  },
+  "stt": {
+    "status": "unverified",
+    "mode": "batch-wav",
+    "reason": "Microphone intentionally muted; no STT requested."
+  },
+  "tts": {
+    "status": "unverified",
+    "incremental": false,
+    "reason": "Output intentionally muted; zero /api/speech requests and zero native audio sources."
+  },
+  "sse": {
+    "incremental": true,
+    "beforeCompletion": true,
+    "requestToFirstTextMs": 1489.4000000953674,
+    "requestToTerminalMs": 3459.4000000953674,
+    "firstTextBeforeTerminalMs": 1970
+  },
+  "search": {
+    "state": "configured",
+    "accountValidation": "pending",
+    "citations": [],
+    "searchUses": 2,
+    "omittedToolContinuation": "incompatible",
+    "pauseObserved": null,
+    "providerWireObserved": false,
+    "rawProviderErrorObserved": false
+  },
+  "deliberateRequest": "First perform two separate web searches: (1) official Anthropic documentation for the web search API; (2) official Deepgram documentation for Nova-3. After both searches, look up Atlas in the project catalog. Then give at most three short sentences with sources and Atlas status/owner.",
+  "observations": {
+    "observedAt": "2026-10-15T03:02:45.978Z",
+    "gitHead": "d98fcd99ffea8c2b8266a9fde7c34f664b88e7c8",
+    "sourceDigest": "ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51",
+    "nodeVersion": "v26.8.1",
+    "browser": {
+      "name": "Chrome",
+      "version": "155.0.8059.40",
+      "os": "darwin"
+    },
+    "capabilities": [
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "unavailable",
+          "reason": "Hosted search model support has not been checked.",
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "mode": "live",
+        "model": "claude-sonnet-4-6",
+        "sttModel": "nova-3",
+        "ttsModel": "aura-2-thalia-en",
+        "build": {
+          "mode": "production",
+          "buildId": "Fm7ulGF7DhoVvhi0AyrOw"
+        },
+        "turnsAvailable": true,
+        "speechAvailable": true,
+        "search": {
+          "state": "configured",
+          "reason": null,
+          "accountValidation": "pending"
+        },
+        "speech": {
+          "segmentChars": 84,
+          "backlogChars": 2400,
+          "highWaterSeconds": 10,
+          "lowWaterSeconds": 2
+        }
+      }
+    ],
+    "network": [
+      {
+        "requestId": "27934.26",
+        "path": "/api/turn",
+        "type": "request",
+        "timestamp": 3832778.928504
+      },
+      {
+        "requestId": "27934.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3832778.956485,
+        "bytes": 292
+      },
+      {
+        "requestId": "27934.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3832780.416083,
+        "bytes": 153
+      },
+      {
+        "requestId": "27934.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3832780.752829,
+        "bytes": 152
+      },
+      {
+        "requestId": "27934.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3832780.758144,
+        "bytes": 782
+      },
+      {
+        "requestId": "27934.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3832782.103278,
+        "bytes": 326
+      },
+      {
+        "requestId": "27934.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3832782.124489,
+        "bytes": 515
+      },
+      {
+        "requestId": "27934.26",
+        "path": "/api/turn",
+        "type": "data",
+        "timestamp": 3832782.385182,
+        "bytes": 591
+      },
+      {
+        "requestId": "27934.26",
+        "path": "/api/turn",
+        "type": "finished",
+        "timestamp": 3832782.385099
+      }
+    ],
+    "turns": [
+      {
+        "status": 200,
+        "contentType": "text/event-stream",
+        "events": [
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 0,
+            "type": "turn.accepted",
+            "data": {
+              "mode": "live"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 1,
+            "type": "stage",
+            "data": {
+              "stage": "researching"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 2,
+            "type": "answer.delta",
+            "data": {
+              "text": "I'll kick"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 3,
+            "type": "answer.delta",
+            "data": {
+              "text": " off all"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 4,
+            "type": "answer.delta",
+            "data": {
+              "text": " three look"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 5,
+            "type": "answer.delta",
+            "data": {
+              "text": "ups simultaneously"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 6,
+            "type": "answer.delta",
+            "data": {
+              "text": " since"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 7,
+            "type": "answer.delta",
+            "data": {
+              "text": " they're fully"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 8,
+            "type": "answer.delta",
+            "data": {
+              "text": " independent!"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 9,
+            "type": "tool.started",
+            "data": {
+              "name": "lookup_projects",
+              "summary": "Lookup Atlas"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 10,
+            "type": "stage",
+            "data": {
+              "stage": "retrieving"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 11,
+            "type": "tool.completed",
+            "data": {
+              "result": {
+                "schemaVersion": 1,
+                "source": "synthetic-project-catalog",
+                "records": [
+                  {
+                    "id": "atlas",
+                    "name": "Atlas",
+                    "status": "active",
+                    "ownerTeam": "North",
+                    "openItems": 3,
+                    "summary": "Synthetic active project owned by North with three open items."
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 12,
+            "type": "stage",
+            "data": {
+              "stage": "answering"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 13,
+            "type": "answer.delta",
+            "data": {
+              "text": "\n\n[Answer truncated: hosted search continuation is incompatible.]"
+            }
+          },
+          {
+            "schemaVersion": 1,
+            "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2",
+            "seq": 14,
+            "type": "turn.completed",
+            "data": {
+              "text": "I'll kick off all three lookups simultaneously since they're fully independent!\n\n[Answer truncated: hosted search continuation is incompatible.]",
+              "status": "truncated",
+              "usage": {
+                "inputTokens": 2387,
+                "outputTokens": 157,
+                "searchUses": 2
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "marks": [
+      {
+        "label": "turn-response-1",
+        "entries": [
+          {
+            "name": "aivc.turn-created:1",
+            "startTime": 15102.900000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.turn-request:2",
+            "startTime": 15141,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.turn-headers:3",
+            "startTime": 15158.700000286102,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.turn.accepted:4",
+            "startTime": 15170.5,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.stage-researching:5",
+            "startTime": 15171.300000190735,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:6",
+            "startTime": 16630.400000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:7",
+            "startTime": 16965.900000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:8",
+            "startTime": 16971.200000286102,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:9",
+            "startTime": 16972.10000038147,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:10",
+            "startTime": 16972.800000190735,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:11",
+            "startTime": 16973.400000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:12",
+            "startTime": 16973.800000190735,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.tool.started:13",
+            "startTime": 18316.200000286102,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.stage-retrieving:14",
+            "startTime": 18316.900000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.tool.completed:15",
+            "startTime": 18337.60000038147,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.stage-answering:16",
+            "startTime": 18338.400000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:17",
+            "startTime": 18598.200000286102,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.turn.completed:18",
+            "startTime": 18600.400000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          }
+        ]
+      },
+      {
+        "label": "single-muted-search-continuation-terminal",
+        "entries": [
+          {
+            "name": "aivc.turn-created:1",
+            "startTime": 15102.900000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.turn-request:2",
+            "startTime": 15141,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.turn-headers:3",
+            "startTime": 15158.700000286102,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.turn.accepted:4",
+            "startTime": 15170.5,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.stage-researching:5",
+            "startTime": 15171.300000190735,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:6",
+            "startTime": 16630.400000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:7",
+            "startTime": 16965.900000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:8",
+            "startTime": 16971.200000286102,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:9",
+            "startTime": 16972.10000038147,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:10",
+            "startTime": 16972.800000190735,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:11",
+            "startTime": 16973.400000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:12",
+            "startTime": 16973.800000190735,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.tool.started:13",
+            "startTime": 18316.200000286102,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.stage-retrieving:14",
+            "startTime": 18316.900000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.tool.completed:15",
+            "startTime": 18337.60000038147,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.stage-answering:16",
+            "startTime": 18338.400000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.answer.delta:17",
+            "startTime": 18598.200000286102,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          },
+          {
+            "name": "aivc.turn.completed:18",
+            "startTime": 18600.400000095367,
+            "detail": {
+              "turnId": "69e8e493-437b-4cfe-8647-785f54822ff2"
+            }
+          }
+        ]
+      }
+    ],
+    "devices": [
+      {
+        "method": "Pass-through diagnostic records only streams actually requested by the app; no additional getUserMedia call, constraints change, or track mutation.",
+        "observedAt": 6721.5,
+        "tracks": [],
+        "deviceLabels": [
+          {
+            "kind": "audioinput",
+            "label": "",
+            "isDefault": false
+          },
+          {
+            "kind": "audiooutput",
+            "label": "",
+            "isDefault": false
+          }
+        ]
+      },
+      {
+        "method": "Pass-through diagnostic records only streams actually requested by the app; no additional getUserMedia call, constraints change, or track mutation.",
+        "observedAt": 37512.90000009537,
+        "tracks": [],
+        "deviceLabels": [
+          {
+            "kind": "audioinput",
+            "label": "",
+            "isDefault": false
+          },
+          {
+            "kind": "audiooutput",
+            "label": "",
+            "isDefault": false
+          }
+        ]
+      }
+    ],
+    "audioDiagnostics": [
+      {
+        "method": "Pass-through native AudioContext constructor, createBufferSource and source.start observation; original arguments, returned context/source, samples, start schedule and native result are unchanged. Read-only per-buffer amplitude summary records no raw audio.",
+        "contexts": [],
+        "starts": [],
+        "ended": [],
+        "truncated": false
+      }
+    ],
+    "limitations": [
+      "Browser observations alone do not establish physical echo or acoustic measurements."
+    ],
+    "ui": [
+      {
+        "at": 6713.700000286102,
+        "viewport": {
+          "width": 1200,
+          "height": 919,
+          "scrollX": 0,
+          "scrollY": 0,
+          "outerWidth": 1200,
+          "outerHeight": 1006
+        },
+        "status": "Ready",
+        "mutes": [
+          {
+            "label": "Mute microphone",
+            "checked": true
+          },
+          {
+            "label": "Mute output",
+            "checked": true
+          }
+        ],
+        "latest": null
+      },
+      {
+        "at": 21767.200000286102,
+        "viewport": {
+          "width": 1200,
+          "height": 919,
+          "scrollX": 0,
+          "scrollY": 0,
+          "outerWidth": 1200,
+          "outerHeight": 1006
+        },
+        "status": "Ready",
+        "mutes": [
+          {
+            "label": "Mute microphone",
+            "checked": true
+          },
+          {
+            "label": "Mute output",
+            "checked": true
+          }
+        ],
+        "latest": {
+          "label": "Turn 1",
+          "text": "First perform two separate web searches: (1) official Anthropic documentation for the web search API; (2) official Deepgram documentation for Nova-3. After both searches, look up Atlas in the project catalog. Then give at most three short sentences with sources and Atlas status/owner.I'll kick off all three lookups simultaneously since they're fully independent!\n[Answer truncated: hosted search continuation is incompatible.]Atlasactive · North · 3 open itemsSynthetic active project owned by North with three open items.The answer was truncated. This turn was not added to context.Speech: muted · Output muted. Answer text is retained.Transcript / detailsFirst perform two separate web searches: (1) official Anthropic documentation for the web search API; (2) official Deepgram documentation for Nova-3. After both searches, look up Atlas in the project catalog. Then give at most three short sentences with sources and Atlas status/owner.Turn status: truncatedRequest traceTurn acceptedResearchingProject lookup startedRetrieving projectsProject lookup completedAnsweringAnswer truncatedInput tokens: 2387 · Output tokens: 157 · Search uses: 2",
+          "rect": {
+            "top": 408,
+            "bottom": 937.09375,
+            "left": 136,
+            "right": 1064
+          },
+          "display": "block",
+          "visibility": "visible",
+          "ariaHidden": null,
+          "intersectsViewport": true
+        }
+      }
+    ]
+  },
+  "sourceInference": {
+    "kind": "Source-derived explanation; not provider-wire observation",
+    "files": [
+      "apps/web/server/providers/claude.ts",
+      "apps/web/server/turns/run-turn.ts"
+    ],
+    "description": "The current provider omits web_search when searchRemaining is zero. run-turn retains native assistant content and decrements observed usage. SEARCH_COMPATIBILITY is selected only for a retained-search, omitted-search API400 matching the adapter predicate. The browser observed the mapped incompatible fallback, not the outgoing request bytes, original error text or a provider pause.",
+    "reference": {
+      "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools",
+      "accessedAt": "2026-10-15T03:09:01.970Z",
+      "summary": "Official documentation requires same tools for pause and mixed pending client/server-tool continuation; omission of a waiting server tool may return validation400.",
+      "interpretation": "Plausible accepted-spec/API tension only. No actual pause or pending native block was observed and no tool policy or budget was changed."
+    }
+  },
+  "provenance": {
+    "rawArtifact": ".scratch/11-live-d98fcd99-session-01a13d81-observations.json",
+    "rawSha256": "ff98e049901f93321bfc715b8b8c37d9cef0c39ce1e2e983a9fdd474854c5452",
+    "observer": ".scratch/11-live-browser-session-01a13d81.mjs",
+    "observerSha256": "4a354f4da294337431a4209583df759a7d8eac623c3a46ca032a8b096af6b770",
+    "authorSession": "01a13d81-022f-7b00-8248-db15f9d4449b",
+    "serverLaunch": ".scratch/11-live-launch.mjs; production launch() used by npm start",
+    "buildCommand": "npm run build:clean",
+    "ownedShutdown": {
+      "browserExit": 0,
+      "serverExit": 130,
+      "signal": "SIGINT",
+      "ports3000and3001": "no listeners after shutdown"
+    }
+  },
+  "limitations": [
+    "Exactly one deliberate typed /api/turn request; no retry, budget reset or budget increase was requested.",
+    "The model announced simultaneous lookups despite the requested sequence. Two reported search uses do not prove two successful searches or the requested official source results. No sources SSE event was returned.",
+    "Atlas active/North/3 was observed in tool.completed and the visible card. The answer was explicitly truncated and excluded from follow-up context.",
+    "No provider-wire observer was installed. Native omitted-tool/prior-block identity, original API error text and pause_turn remain unverified.",
+    "A configured/pending search state is not genuine account-unavailable evidence or successful search-off fallback.",
+    "Installed patch postimages/marker and fresh production build were verified. This muted typed run did not import/acquire MicVAD, so no current browser-observed lifecycle marker is claimed.",
+    "No raw audio, credentials or fabricated provider counters are included. Unknown counters remain omitted."
+  ]
+}
