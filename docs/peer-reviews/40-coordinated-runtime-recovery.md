@@ -22,10 +22,24 @@ message `Primary policy cannot be validated.` This is failed endpoint preflight,
 not native tool attachment, a handoff receipt or review acceptance. No synthetic
 review ID or handoff event was supplied.
 
-The runtime owner is assessing the separately verified #190 build for a supported
-installation without native bootstrap. It is not yet established as the installed
-replacement. Both #40 artifacts remain identical to their native SAR acceptance
-pins. Neither has sealed XPR acceptance; implementation remains stopped.
+The runtime owner subsequently repaired the no-native candidate through the normal
+#190 rework process in [PR #196](https://github.com/kburson/ai-peer-review/pull/196).
+Source revision `fb922c4cabad5648ad71e467e9b602fa76dd41a4` contains historical-hook
+compatibility and bounded support for AIVC npm aliases and tracked Node check
+drivers. The repair preserves unknown-command refusal and source/proposed-file
+custody. Its real AIVC zero-write preflight passed within the original setup
+deadline, with Git, index and package metadata unchanged. Local checks are
+reported green by the runtime owner; exact-head hosted verification is pending.
+The ordinary and selected historical installations remain intact.
+
+The new review workflow retains sealed invitations, participant-bound responses,
+artifact snapshots, acceptance events and genuine MCP delivery receipts in LOCAL
+JOURNAL MODE. Its terminal accepted-uncommitted record must not be described as a
+historical Git-bound normal-mode finalization or a test-human-authority approval.
+Any later Git publication independently pins the actual accepted bytes.
+
+Both #40 artifacts remain identical to their native SAR acceptance pins. Neither
+has sealed XPR acceptance; implementation remains stopped.
 
 The [earlier restoration checkpoint](40-runtime-restoration-checkpoint.md) retains
 the missing primary-file pins and original recovery boundary. This investigation
