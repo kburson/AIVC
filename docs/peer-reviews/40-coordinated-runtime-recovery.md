@@ -17,12 +17,27 @@ registration, setup or activation followed. A disposable first-use test then
 exposed the separate legacy source-class prerequisite; no class or activation
 was fabricated.
 
-The runtime owner identified an existing #190 conformance defect: local MCP
-startup still enters legacy enrollment, despite the approved local workflow
-excluding that prerequisite. Correction is pending through normal source review
-and verification. Per-review authentication, locking, journal seals and legacy
-maintenance guards must remain intact. Both #40 artifacts still have native SAR
-acceptance only; neither sealed XPR has started and implementation remains stopped.
+The runtime owner corrected the missed legacy-enrollment startup check, awaited
+the asynchronous delivery-source factory, and separated passive MCP waiting from
+bounded authenticated filesystem operations in source `e416bede4c45b20174bc53dbc645c61a955a9aac`.
+The original operation budgets and per-review authentication remain intact.
+Actual installed SDK discovery passed in both the physical AIVC checkout and this
+linked worktree; the owner also verified canonical notification replay from an
+existing genuine journal. These are runtime checks, not new #40 review acceptance.
+
+The first full CI attempt retained one historical five-second Git-inventory
+timeout and three Windows MCP failures after delivery, cancellation and replay.
+Inspection found a test teardown defect: it deleted its fixture
+before closing MCP; a failed first cleanup could prevent the close hook. The
+reviewed test-only correction is source
+`98efe0374a5a1d53f8171c0e6496238d3bbdfeb1`. Its staged package is byte-identical
+to the preceding candidate and remains unselected. All six [fresh installed
+journeys](https://github.com/kburson/ai-peer-review/actions/runs/38961639161) passed
+at that exact source. [Fresh full CI](https://github.com/kburson/ai-peer-review/actions/runs/38961649041)
+and native Test verification remain pending before selection and AIVC rollout.
+The selected runtime remains `fb922c4`; no primary-registration, setup or activation
+retry followed the refusal. Both #40 artifacts retain native SAR acceptance only;
+neither sealed XPR has started and implementation remains stopped.
 
 ## Earlier recovery findings
 
