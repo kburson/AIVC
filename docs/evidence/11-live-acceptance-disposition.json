@@ -49,6 +49,46 @@
       }
     ]
   },
+  "trunkConfiguration": {
+    "baselineCommit": "78429753cdeede058b0b279296b77d9f1c2bb246",
+    "storageCommit": "72a937e7147018d02a3552400fa16f8d8c4e33ff",
+    "path": ".ai-task-manager/task-tracker.json",
+    "before": {
+      "mode": "100644",
+      "blob": "4c117bc9ffdd4cfbbaf2d6fa4ad758c4834affa3",
+      "bytes": 2091,
+      "sha256": "23500227004639e8708857bf2017b6eaeba8c0e0c427e339b8865f547b37885f"
+    },
+    "after": {
+      "mode": "100644",
+      "blob": "fcdfc1f95c17b1e342b01325103274a3991077ea",
+      "bytes": 2121,
+      "sha256": "4b3c919cbae4dc9e6e225965ad420ba80405cb8e86f552bfc53bb06b32b450b9"
+    },
+    "anchors": [
+      {
+        "path": "docs/superpowers/specs/2026-10-15-57-explicit-trunk-target-design.md",
+        "mode": "100644",
+        "blob": "680a006998d718240bfee09e63632701ff88074e",
+        "bytes": 11247,
+        "sha256": "3e7057b4f4b4583d8053af501c1168b6969c677bf38e918c2c668488343d9378"
+      },
+      {
+        "path": "docs/superpowers/plans/2026-10-15-57-explicit-trunk-target.md",
+        "mode": "100644",
+        "blob": "ca9366f75aa418d313f4ca15b3c1f70e7139ccd3",
+        "bytes": 22203,
+        "sha256": "6316442ee31227cd59df74df34e898cd9a41219349989a530aaf9c9d504f7fc8"
+      },
+      {
+        "path": "docs/evidence/57-astra-explicit-trunk-target-assessment.txt",
+        "mode": "100644",
+        "blob": "5cbc60b9316cec50c6caf1c932575d544941d942",
+        "bytes": 4609,
+        "sha256": "b223a0f9037053aaf202aebeec09bd00c72b42d7c145ed941c366220bfdabb19"
+      }
+    ]
+  },
   "targetHandoff": {
     "path": "docs/implementation/2-live-validation-handoff.md",
     "targetCommit": "fe2a158c8f717aed43d604c3d7614dc18a3452e1",
@@ -59,7 +99,7 @@
     "gitHead": "2687b5434377f423363be7d279dbcaf12279aa8f",
     "sourceDigest": "14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63"
   },
-  "currentSourceDigest": "03e5c22a0395ccaace69e1d83d11c9b282a4388a8ac2289ecf7493a020164274",
+  "currentSourceDigest": "d3232d655b813aba3aa6a0b18ac157237c169d9228b2be270fbc152798e40b19",
   "changedFiles": [
     {
       "path": ".ai-task-manager/task-tracker.json",
@@ -69,7 +109,7 @@
       },
       "after": {
         "mode": "100644",
-        "blob": "4c117bc9ffdd4cfbbaf2d6fa4ad758c4834affa3"
+        "blob": "fcdfc1f95c17b1e342b01325103274a3991077ea"
       }
     },
     {
@@ -116,6 +156,14 @@
       }
     },
     {
+      "path": "docs/evidence/57-astra-explicit-trunk-target-assessment.txt",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "5cbc60b9316cec50c6caf1c932575d544941d942"
+      }
+    },
+    {
       "path": "docs/implementation/11-system-acceptance.md",
       "before": {
         "mode": "100644",
@@ -154,6 +202,14 @@
       }
     },
     {
+      "path": "docs/superpowers/plans/2026-10-15-57-explicit-trunk-target.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "ca9366f75aa418d313f4ca15b3c1f70e7139ccd3"
+      }
+    },
+    {
       "path": "docs/superpowers/specs/2026-10-15-11-sealed-review-lint-addendum.md",
       "before": null,
       "after": {
@@ -175,6 +231,14 @@
       "after": {
         "mode": "100644",
         "blob": "be5ed0d4bd985fc13e7080ece1051114e819d3f5"
+      }
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-15-57-explicit-trunk-target-design.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "680a006998d718240bfee09e63632701ff88074e"
       }
     },
     {
@@ -207,7 +271,7 @@
       },
       "after": {
         "mode": "100644",
-        "blob": "c954bfb91bc476e38e300b3f7c1d9d0d2b85e8e2"
+        "blob": "2b6f22660cbb184df864e796d1549c9f6d6410eb"
       }
     },
     {
@@ -240,7 +304,7 @@
       },
       "after": {
         "mode": "100644",
-        "blob": "158ddbe77f273d2e3a3c8b90082bd7bbe7aaf06d"
+        "blob": "e53f0660cca707e86d98222219e68a097b7718a3"
       }
     }
   ],
