@@ -35,17 +35,17 @@
 
 ## Delivery graph and effort
 
-These are proposed implementation work packages, not already created or approved issues. Estimate is preliminary joint human effort, not AI elapsed time.
+These are proposed implementation work packages, not already created or approved issues. Estimate is preliminary joint human effort revised after native SAR to include concrete production fixtures and settlement handoff, not AI elapsed time.
 
-| Task  | Deliverable                                         | Depends on                                   | Joint hours |
-| ----- | --------------------------------------------------- | -------------------------------------------- | ----------- |
-| 1     | Neutral contract workspace and consumer migration   | Accepted spec/plan and normal AITM admission | 4           |
-| 2     | Portable authenticated core with bounded transport  | 1                                            | 10          |
-| 3     | Thin web streaming delegation                       | 2                                            | 6           |
-| 4     | Independent production containers and lifecycle     | 3                                            | 8           |
-| 5     | Cross-replica, interruption and shutdown acceptance | 4                                            | 8           |
-| 6     | Integrated regression evidence and Task 0 handoff   | 5                                            | 4           |
-| Total | Dependency-ordered migration                        |                                              | 40          |
+| Task  | Deliverable                                             | Depends on                                   | Joint hours |
+| ----- | ------------------------------------------------------- | -------------------------------------------- | ----------- |
+| 1     | Neutral contract workspace and consumer migration       | Accepted spec/plan and normal AITM admission | 4           |
+| 2     | Portable authenticated core with bounded transport      | 1                                            | 12          |
+| 3     | Thin web streaming delegation                           | 2                                            | 6           |
+| 4     | Independent production containers, lifecycle and runner | 3                                            | 14          |
+| 5     | Cross-replica, interruption and shutdown acceptance     | 4                                            | 12          |
+| 6     | Integrated regression evidence and Task 0 handoff       | 5                                            | 4           |
+| Total | Dependency-ordered migration                            |                                              | 52          |
 
 Before coding, run governed decomposition/admission against the accepted plan. #40 is XL and must not silently execute as an atomic story. The next preparation action is governed decomposition/conversion and child hydration as required by AITM; no issue numbers are invented here. Each implementation owner gets a bound worktree, current source, pushed branch and draft PR targeting its recorded integration base. Preserve review and source provenance across the resulting issues. Do not start parallel implementation before contract freeze and ownership admission; this sequence is serial by default.
 
@@ -58,6 +58,11 @@ Before coding, run governed decomposition/admission against the accepted plan. #
 | `apps/orchestrator/src/http/{app,auth,request,response,pump}.ts`                                               | Routes, authentication, request bridge and bounded response pumping      |
 | `apps/orchestrator/src/{runtime,config,capabilities,build-info}.ts`, `providers/`, `tools/`, `turns/`          | Moved real orchestration and lifecycle with corrected imports            |
 | `apps/orchestrator/src/lifecycle.ts`                                                                           | Readiness, active request registry, drain/abort/settlement               |
+| `apps/web/server/start.mjs`                                                                                    | Owned production Next.js HTTP/socket lifecycle wrapper                   |
+| `scripts/test-migration-containers.mjs`, `vitest.migration.config.ts`, `playwright.migration.config.ts`        | Bounded runner and explicit production-container test selections         |
+| `deploy/{migration-provider,migration-test}.Dockerfile`, `deploy/compose.migration-test.yaml`                  | Separate private fixture/test driver images and networks                 |
+| `tests/fixtures/migration-provider/{server,schema}.mjs`, `tests/scripts/migration-runner.test.ts`              | Fixture wire/control/ledger contract and dispatch/cleanup tests          |
+| `apps/orchestrator/src/providers/scripted.ts`                                                                  | Mock-only fixture adapters sharing real production lifecycle             |
 | `apps/web/server/forwarding/{config,request,capabilities}.ts`                                                  | Fixed upstream, token, bounded stream/abort and safe metadata adaptation |
 | `apps/web/server/http/admission.ts`, existing web API routes                                                   | Web-only admission and delegation                                        |
 | `apps/web/app/{health,ready}/route.ts`                                                                         | Operational health/readiness                                             |
@@ -70,7 +75,7 @@ Before coding, run governed decomposition/admission against the accepted plan. #
 | `scripts/{dev,clean-build,run-tests,verify-docs}.mjs`, root config/package lock                                | Three-service orchestration and test discovery                           |
 | `docs/implementation/40-stateless-services.md`, `docs/evidence/40-migration-manifest.json`                     | Actual integrated handoff, state/cost/topology and verifier references   |
 
-Existing `apps/web/server/http/{body,sse-response,speech-response,errors}.ts` move into core's corresponding HTTP modules; provider/runtime orchestration leaves web. Keep only web admission/forwarding. Tests follow their new owning imports; do not delete behavioral assertions to make moves green.
+Existing server implementations move into core. Task 2 retains temporary single-source compatibility re-exports so web route checkpoints remain buildable; Task 3 removes them when forwarding replaces the routes. The final web graph contains contracts and web admission/forwarding only. Preserve assertions while retargeting fixtures as detailed below.
 
 ## Task 1: Extract browser-safe contracts
 
@@ -162,7 +167,7 @@ export type Lifecycle = {
 `finish` removes the registry entry only after settlement, while recording terminal or unknown outcome. A lease belongs to core work, not the response pump. Handle Node response close independently of request upload completion. Disable request/SDK automatic retries and redirect following. Never release from deadline `result`; retain existing release-from-`settled` semantics.
 
 - [ ] Step 4: Add pausing-reader and deferred cancellation fixtures. Fill two slots, abort both transports, keep underlying provider cancellation unresolved, and prove a third request remains BUSY until actual settlement. Pause read demand and assert producer pulls/queued bytes stop at the declared bound; abort during drain and verify cleanup. Exercise oversize body, malformed media/history, provider rate limit, deadline before headers, deadline after accepted SSE, PCM EOF/error and once-only terminal.
-- [ ] Step 5: Run `npx vitest run tests/contracts/orchestrator-http.test.ts tests/contracts/leases.test.ts tests/contracts/deepgram.test.ts tests/contracts/search-budget.test.ts tests/slow/disconnect.test.ts tests/slow/deadlines.test.ts`. Update moved imports only, retain prior behavioral assertions. Commit focused core ownership/transport deliverable.
+- [ ] Step 5: Run `npx vitest run tests/contracts/orchestrator-http.test.ts tests/contracts/leases.test.ts tests/contracts/deepgram.test.ts tests/contracts/search-budget.test.ts tests/slow/disconnect.test.ts tests/slow/deadlines.test.ts`. Use the temporary compatibility seam defined below at this checkpoint; preserve every behavioral assertion. Task 3 retargets legacy fixtures to the real core and removes the seam. Commit focused core ownership/transport deliverable.
 
 ## Task 3: Delegate web requests without provider ownership
 
@@ -293,7 +298,7 @@ The following decisions make the three optional SAR planning suggestions concret
 - Production binds inside private containers: web `0.0.0.0:3000`, orchestrator `0.0.0.0:3002`, lookup `0.0.0.0:3001`. Local launcher can retain loopback. Compose exposes only web; direct-core tests run inside the private test network.
 - Web `ORCHESTRATOR_BASE_URL` is one fixed private origin; `CORE_CALLER_TOKEN`, `BFF_ALLOWED_HOSTS`, `BFF_ALLOWED_ORIGINS`, forwarding turn/speech timeouts and bounded transport grace are server-owned config. Core has separate `CORE_ALLOWED_HOSTS` and the configured caller token. Incoming headers cannot override any value.
 - The current lookup client rejects all non-loopback origins. Task 2 replaces that restriction with an exact configured `RETRIEVAL_BASE_URL` origin policy and fixed `/v1/projects` path. Reject userinfo, fragments, query/base paths, wildcard origins, user-supplied URLs and redirects. Select the declared private lookup service origin explicitly; retain strict query/schema validation.
-- Task 2 owns negative origin/redirect tests plus real inter-container connectivity; Task 4 tests the actual production bind addresses. Relocation without these changes does not pass.
+- Task 2 owns negative origin/redirect tests and real two-server HTTP connectivity. Task 4 owns production binds and inter-container connectivity after packaging exists. Relocation without these changes does not pass.
 
 ### Contract digest migration — Task 1
 
@@ -312,3 +317,142 @@ Create `apps/web/server/start.mjs`, update the web start script and add its sock
 The local pinned guide `node_modules/next/dist/docs/01-app/02-guides/custom-server.md` supports this API and states that custom servers and standalone output cannot be combined. Package required production dependencies and `.next` output, not unsupported standalone tracing. Production tests validate background/framework close and active forwarding streams. This selects the wrapper option previously described in Task 4; no unresolved alternative remains.
 
 Task 2's Node request bridge must distinguish normal upload completion from an actual disconnected response: a normal IncomingMessage close after a fully uploaded request cannot abort valid work. Socket tests exercise both conditions independently.
+
+## Route settlement interface — revised Task 2 contract
+
+The following operation contract replaces Task 2's response-only moved-handler boundary. A response or completed socket pump is never a substitute for operation settlement.
+
+```ts
+export type OperationHandle = {
+  response: Promise<Response>;
+  settled: Promise<void>;
+  abort(reason: unknown): void;
+};
+export function beginTurn(
+  req: Request,
+  runtime: ServerRuntime,
+  signal: AbortSignal,
+): OperationHandle;
+export function beginSpeech(
+  req: Request,
+  runtime: ServerRuntime,
+  signal: AbortSignal,
+): OperationHandle;
+```
+
+Create the handle synchronously before asynchronous body ingestion. Its `response` resolves to headers/body readiness or rejects with the pre-header error; its `settled` resolves only when body work, producer, pending reads and provider/reader cancellation actually settle. Validation or unavailable-provider failures resolve `settled` after their own cleanup; missing adapter work is not an unresolved promise. Provider failures retain response/error semantics while `settled` observes every rejection. `abort` is idempotent and signals all admitted work. Existing deadline `task.settled` must feed this handle directly, rather than being hidden behind `Promise<Response>`.
+
+The route registers an `ActiveRequest` before auth/body work, and passes its signal into the handle. Core onRequest bearer/Host rejection never reads the body or acquires a lease; that rejected request finishes its registry entry with a resolved cleanup promise. Authentication is not deferred into a body parser. A factory throw before the handle exists also finishes the entry after local cleanup. For accepted work, the response pump has its own settled promise including reader cancellation. Route ownership is:
+
+```ts
+const active = lifecycle.enter(); // rejects new application work during drain
+let operation: OperationHandle | undefined;
+let pumpSettled: Promise<void> = Promise.resolve();
+let cleanEnd = false;
+try {
+  assertCoreCaller(rawRequest, config); // before parser/body/lease
+  operation = beginTurn(
+    requestFromIncoming(rawRequest, active.signal),
+    runtime,
+    active.signal,
+  );
+  const response = await operation.response;
+  pumpSettled = pumpResponse(response, rawReply, active.signal);
+  await pumpSettled;
+  cleanEnd = true;
+} catch (error) {
+  sendPreHeaderErrorOrClose(rawReply, error); // never a second terminal
+} finally {
+  if (!cleanEnd) operation?.abort(new Error('transport ended'));
+  const settled = Promise.allSettled([
+    operation?.settled ?? Promise.resolve(),
+    pumpSettled,
+  ]).then(() => undefined);
+  active.finish(settled); // finish arranges removal only after this promise
+}
+```
+
+`enter` installs the entry before returning its controller. `finish` is idempotent and retains the entry during its supplied promise; shutdown enumerates entries even if `finish` has not yet been called because headers are pending. `sendPreHeaderErrorOrClose` can emit a sanitized JSON error only before headers; otherwise it closes incomplete. In actual code, capture a reader-cancel promise even when a pump fails during initialization, and join it to `pumpSettled`. Core paid-lease release stays directly tied to the operation's real work settlement, not lifecycle bookkeeping or the pump. Shutdown may report unknown at the hard bound while leaving the unresolved entry until process exit; it must not claim drained.
+
+Web has no paid lease. Its custom HTTP wrapper registers requests before Next dispatch. `forwardRequest` exposes an internal `ForwardingHandle` with the same `response`, `settled` and idempotent `abort` fields; `settled` covers its upload, upstream response reader, and reader/socket cancellation cleanup. The forwarding function binds that handle to the wrapper's request context before returning a Response. Use an AsyncLocalStorage-owned request context passed through the custom server to route delegation; no browser header selects registry identity. The wrapper joins framework response transport cleanup and forwarding settlement before removing its entry. It does not claim knowledge of provider settlement from a closed HTTP socket; the owning core retains that separate responsibility. Requests with no forwarding handle settle from framework/socket cleanup only. Core/web close listeners ignore normal upload completion and abort on real downstream loss.
+
+Task 2 adds a **real route + lifecycle** test, not only the fake lifecycle unit: occupy both turn slots, time out/close both responses, defer actual adapter cancellation, and observe both leases and both lifecycle entries still occupied. Start shutdown; assert not drained. Resolve the gates and require registry/lease removal exactly once; repeat with gates never resolved through the hard bound and require settlement-unknown. Exercise auth failure, validation failure and factory failure before response readiness and require zero leaked entries/provider calls. Task 3 repeats the route/registry oracle through the real web wrapper and upstream cancellation cleanup. These are necessary RED/GREEN tests for the new operation interface.
+
+## Production acceptance harness — revised Tasks 2, 4 and 5
+
+### Scripted provider selection and observations
+
+Create `apps/orchestrator/src/providers/scripted.ts` in Task 2, with an optional mock-only adapter selection in the real `createRuntime` factory. Production image/entrypoint remains the same as the delivered application; provider injection does not replace routes, validation, orchestration, deadlines, leases, streaming or lifecycle. With `AIVC_MODE=mock` and an explicitly configured `AIVC_MOCK_SCRIPT_ORIGIN` plus `AIVC_MOCK_SCRIPT_TOKEN`, adapters use the isolated fixture service. Without that origin, preserve the existing deterministic in-process mock. If script configuration is present in live mode, refuse startup; do not silently enable it. Accept only one fixed private origin and fixed fixture paths, no redirects or caller-selected URL. Do not add test-control application routes, query flags or browser-visible tokens.
+
+Create `tests/fixtures/migration-provider/{server.mjs,schema.mjs}` and `deploy/migration-provider.Dockerfile` in Task 4. This is a small offline contract fixture, not the later research performance simulator. It owns an append-only, monotonically sequenced observation ledger for the lifetime of the test run, outside the core containers. The ledger survives core SIGKILL/replacement; fixture death invalidates the run. No application session/history dependency is introduced: it represents the external mock provider and is used only in the offline topology. Record its image/resource limits and test provenance separately from the three application services.
+
+Runtime creates a fresh internal operation UUID for each turn/speech dispatch, distinct from caller IDs; duplicate submitted IDs do not collapse ledger entries. Each adapter request carries internal operation UUID, replica-instance marker, caller turn/segment IDs, provider kind and exact fixture inputs. The fixture records ordered entries with operation UUID, provider kind, event kind (`started`, `input`, `chunk`, `cancel-requested`, `settled`, `connection-lost`), timestamp from its own clock and sanitized test input. Compare timestamps only within that fixture clock. Input contains fixture prompts/history/text needed by assertions, never real user content or secrets; evidence exports only fixture IDs and digests where full payloads are unnecessary.
+
+Model fixtures supply the existing `ModelEvent` structure, including tool rounds and usage, rather than public application SSE. STT returns transcript; TTS returns bounded raw PCM. The actual orchestrator still constructs the public SSE, invokes lookup tools and enforces all lifecycle/validation. Controls select per-operation/fixture scripts: delay before first result, gate after a chunk, produce a larger-than-16-KiB chunk, hold final settlement, provider failure, and deferred cancellation acknowledgement. Controls are bounded by the run deadline and always released/terminated during teardown.
+
+The fixture has separate runner-only control endpoints to load scripts, release gates and read the ledger; these are not reachable through web/core application routes. Use distinct fixture auth credentials for adapter traffic and runner control, on a private control network without host bindings; credential values are generated per run, never logged or baked into images. Core can invoke only data/cancellation endpoints, not mutate scripts or clear observations. All fixture/control inputs have schema/body caps. Compose internal networks deny external provider egress; no paid credentials enter any service. No control endpoint can proxy an external URL.
+
+Adapter abort has two obligations: stop its current data reader and send an authenticated fixture cancellation request whose acknowledgement may be deliberately gated. The adapter's promise/iterator finalization waits for pending reader cleanup **and that acknowledgement**, so local operation settlement can remain delayed even after the original HTTP fetch rejects on abort. A fixture EOF alone cannot satisfy the cancellation gate. The fixture ledger records cancellation independently. If core dies first, record started-but-unsettled/connection-lost from the surviving fixture; do not invent cancellation acknowledgement or zero provider cost. Surviving cores never receive a replay request. Task 5 reads the ledger from the runner after hard kill to prove provider-call counts and no replay. This mock boundary tests actual app settlement plumbing, without claiming that a real provider settles identically.
+
+### Exact runner and browser configuration
+
+Add the following owning files to Task 4's file map: `scripts/test-migration-containers.mjs`, `tests/scripts/migration-runner.test.ts`, `vitest.migration.config.ts`, `playwright.migration.config.ts`, the fixture files/Dockerfile above, `deploy/compose.migration-test.yaml`, and `apps/web/server/start.mjs`. Task 5 supplies the acceptance cases/config includes; Task 4 supplies independently tested runner startup/cleanup and production service packaging.
+
+The command graph is fixed and nonrecursive:
+
+```text
+node --test tests/contracts/stateless-services.test.mjs
+  -> npm run test:migration:containers
+     -> node scripts/test-migration-containers.mjs
+        -> build/verify production images; start private Compose topology
+        -> npx vitest run --config vitest.migration.config.ts
+        -> npx playwright test --config playwright.migration.config.ts
+        -> collect sanitized ledger/manifests; docker compose down
+```
+
+Root script `test:migration:containers` is exactly `node scripts/test-migration-containers.mjs`. Vitest's migration config includes only `tests/integration/stateless-services.test.ts`, runs serially against the runner's ready topology, and excludes the Node wrapper. Playwright's migration config includes only `tests/browser/stateless-interruption.spec.ts`, uses `baseURL` from validated `AIVC_MIGRATION_WEB_URL`, sets one worker, `retries: 0`, `forbidOnly: true`, and defines **no `webServer`**. It refuses an absent URL/topology manifest; it cannot import the legacy system-server launcher. The runner passes only bounded fixture/control connection information, never paid credentials. No suite uses an implicit localhost/development fallback.
+
+The runner owns a unique Compose project name, all images/services/networks/volumes and teardown on success, failure, signals and timeout. Keep the three application services at production mode, with independent configured replicas; the fixture/router are declared test infrastructure. Application images are built from the clean pinned source revision or accepted only when source SHA, build manifest, contract/catalog digests and content labels match that exact revision. A local tag or cached image without this proof refuses. Record the built image content digests before tests. Core death never deletes the fixture ledger before assertions/artifact capture.
+
+Bound the whole runner to 1,200 seconds: builds at most 600 seconds, readiness 90 seconds, Vitest 240 seconds, Playwright 240 seconds, teardown 30 seconds, all also constrained by the remaining global budget. Individual integration/browser tests have at most 60-second deadlines; real 20-second shutdown checks fit that limit. The Node wrapper has a 1,260-second timeout, launches the runner with a 1,200-second subprocess timeout and preserves nonzero exits. On forced runner death it performs bounded fallback teardown using the recorded Compose project; capture incomplete evidence first if possible. Cleanup failure stays a nonzero test outcome. Docker, Compose, image identity or Chromium absence is explicit failure, never skip. Build services from the pinned source before declaring images missing; a required unavailable build/runtime is still nonzero.
+
+Task 4's runner tests use a fake spawn interface to assert exact argv/config selection and error/signal/timeout cleanup. The runtime run manifest lists the Node wrapper (when invoked), Vitest selection and Playwright selection with start/end/exit code and expected test counts. Reject missing, duplicate or skipped selections and any legacy launcher selection. The Node wrapper is not re-entered by either child suite. Pair fake dispatch tests with Task 5's real topology manifest so a fake-only runner cannot pass acceptance.
+
+Task 3 migrates `tests/browser/system-server.ts` and the ordinary `playwright.config.ts` fixture contract to start the actual standalone core (scripted/mock mode) plus lookup and the thin web server; it must no longer inject a web-global paid runtime. Ordinary developer regressions may retain their existing dev web workflow, but Task 6's required migration production-browser proof always uses the dedicated migration config without `webServer`. The ordinary browser suite still runs to preserve regression assertions; its outcome is distinct from production-container acceptance.
+
+## Extraction checkpoint and regression ownership — revised Tasks 2–3
+
+Task 2 uses **temporary single-source compatibility re-exports**, removed in Task 3. Move implementations to core, but leave tiny deprecated modules at the old web server paths to re-export the moved code/types and response-compatibility functions. Do not copy or fork the implementation. Preserve the existing test-only global runtime identity for this temporary seam so current route fixtures still inject their scripted dependencies. `turnResponse`/`speechResponse` compatibility functions return the new operation handle's `response` and preserve existing web admission; core's external Fastify routes apply their separate bearer/Host gate before invoking the same underlying operations. Re-exports themselves own no provider logic.
+
+Thus Task 2's web routes remain buildable and old route-based regressions still execute their behavioral assertions while the new core socket/lifecycle tests independently prove the portable path. Intermediate Task 2 is **not** accepted final three-service delivery and does not satisfy the final web import-boundary test. Provider dependency removal and the final no-provider-web-graph gate belong to Task 3, after delegation replaces those routes.
+
+Task 3 removes all compatibility re-exports and the legacy web runtime-global injection. Retarget existing `tests/slow/disconnect.test.ts`, deadline/lease/speech route fixtures and integration imports to `createOrchestratorApp` with `createRuntime(..., overrides)` on real sockets; preserve each original behavioral assertion while changing setup/transport to the new owner. Keep new delegated-path regressions against the real thin web wrapper as a second layer. Migrate every test importing old server paths, not just module specifiers; `rg` for old web runtime/http/provider imports is a required closure check. Only browser-safe contracts and web admission/forwarding remain in the final web graph.
+
+Task 2 proves private origin policy and two real local HTTP servers with different host/port origins. **Production inter-container connectivity belongs to Task 4**, after Dockerfiles/Compose exist; it is not a Task 2 prerequisite. Task 5 then tests the accepted packaged topology across replicas. This corrects the earlier appended suggestion assigning real inter-container proof prematurely to Task 2.
+
+Task 2's pressure test separately measures original producer allocations, queued slices and Node/Web/socket buffers; views into a large original allocation do not make that allocation disappear from the bound. Gate producer demand and copy bounded chunks where retaining the original would violate limits. Include the oversized-chunk fixture in both core and delegated-path pressure tests.
+
+### Fixture wire protocol and private test execution
+
+Freeze the fixture boundary in `tests/fixtures/migration-provider/schema.mjs` and validate it on both sides. `createScriptedDeps({operationId, turnId, segmentId?, replicaId}, config)` is the Task 2 request-scoped adapter factory; the core generates operation IDs itself. It returns the existing `TurnDeps`/`SpeechAdapter` interfaces and is selected by mock-only configuration above, never by request headers. Tool lookup remains the real separate lookup HTTP service.
+
+| Listener/operation                          | Contract                                                                                                                                                                                                            |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Data: `POST /v1/mock/operations`            | Authenticated adapter token; body contains operation/replica UUIDs, kind (`model`, `stt`, `tts`), caller IDs and typed fixture input. Returns an operation receipt; accepts each internal operation once.           |
+| Data: `GET /v1/mock/operations/:id/stream`  | Same adapter identity and operation receipt; model NDJSON carries existing `ModelEvent` values, STT JSON carries transcript, TTS body carries raw bounded PCM. No public application SSE is synthesized by fixture. |
+| Data: `POST /v1/mock/operations/:id/cancel` | Records cancel request; acknowledgement resolves only when the named cancellation gate is released. EOF/data-socket abort does not auto-release that gate.                                                          |
+| Control: `POST /v1/control/scripts`         | Runner token only; loads bounded declarative scripts (no code/eval/URLs), keyed by fixture/caller input. No application-side endpoint invokes this operation.                                                       |
+| Control: `POST /v1/control/release`         | Runner token, operation ID and named gate; returns acknowledged gate transition.                                                                                                                                    |
+| Control: `GET /v1/control/ledger`           | Runner-only paginated sequence/observation records; monotonic cursor, no reset/delete during run.                                                                                                                   |
+
+Data inputs cap at 2 MiB; control bodies cap at 8 KiB. Limit the fixture to 256 operations and a 16 MiB observation ledger per run; overflow invalidates the run with an explicit error instead of dropping observations. Gate deadlines never exceed the runner's remaining budget. Fixture listener auth failures read no control payload and mutate no scripts. Bind the control listener only to its separate control-network interface/address, verified by the runner; it must not listen on the application's data interface or wildcard. Separate adapter/control credentials enforce roles even if a network is misconfigured.
+
+The host runner performs Compose orchestration only. Add `deploy/migration-test.Dockerfile` and a `migration-test` container containing the exact source/lockfile, pinned Node/dev dependencies and the pinned Playwright Chromium installation. It joins private application/control networks and has no host binding or Internet egress. Fixture/router/test-container resources and image digests are in the manifest. Data-plane app containers do not join the control network. The fixture binds its data listener to the application interface and control listener to the control interface. All auth values are runtime secrets generated by the host runner and passed without logging; no app/data container receives the runner token.
+
+Execute the diagram's two test selections through `docker compose exec -T migration-test npx --no-install vitest run --config vitest.migration.config.ts` and `docker compose exec -T migration-test npx --no-install playwright test --config playwright.migration.config.ts`. This is the concrete realization of the Vitest/Playwright rows in the earlier command graph. The browser base URL is `http://web:3000` inside that topology, validated against the manifest; direct core tests address replica service/connection targets from the same private application network. No host cannot-reach-core workaround, hidden core port exposure, dev server or extra test execution path is permitted. The driver reads fixture observations from the control interface; a hard-killed core cannot erase them.
+
+Production application images share exactly the delivered entrypoint/modules and are separately source/image-verified. The test driver and fixture are distinct tooling images; their presence does not convert the application into a test server. Missing Chromium inside the pinned driver image fails browser preflight. No runtime `npx` download is permitted. The host's Node wrapper and runner impose the previously declared global bounds on all Compose exec processes and preserve their real nonzero exit codes.
+
+Fixture STT input serializes WAV as an explicit base64 byte string with byte length and SHA-256; model input serializes the existing typed round input, and TTS input serializes the existing speech input. Decode and validate these forms inside the fixture caps. The data cap is 2 MiB so the application's maximum valid WAV remains representable; ledger observations retain STT byte length/digest rather than duplicating audio bytes. History/speech assertions use their exact controlled fixture text. The runner's declared scenario inventory stays below ledger/operation caps; exhaustion is an explicit invalid run, never evidence of success.
+
+The real core request boundary has exactly one lifecycle registration per HTTP request, created in the first onRequest stage before the auth gate and carried in request context to the raw route. The earlier route pseudocode describes that combined boundary; an implementer must not register a second entry when the raw route begins. Auth/pre-parser error hooks finish the same request entry after local cleanup. The web wrapper likewise creates exactly one request context and verifies its AsyncLocalStorage binding reaches the actual Next.js Node route in production tests.
