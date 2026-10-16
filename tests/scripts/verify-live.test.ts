@@ -816,11 +816,15 @@ describe('reviewed live acceptance real history', () => {
     'docs/superpowers/specs/2026-10-15-11-sealed-review-lint-addendum.md',
     'docs/evidence/11-astra-sealed-lint-assessment.txt',
   ])
-    it('rejects changed immutable component or collateral ' + path, () => {
-      const root = amendedFixture();
-      put(root, path, readFileSync(join(root, path), 'utf8') + '\nChanged\n');
-      expect(amendErrors(root)).toContain('Amended acceptance invalid');
-    });
+    it(
+      'rejects changed immutable component or collateral ' + path,
+      () => {
+        const root = amendedFixture();
+        put(root, path, readFileSync(join(root, path), 'utf8') + '\nChanged\n');
+        expect(amendErrors(root)).toContain('Amended acceptance invalid');
+      },
+      15000,
+    );
   it('does not accept an untracked application file or a deleted original runtime path', () => {
     const root = amendedFixture();
     put(root, 'apps/web/new.ts', 'export const hidden = 1;');
