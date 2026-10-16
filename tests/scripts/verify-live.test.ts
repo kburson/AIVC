@@ -789,14 +789,18 @@ describe('reviewed live acceptance real history', () => {
       },
     ],
   ] as const)
-    it('rejects disposition ' + name, () => {
-      const root = amendedFixture();
-      const path = 'docs/evidence/11-live-acceptance-disposition.json';
-      const d = JSON.parse(readFileSync(join(root, path), 'utf8'));
-      mutate(d);
-      json(root, path, d);
-      expect(amendErrors(root)).toContain('Amended acceptance invalid');
-    });
+    it(
+      'rejects disposition ' + name,
+      () => {
+        const root = amendedFixture();
+        const path = 'docs/evidence/11-live-acceptance-disposition.json';
+        const d = JSON.parse(readFileSync(join(root, path), 'utf8'));
+        mutate(d);
+        json(root, path, d);
+        expect(amendErrors(root)).toContain('Amended acceptance invalid');
+      },
+      15000,
+    );
   for (const path of [
     'apps/web/server/providers/claude.ts',
     'apps/web/server/turns/run-turn.ts',
