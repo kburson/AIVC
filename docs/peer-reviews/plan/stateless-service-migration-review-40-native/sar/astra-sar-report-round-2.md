@@ -1,3 +1,6 @@
+> **Formatting view; original report preserved.**
+> [Exact original report](https://github.com/kburson/AIVC/blob/e6347619fb245ba506bf455d57a0672cf663260b/docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-2.md) · original SHA-256: `19646f9b03b1e55e5c1ffec048df9d8ed0fa626d660ae33fdcf85389c88ce0b3`. Formatting does not renew or expand native SAR acceptance.
+
 # Issue 40 migration implementation plan — native SAR round 2
 
 ## Decision
@@ -18,12 +21,12 @@ The revision closes the original operation-settlement and extraction-checkpoint 
 
 ## Previous finding dispositions
 
-| Finding | Disposition | Independent assessment |
-| --- | --- | --- |
-| R1: operation-to-lifecycle handoff | Closed | Lines 321–379 define synchronous operation handles, separate response/settlement promises, abort, registry/pump joining, early-error cleanup and real-route shutdown oracles. Line 458 removes double-registration ambiguity. Web forwarding has its own settlement handle and an explicitly verified AsyncLocalStorage binding. |
-| R2: production harness/runner seam | Partially closed | Lines 381–456 select real runtime adapters, surviving external observations, separate data/control authority, exact production test configs/commands, driver image, finite budgets and identity checks. The defects below are in those concrete selections and prevent full closure. |
-| R3: broken extraction checkpoint | Closed | Lines 425–431 select temporary single-source re-exports, preserve the legacy fixture seam only at the intermediate checkpoint, then retarget fixtures and remove it. Production inter-container proof now belongs to Task 4. |
-| Optional allocation/file-map suggestions | Addressed | Main file map includes wrapper and harness files. Line 433 requires original backing allocations and queued slices to be measured independently, with oversized-chunk fixtures. |
+| Finding                                  | Disposition      | Independent assessment                                                                                                                                                                                                                                                                                                           |
+| ---------------------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1: operation-to-lifecycle handoff       | Closed           | Lines 321–379 define synchronous operation handles, separate response/settlement promises, abort, registry/pump joining, early-error cleanup and real-route shutdown oracles. Line 458 removes double-registration ambiguity. Web forwarding has its own settlement handle and an explicitly verified AsyncLocalStorage binding. |
+| R2: production harness/runner seam       | Partially closed | Lines 381–456 select real runtime adapters, surviving external observations, separate data/control authority, exact production test configs/commands, driver image, finite budgets and identity checks. The defects below are in those concrete selections and prevent full closure.                                             |
+| R3: broken extraction checkpoint         | Closed           | Lines 425–431 select temporary single-source re-exports, preserve the legacy fixture seam only at the intermediate checkpoint, then retarget fixtures and remove it. Production inter-container proof now belongs to Task 4.                                                                                                     |
+| Optional allocation/file-map suggestions | Addressed        | Main file map includes wrapper and harness files. Line 433 requires original backing allocations and queued slices to be measured independently, with oversized-chunk fixtures.                                                                                                                                                  |
 
 ## Required findings
 

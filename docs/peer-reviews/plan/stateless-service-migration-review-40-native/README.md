@@ -35,3 +35,5 @@ Next review work is registered-primary verification, setup/doctor as required by
 Published through [draft PR #61](https://github.com/kburson/AIVC/pull/61) to `trunk`. #40 remains Plan, with implementation and paid execution stopped. No Plan approval, child hydration, merge, Test/Review/Done or research unblocking is implied. Before coding, retain sealed-review, decomposition, owner decision and all normal AITM admission gates. Research Task 0 still requires actually accepted integrated application source and verification/state/topology evidence.
 
 Validation performed for this documentation checkpoint: targeted Markdown lint, Prettier and Git whitespace checks. These are document checks, not execution of the plan's proposed tests.
+
+Reports 2–4 are displayed as formatting views for repository lint/format compliance. Exact original reviewer bytes are preserved at commit `e6347619fb245ba506bf455d57a0672cf663260b`, linked and hashed at the top of each view. The coordinator verified those original Git blobs against the recorded raw hashes. Formatting adds no acceptance, and neither accepted specification nor accepted plan bytes changed.
