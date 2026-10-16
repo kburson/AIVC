@@ -485,7 +485,37 @@ Task 2's fixture adapter tests and Task 5's production acceptance explicitly cov
 
 The host runner is the sole Docker/Compose authority. The in-container client is `attachMigrationTopology(manifest)` and never starts a second stack. It delegates signal/replacement/scale actions to the host through a bounded per-run request/acknowledgement directory mounted only into the driver and visible to the host. No application or fixture container receives this mount, Docker socket or Docker API access. The host creates the directory under ignored generated `.tmp` state with restricted permissions; a per-run capability nonce authenticates driver control records and is omitted from evidence.
 
-The control schema is closed: run UUID, request UUID, monotonic request sequence, capability nonce, deadline, action enum (`terminate`, `kill`, `replace`, `scale-core`), target enum (`core-a`, `core-b`, `web`, `lookup`), expected current container ID, and optional replica count (1 or 2 only for `scale-core`). No command, shell, path, image, argument array or arbitrary service name is accepted. `scale-core` targets the core group and verifies both expected replica identities from the current host manifest; other actions select exactly one current run-owned container. All targets must carry the unique run label and expected source/image identity.
+The capped control request uses this closed discriminated union; unknown fields refuse. UUIDs and container IDs are validated canonical strings, sequence is a positive safe integer, and the deadline is bounded by the run budget.
+
+```ts
+type LifecycleRequestBase = {
+  runId: string;
+  requestId: string;
+  sequence: number;
+  capabilityNonce: string;
+  deadlineUnixMs: number;
+};
+type CoreMembership = { 'core-a': string; 'core-b': string | null };
+type LifecycleRequest = LifecycleRequestBase &
+  (
+    | {
+        action: 'terminate' | 'kill' | 'replace';
+        target: 'core-a' | 'core-b' | 'web' | 'lookup';
+        expectedContainerId: string;
+      }
+    | {
+        action: 'scale-core';
+        target: 'core';
+        desiredCount: 1 | 2;
+        expectedReplicas: CoreMembership;
+        expectedPeers: { web: string; lookup: string };
+      }
+  );
+```
+
+Single-container actions require their target to be currently present and its ID to match exactly; absent core-b refuses. Scale always names the allowed core group and supplies both membership keys: core-a is present; core-b is null in the one-replica state and an exact present ID in the two-replica state. Missing or extra keys, stale/foreign IDs or membership different from the current run manifest refuse before Docker mutation. The host verifies expected web/lookup IDs as well. No shell command, path, image, argv array or arbitrary service/group name is accepted.
+
+For 1-to-2, retain core-a unchanged and create only core-b from the pinned run-owned orchestrator replica template. For 2-to-1, retain core-a unchanged and drain/remove only core-b using the declared lifecycle bounds. Use fixed host-owned Compose/template mappings; neither the driver nor a record selects an image or service name. Never recreate core-a to satisfy a scale request. A request matching the current count is a verified no-op. Verify web/lookup identities and limits are unchanged and publish complete before/after CoreMembership plus peer IDs in the acknowledgement/updated manifest, including core-b:null after scale-down. Partial/uncertain results remain unknown and fail the run. All actual targets must retain the unique run label and expected source/image identity.
 
 The driver writes each capped 8 KiB JSON request to a temporary file and atomically renames it into the request directory. Host runner asynchronously consumes requests while suite subprocesses are active, validates schema/capability/deadline/identity, executes fixed argv arrays for the enumerated action only, then atomically writes an acknowledgement with request/run IDs, verified before/after container IDs, outcome (`completed`, `refused`, `failed`, `unknown`), sanitized error and host-owned timestamp. Return an updated manifest after replacement/scale. A completed signal receipt verifies signal delivery and observed target termination; it does not assert provider settlement. Driver waits at most 40 seconds and never infers success from silence or provider counts alone.
 
@@ -509,3 +539,5 @@ Validate encoded length and canonical base64 before decoding; validate decoded r
 Add a structurally valid 1,600,000-byte WAV with a legal ancillary padding chunk, plus a valid near-multipart-limit padded WAV: first prove application parsing accepts them, then fixture roundtrip/length/digest succeeds. Add over-wire-cap, over-base64-field, noncanonical encoding and decoded-raw-over-cap rejections. Keep original PCM/duration restrictions; do not reject legal ancillary chunks merely to fit the fixture. Task 5 repeats the accepted padded-WAV case through direct and delegated production paths.
 
 When retargeting old regressions, retain Origin/Host browser-protection assertions at the web boundary; test core bearer/Host independently. Do not turn browser Origin into a direct-core requirement.
+
+Task 4's lifecycle-channel tests instantiate the discriminated scale schema for 1→2 with `core-b: null`, 2→1 with both exact IDs, and same-count no-op. Reject omitted/extra membership, stale/foreign identity, mismatched peer IDs and single-target actions on absent core-b. A duplicate matching request returns its original before/after membership acknowledgement without scaling again; a conflicting duplicate refuses. Task 5 verifies real transitions retain the identical core-a, web and lookup containers, while only core-b is added or drained/removed. No template/service/image override is accepted from the driver.
