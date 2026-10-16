@@ -43,8 +43,8 @@ completed epic graph to select different delivery semantics was rejected.
 The owner branch was instead fast-forwarded to current trunk. This adopted
 the already-reviewed #54/#57 delivery configuration, including
 `trunkRef: origin/trunk`; no duplicate configuration edit or application
-change is needed. This completion record is the only new authored change.
-The final PR targets trunk directly.
+change is needed. The final PR targets trunk directly. Its authored changes
+are this completion record and the narrow test timing correction below.
 
 Ruling: use an ordinary, directly targeted completion PR and repeat all
 registered verification at its exact new head. The cost is another Test,
@@ -54,6 +54,33 @@ The genuine new session is `01a1447f-ca81-7131-ac64-3ccb5fbd2f04`. It
 released the paused predecessor's occupancy through the registered command
 before binding normally. There is one owning chat, with no delegated
 implementation work or changes to the epic graph.
+
+## Local test timing correction
+
+Canonical Test at the initial completion head reported one failure among
+231 unit/UI tests: the unchanged immutable-component rejection fixture for
+apps/web/server/config.ts exceeded Vitest's default five-second deadline.
+All assertions in the other 230 cases passed; CI passed all 231 at the same
+head. The failed run remains recorded on #25 rather than being replaced by
+a success claim.
+
+The parameterized immutable-component rejection fixture now receives the
+same explicit 15-second allowance used by its neighboring Git-backed test.
+Its setup, tampered inputs and rejection assertion are unchanged. The exact
+previously timed-out case then passed locally in 9.2 seconds. This is a
+test-harness timing correction, not a change to application behavior or the
+integrity oracle.
+
+Ruling: retain every test and assertion, adjust only this fixture deadline,
+and repeat canonical Test, independent review and CI at the amended head.
+No failing functional assertion is waived.
+
+The existing scanner verifier declaration was also corrected through the
+sanctioned issue-body command: vc:4 now invokes the installed Vitest scanner
+test directly. The previous npm script ignored its file argument and ran
+the complete unit group. Its interrupted redundant run is recorded as exit
+143 with no success proof. The corrected scanner test passed; canonical
+Test retains its complete lane floor.
 
 ## Remaining terminal checks
 
