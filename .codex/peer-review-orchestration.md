@@ -1,6 +1,47 @@
 # Native peer review in AIVC
 
-Use the installed local-tarball ai-peer-review 0.4.1 protocol with native agent orchestration when the user requests Codex fanout. Keep this guide separate from the package-owned copied skill.
+## Current local review procedure
+
+Resolve `peer-review help --json` from the actual project and read its returned
+`skillPath` in full. The registered local runtime uses sealed invitations, genuine
+distinct participant sessions, authenticated responses, artifact snapshots and
+durable journal authority. It needs no primary setup, activation, source-class
+capture, native helper or broker for a new local review. Preserve the separate
+legacy maintenance contracts. Some descriptive CLI help still states a broker
+requirement; the governing installed procedure and actual local startup path
+exclude that prerequisite.
+
+The invoking session is the author. Record the tracked issue and exact reviewer
+provider, model and effort for each review. Use the package launcher for Claude
+XPR and its same-session resume/recovery actions; never copy identity handles or
+handcraft broader write permissions. Follow generated invitations, response paths,
+sealed submissions, event-derived actions and the sealed turn limit. Only actual
+reviewer acceptance permits author finalization.
+
+New reviews use `LOCAL JOURNAL MODE` and finish as `accepted-uncommitted`. This is
+genuine local protocol acceptance, distinct from historical Git-bound normal
+mode and from `NO-COMMIT TEST MODE`. Git publication separately pins the accepted
+artifact bytes and retained review records; it is not a package-generated Git
+finalization or provider-action receipt.
+
+The official MCP `wait_for_handoff` reads authentic delivery events and matching
+canonical receipts. Use the real review ID, receiving role and observed sequence.
+Native chat tool attachment and an official stdio MCP client are distinct host
+connections; report the actual connection used. Discovery alone is preflight,
+not a new review handoff or acceptance. Preserve inherited session identity and
+never synthesize notifications or receipts.
+
+Retain the collateral layout below. Independent spec and plan XPRs may use their
+respective artifact groups so one combined flow cannot place plan collateral
+under the specification folder. Ordered multi-phase reviews otherwise follow the
+installed finalize/advance procedure.
+
+## Historical 0.4.1 native orchestration
+
+The following procedure and evidence describe the installed local-tarball
+ai-peer-review 0.4.1 runtime used for the historical reviews below. Keep this guide
+separate from the package-owned copied skill; do not apply historical primary or
+broker assumptions to new local journal reviews.
 
 The coordinating agent launches and supervises the requested participants with native agent tools. For the requested two-child SPR, use fresh author and reviewer contexts and genuine distinct identities. Preserve the exact provider, model, effort, artifact, and tracked issue selection per run. Do not copy identity handles or pin model choices in project configuration.
 

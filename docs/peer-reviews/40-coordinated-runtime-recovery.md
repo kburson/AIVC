@@ -2,42 +2,46 @@
 
 ## Current checkpoint
 
-The registered no-native runtime at source `fb922c4cabad5648ad71e467e9b602fa76dd41a4`
-passed all 39 required CI jobs and six installed handoff jobs. CLI entrypoints
-and user-owned wrappers now resolve that installation; original CLI targets and
-the previous verification launcher were privately backed up. Old package bytes
-remain intact. [PR #62](https://github.com/kburson/AIVC/pull/62) retains portable
-MCP timeouts while resolving the runner through account configuration.
+Source `64e2d35ba6e0fb291936077dbc071fb1ad05a19a` passed all 39 required
+[full CI jobs](https://github.com/kburson/ai-peer-review/actions/runs/38970968651)
+and six [installed-platform jobs](https://github.com/kburson/ai-peer-review/actions/runs/38970960081).
+Native Test receipt `01M53E3PDBZ3W3F9ZWFS7RVEV3` records all eight commands
+exit zero. The later timing-accounting error remains preserved separately.
+Source story #190 is in Test, not Done.
 
-Actual primary-registration dry-run refused before its callback because the
-first-use primary admission root was absent. Its wrapper reported uncertain
-completion; no primary effect committed, cleanup discharged. Read-only inspection
-confirmed the old activation record and absent owned files. No AIVC non-dry
-registration, setup or activation followed. A disposable first-use test then
-exposed the separate legacy source-class prerequisite; no class or activation
-was fabricated.
+Supported registration selected `ab521d35-9208-45f5-bbf6-00f52f5ae4a4`, using
+existing Node 26.8.1 and package prefix
+`/Users/kpburson/.codex/runtime-tools/190-simple-local-98efe03`. Its official
+source-64 tarball is byte-identical to the earlier 98/e416 package: SHA-256
+`1c086d56eb0a3dfda727af792c3eb8c267a28d0cbc8373322a388ff95e14a548`.
+Canonical deployed inventory is
+`fa062a4742539aa19c0643908a1a37594b293246cd79445c28f74dba111209e4`.
+No native build, addon or runtime download occurred. The runtime owner verified
+all three prior package trees unchanged and retained the existing old MCP process.
 
-The runtime owner corrected the missed legacy-enrollment startup check, awaited
-the asynchronous delivery-source factory, and separated passive MCP waiting from
-bounded authenticated filesystem operations in source `e416bede4c45b20174bc53dbc645c61a955a9aac`.
-The original operation budgets and per-review authentication remain intact.
-Actual installed SDK discovery passed in both the physical AIVC checkout and this
-linked worktree; the owner also verified canonical notification replay from an
-existing genuine journal. These are runtime checks, not new #40 review acceptance.
+AIVC restored six CLI entrypoints from the selected package bin map, retaining
+private backups. Supported account MCP configuration uses that exact package
+and Node. Portable project timeouts from [PR #62](https://github.com/kburson/AIVC/pull/62)
+are carried into the story branch. Effective readback confirms 30-second startup
+and 28,800-second tool timeouts. User wrapper setup preview is byte-identical.
+The official SDK initialized and listed `wait_for_handoff` in this linked
+worktree. Native chat tool attachment is unavailable; the genuine official stdio
+MCP client provides the connection with inherited identity. Discovery is
+preflight, not a new review handoff or acceptance.
 
-The first full CI attempt retained one historical five-second Git-inventory
-timeout and three Windows MCP failures after delivery, cancellation and replay.
-Inspection found a test teardown defect: it deleted its fixture
-before closing MCP; a failed first cleanup could prevent the close hook. The
-reviewed test-only correction is source
-`98efe0374a5a1d53f8171c0e6496238d3bbdfeb1`. Its staged package is byte-identical
-to the preceding candidate and remains unselected. All six [fresh installed
-journeys](https://github.com/kburson/ai-peer-review/actions/runs/38961639161) passed
-at that exact source. [Fresh full CI](https://github.com/kburson/ai-peer-review/actions/runs/38961649041)
-and native Test verification remain pending before selection and AIVC rollout.
-The selected runtime remains `fb922c4`; no primary-registration, setup or activation
-retry followed the refusal. Both #40 artifacts retain native SAR acceptance only;
-neither sealed XPR has started and implementation remains stopped.
+The repair removes unintended local-start legacy enrollment, awaits the async
+delivery-source factory, and separates passive waiting from bounded authenticated
+observations. Legacy maintenance and historical Git-bound evidence stay separate.
+Earlier refusal, incomplete/failed hosted attempts, test cleanup and CI scheduling
+corrections remain retained by the runtime owner. No AIVC primary retry, setup,
+activation, provisioning or fabricated source class followed the refusal.
+
+Both migration artifacts still match their native SAR accepted hashes. Separate
+spec and plan XPRs will use their existing artifact groups and real Claude
+`claude-opus-5-5`/high sessions. Neither sealed XPR has started at this checkpoint.
+Actual acceptance and accepted bytes must be recorded before an acceptance claim.
+Application implementation remains stopped; #40 stays in Plan with normal
+decomposition and approval gates intact.
 
 ## Earlier recovery findings
 
