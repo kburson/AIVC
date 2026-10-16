@@ -1,0 +1,62 @@
+Ordinary independent whole-story review of AIVC #11.
+
+Reviewer: fresh native Astra6/high, genuine SID `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`. Author: distinct Sol6.1/high. This is source/evidence review, not sealed APR, a provider-action receipt, canonical Review, or lifecycle approval.
+
+Reviewed HEAD: `c63c4d2cdc243d995d0d73fa92b303ece0357b54`, branch `codex/11-draft`; whole-story base: `31948e8d40ce11bf36a1ca74cc4363a9643f7757`.
+
+Independently computed source digest: `ce046dc6beb32f54089dab109bf73f423a5425ba2d6a1112ce8e53e5b11e2c51`. It equals the digest at `d98fcd99ffea8c2b8266a9fde7c34f664b88e7c8`. Tracked checkout and index remained clean, and HEAD remained unchanged.
+
+**Offline implementation specification: PASS. Offline quality: PASS. No new actionable source-code findings. Evidence checkpoint: honest but incomplete. Whole-live acceptance: NOT PASSED. Merge/lifecycle readiness: NOT READY.**
+
+I reviewed the whole-story changes against original Task 9, the accepted contract-first amendment, current live issue #11, preserved specification, and prior findings. The joined Next/Fastify boundary, integer SDK timeouts, bounded measurements, speech segmentation, response scrolling, documentation, CI, and read-only verifiers conform to the inspected requirements. Public contracts, pins, native prior-content handling, zero retries, and search/token/round/speech budgets remain intact.
+
+The current truncated search fallback is specified behavior. The accepted specification requires stopping with partial/truncated status when the selected API rejects exhausted-search omission: [specification.md:257](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/docs/specification.md:257). The completion gate separately requires successful omitted-tool/prior-block continuation including an actual pause, or a genuine unavailable-search alternative: [verify-live.mjs:372](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/scripts/verify-live.mjs:372). Correct fallback behavior does not satisfy that success gate.
+
+Independent verification:
+
+- Eight targeted verifier, measurement, segmentation, search-budget, controller, and conversation suites: **143 tests passed**.
+- `PLAYWRIGHT_LAST_RUN_OUTPUT_FILE=.tmp/playwright-last-run.json npm run test:browser -- tests/browser/typed-system.spec.ts`: **six passed**, using actual joined mock Next/Fastify routes without `/api/turn` interception.
+- `node node_modules/vitest/vitest.mjs run tests/scripts tests/contracts tests/integration tests/voice tests/slow tests/ui`: initially **621 of 623 passed**. My concurrent browser launch occupied port 3000, causing the production integration test’s exclusive-port refusal; an ESLint fixture also exceeded its five-second timeout under that load.
+- Sequential correction: `node node_modules/vitest/vitest.mjs run tests/integration/workspace-http.test.ts tests/scripts/quality-scans.test.ts --maxWorkers=1`: **all ten passed**, including the current production build, two-process HTTP behavior, and shutdown. No product edit or timeout relaxation was used. The initial broader run was not fully green.
+- `node scripts/verify-docs.mjs`: **passed**, including accepted-spec byte equality.
+- `node scripts/verify-live.mjs`: **exited 1**, correctly reporting missing current browser marker, failed/unverified L1–L8, and search/timing/device/STT/TTS obligations.
+
+All four referenced saved observation files match their recorded SHA256 hashes. Historical heads reproduce their recorded source digests. The current embedded observation object equals its saved raw JSON. Every retained historical mark, terminal/transcript/retrieval record, and device snapshot checked agrees with its original. All eight preserved native review reports match their documented byte lengths and hashes.
+
+I recomputed all five historical Atlas/research timing rows from original same-document marks: all seven reported duration fields match within 0.001 ms, with matching capture-token correlation. Current request-to-first-text 1489.4 ms and request-to-terminal 3459.4 ms also reproduce. No cross-clock subtraction was needed. The inspected sanitized evidence contains no credential-pattern or raw-audio fields; ordinary prompts, synthetic answers, and device labels remain present.
+
+The historical evidence supports these qualified observations:
+
+- **L1/L2:** Three actual hands-free Atlas turns at `33d9`, batch STT, catalog cards, voice, and completed-history owner follow-up are supported. First-audio totals of 4002.5/3848.6/3820.9 ms miss the approximate three-second goal; that goal alone is not a hard acceptance failure. One Atlas trial and both research trials scheduled first audio before terminal completion; the other two Atlas trials did not.
+- **L3:** The confirmed `c6d3ec67` → `e3296785` interruption supports 0.2 ms callback-to-local-suspension and 0.1 ms confirmation-to-local-cancel initiation. The `96ee` Working candidate supports suspension, native resume at 223626.1 ms, and preservation of the same request. The Speaking “umm” confirmed after 362.6 ms and canceled; it cannot count as a short misfire. Older unconfirmed candidates lack playback-state correlation. See [live-validation.json:73](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/docs/evidence/live-validation.json:73).
+- **L4:** Corrected `96ee` listening is meaningful evidence for the segmentation change: three segments of 2.60/3.16/3.60 seconds, 248 ended sources, and the preserved participant report of clear, complete audio. Earlier choppiness/provider padding remains a distinct historical finding. It does not justify PCM trimming or establish a playback-buffer defect.
+- **L5:** Typed Cedar with microphone muted and three microphone Beacon responses with output muted support independent mute/fallback behavior. The latter completed text with zero TTS. The visibility defect was real and is addressed by the current layout; it was not an STT failure.
+- **L6:** Historical citation events and `searchUses: 1` support real hosted search. The research timing samples and 109-chunk/188160-byte TTS probe remain valid historical observations. The stopped 4/16 reply and completed 16/16 reply remain separate. None proves exhausted-budget or paused continuation success.
+- **L7:** Preserve existing participant headset/speaker answers and the speaker-run absence of another raw-start before Stop. Actual later input is Yeti; default output is USB Audio. Do not infer built-in/Bluetooth input or universal echo immunity.
+- **L8:** Actual `96ee` Stop snapshots show ended acquired tracks and all six native contexts closed. Unmount evidence is controlled offline coverage, not observed physical unmount. Current typed-run shutdown acquired no microphone and proves cleanup only of resources it used.
+
+Between `33d9` and `96ee`, the application change was speech-text segmentation. Between `96ee` and `d98`, it was Conversation display/layout and CSS. Provider, capture, interruption, playback, and budget code did not change in those intervals. Historical observations remain useful for those unchanged boundaries and should not be discarded merely because the conversation changed.
+
+They nevertheless retain different whole-source digests. The accepted verifier enforces whole-source equality: [verify-live.mjs:207](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/scripts/verify-live.mjs:207). Allowing per-boundary historical carry-forward would require an explicit evidence-contract amendment; this review cannot silently populate current report fields from older runs.
+
+Current L6 is recorded accurately: one deliberate HTTP 200/SSE turn `69e8e493-437b-4cfe-8647-785f54822ff2`, 2387 input/157 output tokens, two reported search uses, Atlas active/North/3, explicit incompatible-continuation truncation, and no sources event. Configured/pending capability is not genuine account unavailability. Two reported uses do not prove two completed searches or the requested official results.
+
+There is a real API/spec compatibility tension, but its exact occurrence in this request remains unproven. Anthropic’s current [server-tool documentation](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools) says paused and mixed pending server/client continuations retain the same tools; omitting a pending server-tool definition can cause HTTP 400. That supports a plausible explanation for strict exhausted-tool omission. It does not prove the saved request’s native blocks, original error, or pause. I cannot conclude that a pause occurred or that every omitted-tool continuation is impossible. Restoring a budget or assuming `max_uses: 0` works is not an authorized correction.
+
+The minimal remaining obligations are:
+
+1. **Genuinely missing physical observation:** A short, unconfirmed candidate while audio is demonstrably Speaking, followed by resumption of the same answer, correlated with native playback state and candidate identity. Existing Working and confirmed-interruption evidence already answers those narrower questions. Physical unmount remains unobserved if that distinct L8 subcase is required; actual Stop and offline unmount must keep their labels.
+2. **Current-runtime qualification:** The current muted typed run never imported MicVAD. It cannot supply a browser-observed lifecycle marker or current microphone/audio/device acceptance. Retaining the existing whole-source gate requires current-source L1–L8 and timing qualification. This is an accepted-policy requirement, not evidence that all previously observed behavior broke.
+3. **Provider acceptance:** Successful omitted-tool/prior-block/pause continuation remains unverified, with one observed compatibility fallback. No evidence establishes the genuine-unavailable/search-off alternative. Further paid searches without a discriminating hypothesis are not justified. A narrow investigation would need sanitized native stop reason, pending blocks, tool-set, and original-error evidence while preserving budgets and no-retry behavior.
+4. **Final evidence and delivery:** Resolve scope and missing observations, produce the qualified report, run registered final checks, and complete canonical Test, independent Review, approval, exact-head cloud integration, and Close. This review grants none of those transitions.
+
+Concrete owner choices:
+
+1. **Keep the accepted full-live scope.** Leave #11 in Develop, plan only missing or affected observations and a bounded compatibility investigation, and satisfy the unchanged current-source gate before acceptance.
+2. **Explicitly amend the evidence/scope contract.** Publish a reference baseline with documented incompatible continuation and remaining live limitations, optionally allowing reviewed per-boundary historical evidence. Preserve fail/unverified outcomes and refresh governed scope, approval, and verifier requirements. This does not constitute passing the original full-live scope.
+
+I decline to judge acoustic-onset latency, universal echo safety, remote provider cancellation/billing cessation, subjective quality beyond preserved participant statements, the exact native API failure/pause, or current physical success from the typed-only run. No paid/provider calls, microphone acquisition, repeated participant rounds, tracked edits, commits, pushes, merges, or lifecycle transitions occurred. Prior scoped UI approval is not whole-story acceptance.
+
+Cleanup completed: owned browser/build/test processes exited; no listeners remained on ports 3000/3001. My normal admitted `stop 11 --allow-foreign-worktree` exited 0 and released the reviewer binding. It reported active minutes as Unknown; no timing value was fabricated or repaired. All reviewer resources are released.
+
+The requested scratch report write was blocked by the PreToolUse activity policy as `WRITE_OTHER`; its hook context identified active root #2 and stated that no kanban state permits that classification. I did not change policy or bypass the refusal. No scratch report file/hash exists; this final response is the reviewer-authored report for preservation.

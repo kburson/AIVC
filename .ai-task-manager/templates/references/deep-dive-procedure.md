@@ -10,7 +10,7 @@ code" in `.ai-task-manager/templates/pickup-directive.md`.
 > **Never use raw `gh issue edit` body flags.** Route the analysis through the
 > governed `comment` and `mirror-deep-dive` verbs so the fresh-base body writer
 > preserves lifecycle markers and verifies read-back.
-
+>
 > 📐 **Placement is mandatory.** Append the `## Deep-Dive Analysis (YYYY-MM-DD)`
 > section AFTER the `## Pickup Directive` heading block (after its trailing
 > `- [ ] Deep dive complete` checkbox) and BEFORE the
@@ -90,7 +90,7 @@ The deep-dive section must include:
 - **Sibling sub-issues to spawn** (if any).
 - **Dependency map** (always include, even if no dependencies):
 
-  ```
+  ```text
   ## Dependency Map
   Depends on: #N (reason), #M (reason)   ← or "none"
   Blocks: #P (reason), #Q (reason)        ← or "none"
@@ -128,7 +128,7 @@ offending heading + line number." Do NOT add it to the appendix. Instead:
    with a stable ID, then append the AC to the root-level
    `## Acceptance Criteria` section with a citation to that ID:
 
-   ```
+   ```text
    - [ ] `node --test scripts/tests/unit/task-tracker/lib/gh-edit-guard-body.test.mjs` <!-- id=4 -->
    - [ ] **Refusal names heading + line.** ... <!-- aitm-verified vc-list="vc:4" -->
    ```

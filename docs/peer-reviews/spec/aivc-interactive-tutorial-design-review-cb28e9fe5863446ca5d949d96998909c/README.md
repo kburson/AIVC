@@ -1,3 +1,7 @@
+> **Formatting view; original evidence preserved.**
+> The [historical original](https://github.com/kburson/AIVC/blob/89fc7a6125cd4b2be6f0f338dea928bd81bcea45/docs/peer-reviews/spec/aivc-interactive-tutorial-design-review-cb28e9fe5863446ca5d949d96998909c/README.md) and its exact bytes remain available in the [tutorial evidence archive](../../../quality-evidence/2026-10-14-25-tutorial-originals.json).
+> Original SHA-256: `d637173de1af958f309e33daa99e1de42b3d30c9a29e169c779c03b3a1b54617`. Review acceptance and protocol hashes apply to those original bytes.
+
 # AIVC interactive tutorial specification review group
 
 Design story: [AIVC #15](https://github.com/kburson/AIVC/issues/15).
@@ -10,14 +14,14 @@ Group ID: `cb28e9fe5863446ca5d949d96998909c`. This groups native SAR and any fut
 
 Requested selection: Codex `gpt-6-astra`, `medium`. The same native Astra context reviewed both rounds. Native launch accepted the requested selection; no provider-certified per-turn model/effort attestation is claimed.
 
-| Stage | Evidence | Outcome |
-|---|---|---|
-| Initial authority | [Original request](sar/review-request.md) | Original one-pass stopping condition, superseded by owner clarification |
-| Round 1 | [Astra report](sar/astra-sar-report.md) | Revisions needed: two required and four optional findings |
-| Loop clarification | [Owner authority](sar/review-loop-authority.md) | Continue review/revise until nothing remains to revise |
-| Author revision | [Dispositions](sar/author-response-round-1.md) | Concrete changes for all six findings, revision `4a4824f2cf57bd2cd693927103076afaee2d242d` |
-| Round 2 | [Astra re-review](sar/astra-sar-report-round-2.md) | No further specification revisions; all six findings closed and no new required/optional changes |
-| Final collation | [Loop summary](sar/sar-loop-summary.md) | Same artifact digest confirmed; ready for owner review |
+| Stage              | Evidence                                           | Outcome                                                                                          |
+| ------------------ | -------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Initial authority  | [Original request](sar/review-request.md)          | Original one-pass stopping condition, superseded by owner clarification                          |
+| Round 1            | [Astra report](sar/astra-sar-report.md)            | Revisions needed: two required and four optional findings                                        |
+| Loop clarification | [Owner authority](sar/review-loop-authority.md)    | Continue review/revise until nothing remains to revise                                           |
+| Author revision    | [Dispositions](sar/author-response-round-1.md)     | Concrete changes for all six findings, revision `4a4824f2cf57bd2cd693927103076afaee2d242d`       |
+| Round 2            | [Astra re-review](sar/astra-sar-report-round-2.md) | No further specification revisions; all six findings closed and no new required/optional changes |
+| Final collation    | [Loop summary](sar/sar-loop-summary.md)            | Same artifact digest confirmed; ready for owner review                                           |
 
 Final reviewed specification SHA-256: `9b3f489fcfa836f0f3d11f3545694949e22f0d66e611cd34260b0bff3a24f0aa`. The specification remained unchanged after round 2. Historical reports and their reviewed revisions/hashes are preserved.
 

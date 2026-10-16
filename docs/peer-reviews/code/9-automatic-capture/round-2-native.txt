@@ -1,0 +1,26 @@
+**Round 2: Spec PASS; Quality PASS for story #9’s allocated scope. No remaining actionable findings.**
+
+Reviewed exact source `fb14a5d47c927e050e19ebdab4d80669caa59958` against product base `3049e5b911b2d82b916d7ad70d5e5cc5fb47cc4b`, including the fix diff from `5ceedc61378257f237ca285b574afc089466f02c`.
+
+Reviewer: same requested Astra6/high seat, native SID `01a13c7c-c4a4-7760-8b80-278687d46e54`, distinct from the author.
+
+The initial review was **FAIL with three P2 findings**. All three are resolved:
+
+| Finding | Fix and independent verification |
+|---|---|
+| F1: Capture startup erased the active typed-playback token | [Conversation.tsx:160](/Users/kpburson/.codex/worktrees/voice-bff-refine-b-5527/AIVC/apps/web/components/Conversation.tsx:160) preserves the existing token when capture only unlocks output. Repeating typed playback → Start conversation → output mute now stops the scheduled source once. |
+| F2: Capture initialization failure disposed output adopted by a typed answer | [Conversation.tsx:279](/Users/kpburson/.codex/worktrees/voice-bff-refine-b-5527/AIVC/apps/web/components/Conversation.tsx:279) releases only unchanged, unclaimed startup output. Repeating pending permission → typed playback → permission denial preserves running playback and closes capture; the typed source remains unstopped. |
+| F3: Pending teardown bypassed disposal of newly created output | [Conversation.tsx:191](/Users/kpburson/.codex/worktrees/voice-bff-refine-b-5527/AIVC/apps/web/components/Conversation.tsx:191) disposes current resources while joining earlier cleanup. Repeating pending permission → Stop → typed playback → Stop immediately closes the new output context; all contexts are closed after permission settles. Rendered regression tests also verify unmount, exactly-once context closure, and interval cleanup. |
+
+Independent checks on the fix SHA:
+
+- `npx vitest run tests/voice tests/contracts/assets.test.ts tests/ui` — **129 tests passed across 12 files**: 107 voice tests, 18 UI tests, and four asset tests. Includes all 19 capture integration tests.
+- `PLAYWRIGHT_LAST_RUN_OUTPUT_FILE=.tmp/playwright-last-run.json npm run test:browser` — **eight tests passed**, including actual pinned local VAD/ORT loading and asset HTTP/MIME/digest verification.
+- Repeated the same three original Chromium probes through `node --import tsx --input-type=module`, using controlled permission and synthetic PCM. All showed the corrected behavior described above.
+- Diff verification confirmed delivered voice modules, shared contracts, dependency pins, and patches remain unchanged.
+
+The fixes address ownership directly and add focused regression coverage. Whole-story review retains the earlier assessment of synchronous distinct-context activation, current-token automatic submission, independent mutes, recovery, and cleanup.
+
+Declined to judge: #10 two-phase barge-in and #11 physical microphone, echo, latency, and live-provider acceptance, because they belong to later stories. Synthetic evidence does not establish those behaviors. I did not independently rerun build, typecheck, lint, format, or the full contracts/integration suites; those remain author-reported checks.
+
+No tracked files or lifecycle state were changed by this reviewer. Review-owned browser/server processes are stopped, and ports 3000/3001 have no listeners. This review supports proceeding through the required registered delivery gates.

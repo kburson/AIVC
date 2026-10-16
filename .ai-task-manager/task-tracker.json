@@ -50,5 +50,10 @@
     "planTime": "PVTF_lAHOABCEY84BmwwczhlYcnQ",
     "rank": "PVTF_lAHOABCEY84BmwwczhlYcvU",
     "startTime": "PVTF_lAHOABCEY84BmwwczhlYcvY"
-  }
+  },
+  "fullAutoMerge": {
+    "mechanism": "provider-action",
+    "mergeMethod": "merge"
+  },
+  "trunkRef": "origin/trunk"
 }

@@ -1,0 +1,25 @@
+**Round 1: Spec FAIL; Quality requires fixes. Not ready to merge.**
+
+Reviewed source `5ceedc61378257f237ca285b574afc089466f02c` against product base `3049e5b911b2d82b916d7ad70d5e5cc5fb47cc4b`. Reviewer native SID: `01a13c7c-c4a4-7760-8b80-278687d46e54`; requested Astra6/high seat.
+
+Three confirmed P2 findings in [Conversation.tsx](/Users/kpburson/.codex/worktrees/voice-bff-refine-b-5527/AIVC/apps/web/components/Conversation.tsx):
+
+1. **Capture startup loses the active playback token** — lines 215–216, with assignment at line 159. While a typed answer is playing, clicking **Start conversation** overwrites its output token with `null`. **Mute output** then skips cancellation. Independent Chromium reproduction left the scheduled source unstopped and playback running. Preserve the existing answer token when unlocking playback for capture.
+
+2. **Capture failure cancels a newer typed answer’s speech** — lines 275–277. Start capture, submit a typed question while permission is pending, then deny permission. Failure cleanup disposes the output object now serving the typed turn. Reproduction changed both contexts from running to closed and stopped typed speech. Release startup output only while it remains unclaimed by another operation.
+
+3. **Pending teardown bypasses disposal of subsequently created output** — lines 189–190. With permission pending: **Stop → typed submit → Stop**, or unmount. The second cleanup returns the original teardown promise without disposing new playback resources. After permission settles, reproduction retained one running playback context. The stale-generation queue tick eventually stopped its source, but its context and queue interval remained undisposed. Cleanup must include resources acquired after earlier teardown began.
+
+The implementation otherwise uses delivered capture interfaces unchanged, validates current immutable candidates before automatic submission, and preserves synchronous distinct-context activation. Existing tests cover many pending-start and recovery cases.
+
+Independent verification:
+
+- `node --version; npm --version`: **26.8.1 / 12.0.2**.
+- `npx vitest run tests/voice tests/contracts/assets.test.ts tests/ui`: **125 tests passed across 12 files**.
+- `PLAYWRIGHT_LAST_RUN_OUTPUT_FILE=.tmp/playwright-last-run.json npm run test:browser`: **8 tests passed**, including actual pinned local VAD/ORT loading and asset MIME/digest checks.
+- Read-only Chromium probes through `node --import tsx --input-type=module` reproduced all three findings using controlled permission and synthetic PCM.
+- Compared the complete owned diff and confirmed no changes to delivered voice modules, shared contracts, dependency pins, or patches.
+
+Declined to judge: #10 two-phase barge-in and #11 physical microphone, echo, latency, and live-provider acceptance, because those belong to later stories. Synthetic evidence does not establish them. I did not independently rerun build, typecheck, lint, format, or the full contracts/integration suites.
+
+No tracked files or lifecycle state were changed. Review-owned browser/server processes are stopped; ports 3000/3001 have no listeners. Same reviewer remains available for the exact fix SHA.

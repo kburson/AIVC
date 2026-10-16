@@ -1,0 +1,53 @@
+**Spec PASS / Quality PASS for the accepted amended scope. All four P2 findings are resolved; no blocking implementation finding remains.** I recommend proceeding with final review archival and governed verification, then merging only after the exact final candidate passes its required gates and the owner approves.
+
+This is the same genuine Astra6/high reviewer session, `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`. It is an ordinary independent implementation and whole-PR recheck, not a new sealed decision, lifecycle approval or protocol receipt.
+
+Reviewed identities:
+
+- HEAD: `0e0e6b6f60dff333de99754c6884a4a816b91424`
+- Target: `fe2a158c8f717aed43d604c3d7614dc18a3452e1`
+- Merge base: `31948e8d40ce11bf36a1ca74cc4363a9643f7757`
+- Working-tree and HEAD source digest: `bd2e9413572655e5e73e8a03316a7fd4b04442c236a07bcd5f3fcba60d99ea04`
+
+I independently confirmed the clean checkout, complete **81-path** merge-base-to-head inventory, and seven-path change since the `5083687` review. The current whole-PR assessment combines the earlier complete application review at `f2baab7`, the amendment implementation review at `5083687`, and inspection of every intervening change. Application code, runtime configuration, dependencies, patches, launcher, CI and application tests remain unchanged from the earlier complete review. No changed category was silently excluded.
+
+The four corrections are satisfactory:
+
+1. **Candidate HEAD and working-tree protection:** [verify-live.mjs](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/scripts/verify-live.mjs) now validates both complete path/mode/blob inventories independently against the same fixed boundaries. Tests demonstrate rejection of a committed protected change restored on disk, a committed runtime addition removed from index/worktree, and altered committed collateral restored on disk.
+
+2. **Target handoff preservation:** the historical handoff is required immutable collateral, not a broadly exempt documentation path. Its regular paths, mode, length, SHA, trusted target blob, archival blob and archival ancestry are checked. The unmerged child correctly need not contain the target commit as an ancestor. Actual target-merge and unrelated-addition regressions pass. Independent read-only three-tree inspection now produces **zero target delta**.
+
+3. **Positive-test isolation:** the amended acceptance positive uses its isolated repository fixture rather than the concurrently modified shared checkout. Strict inventory enforcement remains intact.
+
+4. **Final-review archive handling:** the fixture copies the exact optional final-review path when present. Separate pre-archive and post-archive tests preserve matching provenance. Before the final report exists, copied authentic assessment bytes are explicitly confined to test-fixture content; no production placeholder is created.
+
+The [target-collateral addendum](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/docs/superpowers/specs/2026-10-15-11-target-collateral-addendum.md) and its authentic assessment match their fixed bytes at `c529123d95e782acd962aa8276cd635616d59db9`. I verified live issue11 Scope version77 and epic2 version41 adopt that narrow extension. The handoff remains exactly 11,475 bytes, mode100644, blob `bd64361def52c6ce512bad6ac90deb96f2a8e406`, SHA-256 `c75d79584e13b4685650ca6bbbe29a9cbce9305b8b23e9a96023525b89891be0`. Its historical instructions remain historical material.
+
+The implementation retains the important protections established in the preceding review: fixed trusted authority and storage anchors, strict default evidence validation, rejection of alternate caller-selected reports, complete protected component comparisons, package and installed-patch validation, and explicit separation of observations from release disposition. The unchanged formatter/linter exclusions remain limited to the integrity-verified native pair; ordinary files and configuration/result protections remain checked.
+
+Evidence custody is preserved:
+
+- Original observed report: `d908c3bb4a8fd6ab1a99272833d6de9d69fc8f43cebccf563aea61afe1ee6882`
+- Physical artifact: `663b8089359e22afa454abf7e5f1bd9139befc4710e5a9d9a2365b46e08b0da6`
+- Ordinary native continuation artifact: `4b0159c5d9594ac142bb3104e5ddf1de7a9bd1bca631e59a961da5ade88484c3`
+- Teardown artifact: `74b2d27f80b9bff407bf58e05125ad3173e261ab0c4cb4709c7b8cdc8e7925d4`
+
+I recomputed those hashes and ran the sealed amendment-pair integrity verification. Original L4 remains **fail**, L6 remains **unverified**, and L1/L2/L3/L5/L7/L8 retain their bounded recorded pass dispositions.
+
+Independent verification in this pass:
+
+- The focused live/docs command ran **87 tests: 85 passed, two timed out** at the unchanged5-second test limit. Every new four-fix regression passed.
+- The timed-out cases were “fabricated observed pass” at5.541s and changed archived full-review collateral at5.135s. One targeted rerun of those same two tests, without code or timeout changes, passed in2.531s and2.122s. I do not relabel the original run as87/87.
+- This is a **nonblocking test-timing risk** in Git/filesystem-heavy fixtures. No persistent assertion defect was demonstrated; no further retry or source change was made.
+- Read-only `verify:live` passed with the explicit amended-limitations verdict.
+- `verify:docs` passed.
+- Source digests matched working files and HEAD; final checkout remained clean.
+- I independently queried CI run **38743555390**: exact head `0e0e6b6f60dff333de99754c6884a4a816b91424`, all **six jobs succeeded**, including unit/UI and offline system acceptance.
+
+The earlier `5083687` CI failure remains a genuine historical failure. Current green CI and the corrected isolated test resolve that defect without rewriting its history. I did not repeat unchanged application/browser lanes locally; their unchanged implementation and current successful CI provide the relevant coverage.
+
+**Declined to judge:** this review does not establish genuine live provider-pause behavior, achievement of the original six-second duration target, or qualification of unchanged default CPS14. Under the accepted amendment, pause remains unverified/deferred, the actual6.60-second response remains an observed failure with an accepted release disposition, and physical qualification remains CPS12/cap72. These are explicit accepted limitations, not hidden exclusions. I also do not infer acoustic causes, zero glitches, remote-provider cessation, new account behavior or current physical performance. The recorded minor human quality reports remain intact.
+
+Technical readiness is satisfied for this reviewed implementation under the accepted amendment. Remaining delivery obligations are to archive this authentic report at the exact permitted path, regenerate the separate disposition after final collateral settles, verify that final documentation-only candidate, obtain its required exact-head CI/canonical Test and registered Review results, and obtain the owner’s final merge approval. Sanctioned integration, target reachability and Close remain separate steps.
+
+Normal **Stop11 exited0** before this response, reporting `Unknown active min (wall 5)`. All reviewer command sessions completed and binding/resources were released. No tracked source, index, HEAD or branch was changed; no application server, browser, microphone, speaker or provider resource was opened.

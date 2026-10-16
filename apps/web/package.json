@@ -1,0 +1,24 @@
+{
+  "name": "@aivc/web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1 --port 3000",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1 --port 3000",
+    "typecheck": "tsc --noEmit",
+    "predev": "node ../../scripts/copy-vad-assets.mjs",
+    "prebuild": "node ../../scripts/copy-vad-assets.mjs"
+  },
+  "dependencies": {
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-markdown": "10.1.0",
+    "@anthropic-ai/sdk": "0.133.0",
+    "@deepgram/sdk": "5.15.0",
+    "@ricky0123/vad-web": "0.0.31",
+    "onnxruntime-web": "1.30.0"
+  }
+}

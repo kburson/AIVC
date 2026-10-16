@@ -1,0 +1,65 @@
+Scoped Spec/Quality verdict: **PASS for the inline-content correction; prior P2 resolved.** No new actionable source defect found. A complete affected-text duration screen does **not** fit the ten-call limit. A clearly partial ten-call rejection screen is useful, with the uncovered cases retained explicitly. L4, L6, current-source qualification and whole-live acceptance remain open.
+
+Reviewed HEAD: `3e7170f83f7618955f53c080e2d184dc3d16409b`  
+Verified source digest: `14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63`  
+Reviewer: same native Astra6/high SID `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`.
+
+The change in [speech-text.ts:15](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/apps/web/client/voice/speech-text.ts:15) preserves readable closed inline payloads, including `model=nova-3`, numbers, operators, underscores and indexing. Exact delimiter-run matching prevents a longer internal run from prematurely closing a one/two-backtick span. The scanner still holds incomplete structured tokens while streaming, applies existing URL/citation filtering and enforces segment limits and oversized-token notification.
+
+The separate fenced-listing policy is now explicit in [architecture.md:65](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/docs/architecture.md:65): three-or-more-backtick listings and their language tags remain visual. That bounded policy is consistent with allowing longer explanations to remain on screen; it no longer deletes a meaningful inline value as though it were a listing. It is not a claim of verbatim speech for arbitrary Markdown.
+
+Independent checks:
+
+- **42/42 scanner tests passed**, including two-way splits, character-at-a-time delivery, delimiter mismatches, values, fences, dangling tokens and cap enforcement.
+- All five committed offline cap-72 replays reproduce exactly through the corrected scanner.
+- `verify:docs` passed.
+- Scoped `git diff --check`, excluding only the authenticated prior report, passed.
+- `verify:live` exits 1 with exactly stale source, L4 fail, L6 unverified and required provider-pause continuation unverified.
+- Tracked tree/index remained clean; fresh Explain remains blocked on incomplete acceptance.
+
+The replay artifact is exactly **19,700 bytes**, SHA256 `3d4e8c86a17f42783c2d6542c3b79f9901f4e5e71a5a4531c6396e376fdb6586`. The earlier physical artifact remains **2,791,079 bytes**, SHA256 `47882820530f38aeef221aa8f022a4e8dcee3946be8ff8ae3788215d2c48c630`. The archived prior review remains **7,046 bytes**, SHA256 `5374216421508c1e470dd68eea969fb12765514b55bba4b99bf60f4f76123951`. Its preserved Markdown hard-break whitespace is not a source defect and should not be rewritten merely to satisfy whitespace checking.
+
+The Atlas provenance limitation remains material but accurately disclosed. Raw SSE contains mojibake; actual submitted speech bodies contain the emoji. The secondary reconstructions preserve queued words while losing original whitespace/Markdown boundaries. They can support a prospective duration sample of those exact reconstructed texts, not historical display/final equality. The ASCII research replay has no such encoding discrepancy and now retains the omitted value.
+
+The complete selection count is **23 distinct prospective texts across the three relevant full answers: 19 changed texts and four unchanged texts**. This is the bounded replay corpus, not every possible answer.
+
+The immediate-neighbor set contains 14 texts. Only three are exact unchanged prior requests:
+
+- “Let me look that up for you!”
+- “Synthetic active project owned by North with three open items.”
+- “2. It represents a significant leap forward in speech AI technology,”
+
+Removing those leaves **11 changed immediate-neighbor candidates**, already exceeding ten. Expanding to all changed text in the relevant full answers adds eight more:
+
+- Atlas summary remainder and two closing chunks: changed split boundaries can affect duration and continuity.
+- Research introduction: cap reduction splits the former introduction into a longer prefix and `documentation:`.
+- Three research point-3 chunks: all are recut, including a near-cap chunk and technical wording.
+- Corrected point 4: newly spoken `model=nova-3` changes actual synthesis content.
+
+Short changed fragments have lower apparent duration risk, but no measured duration at this profile. Excluding them cannot be presented as complete affected-boundary coverage.
+
+A useful **PARTIAL ten-call rejection screen** can be specified without ambiguity using [11-inline-content-offline-replay.json](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/docs/evidence/11-inline-content-offline-replay.json):
+
+1. Use all eight entries of `distinctOverlapCandidates`, unchanged and in their recorded order. These cover the recuts overlapping all five historical overrun occurrences.
+2. Add segment 5, using one-based numbering, from the **secondary** `341a124a…` replay: “Let me know if you'd like more details or want to take action on any of”.
+3. Add research replay segment 14: “4. To access the model, you simply use model=nova-3 in your API calls.”
+
+The ninth sample covers the longest remaining Atlas chunk; the tenth directly exercises the corrected meaningful value. This screen can reject CPS 12 on an observed overrun or invalid response. Ten acceptable responses would mean only that those ten exact samples passed once.
+
+The following **nine changed texts remain uncovered** by that screen:
+
+- Secondary `341a124a…` replay segments **3, 4 and 6**: Atlas summary prefix/remainder and closing remainder.
+- Research replay segments **1, 2, 10, 11, 12 and 13**: introduction prefix/remainder, point-2 tail, and all three point-3 chunks.
+
+Those identifiers refer to the artifact’s existing segment arrays, counted from one. None is implicitly accepted through another sample. The four unchanged texts retain historical observations only; they are not newly qualified at the corrected source/profile.
+
+The reviewed next protocol is therefore:
+
+1. Preserve this explicit partial selection and uncovered ledger before any calls. Set the intended runtime profile to CPS 12/cap 72 with current source/build/package/voice provenance recorded; do not silently change defaults.
+2. Make at most ten sequential requests through the existing admitted `/api/speech` route, with proper Origin/Host and unchanged deadlines, budgets and retry policy. Record exact text and PCM-derived duration. No automatic replay or budget expansion.
+3. Keep L4 failed/incomplete after the screen, even if all ten samples pass.
+4. A later ordinary joined app listening/backlog run can supply additional duration and continuity evidence through existing capabilities, controller and speech requests. It must record what was actually generated, queued and played, including audible inline content, queue draining and remaining limitations. A model prompt cannot guarantee exact reproduction of the uncovered texts; unmatched cases remain uncovered. No debug endpoint or new harness is needed, and no provider pause may be inferred or manufactured.
+
+The retained whole-source gate still governs final qualification. Earlier cfa3/cap-84 physical evidence cannot be rebound to this source or cap 72. Genuine provider-pause continuation remains independently unobserved. This review grants no whole-live acceptance, lifecycle transition or merge approval.
+
+Normal own `stop 11 --allow-foreign-worktree` completed with exit 0; AITM reported `Unknown active min (wall 3)`. All reviewer commands ended and resources are released. No source/evidence edits, paid calls, browser/microphone use, runtime CPS changes or lifecycle transitions occurred.

@@ -1,0 +1,106 @@
+Full PR37 review: **offline implementation Spec PASS; code Quality PASS. No new actionable code defect found. Whole-live acceptance has not passed, and the PR is not ready to merge under the retained requirements.**
+
+This is an ordinary independent review by the same genuine Astra6/high reviewer, SID `01a13d8d-0f96-7862-a1f0-c8d3c5c86071`. Earlier scoped passes were context, not substitutes for this whole-PR pass.
+
+I independently verified:
+
+- Reviewed head: `f2baab7fe94fb739378995fdc0a0aa647dd79cd5`.
+- Remote target: `fe2a158c8f717aed43d604c3d7614dc18a3452e1`.
+- Actual merge base: `31948e8d40ce11bf36a1ca74cc4363a9643f7757`.
+- Correct PR inventory: **65 changed paths**, using merge-base-to-head rather than target-to-head.
+- Working-tree and HEAD source digest: `14bee2533f13459b45add5278bf59a243e5af135e5cc70110dcaf54f31854e63`.
+- Clean tracked worktree after the checks.
+
+**Findings and remaining blockers**
+
+No new P0/P1/P2/P3 source correction is requested. The following existing acceptance blockers remain material:
+
+1. **L4 duration qualification remains failed.** [Current duration evidence:6184](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/docs/evidence/11-live-physical-2687b54.json:6184) records one 71-character research segment lasting **6.60 seconds** at CPS12/cap72. I independently recomputed its 316800 bytes = 158400 frames ÷ 24000Hz and checked all 60 segment frame sums. This is not evidence of a character-cap calculation defect: the estimate is an engineering assumption. It is evidence that the current profile has not satisfied the retained duration-tuning acceptance. Resolve that qualification through a bounded, reviewed adjustment and affected duration/backlog evidence, or an explicitly approved contract change. The successful partial ten-text screen cannot erase this later failure.
+
+2. **L6 current-source continuation qualification remains unverified.** [Current search evidence:12999](/Users/kpburson/.codex/worktrees/voice-bff-story-11/AIVC/docs/evidence/11-live-physical-2687b54.json:12999) correctly records no current-source native omitted-tool/prior-block proof and no genuine provider pause. The historical cfa3 ordinary continuation is useful evidence at its original source, but the retained whole-source rule prevents rebinding it to 14bee. The earlier mixed-pending rejection and explicit truncated fallback are documented conforming failure behavior; they do not prove every omitted-tool continuation impossible or satisfy successful pause acceptance. No budget restoration, automatic retry, invented pause, or undocumented unavailable-search alternative is justified.
+
+These are known live qualification blockers, not newly manufactured code findings.
+
+**What the implementation does well**
+
+The production changes preserve the important boundaries:
+
+- The original admitted Next request reaches the counted body reader without the problematic Request clone. Combined cancellation still reaches the deadline runner; admission precedes body/provider work.
+- Search usage distinguishes authoritative counters, unambiguous completed pairs and unknown consumption. Pending IDs alone no longer become public executed usage. Unknown consumption removes the public cumulative counter and exhausts further search admission; later rounds do not restore it.
+- Native assistant/tool blocks remain intact across continuations. Token, round, custom-tool and search limits and zero automatic retries remain unchanged.
+- Measurement marks are bounded, correlated and sanitized, and instrumentation failure cannot control product progress.
+- Playback, synthesis admission and interruption retain separate capture/playback contexts, actual audio-clock accounting, reversible tentative pauses, confirmed cancellation and stale-generation rejection.
+- Speech cleanup retains meaningful closed inline values—including `model=nova-3`, numbers, operators, underscores and indexing—while maintaining exact delimiter matching and streaming invariance. The documented visual-only fenced-listing policy and conservative dangling-token behavior remain distinct.
+- Newest-first presentation reverses a display copy without reversing completed-history order. New-turn scrolling and short-window independent panes address the observed usability failures.
+- Joined browser tests exercise actual Next/Fastify HTTP with deterministic providers, including early text, cards, history equality, visible retrieval failure and deliberate Busy recovery. They do not intercept `/api/turn`.
+- CI, documentation and read-only verifiers preserve the distinction between offline success and actual provider/device acceptance.
+
+No public interface, dependency pin, VAD patch, paid-request budget or default CPS change was introduced by the reviewed corrections.
+
+**Coverage**
+
+All 65 changed paths were accounted for:
+
+- All 15 application paths: CSS, measurements, turn controller/stream, capture, interruption, playback, speech queue/text, VAD adapter, Capabilities/Conversation, body/SSE transport and Claude adapter.
+- All four changed scripts, Playwright configuration and CI workflow.
+- All 11 changed test/harness paths: joined server/browser tests; search budget; launcher, formatting and both verifiers; Conversation; measurements, speech text and VAD measurements.
+- README, architecture, tutorial, live guide, exact specification transfer, deep dive, system-acceptance chronology and workflow observations.
+- All 13 archived native review reports and all 12 changed JSON evidence/report paths.
+
+Relevant unchanged admission, error/deadline/lease orchestration, turn loop, Deepgram transport, safe rendering and lifecycle interactions were also inspected. Historical review reports were assessed as provenance with their original scopes and dispositions. Large numerical evidence was checked programmatically rather than treating a line-by-line reading of millions of bytes as additional proof.
+
+**Independent verification**
+
+- **189 tests passed across 10 affected files**, covering search accounting through the real pinned SDK boundary, body handling, both verifiers, launcher/format controls, speech scanner, measurements/VAD and Conversation.
+- `verify:docs`: **exit 0**.
+- `verify:live`: **exit 1**, with exactly:
+  - `Incomplete required live case L4: fail`
+  - `Incomplete required live case L6: unverified`
+  - `Required omitted-tool/prior-block provider-pause continuation remains unverified`
+- GitHub run **38726614846** independently confirmed the exact reviewed head and **all six jobs successful**, including Offline system acceptance.
+- Source digests matched between working tree and HEAD. Credential-pattern inspection found no matching credential material in changed non-test files.
+
+I did not repeat the entire local matrix after these checks and the exact-head CI confirmation.
+
+**Evidence assessment**
+
+The current physical artifact matches **3,409,513 bytes**, SHA256 `663b8089359e22afa454abf7e5f1bd9139befc4710e5a9d9a2365b46e08b0da6`.
+
+Independent checks established:
+
+- All ten current original-snapshot hashes match.
+- All **750 selected marks**, **5167 native source records** and **11 turn event arrays** match their retained raw observations.
+- All **60 segment native-frame totals** recompute from scheduled sources and agree with recorded PCM bytes/durations.
+- Maximum observed scheduled outstanding audio recomputes to **6.228666666666896 seconds**. This does not directly inspect every unscheduled internal queue field.
+- Five Atlas/follow-up/research timing rows recompute from their correlated browser marks.
+- Current research replay through `SpeechText(72)` exactly matches all **13 submitted texts**, including `model=nova-3`.
+- Across the changed artifacts, **29 distinct referenced raw-file hashes** checked successfully. The prior cfa3 physical artifact and preserved correction/review artifacts retain their recorded hashes.
+
+The evidence supports the stated bounded L1/L2/L3/L5/L7/L8 dispositions. Speaking candidates overlap nonquiet PCM and resume the same answer/context; Working and confirmed interruption remain distinct. Typed fallback, independent mutes, actual Stop and document/process closure have appropriate supporting observations.
+
+The preserved minor unevenness, cutoff and smart-formatting reports are not converted into an all-clean claim. The owner’s instruction against further minor-stutter iteration is respected. Current acoustic hearing statements remain attributed human reports; synthesis completion or ended callbacks alone are not treated as proof that every word was heard.
+
+The three Atlas scheduled-first-audio values—**5271.6, 4070.0 and 4418.5ms**—miss the approximate three-second goal. That goal is a target, not a separate hard acceptance guarantee. Scheduled output, VAD-frame proxy timing and acoustic output remain correctly distinguished.
+
+**Declined-to-judge boundaries**
+
+This review does not establish:
+
+- Acoustic onset/silence, Bluetooth/OS latency or the physical cause of reported unevenness.
+- Universal speaker echo immunity or production latency percentiles.
+- Remote provider cancellation, billing cessation or undocumented provider behavior.
+- Genuine current-source provider-pause acceptance from ordinary continuation or mock tests.
+- Direct physical React-effect execution from browser/process closure; controlled unmount tests remain separate.
+- Full historical DOM/final/history-wire equality where the observer captured mojibake.
+- Authentic native-message bytes for human reports supplied through root attribution.
+- Comprehensive dependency vulnerability or public-deployment security certification.
+
+No new live calls, physical trials or resource acquisition were performed to fill these limits.
+
+**Next required work**
+
+1. Keep the current report’s L4 failure and L6 unverified status intact. Complete only justified, bounded work addressing those obligations; do not restart answered physical rounds merely for paperwork.
+2. Preserve exact source/profile qualification for any correction. Historical evidence and the partial ten-text screen retain their own boundaries; no silent waiver or automatic carry-forward is granted.
+3. Once the retained live requirements actually pass, perform the registered final verification, lifecycle review, owner approval and exact-head integration gates. This code review does not authorize those transitions.
+
+Normal `stop 11 --allow-foreign-worktree` completed with **exit 0**. It reported **Unknown active minutes (wall 10)**, which remains Unknown. My binding and reviewer resources are released. No tracked files, index, HEAD or branch were changed; no paid calls, browser/microphone/server runs, merges or lifecycle transitions occurred.

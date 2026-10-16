@@ -1,0 +1,87 @@
+# #5 Claude orchestration
+
+Source implementation is complete after registered Plan approval and Develop entry. Author verification is recorded in [5-verification.md](5-verification.md). Independent review, exact-head lifecycle checks, actual cloud merge and Close remain pending. Earlier setup checkpoints below remain historical.
+
+## Governing authority
+
+- [Issue #5](https://github.com/kburson/AIVC/issues/5)
+- [Reference design](../superpowers/specs/2026-10-12-voice-bff-reference-design.md)
+- [Accepted base plan](../superpowers/plans/2026-10-12-2-voice-bff-reference.md)
+- [Contract-first amendment](../superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md)
+- [Canonical hydration index, Task 3](../superpowers/plans/2026-10-13-2-contract-first-hydration-index.md)
+
+Implementation depends on whole [#4](https://github.com/kburson/AIVC/issues/4) being reviewed, integrated, and strictly Done, plus current registered native rank-wave admission. Consume the integrated #4 server configuration, admission, measured-body, deadline, lease, runtime, and capability boundaries. Consume frozen #13 shared contracts, SSE codec, and conformance fixtures unchanged.
+
+## Ownership
+
+After admitted entry, #5 owns the server-native model contracts, Claude and mock adapters, typed turn orchestration, project lookup and real HTTP retrieval client, normalized SSE response, and turn endpoint. It may extend runtime and capabilities after #4. Native Anthropic message and tool types remain server-only.
+
+Owned source paths are `apps/web/server/providers/contracts.ts`, `apps/web/server/providers/claude.ts`, `apps/web/server/providers/mock.ts`, `apps/web/server/turns/run-turn.ts`, `apps/web/server/tools/lookup-projects.ts`, `apps/web/server/tools/retrieval-client.ts`, `apps/web/server/http/sse-response.ts`, `apps/web/app/api/turn/route.ts`, `apps/web/server/runtime.ts`, and `apps/web/server/capabilities.ts`.
+
+Owned evidence paths are `tests/helpers/scripted-providers.ts`, `tests/integration/typed-turn.test.ts`, `tests/contracts/search-budget.test.ts`, and `tests/slow/disconnect.test.ts`. Shared SSE source, fixtures, and `tests/contracts/sse.test.ts` remain #13 inputs. Browser, capture, shared-contract, and root-manifest changes are outside #5 ownership. #7 acquires shared provider/runtime/turn wiring only after whole #5 integration.
+
+## Planned checks
+
+- Prove exact native tool-use/result identity, validated arguments, unchanged provider blocks, and actual Fastify HTTP retrieval provenance with scripted model rounds.
+- Exercise three-round, four-attempt, 1,024-token, and shared two-search-use limits; native pause continuation; capability rejection; and no paid retry or replay.
+- Prove one display accumulator, exact cross-round separators, citation metadata, and full producer type/data/sequence conformance through the frozen SSE encoder and decoder.
+- Exercise incremental first-delta delivery, pre-stream errors, one accepted-stream failure, pre-aborted requests, and disconnect settlement that retains the lease until upstream work settles.
+- Check that browser imports cannot reach server-native SDK modules. Preserve accepted runtime/dependency pins without application credentials or a live model choice for offline checks.
+
+The accepted verifier commands are recorded below; current observed results are in [5-verification.md](5-verification.md):
+
+```sh
+npm run test:integration
+npx vitest run tests/contracts/search-budget.test.ts tests/contracts/sse.test.ts
+npm run test:slow
+npm run typecheck
+npm test
+npm run lint
+npm run format:check
+```
+
+Source behavior and offline verification are complete; registered per-criterion lifecycle evidence, review, delivery and Close remain pending. The parent owner retains review, integration, and Close authority.
+
+## Integrated boundary readiness
+
+The accepted parent baseline `1dcc070` includes the completed #4 server delivery. The dependency implementation is now present in this branch through a normal preserving merge. Implementation of #5 remains unstarted while native rank-wave admission is refreshed; the current lifecycle decision still refuses entry with `rank-wave-graph-stale`.
+
+The inspected APIs establish the following implementation boundaries:
+
+- `getRuntime()` returns process-owned configuration, capabilities, adapter storage, and shared lease pools. #5 will populate its own model/retrieval adapters without replacing #4 admission or altering another provider.
+- `assertAdmission(headers, config, true)` checks the configured Origin and matching Host before body access. `runAdmittedTurn(req, config, work)` performs the inherited turn deadline and bounded 2 MiB parse before the work callback.
+- `runWithDeadline()` returns separate `result`, `settled`, and `signal` fields. The producer callback must await all admitted upstream work; returning a Response alone does not establish settlement. Release the acquired turn lease only after `settled`, even when client-facing timeout or stream cancellation occurs earlier.
+- `LeasePools.acquire('turn')` limits active upstream-held turn slots to two and supplies idempotent release. Provider cancellation and response-stream completion must preserve this distinction.
+- `errorResponse()` and `errorFields()` provide the common sanitized error boundary, using the frozen shared AppError. Pre-stream and accepted-stream error handling must reuse this boundary.
+- The actual retrieval integration entry is `createRetrievalApp()`. Tests can start it on an ephemeral loopback port and exercise the real HTTP client without importing a catalog fallback into production BFF code.
+- The frozen normalized fixture pins accepted/researching/preamble/tool-started/retrieving/tool-completed/answering/separator/answer/completed, sequence zero plus one, exact Atlas catalog, and scripted usage 20/30/0. Producer conformance must prove that full trace through the actual turn generator and codec.
+
+The first admitted implementation checkpoint will establish the scripted native-message helper and real HTTP producer test, observe the expected failure, and implement only the server-owned orchestration needed to pass. Further checks cover argument-error continuation, round/tool/search budgets, exact text joining, provider capability behavior, and request cancellation with deferred upstream settlement. Pinned setup has now completed with Node 26.8.1 and npm 12.0.2 without changing manifests. Installed SDK 0.133.0 confirms Models.retrieve, capabilities.server_tools.web_search.supported, incremental MessageStream events, finalMessage, citation deltas, native server-tool blocks, and final search usage. The retrieval client can consume the frozen validateProjectCatalog export. These are local type inspections, not live-provider calls or acceptance evidence.
+
+All earlier ownership and whole-story review gates continue to apply. The user stop boundary remains completion of rank 4, then pause before #8.
+
+## Capture baseline setup checkpoint
+
+A normal preserving merge now includes accepted feature parent `372f5a7f8d6fff945ef5269874e5d56d03524d74`, retaining original accepted planning and sealed review history. The integrated #6 client and #14 capture delivery remain upstream-owned inputs; #5 authored no changes to them.
+
+Pinned `npm ci` completed with Node 26.8.1 and npm 12.0.2, and the accepted postinstall applied the @ricky0123/vad-web 0.0.31 patch through patch-package 8.0.1. No manifests, dependency pins, frozen contracts, or implementation sources were edited. The installed Next 16.4.0 route-handler and server/client-boundary guides were read for the future server endpoint implementation.
+
+Implementation remains unstarted in Ready for Planning. Native admission is still refused as `rank-wave-graph-stale`; the runtime authorization grammar correction is under separate governed review. This setup checkpoint is not Plan approval, source-entry authority, an application verifier result, or live-provider evidence.
+
+## Quality baseline preparation checkpoint
+
+The branch now preserves the latest accepted feature parent `aeabcb9b148486870ebcf685675f02cef8c939e5`, including owner-approved #25 quality tooling and document formatting views. Original accepted specification, plan, and sealed review bytes remain authoritative in their immutable Git commits and the upstream original-byte archives. The server and shared TypeScript modules are unchanged from the earlier integrated baseline.
+
+The updated lockfile required a fresh pinned `npm ci`, which completed and applied the existing VAD patch without authoring manifest, pin, contract, application-source, or test changes. The current admitted runtime reports `rank-wave-source-unverified`; authorization grammar correction #2012 is being fixed and reviewed separately. Earlier stale-graph observations above are historical preparation checkpoints, not the current runtime diagnosis.
+
+Implementation is still unstarted in Ready for Planning. Native READY confirmation, registered Plan entry, and all subsequent approval and whole-story gates remain required. This document update and draft PR publication create no grant or live-provider evidence.
+
+## Active execution checkpoint
+
+Actual native admission is now READY. Registered Plan entry, narrative deep dive, truthful Full-Auto Plan approval and Develop entry completed before authored application source. Source implementation and author verification are complete; the older refusal/setup checkpoints are retained as history. Root still owns independent review, exact-head lifecycle verification, cloud merge and Close. Source delivery remains whole-story only.
+
+## Immutable planning references and review handoff
+
+The governing contract-first amendment remains [6eda972](https://github.com/kburson/AIVC/blob/6eda972a9df1bcbe1f8f650e9506c709026b02d8/docs/superpowers/plans/2026-10-13-2-contract-first-parallel-implementation.md), with accepted base cb82f730 and Node amendment 3574e5 retained in Git history. Current formatted views do not replace sealed accepted bytes; owner #25 archives are in [quality-evidence](../quality-evidence/README.md).
+
+The epic orchestrator allocated scripts/format-check.d.mts as a narrow integration declaration only. Its inspected runtime APIs and drift risk are covered in the verification report; no #25 behavioral source or fixture was edited. Review should inspect the nine server source files, four owned test/helper files, three authored documents and that explicit declaration bridge. The draft PR targets codex/2-draft; its actual merge must precede Done.
