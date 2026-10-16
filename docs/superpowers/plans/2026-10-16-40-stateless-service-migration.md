@@ -281,3 +281,34 @@ Define `test:migration:containers` here to run the topology-owned integration/br
 | Decomposition and no implementation before approval              | Delivery graph and global constraints |
 
 Self-review checks: every interface above is assigned an owning task; snippets are design-level contracts/tests, not implemented application APIs. Existing application tests remain behavioral authority. All five Review Focus cases have owning tests. No test or deployment result is claimed by this plan. Review may revise the design and plan together; accepted artifact pins must follow the actual final bytes.
+
+## Specification SAR and concrete planning decisions
+
+The migration specification at `07a92dd97ca7d8819e235ebe97b17f08608d8671`, SHA-256 `fecb93bdc40e6f2636f04bb243d7f5cbf74cbb8041f8c16891f38db4c643d1d4`, received native SAR acceptance with no required changes. [Complete SAR report](../../peer-reviews/spec/stateless-service-migration-design-review-40-native/sar/astra-sar-report-round-1.md). Its accepted bytes are unchanged. This records the exact specification pin required by the header. Sealed XPR is pending the owner-selected tooling recovery; native SAR is not two-party consensus or implementation approval.
+
+The following decisions make the three optional SAR planning suggestions concrete. They are part of this plan's review input and govern their owning tasks above.
+
+### Service networking — Tasks 2–4
+
+- Production binds inside private containers: web `0.0.0.0:3000`, orchestrator `0.0.0.0:3002`, lookup `0.0.0.0:3001`. Local launcher can retain loopback. Compose exposes only web; direct-core tests run inside the private test network.
+- Web `ORCHESTRATOR_BASE_URL` is one fixed private origin; `CORE_CALLER_TOKEN`, `BFF_ALLOWED_HOSTS`, `BFF_ALLOWED_ORIGINS`, forwarding turn/speech timeouts and bounded transport grace are server-owned config. Core has separate `CORE_ALLOWED_HOSTS` and the configured caller token. Incoming headers cannot override any value.
+- The current lookup client rejects all non-loopback origins. Task 2 replaces that restriction with an exact configured `RETRIEVAL_BASE_URL` origin policy and fixed `/v1/projects` path. Reject userinfo, fragments, query/base paths, wildcard origins, user-supplied URLs and redirects. Select the declared private lookup service origin explicitly; retain strict query/schema validation.
+- Task 2 owns negative origin/redirect tests plus real inter-container connectivity; Task 4 tests the actual production bind addresses. Relocation without these changes does not pass.
+
+### Contract digest migration — Task 1
+
+Modify `scripts/contract-digest.mjs`, its declaration, `tests/contracts/contract-digest.test.ts` and build-info consumers with the moved contracts. The digest currently frames closed path-labelled inputs under `apps/web/shared`; moving those paths changes the digest even with identical behavior. Record the new framed digest; retain frozen wire fixtures as semantic parity proof. Preserve historical sealed artifacts and hashes rather than rewriting them to the new layout. Extend Task 1's transitive boundary tests to all new package exports and include the owning digest test in its focused verification.
+
+### Credential/readiness matrix — Tasks 2 and 4
+
+Core caller token and valid service Host/origin/config values are mandatory in every mode. Mock readiness succeeds with paid-provider keys absent. In live mode retain existing unavailable capability states for optional missing provider configuration; readiness/capability reads make no paid call, and unavailable-function requests retain sanitized failures.
+
+Dependency readiness checks run at most once per five seconds, timeout at 500 ms, use no retries, coalesce concurrent probes and cache at most ten seconds. Failed/stale probes return not-ready, affect readiness only, and never cause autonomous restarts or paid probes. Drain always overrides cached health. Task 4 tests missing caller token, mock success without paid keys, unavailable live capabilities and stale/failed probe behavior; Task 2 retains provider-availability request errors.
+
+### Concrete web lifecycle mechanism — Task 4
+
+Create `apps/web/server/start.mjs`, update the web start script and add its socket lifecycle tests. Use an owned Node HTTP server around pinned Next.js `next({dev:false})` and `getRequestHandler()`. Its request/socket registry and signal handling withdraw readiness and gate new/keepalive work before invoking the framework handler; close/abort at the declared bounds. Merely toggling a health route cannot prove upstream drain.
+
+The local pinned guide `node_modules/next/dist/docs/01-app/02-guides/custom-server.md` supports this API and states that custom servers and standalone output cannot be combined. Package required production dependencies and `.next` output, not unsupported standalone tracing. Production tests validate background/framework close and active forwarding streams. This selects the wrapper option previously described in Task 4; no unresolved alternative remains.
+
+Task 2's Node request bridge must distinguish normal upload completion from an actual disconnected response: a normal IncomingMessage close after a fully uploaded request cannot abort valid work. Socket tests exercise both conditions independently.
