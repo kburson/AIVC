@@ -55,5 +55,6 @@
     "mechanism": "provider-action",
     "mergeMethod": "merge"
   },
-  "trunkRef": "origin/trunk"
+  "trunkRef": "origin/trunk",
+  "estimationRubricIssue": 70
 }

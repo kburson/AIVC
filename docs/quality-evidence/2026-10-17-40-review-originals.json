@@ -1,0 +1,138 @@
+{
+  "schema": "aivc.review-formatting-archive/v1",
+  "issue": 40,
+  "purpose": "Lossless originals and presentation views; no new review or authority",
+  "acceptedArtifacts": {
+    "spec": {
+      "path": "docs/superpowers/specs/2026-10-16-40-stateless-service-migration-design.md",
+      "sha256": "f50590006c4f5d22e94ed3e8539ed1d50f0af14755dd6720b175b7f9ea951e28"
+    },
+    "plan": {
+      "path": "docs/superpowers/plans/2026-10-16-40-stateless-service-migration.md",
+      "sha256": "eb1b3ea30ab1096207790da09403833f9b4e077f3f1289d3579b08e7ba17a350"
+    }
+  },
+  "documents": [
+    {
+      "path": "docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-1.md",
+      "sourceCommit": "e6347619fb245ba506bf455d57a0672cf663260b",
+      "originalPath": "docs/quality-evidence/40-review-originals/plan-sar-astra-sar-report-round-1.txt",
+      "sha256": "860eed2ebca0676e3aeff17db4f8297d93550770ae3a4da6b2dbda318c6728bb",
+      "byteLength": 14082,
+      "gitBlob": "6fef015e322b1709385f6e37e6fc2b123b889c3d",
+      "previousViewCommit": "4997fc324aec85f5173997483f0ab78a54371468",
+      "previousViewSha256": "860eed2ebca0676e3aeff17db4f8297d93550770ae3a4da6b2dbda318c6728bb",
+      "viewSha256": "e4d2c09a1d7291a8cbb01ab5a088d33f45bd11c8bce44977675e36190e10a988"
+    },
+    {
+      "path": "docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-2.md",
+      "sourceCommit": "e6347619fb245ba506bf455d57a0672cf663260b",
+      "originalPath": "docs/quality-evidence/40-review-originals/plan-sar-astra-sar-report-round-2.txt",
+      "sha256": "19646f9b03b1e55e5c1ffec048df9d8ed0fa626d660ae33fdcf85389c88ce0b3",
+      "byteLength": 13500,
+      "gitBlob": "6f0b697e7bcc41bfa8e600720f0c71731092b2ce",
+      "previousViewCommit": "4997fc324aec85f5173997483f0ab78a54371468",
+      "previousViewSha256": "3305003139461386ec0cbd5e52104c9ef0f7ff41fa7f8d99bf67a5d408376680",
+      "viewSha256": "3fe0f8e3799d544f173779571460b10ea20a366103ce271fd4bc73e0f941163d"
+    },
+    {
+      "path": "docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-3.md",
+      "sourceCommit": "e6347619fb245ba506bf455d57a0672cf663260b",
+      "originalPath": "docs/quality-evidence/40-review-originals/plan-sar-astra-sar-report-round-3.txt",
+      "sha256": "6fa63b47157f9ba00ae6f76acbe03cf028f2d5afd7bb29e5b89575fef7079f3a",
+      "byteLength": 9356,
+      "gitBlob": "05b5189cdfbe9e362540f060657a993297f830ec",
+      "previousViewCommit": "4997fc324aec85f5173997483f0ab78a54371468",
+      "previousViewSha256": "f0f027101a4e8e57e1cecf26738cfdf6885fff4c04c6495a166843eb7a4e0cad",
+      "viewSha256": "cd665a768296be47227ffc70f0adb1290a710981957b69375cfa1d1401cedc98"
+    },
+    {
+      "path": "docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-4.md",
+      "sourceCommit": "e6347619fb245ba506bf455d57a0672cf663260b",
+      "originalPath": "docs/quality-evidence/40-review-originals/plan-sar-astra-sar-report-round-4.txt",
+      "sha256": "f6a16915b0776c0388123024a39393a84f33ecaaf001dd1b484850abba7eec07",
+      "byteLength": 14168,
+      "gitBlob": "8f2c8242f503c57adfb7cbaaae54ed50eaba607e",
+      "previousViewCommit": "4997fc324aec85f5173997483f0ab78a54371468",
+      "previousViewSha256": "dfba716e549dc55c67ccc7ad257836d4889f4d4efbcbcb058668e5cdb3d013da",
+      "viewSha256": "2e4cbe39459d030444f83f0f9b629c31086e8fe30e59706ac003b67c9d535b8e"
+    },
+    {
+      "path": "docs/peer-reviews/plan/stateless-service-migration-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-review-3f99142a6b19c9dcbe0e6e53c7b1354a-author-response-1.md",
+      "sourceCommit": "80efe1a150dbd8605aab69678c2a7a87f8553072",
+      "originalPath": "docs/quality-evidence/40-review-originals/plan-xpr-author-response-1.txt",
+      "sha256": "9a454aa51f638d018f8ab4c4ef35f19383538a74e17c3305d5635c4e4613f148",
+      "byteLength": 7482,
+      "gitBlob": "9af5612f8ef4ec8d641c4af3aba828a3dd893008",
+      "previousViewCommit": "4997fc324aec85f5173997483f0ab78a54371468",
+      "previousViewSha256": "9a454aa51f638d018f8ab4c4ef35f19383538a74e17c3305d5635c4e4613f148",
+      "viewSha256": "97c2632249736d57c3c7964be90e5df05ec5ed357fc543449ba5146b3edb86ef"
+    },
+    {
+      "path": "docs/peer-reviews/plan/stateless-service-migration-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-review-3f99142a6b19c9dcbe0e6e53c7b1354a-reviewer-response-1.md",
+      "sourceCommit": "80efe1a150dbd8605aab69678c2a7a87f8553072",
+      "originalPath": "docs/quality-evidence/40-review-originals/plan-xpr-reviewer-response-1.txt",
+      "sha256": "063ff8c0b32407c4ae346ddf8b73cebd100a4fb9105c10d9b0d11ab87f7ab2a9",
+      "byteLength": 17834,
+      "gitBlob": "bb189265a3ac3c1f68a6be1557b8a0c55b0d2214",
+      "previousViewCommit": "4997fc324aec85f5173997483f0ab78a54371468",
+      "previousViewSha256": "063ff8c0b32407c4ae346ddf8b73cebd100a4fb9105c10d9b0d11ab87f7ab2a9",
+      "viewSha256": "bf45d8bc0a8fdc0a50a5ab8ffa8b15ed9d2023103f073fe3253ee17ff111efff"
+    },
+    {
+      "path": "docs/peer-reviews/plan/stateless-service-migration-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-review-3f99142a6b19c9dcbe0e6e53c7b1354a-reviewer-response-2.md",
+      "sourceCommit": "80efe1a150dbd8605aab69678c2a7a87f8553072",
+      "originalPath": "docs/quality-evidence/40-review-originals/plan-xpr-reviewer-response-2.txt",
+      "sha256": "e2b0046e9d38ead19e2bc10b4511bc151ea6298d529c4c69f81b13b20000154a",
+      "byteLength": 8427,
+      "gitBlob": "9e03c80f5af48fb65012066c4b4b68d3d4548f64",
+      "previousViewCommit": "4997fc324aec85f5173997483f0ab78a54371468",
+      "previousViewSha256": "e2b0046e9d38ead19e2bc10b4511bc151ea6298d529c4c69f81b13b20000154a",
+      "viewSha256": "1cbcdf40bc0e62526d1400ea411357cc870cff1282f283f7c69e100e5a3d8d6c"
+    },
+    {
+      "path": "docs/peer-reviews/spec/stateless-service-migration-design-review-40-native/sar/astra-sar-report-round-1.md",
+      "sourceCommit": "e6347619fb245ba506bf455d57a0672cf663260b",
+      "originalPath": "docs/quality-evidence/40-review-originals/spec-sar-astra-sar-report-round-1.txt",
+      "sha256": "94fc179cad25367ec118b8419179a1d9e7100b469880e89fe15219634b34f4a9",
+      "byteLength": 11403,
+      "gitBlob": "0473adad210491cf2be384b246c1db88467a6f99",
+      "previousViewCommit": "4997fc324aec85f5173997483f0ab78a54371468",
+      "previousViewSha256": "94fc179cad25367ec118b8419179a1d9e7100b469880e89fe15219634b34f4a9",
+      "viewSha256": "e5cab6851c9586b08e939dfa64edf80e72a64029972a3956cfcd36d35732ba68"
+    },
+    {
+      "path": "docs/peer-reviews/spec/stateless-service-migration-design-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-design-review-0009efb5ca6886291ad48628afa78120-author-response-1.md",
+      "sourceCommit": "e6e96c9a4f07bb78faa73dc56368a0503d912982",
+      "originalPath": "docs/quality-evidence/40-review-originals/spec-xpr-author-response-1.txt",
+      "sha256": "f576933351fba27827ccc718b250e1e3898cbea840d9f6dbce1e646ee063ac73",
+      "byteLength": 7186,
+      "gitBlob": "b4a9bae116927040933a09c9d76a6cdb1699b549",
+      "previousViewCommit": "4997fc324aec85f5173997483f0ab78a54371468",
+      "previousViewSha256": "f576933351fba27827ccc718b250e1e3898cbea840d9f6dbce1e646ee063ac73",
+      "viewSha256": "99c4601856dc1ef135168146fcedaa9686dfd31cce0b16cdaa957827dd5b3282"
+    },
+    {
+      "path": "docs/peer-reviews/spec/stateless-service-migration-design-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-design-review-0009efb5ca6886291ad48628afa78120-reviewer-response-1.md",
+      "sourceCommit": "e6e96c9a4f07bb78faa73dc56368a0503d912982",
+      "originalPath": "docs/quality-evidence/40-review-originals/spec-xpr-reviewer-response-1.txt",
+      "sha256": "96bcb0215a7b1d144cb0f3361bef3520e5fa76e3268202c9a7c2b9f8726b4b93",
+      "byteLength": 16920,
+      "gitBlob": "56b6bec440f29e86e467e91f1f37a7868e63e463",
+      "previousViewCommit": "4997fc324aec85f5173997483f0ab78a54371468",
+      "previousViewSha256": "96bcb0215a7b1d144cb0f3361bef3520e5fa76e3268202c9a7c2b9f8726b4b93",
+      "viewSha256": "08ea9de18dbadab31c594c2839a6cbe4631798c7ab4bd70b7f8ab251acfcabd3"
+    },
+    {
+      "path": "docs/peer-reviews/spec/stateless-service-migration-design-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-design-review-0009efb5ca6886291ad48628afa78120-reviewer-response-2.md",
+      "sourceCommit": "e6e96c9a4f07bb78faa73dc56368a0503d912982",
+      "originalPath": "docs/quality-evidence/40-review-originals/spec-xpr-reviewer-response-2.txt",
+      "sha256": "fa0ab0ee9afb0aac4b1024fb91af3747a1d11a07105e762c8c3bf67550afe93d",
+      "byteLength": 9078,
+      "gitBlob": "be6b9840089c4176a0071d3386c708973c272cc3",
+      "previousViewCommit": "4997fc324aec85f5173997483f0ab78a54371468",
+      "previousViewSha256": "fa0ab0ee9afb0aac4b1024fb91af3747a1d11a07105e762c8c3bf67550afe93d",
+      "viewSha256": "6a8a9ab0c08801990c81b5a1173f1d485ef9fa23285ce420ed717d198ebd5023"
+    }
+  ]
+}
