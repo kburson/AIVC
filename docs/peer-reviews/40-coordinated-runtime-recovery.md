@@ -1,6 +1,30 @@
 # #40 coordinated runtime recovery
 
-## Current checkpoint
+## Current restoration and review checkpoint — October 17, 2026
+
+The approved Linux/macOS-only prerequisite and separate runtime maintenance completed in **3987 elapsed seconds (1h 6m 27s)**, including all waits, within the original four-hour cap. Runtime owner paused at its verified stop; no fresh clock or Windows execution was introduced.
+
+- AITM [#2020](https://github.com/kburson/ai-task-manager/issues/2020), [draft PR #2021](https://github.com/kburson/ai-task-manager/pull/2021), fixed the exact registered Node/CLI path admission while retaining other path, write and role boundaries. Supported no-save consumer maintenance installed its verified payload; a later npm ci can revert that local override until the separate devtool update.
+- APR launch correction source `426643c1f202bb9c15a65883d4a58d6e65535e2d` separates passive provider lifetime from bounded effects. [#212](https://github.com/kburson/ai-peer-review/issues/212) adds truthful Linux/macOS scope and receipt gates at source `763538f1bde4c9bc7bf69144eefdfd363c00d62c` in [draft PR #196](https://github.com/kburson/ai-peer-review/pull/196).
+- Exact-source [CI 39016155269](https://github.com/kburson/ai-peer-review/actions/runs/39016155269), attempt 1: seven required POSIX workers, 35 authenticated lane receipts. [Installed run 39016151398](https://github.com/kburson/ai-peer-review/actions/runs/39016151398): four Linux/macOS workers. Default all-platform verification refuses those scoped receipts. Windows is deferred/unverified, with no Windows runner allocated.
+- #212 native Test `01M54FGBR0MZD55BY0JXSXXKNM`: nine commands exit zero. #190 native Test `01M54G1AP8P9ZCXQYAHY4VN7F8`: nine commands exit zero, resulting Test; its outer command later exited 1 on existing timing-field-projection invalid-evidence. That separate failure and Unknown timing remain preserved, not fabricated or erased. Both source issues remain Test, not Done/merged.
+- Supported isolated installation preserves all 261 archive entries; tar SHA-256 `2bed8d37035a6f94b0ca8fa118cdef8f0014e30b532f29dd492f6137ab96ca76`, deployed inventory `5d965bbbddcf0d6c7d7cf079d29b5cea4a4cd3594c8e063b94edd20024ed5c21`. Current selection, six owned CLI links and saved Codex MCP configuration point to the verified candidate, using existing Node 26.8.1. No native binary/build/download or identity override.
+- Exact installed official SDK/MCP stdio connections delivered both real #40 reviews at author sequences 8 and 12. The plan's first wait was delayed but completed unchanged. Native chat tool exposure is separate from saved config/effective SDK connection; no desktop restart or resident automatic transport was proved.
+
+Both genuine sealed XPRs finalized **accepted-uncommitted**, LOCAL JOURNAL MODE, authority assurance unavailable:
+
+| Artifact                                                                            | Review                                    | Accepted SHA-256                                                   |
+| ----------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------ |
+| [Specification](spec/stateless-service-migration-design-review-40-native/README.md) | `review-0009efb5ca6886291ad48628afa78120` | `f50590006c4f5d22e94ed3e8539ed1d50f0af14755dd6720b175b7f9ea951e28` |
+| [Plan](plan/stateless-service-migration-review-40-native/README.md)                 | `review-3f99142a6b19c9dcbe0e6e53c7b1354a` | `eb1b3ea30ab1096207790da09403833f9b4e077f3f1289d3579b08e7ba17a350` |
+
+Each used Claude opus 5.5/high for two rounds and one revision, with its own genuine distinct session and no required changes left. Requested model/effort and protocol evidence are retained; provider-certified per-turn attestation is unavailable.
+
+The original spec attempt `review-2bdf5dd8ee56accc6e494643054a3cf1`, its uncertain provider session and launch reservation remain byte-preserved and unsettled. Its eight-hour MCP caller timeout was not provider termination. New independent spec review sealed a preserved-predecessor reference; no replay/kill/reconcile or invented terminal evidence. Old runtime trees and MCP processes were preserved.
+
+#40 remains **Plan**. Planning acceptance does not approve application implementation, hydrate children, promote state, merge, close or unblock research. Application implementation and paid execution remain stopped; current plan proposes six dependent packages and 64 joint hours/XL for later governed decomposition/admission.
+
+## Historical source-64 restoration checkpoint
 
 Source `64e2d35ba6e0fb291936077dbc071fb1ad05a19a` passed all 39 required
 [full CI jobs](https://github.com/kburson/ai-peer-review/actions/runs/38970968651)

@@ -2,7 +2,28 @@
 
 Tracking: [#40](https://github.com/kburson/AIVC/issues/40). Date: October 16, 2026.
 
-## Native SAR — accepted
+## Current sealed XPR — accepted
+
+- Current [migration implementation plan](../../../superpowers/plans/2026-10-16-40-stateless-service-migration.md): publication commit `80efe1a150dbd8605aab69678c2a7a87f8553072`, SHA-256 `eb1b3ea30ab1096207790da09403833f9b4e077f3f1289d3579b08e7ba17a350`.
+- Review `review-3f99142a6b19c9dcbe0e6e53c7b1354a`: [round 1](xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-review-3f99142a6b19c9dcbe0e6e53c7b1354a-reviewer-response-1.md), [author dispositions](xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-review-3f99142a6b19c9dcbe0e6e53c7b1354a-author-response-1.md), [accepted round 2](xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-review-3f99142a6b19c9dcbe0e6e53c7b1354a-reviewer-response-2.md), [sealed manifest](xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-review-3f99142a6b19c9dcbe0e6e53c7b1354a-review-manifest.md).
+- Claude `claude-opus-5-5` / `high`, same genuine distinct reviewer session across both rounds. Two rounds and one revision; no required changes remain. Three optional round-2 consistency refinements remain recommendations, not later edits to accepted bytes.
+- Implements the separately XPR-accepted spec digest `f50590006c4f5d22e94ed3e8539ed1d50f0af14755dd6720b175b7f9ea951e28` published at `e6e96c9a4f07bb78faa73dc56368a0503d912982`.
+- Six proposed dependent work packages; preliminary **64 joint hours / XL**, reassessed from historical 52 after spec XPR. This is not a converged/approved forecast, child hydration or implementation authorization.
+- Terminal `accepted-uncommitted`, LOCAL JOURNAL MODE, assurance `unavailable`; normal Git publication pins exact accepted bytes separately.
+- Official candidate SDK stdio MCP delivered author sequences 8 and 12 with canonical receipts. The first caller was delayed and preserved; it ultimately completed without cancellation or duplicate wait. No native desktop restart/automatic-required transport is claimed.
+
+The SAR lineage below retains its own accepted bytes. Both planning artifacts now have genuine sealed XPR acceptance; #40 remains Plan and application implementation stays stopped pending separate owner approval and normal decomposition/admission gates.
+
+### Observed author MCP deliveries
+
+| Sequence | Reviewer-response / canonical receipt digest                              |
+| -------- | ------------------------------------------------------------------------- |
+| 8        | `sha256:063ff8c0b32407c4ae346ddf8b73cebd100a4fb9105c10d9b0d11ab87f7ab2a9` |
+| 12       | `sha256:e2b0046e9d38ead19e2bc10b4511bc151ea6298d529c4c69f81b13b20000154a` |
+
+These are observed official-SDK results matched to journal delivery receipts and sealed response hashes; this index is an additive publication record, not a fabricated package receipt.
+
+## Historical native SAR — accepted
 
 - Artifact: [Migration implementation plan](../../../superpowers/plans/2026-10-16-40-stateless-service-migration.md).
 - Accepted artifact commit: `878cb5c16d5183a39980d39f5c7d54c27d8b2347`.
@@ -11,7 +32,7 @@ Tracking: [#40](https://github.com/kburson/AIVC/issues/40). Date: October 16, 20
 - Requested reviewer: Codex `gpt-6-astra` / `high`, same genuine distinct native session through the accepted specification and all four plan rounds. Requested selection and session correlation are evidence; provider-certified per-turn attestation is unavailable.
 - Six dependent proposed implementation work packages; preliminary 52 joint hours/XL. This is not AI elapsed time, a converged Plan estimate, hydration or implementation approval.
 
-The coordinator read every complete report/disposition, checked findings against source, and independently verified accepted artifact bytes and their commit associations. No plan edit followed round-four acceptance. Its later correction sections govern predecessor text as the reviewer explicitly assessed. Application tests/builds/container behavior remain future implementation obligations.
+The coordinator read every complete report/disposition, checked findings against source, and independently verified accepted artifact bytes and their commit associations. No edit occurred within that SAR checkpoint; subsequent XPR amendments have separate acceptance above. Its later correction sections govern predecessor text as the reviewer explicitly assessed. Application tests/builds/container behavior remain future implementation obligations.
 
 ## Preserved review lineage
 
@@ -24,7 +45,7 @@ The coordinator read every complete report/disposition, checked findings against
 
 The [migration specification acceptance](../../spec/stateless-service-migration-design-review-40-native/README.md) remains at commit `07a92dd97ca7d8819e235ebe97b17f08608d8671`, SHA-256 `fecb93bdc40e6f2636f04bb243d7f5cbf74cbb8041f8c16891f38db4c643d1d4`. Its accepted bytes were unchanged throughout plan review. #39 inherited acceptance/amendment lineage is preserved separately; this SAR does not retroactively accept the whole research corpus.
 
-## Owner-selected pause before sealed XPR
+## Historical owner-selected pause before sealed XPR
 
 The owner selected completion of native SAR for both documents, then a pause for the registered runtime and MCP handoff tools to be restored. The [specification index](../../spec/stateless-service-migration-design-review-40-native/README.md#sealed-xpr--not-started) records the concrete tooling mismatch and recovery boundary. No sealed review was started, no provider launch/consensus/finalization is claimed, and no configuration downgrade or guard bypass was used.
 
