@@ -58,3 +58,17 @@ The project activity policy adds only `.scratch/gh/63-current-plan-metadata.json
 The test dispatcher now forwards explicit Vitest options from `npm test -- ...`; previously they were silently dropped. A real two-directory fixture, requiring exclusive execution, failed with overlapping work before the change and passed with single-worker serial options afterward. This permits the requested full serial run without changing default suite selection or hiding tests. An initial fixture invocation used the CLI's project-root default and timed out; it was corrected to use the runner's supported fixture root, and no child process remained.
 
 Observed RED→GREEN: blocker policy/integrity cases failed before repair, then the three relevant suites passed 25/25; serial runner passed 6/6. Typecheck, ESLint/Markdownlint, full format check (429 files, zero findings), documentation checks and the 122-document sealed archive check passed after the repairs. The authoritative full unit suite with explicit serial options remains to be run at this checkpoint. #63 stays Develop; #64–#68 retain their native predecessor blockers until governed Done.
+
+## Completed serial unit verification
+
+At repair source `568d2631e43260b32c7dce262a6138d9122458a8`, ran:
+
+```sh
+npm test -- --no-file-parallelism --maxWorkers=1 --reporter=verbose
+```
+
+The dispatcher forwarded these exact options to the complete unit groups `tests/ui` and `tests/scripts`. No test-name, path subset, skip, retry or update option was supplied. No other verification/build ran alongside it, and the source/index remained frozen throughout the run. The command completed with exit code 0: **14 files passed, 244 tests passed**, no failed or skipped tests. Vitest reported **993.30 seconds** total (990.68 seconds test time). This complete serial run supersedes the prior aborted/timeout runs, without relabeling their historical outcomes. The raw output remains in this plan's ignored execution workspace as `unit-serial-2026-10-17.log`; this record is an ordinary observed result, not an AITM Test receipt or a provider delivery envelope.
+
+A fresh [repair source review](../peer-reviews/code/63-blocker-repair-review-round-1.md) inspected `2da3ec5..568d263`, finding no Critical, Important or Minor defects. Its verbatim raw report is preserved separately; the reviewer performed source inspection only and did not independently execute the unit suite. The current serial result was still pending when that review returned; this author-owned result completes the requested verification.
+
+Both requested blockers are resolved: the formatter passes with exact immutable integrity verification, and the canonical metadata writer accepts its narrowly allowlisted input. Accepted source bytes, original evidence hashes and review references remain preserved. #63 remains Develop; no application AC signoff, Test/Review/approval/merge/Close or downstream implementation is implied by these repairs or the passing suite. #64–#68 retain their predecessor dependencies until governed Done permits their next admission.
