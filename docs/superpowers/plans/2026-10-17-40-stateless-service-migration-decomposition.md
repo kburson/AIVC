@@ -185,9 +185,9 @@ All six intents use operational beneficiaries grounded in the accepted documents
 
 ## Preserved artifact and review lineage
 
-The following is a snapshot of #40's existing Plan Metadata before hydration. Its historical hydration-status text describes that earlier point in time; the new issue map and owner hold above govern this decomposition. All existing review links and acceptance distinctions are preserved verbatim here.
+The following is a snapshot of #40's existing Plan Metadata before hydration. Its historical hydration-status text describes that earlier point in time; the new issue map and owner hold above govern this decomposition. All existing review links and acceptance distinctions are preserved here; presentation headings are normalized for repository Markdown rules.
 
-**Design Specification**
+### Design Specification
 
 Current migration design — **sealed XPR accepted**:
 
@@ -220,7 +220,7 @@ Later amendments — **not covered by renewed SAR/XPR acceptance**:
 - **Governing-spec-SHA-256**: `bd1803bf8b3b1f6c70489c33a125ec4fd4dd9c8962b50023ae23a26945059919`
 - **Governing sections**: 18–19 define the owner-directed three-service architecture and stateless-container requirements.
 
-**Implementation Plan**
+### Implementation Plan
 
 Current migration plan — **sealed XPR accepted**:
 
@@ -256,7 +256,7 @@ Later amendments — **not covered by renewed SAR/XPR acceptance**:
 - **Amendment records**: [Owner-directed review dispositions](https://github.com/kburson/AIVC/blob/trunk/docs/peer-reviews/plan/voice-bff-performance-research-review-37310796a92245e3930c81b664fee657/xpr/owner-amendment-2026-10-15.md) · [Three-container/stateless amendment lineage](https://github.com/kburson/AIVC/blob/trunk/docs/peer-reviews/plan/voice-bff-performance-research-review-37310796a92245e3930c81b664fee657/README.md#subsequent-three-containerstateless-clarification)
 - **Planning-status**: #39 predecessor acceptance applies only to its exact accepted revisions/digests. Its later architecture/stateless/task-intent amendments remain without renewed whole-document acceptance. #40's migration spec and plan now have separate sealed XPR acceptance at the exact current pins above; historical SAR applies only to its original pins. Current accepted bytes remain unchanged since XPR finalization. Peer acceptance does not record owner Plan approval or integrated application acceptance.
 
-**Backlog Hydration Plan**
+### Backlog Hydration Plan
 
 - **Planning-record**: [#39 — research specification and planning](https://github.com/kburson/AIVC/issues/39)
 - **Preparation-handoff**: [Documentation delivery and backlog map](https://github.com/kburson/AIVC/blob/trunk/docs/superpowers/plans/2026-10-15-39-performance-documentation-delivery.md)
