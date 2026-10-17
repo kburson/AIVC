@@ -1,3 +1,11 @@
+# Story 40 specification XPR — reviewer response 1
+
+> Formatting view only. [Exact original Git blob](https://github.com/kburson/AIVC/blob/e6e96c9a4f07bb78faa73dc56368a0503d912982/docs/peer-reviews/spec/stateless-service-migration-design-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-design-review-0009efb5ca6886291ad48628afa78120-reviewer-response-1.md) · [Lossless original file](../../../../../quality-evidence/40-review-originals/spec-xpr-reviewer-response-1.txt).
+> Original SHA-256: `96bcb0215a7b1d144cb0f3361bef3520e5fa76e3268202c9a7c2b9f8726b4b93`. Acceptance and sealed hashes bind the original bytes; this view changes presentation only.
+
+## Original protocol metadata
+
+```text
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
@@ -26,6 +34,7 @@ finding_ids: ["R1-F001","R1-F002","R1-F003","R1-F004","R1-F005","R1-F006","R1-F0
 answered_finding_ids: []
 acknowledged_supplement_ids: []
 ---
+```
 
 > **LOCAL JOURNAL MODE** — authority assurance: `unavailable`
 
@@ -45,7 +54,7 @@ I could not read #40's live GitHub acceptance criteria from this session. Wherev
 Overall the design is sound and honest about its limits:
 
 - The selected approach (extract contracts and the real provider lifecycle into a Fastify core; leave web as a forwarding adapter) is the lowest-drift option.
-- The no-store position is stated precisely, including what it does *not* promise.
+- The no-store position is stated precisely, including what it does _not_ promise.
 - The source checks hold. `runWithDeadline` separates `result` from `settled`. Leases are released only from `settled`. `turn.accepted` is emitted before STT, so the SSE headers mark the first paid-capable boundary. SSE enqueues eagerly, with no demand gating. The turn parser accepts only multipart. Per-process two-slot pools live in `globalThis`. Admission checks Host and Origin before any body read.
 
 Seven items block acceptance. Each is a gap that would leave the migration plan or the acceptance tests under-determined:
@@ -76,7 +85,7 @@ Without these, the acceptance area "Replica correctness" cannot be verified as s
 
 In the current code, a turn lease is acquired inside `work` only after `readBoundedBody(req, 2097152, …)` has buffered the whole multipart body (`body.ts:66`, `sse-response.ts:57`). A speech lease likewise comes after its 8 KiB body read. Bearer authentication runs before the body is read. But the authenticated caller is the BFF, and the BFF forwards any browser that passes Host and Origin. So the core accepts effectively anonymous concurrent uploads, each buffering up to 2 MiB. Each slow upload holds a socket and memory until the turn deadline. Only then is it refused with 429 at lease time.
 
-Section 6 says "Body accumulation remains capped" and sets per-hop queue bounds. That bounds each request, not the process. Under section 8's container memory limits, and section 19's "sized from measured traffic", pre-admission memory of N concurrent uploads × 2 MiB is an undeclared, unbounded resource. A container could be OOM-killed. That is a hard exit with settlement unknown for *admitted* work on the same replica, which is exactly the outcome section 8 tries to keep rare.
+Section 6 says "Body accumulation remains capped" and sets per-hop queue bounds. That bounds each request, not the process. Under section 8's container memory limits, and section 19's "sized from measured traffic", pre-admission memory of N concurrent uploads × 2 MiB is an undeclared, unbounded resource. A container could be OOM-killed. That is a hard exit with settlement unknown for _admitted_ work on the same replica, which is exactly the outcome section 8 tries to keep rare.
 
 ### R1-F003 — Termination and backpressure mechanisms are specified in terms Next.js `next start` does not expose
 
@@ -88,7 +97,7 @@ The design must say how the web service meets each requirement, or scope the req
 
 ### R1-F004 — Cross-service configuration coupling is undeclared
 
-The BFF deadline is "bounded to configured turn/speech timeout plus configured transport grace" (section 6). Web must therefore know the core's `TURN_TIMEOUT_MS` and `SPEECH_TIMEOUT_MS`. Web admission body limits, capabilities, and `segmentChars` matter the same way, if the web layer validates anything. Section 7 requires "same recorded catalog/contract/config digests in eligible replicas", but only across replicas of *one* service.
+The BFF deadline is "bounded to configured turn/speech timeout plus configured transport grace" (section 6). Web must therefore know the core's `TURN_TIMEOUT_MS` and `SPEECH_TIMEOUT_MS`. Web admission body limits, capabilities, and `segmentChars` matter the same way, if the web layer validates anything. Section 7 requires "same recorded catalog/contract/config digests in eligible replicas", but only across replicas of _one_ service.
 
 Suppose web is configured with a shorter turn timeout than the core. The BFF returns 504, or aborts after headers, while the core would have finished or sent its own `TURN_DEADLINE` terminal event. Direct and delegated parity (section 9) then breaks in a way no per-service check detects. Since the services now deploy independently, this mismatch is likely during rolling changes.
 
@@ -105,7 +114,7 @@ Section 8 makes web readiness check "configured core readiness/capabilities with
 
 The section 5 table says core speech admission is "8 KiB/segment validation". The source enforces two different bounds:
 
-- an 8192-byte cap on the *whole* JSON request body (`speech-response.ts:52`);
+- an 8192-byte cap on the _whole_ JSON request body (`speech-response.ts:52`);
 - a separate per-segment character cap, `segmentChars = min(120, floor(6 × SPEECH_CHARS_PER_SECOND))` (`config.ts:80`, applied by `validateSpeech`).
 
 The wording reads as an 8 KiB per-segment allowance. It also drops the character cap that bounds per-request TTS cost and keeps the speech deadline coherent. A migration that preserves "8 KiB/segment" literally could regress the governing paid-work bound.
@@ -124,18 +133,21 @@ That may be the right scope. But it narrows an owner-directed contract for exact
    - the out-of-band evidence that attributes each request (router access log upstream address, per-replica scripted-provider journal, or lease counters). It must not be a response or contract field.
 
    Add a negative control: the test fails if two forced-distinct requests are attributed to the same replica.
+
 2. **R1-F002.** Declare a per-process bound on concurrent pre-admission request bodies, or on open application connections, in the core. Exceeding it must give a fast, sanitized, retryable refusal (429 or 503) before body consumption. Alternatively, acquire the lease before body ingestion and justify the effect on throughput. Include pre-admission memory in the sizing and readiness discussion. Add an acceptance test: concurrent slow 2 MiB uploads beyond the bound are refused without growing memory past the declared limit, and admitted work is unaffected.
 3. **R1-F003.** State the termination contract per service. For web, either:
    - name the mechanism (a custom or standalone Node server wrapper that owns readiness withdrawal, keep-alive 503 refusal and drain, with the pinned Next.js version's support verified); or
    - scope SIGTERM drain semantics for web to what `next start` provides, plus ingress-level drain, and record the gap.
 
    Restate the web bridge's backpressure requirement as observable bounded buffering through `ReadableStream` pull/`highWaterMark`, rather than `write(false)`/`drain`. Require a container bind address other than loopback.
+
 4. **R1-F004.** Declare which web settings derive from core settings: turn/speech timeouts, body limits, and segment cap if web validates it. Declare how consistency is enforced. Acceptable options: web reads the values from authenticated core capabilities at startup, or a recorded cross-service config digest whose mismatch refuses readiness or the accepted topology. Add a parity test with deliberately mismatched timeouts that shows the refusal.
 5. **R1-F005.** Specify the readiness dependency graph explicitly:
    - whether web readiness depends on core (and if so, with an aggregated, cached and hysteretic check, not a single probe through a per-request router);
    - whether core readiness depends on lookup or lookup only degrades the tool.
 
    State the expected behavior when all core replicas are draining or unavailable, e.g. web stays ready and returns sanitized 502/503 for API calls. Keep liveness strictly local (event-loop health) so no dependency can cause restarts.
+
 6. **R1-F006.** Replace "8 KiB/segment validation" with both preserved bounds: an 8192-byte JSON body cap, and a per-segment character cap of `min(120, floor(6 × SPEECH_CHARS_PER_SECOND))` validated by `validateSpeech`. Apply the same bounds in the direct/delegated parity tests.
 7. **R1-F007.** Add an explicit trace for the multipart-only `/api/turn` decision: cite the #40 acceptance criterion or owner decision that permits deferring JSON turn input, and state that Task 0's route/interface inventory will record multipart-only as the accepted contract. If no such authority exists, put JSON turn input in scope as a bounded, validated representation that shares the same parser limits.
 

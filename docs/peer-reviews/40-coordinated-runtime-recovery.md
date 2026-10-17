@@ -24,11 +24,11 @@ The original spec attempt `review-2bdf5dd8ee56accc6e494643054a3cf1`, its uncerta
 
 Story #40 remains **Plan**. Planning acceptance does not approve application implementation, hydrate children, promote state, merge, close or unblock research. Application implementation and paid execution remain stopped; current plan proposes six dependent packages and 64 joint hours/XL for later governed decomposition/admission.
 
-## Documentation verification and remaining formatting findings
+## Documentation verification and original preservation
 
-Both current artifact SHA-256 values and every sealed author/reviewer response were checked against the finalized manifests. Canonical author delivery receipts match sequences 8 and 12 in each real review. Historical evidence verification passed for 122 original documents. Targeted Prettier passed for the plan, both indexes and this recovery document; Git whitespace checks passed.
+Both current artifact SHA-256 values and every sealed author/reviewer original were checked against the finalized manifests. Canonical author delivery receipts match sequences 8 and 12 in each real review. Historical evidence verification passed for 122 original documents. Targeted Prettier passed for the plan, both indexes and this recovery document; Git whitespace checks passed.
 
-The full Markdown scan remains nonzero: **70 formatting findings in 11 preserved SAR/XPR report files**, chiefly generated protected-frontmatter/heading interpretation and historical emphasis. The accepted spec/plan and current indexes are not among those Markdown findings. Sealed response bytes were not rewritten, formatting exemptions were not added, and no all-repository lint/format success is claimed. Any future presentation cleanup must preserve exact original blobs/digests and distinguish views from authority.
+The predecessor scan at `4997fc3` found 70 formatting findings in 11 SAR/XPR report files. The owner-authorized presentation cleanup resolves those findings without changing accepted artifacts or sealed originals. [Lossless originals and provenance manifest](../quality-evidence/40-review-originals/README.md) preserve all eleven original byte streams, hashes and immutable Git references. Existing report paths are explicitly labeled formatting views; sealed response digests continue to bind the originals. No linter exemption or application change was introduced. The full Markdown scan now passes with zero findings.
 
 No application code or application/provider/container tests were executed in this planning task.
 

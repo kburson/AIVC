@@ -2,6 +2,10 @@
 
 Tracking: [#40](https://github.com/kburson/AIVC/issues/40). Date: October 16, 2026.
 
+## Report presentation and sealed originals
+
+Existing response links below open formatting views. [Lossless originals and provenance](../../../quality-evidence/40-review-originals/README.md) preserve every original SHA-256, exact byte stream and immutable Git reference. Sealed manifest/receipt hashes bind those originals, not the presentation views. Accepted artifact bytes and review decisions are unchanged.
+
 ## Current sealed XPR — accepted
 
 - Current [migration implementation plan](../../../superpowers/plans/2026-10-16-40-stateless-service-migration.md): publication commit `80efe1a150dbd8605aab69678c2a7a87f8553072`, SHA-256 `eb1b3ea30ab1096207790da09403833f9b4e077f3f1289d3579b08e7ba17a350`.

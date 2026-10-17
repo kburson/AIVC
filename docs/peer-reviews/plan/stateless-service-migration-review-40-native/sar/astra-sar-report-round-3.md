@@ -1,3 +1,6 @@
+> Formatting view only. [Exact original Git blob](https://github.com/kburson/AIVC/blob/e6347619fb245ba506bf455d57a0672cf663260b/docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-3.md) · [Lossless original file](../../../../quality-evidence/40-review-originals/plan-sar-astra-sar-report-round-3.txt).
+> Original SHA-256: `6fa63b47157f9ba00ae6f76acbe03cf028f2d5afd7bb29e5b89575fef7079f3a`. Acceptance and sealed hashes bind the original bytes; this view changes presentation only.
+>
 > **Formatting view; original report preserved.**
 > [Exact original report](https://github.com/kburson/AIVC/blob/e6347619fb245ba506bf455d57a0672cf663260b/docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-3.md) · original SHA-256: `6fa63b47157f9ba00ae6f76acbe03cf028f2d5afd7bb29e5b89575fef7079f3a`. Formatting does not renew or expand native SAR acceptance.
 
@@ -5,7 +8,7 @@
 
 ## Decision
 
-**changes-requested**
+Decision: **changes-requested**.
 
 The four round-two corrections now have workable architectural resolutions. One narrow required correction remains: the declared closed lifecycle-control schema cannot represent its own scale-core action. Resolve that schema inconsistency and its transition tests; no further specification or architecture change is requested.
 

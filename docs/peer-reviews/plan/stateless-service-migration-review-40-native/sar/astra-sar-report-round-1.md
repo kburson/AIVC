@@ -1,8 +1,11 @@
+> Formatting view only. [Exact original Git blob](https://github.com/kburson/AIVC/blob/e6347619fb245ba506bf455d57a0672cf663260b/docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-1.md) · [Lossless original file](../../../../quality-evidence/40-review-originals/plan-sar-astra-sar-report-round-1.txt).
+> Original SHA-256: `860eed2ebca0676e3aeff17db4f8297d93550770ae3a4da6b2dbda318c6728bb`. Acceptance and sealed hashes bind the original bytes; this view changes presentation only.
+
 # Issue 40 migration implementation plan — native SAR round 1
 
 ## Decision
 
-**changes-requested**
+Decision: **changes-requested**.
 
 The target architecture remains sound and the plan resolves the three optional specification suggestions. Three implementation-plan revisions are required: connect actual operation settlement to the lifecycle interface, define a runnable production-container acceptance harness with genuine provider controls/observations, and repair the extraction-stage handoff so its required tests can execute before web delegation is complete. These requests do not require reopening the accepted specification.
 

@@ -1,3 +1,11 @@
+# Story 40 specification XPR — reviewer response 2
+
+> Formatting view only. [Exact original Git blob](https://github.com/kburson/AIVC/blob/e6e96c9a4f07bb78faa73dc56368a0503d912982/docs/peer-reviews/spec/stateless-service-migration-design-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-design-review-0009efb5ca6886291ad48628afa78120-reviewer-response-2.md) · [Lossless original file](../../../../../quality-evidence/40-review-originals/spec-xpr-reviewer-response-2.txt).
+> Original SHA-256: `fa0ab0ee9afb0aac4b1024fb91af3747a1d11a07105e762c8c3bf67550afe93d`. Acceptance and sealed hashes bind the original bytes; this view changes presentation only.
+
+## Original protocol metadata
+
+```text
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
@@ -26,6 +34,7 @@ finding_ids: ["R2-F001","R2-F002","R2-F003","R2-F004","R2-F005"]
 answered_finding_ids: []
 acknowledged_supplement_ids: []
 ---
+```
 
 > **LOCAL JOURNAL MODE** — authority assurance: `unavailable`
 
@@ -47,6 +56,7 @@ Disposition verification:
   - same-replica and missing-attribution negative controls that must fail the assertion.
 
   No application routing field is added. The A/B test is now deterministic and falsifiable.
+
 - **R1-F002 (resolved).** Two pre-body pipeline permits per request kind are taken after authentication and before ingestion. They have no queue, return a retryable 429 when exhausted, and are held until actual settlement. Invalid or aborted input releases its permit only after the body reader settles. Section 6 forbids Fastify plugins from parsing bodies before this gate. The memory claim is honestly limited to wire-body buffers, with the other overheads measured separately. The design now declares, rather than hides, the tradeoff that slow uploads occupy capacity. See R2-F001 for an optional refinement.
 - **R1-F003 (resolved).** Production web now runs an explicit Node HTTP server wrapper around `prepare`/`getRequestHandler`. That wrapper owns the listener, socket registry, readiness and drain interception. Web backpressure is restated as a pull-driven `ReadableStream` with an explicit high-water mark, proven by socket-level slow-reader tests. Container binds are reachable from outside the container. If the pinned-version compatibility check fails, the design must be revised; silent weakening or a Next.js upgrade is ruled out. SIGTERM ownership is assigned per actual listener, and draining is marked synchronously before any awaited close.
 - **R1-F004 (resolved).** A canonical non-secret interface-policy manifest now feeds both web and core. Web always overwrites the digest header. Core refuses a mismatched digest after authentication and before body ingestion. The header grants no privilege. The core's actual digest is exposed on a private header and stripped for browsers. Deliberate-mismatch tests are required. This is coherent and adds no shared state.

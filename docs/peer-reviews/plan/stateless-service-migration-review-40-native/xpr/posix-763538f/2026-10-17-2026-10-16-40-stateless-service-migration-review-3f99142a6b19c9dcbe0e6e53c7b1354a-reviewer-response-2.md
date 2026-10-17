@@ -1,3 +1,11 @@
+# Story 40 plan XPR — reviewer response 2
+
+> Formatting view only. [Exact original Git blob](https://github.com/kburson/AIVC/blob/80efe1a150dbd8605aab69678c2a7a87f8553072/docs/peer-reviews/plan/stateless-service-migration-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-review-3f99142a6b19c9dcbe0e6e53c7b1354a-reviewer-response-2.md) · [Lossless original file](../../../../../quality-evidence/40-review-originals/plan-xpr-reviewer-response-2.txt).
+> Original SHA-256: `e2b0046e9d38ead19e2bc10b4511bc151ea6298d529c4c69f81b13b20000154a`. Acceptance and sealed hashes bind the original bytes; this view changes presentation only.
+
+## Original protocol metadata
+
+```text
 <!-- ai-peer-review-template version="1" digest="sha256:78e9a634af9d540baaf6790db82952eaf39cf7ab59a6cdc7938319ae07a4cbed" -->
 
 <!-- protected-frontmatter -->
@@ -26,6 +34,7 @@ finding_ids: ["R2-F001","R2-F002","R2-F003"]
 answered_finding_ids: []
 acknowledged_supplement_ids: []
 ---
+```
 
 > **LOCAL JOURNAL MODE** — authority assurance: `unavailable`
 
@@ -49,6 +58,7 @@ Disposition verification:
   - no application drain of the rejected body.
 
   Kernel-buffered bytes are measured separately rather than denied. On the BFF side, an owned Node HTTP/HTTPS duplex client removes the dependency on undici half-duplex ordering, and destructive browser-upload cancellation waits until the error response has flushed. The router and ingress follow the same rule (nginx lingering 1 s / 1 s). Task 5 repeats the refusals hop by hop, and the outcomes for healthy versus stalled readers are explicit. Task 3 Step 4's parity test now has one defined expected outcome.
+
 - **R1-F003 (resolved).** The host generates `AIVC_INSTANCE_ID` and a run label for each new core container. Host inspect verifies a bijection between instance UUID, container ID and private address against the core boot event, before tests and after every acknowledged replace or scale. Router enums and fixture markers both resolve through that manifest. Lease and pipeline observations come from sanitized structured stdout events. They are emitted only in explicit mock-script mode and carry a per-process monotonic sequence. Capture is bounded, and gaps or overflow invalidate the run. No application route is added. A SIGKILL leaves unreleased work unknown, and absent events never imply release. This is a sanctioned channel that can be falsified.
 - **R1-F004 (resolved).** Task 2 Step 5 (line 180) now includes `provider-sdk-migration.test.ts`, plus `config` and `admission`.
 - **R1-F005 (resolved).** Line 473 defines router eligibility as bounded direct probes plus acknowledged membership updates, neither of which consumes the script. The outcomes are:
@@ -59,6 +69,7 @@ Disposition verification:
   - a contradictory script invalidates the scenario.
 
   This reconciles spec §8 ("router excludes draining cores") with its no-substitution rule.
+
 - **R1-F006 (resolved).** `tests/fixtures/migration-scenarios.json` is a closed inventory with maximum durations for each case. Preflight rejects missing, duplicate, extra or skipped cases and any sum above 80% of a phase budget. The Vitest phase and the global bounds are explicitly revised, and the arithmetic holds. The maxima are labeled as enforced limits, not measurements.
 - **R1-F007 (resolved).** `createRuntime` is declared new (line 132). The production runtime, lease pools and new pipeline pools stay process-global and memoized. In-process tests may inject a complete `ResourceContext`, and that is explicitly not a production multi-pool claim. `config`, `leases` and `admission` tests are retargeted with shared-contention and isolated-context cases. Only mock-script mode builds request-scoped deps, passing parent/replica context as arguments and never storing it on cached adapters. Tests with interleaved parents across several rounds cover leakage.
 - **R1-F008, R1-F009, R1-F010 (incorporated).** The entry point now uses `process.execPath` with `timeout`/`killSignal`, handles signal and `null` status, and runs an owned fallback cleanup behind an import-main guard. The transitive walker is moved and re-rooted, and an empty closure fails. Task 2 Step 3 converts the eager `runTurn` producer to demand-driven iteration.

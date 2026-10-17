@@ -1,3 +1,6 @@
+> Formatting view only. [Exact original Git blob](https://github.com/kburson/AIVC/blob/e6347619fb245ba506bf455d57a0672cf663260b/docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-4.md) · [Lossless original file](../../../../quality-evidence/40-review-originals/plan-sar-astra-sar-report-round-4.txt).
+> Original SHA-256: `f6a16915b0776c0388123024a39393a84f33ecaaf001dd1b484850abba7eec07`. Acceptance and sealed hashes bind the original bytes; this view changes presentation only.
+>
 > **Formatting view; original report preserved.**
 > [Exact original report](https://github.com/kburson/AIVC/blob/e6347619fb245ba506bf455d57a0672cf663260b/docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-4.md) · original SHA-256: `f6a16915b0776c0388123024a39393a84f33ecaaf001dd1b484850abba7eec07`. Formatting does not renew or expand native SAR acceptance.
 
@@ -5,7 +8,7 @@
 
 ## Decision
 
-**accepted**
+Decision: **accepted**.
 
 No required revisions remain in the reviewed plan. Round-three finding R3-1 is closed by the actual revised lifecycle schema, transition rules, acknowledgements and tests. This is acceptance of the implementation plan as a planning artifact, not evidence that its future implementation or tests have passed.
 

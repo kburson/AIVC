@@ -1,3 +1,6 @@
+> Formatting view only. [Exact original Git blob](https://github.com/kburson/AIVC/blob/e6347619fb245ba506bf455d57a0672cf663260b/docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-2.md) · [Lossless original file](../../../../quality-evidence/40-review-originals/plan-sar-astra-sar-report-round-2.txt).
+> Original SHA-256: `19646f9b03b1e55e5c1ffec048df9d8ed0fa626d660ae33fdcf85389c88ce0b3`. Acceptance and sealed hashes bind the original bytes; this view changes presentation only.
+>
 > **Formatting view; original report preserved.**
 > [Exact original report](https://github.com/kburson/AIVC/blob/e6347619fb245ba506bf455d57a0672cf663260b/docs/peer-reviews/plan/stateless-service-migration-review-40-native/sar/astra-sar-report-round-2.md) · original SHA-256: `19646f9b03b1e55e5c1ffec048df9d8ed0fa626d660ae33fdcf85389c88ce0b3`. Formatting does not renew or expand native SAR acceptance.
 
@@ -5,7 +8,7 @@
 
 ## Decision
 
-**changes-requested**
+Decision: **changes-requested**.
 
 The revision closes the original operation-settlement and extraction-checkpoint findings. It substantially improves the production harness, but four concrete defects remain in its newly selected protocol and execution topology. Required changes concern browser secure-context support, provider invocation identity, host-owned lifecycle controls, and the fixture's encoded audio size limit. No specification amendment is required.
 

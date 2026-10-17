@@ -1,3 +1,11 @@
+# Story 40 plan XPR — author response 1
+
+> Formatting view only. [Exact original Git blob](https://github.com/kburson/AIVC/blob/80efe1a150dbd8605aab69678c2a7a87f8553072/docs/peer-reviews/plan/stateless-service-migration-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-review-3f99142a6b19c9dcbe0e6e53c7b1354a-author-response-1.md) · [Lossless original file](../../../../../quality-evidence/40-review-originals/plan-xpr-author-response-1.txt).
+> Original SHA-256: `9a454aa51f638d018f8ab4c4ef35f19383538a74e17c3305d5635c4e4613f148`. Acceptance and sealed hashes bind the original bytes; this view changes presentation only.
+
+## Original protocol metadata
+
+```text
 <!-- ai-peer-review-template version="1" digest="sha256:f81da1894a46ceb20866070833b4e99ef536ef633542b418783d29e6a981dbd8" -->
 
 <!-- protected-frontmatter -->
@@ -26,6 +34,7 @@ finding_ids: []
 answered_finding_ids: ["R1-F001","R1-F002","R1-F003","R1-F004","R1-F005","R1-F006","R1-F007","R1-F008","R1-F009","R1-F010"]
 acknowledged_supplement_ids: []
 ---
+```
 
 > **LOCAL JOURNAL MODE** — authority assurance: `unavailable`
 

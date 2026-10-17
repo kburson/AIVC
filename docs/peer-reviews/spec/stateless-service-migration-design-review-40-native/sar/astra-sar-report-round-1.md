@@ -1,8 +1,11 @@
+> Formatting view only. [Exact original Git blob](https://github.com/kburson/AIVC/blob/e6347619fb245ba506bf455d57a0672cf663260b/docs/peer-reviews/spec/stateless-service-migration-design-review-40-native/sar/astra-sar-report-round-1.md) · [Lossless original file](../../../../quality-evidence/40-review-originals/spec-sar-astra-sar-report-round-1.txt).
+> Original SHA-256: `94fc179cad25367ec118b8419179a1d9e7100b469880e89fe15219634b34f4a9`. Acceptance and sealed hashes bind the original bytes; this view changes presentation only.
+
 # Issue 40 migration specification — native SAR round 1
 
 ## Decision
 
-**accepted**
+Decision: **accepted**.
 
 No required specification changes remain. The design provides a coherent, testable migration contract for three independently deployable stateless services while preserving the existing request-scoped semantics. Acceptance applies only to the reviewed specification bytes. It does not accept an implementation plan, authorize implementation, establish delivered application correctness, satisfy story completion gates, or unblock research Task 0.
 
