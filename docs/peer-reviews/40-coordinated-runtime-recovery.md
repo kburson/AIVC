@@ -22,7 +22,15 @@ Each used Claude opus 5.5/high for two rounds and one revision, with its own gen
 
 The original spec attempt `review-2bdf5dd8ee56accc6e494643054a3cf1`, its uncertain provider session and launch reservation remain byte-preserved and unsettled. Its eight-hour MCP caller timeout was not provider termination. New independent spec review sealed a preserved-predecessor reference; no replay/kill/reconcile or invented terminal evidence. Old runtime trees and MCP processes were preserved.
 
-#40 remains **Plan**. Planning acceptance does not approve application implementation, hydrate children, promote state, merge, close or unblock research. Application implementation and paid execution remain stopped; current plan proposes six dependent packages and 64 joint hours/XL for later governed decomposition/admission.
+Story #40 remains **Plan**. Planning acceptance does not approve application implementation, hydrate children, promote state, merge, close or unblock research. Application implementation and paid execution remain stopped; current plan proposes six dependent packages and 64 joint hours/XL for later governed decomposition/admission.
+
+## Documentation verification and remaining formatting findings
+
+Both current artifact SHA-256 values and every sealed author/reviewer response were checked against the finalized manifests. Canonical author delivery receipts match sequences 8 and 12 in each real review. Historical evidence verification passed for 122 original documents. Targeted Prettier passed for the plan, both indexes and this recovery document; Git whitespace checks passed.
+
+The full Markdown scan remains nonzero: **70 formatting findings in 11 preserved SAR/XPR report files**, chiefly generated protected-frontmatter/heading interpretation and historical emphasis. The accepted spec/plan and current indexes are not among those Markdown findings. Sealed response bytes were not rewritten, formatting exemptions were not added, and no all-repository lint/format success is claimed. Any future presentation cleanup must preserve exact original blobs/digests and distinguish views from authority.
+
+No application code or application/provider/container tests were executed in this planning task.
 
 ## Historical source-64 restoration checkpoint
 
@@ -92,7 +100,7 @@ not native tool attachment, a handoff receipt or review acceptance. No synthetic
 review ID or handoff event was supplied.
 
 The runtime owner subsequently repaired the no-native candidate through the normal
-#190 rework process in [PR #196](https://github.com/kburson/ai-peer-review/pull/196).
+Story #190 rework process in [PR #196](https://github.com/kburson/ai-peer-review/pull/196).
 Source revision `fb922c4cabad5648ad71e467e9b602fa76dd41a4` contains historical-hook
 compatibility and bounded support for AIVC npm aliases and tracked Node check
 drivers. The repair preserves unknown-command refusal and source/proposed-file
