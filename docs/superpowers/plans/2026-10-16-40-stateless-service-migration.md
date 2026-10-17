@@ -91,7 +91,7 @@ Existing server implementations move into core. Task 2 retains temporary single-
 
 **Interfaces:** `@aivc/contracts` re-exports existing types/functions without changing signatures: `TurnInput`, `SpeechInput`, `TurnEvent`, `Capabilities`, `parseTurn`, validators, `encodeSse`, `assertTurnSequence`, and history helpers. ESM exports point to compiled `dist/index.js`; types point to `dist/index.d.ts`.
 
-- [ ] Step 1: Add the transitive import boundary regression before moving source. Retain the existing frozen wire fixtures and schema rejection cases.
+- [ ] Step 1: Add the transitive import boundary regression before moving source. Retain frozen wire fixtures/schema cases. Move the existing transitive walker from wire-contracts.test.ts into workspace-boundaries.test.ts, re-root on the actual package export closure and remove the old empty-directory walk. Missing/empty export closure fails.
 
 ```ts
 import { expect, it } from 'vitest';
@@ -129,9 +129,9 @@ it('retains the frozen wire grammar after extraction', () => {
 
 **Files:** Core workspace, moved server modules, `apps/orchestrator/src/http/{pipeline,interface-policy}.ts`, `tests/contracts/{orchestrator-http,provider-sdk-migration}.test.ts` and `tests/fixtures/provider-protocol-stubs/server.mjs`. Root discovery/build config and moved tests belong to this step.
 
-**Interfaces:** `createOrchestratorApp({runtime, lifecycle}): FastifyInstance`; `createRuntime(env, overrides?): ServerRuntime` retains existing adapter injection for scripted providers. `requestFromIncoming(raw, signal): Request` preserves streaming bytes/content type without eagerly consuming the body. `pumpResponse(response, rawReply, signal): Promise<void>` awaits downstream demand and actual reader cancellation. `Lifecycle` is defined in Task 4; initially its non-draining implementation supplies request registration/abort handles with the same interface.
+**Interfaces:** `createOrchestratorApp({runtime, lifecycle}): FastifyInstance`; `createRuntime(env, overrides?): ServerRuntime` is a new factory. Production entry obtains the moved memoized `getRuntime()` once and passes it to every app/route; actual existing adapter injection seams remain supported. `requestFromIncoming(raw, signal): Request` preserves streaming bytes/content type without eagerly consuming the body. `pumpResponse(response, rawReply, signal): Promise<void>` awaits downstream demand and actual reader cancellation. `Lifecycle` is defined in Task 4; initially its non-draining implementation supplies request registration/abort handles with the same interface.
 
-- [ ] Step 1: Write socket-based authentication ordering tests using a request body that never finishes and a scripted provider counter. Missing/wrong token must return 401 with zero body-consumer, adapter and lease calls. Add valid multipart text/audio, JSON text/speech and capabilities tests. Gate two slow uploads per kind: a third must receive retryable 429 before another body read/provider call. Assert memory plateau, retained permits through reader/work settlement and unaffected admitted work. A policy mismatch returns retryable 503 before body/lease work.
+- [ ] Step 1: Write socket-based authentication ordering tests using a request body that never finishes and a scripted provider counter. Missing/wrong token must return 401 with zero body-consumer, adapter and lease calls. Add valid multipart text/audio, JSON text/speech and capabilities tests. Open more than four simultaneous never-finishing unauthenticated uploads, then policy-mismatched uploads: permit counts must remain zero and valid authenticated requests of each kind must still be admitted. Gate two slow uploads per kind: a third must receive retryable 429 before another body read/provider call. Assert memory plateau, retained permits through reader/work settlement and unaffected admitted work. A policy mismatch returns retryable 503 before body/lease work.
 
 ```ts
 it('rejects unauthenticated work before body and paid admission', async () => {
@@ -147,6 +147,8 @@ it('rejects unauthenticated work before body and paid admission', async () => {
       bodyReads: 0,
       providerCalls: 0,
       heldTurns: 0,
+      heldTurnPipelines: 0,
+      heldSpeechPipelines: 0,
     });
   } finally {
     await h.close();
@@ -157,7 +159,7 @@ it('rejects unauthenticated work before body and paid admission', async () => {
 `startCoreFixture` is created here in `tests/helpers/migration-topology.ts`; it starts real Node/Fastify sockets with injected adapters. `rawRequest` resolves on response headers and closes its still-open upload in cleanup. `counts()` returns sanitized in-memory test counters, never a public production endpoint.
 
 - [ ] Step 2: Run the focused test; RED must be missing core entry point/auth behavior, not a provider/network credential failure.
-- [ ] Step 3: Move runtime/providers/tools/deadline/lease and HTTP handling into core, remove Next-specific assumptions, preserve caller-independent validation, and add ordered onRequest lifecycle registration, Host/bearer auth, policy consistency and nonqueued two-per-kind pipeline admission before Fastify body parsing. Use raw streamed routes/custom parsing for capped request handling; default JSON parsing must not precede authentication. Node request construction uses `duplex: 'half'` where required by the pinned runtime.
+- [ ] Step 3: Move runtime/providers/tools/deadline/lease and HTTP handling into core, remove Next-specific assumptions, preserve caller-independent validation, and add ordered onRequest lifecycle registration, Host/bearer auth, policy consistency and nonqueued two-per-kind pipeline admission before Fastify body parsing. Use raw streamed routes/custom parsing for capped request handling; default JSON parsing must not precede authentication. Node Request construction uses `duplex: 'half'` where required. Convert the moved eager turn producer to a pull-driven iterator: obtain the next runTurn event only when stream demand permits. Demand-gating the socket pump alone cannot bound an eager producer queue.
 
 ```ts
 export type PumpLimits = { highWaterBytes: 65536; maxChunkBytes: 16384 };
@@ -175,7 +177,15 @@ export type Lifecycle = {
 `pipelines.acquire(kind)` returns an idempotent `{release(): void}` permit or immediately throws a sanitized retryable 429; no request body is read on refusal. `assertInterfacePolicy` validates a present consistency digest against server config and throws sanitized retryable 503 before ingestion. These helpers live in the mapped http modules, with positive/negative tests. `kind` is derived only from the fixed route, never caller identity. `finish` removes the registry entry only after settlement, while recording terminal or unknown outcome. A lease belongs to core work, not the response pump. Handle Node response close independently of request upload completion. Disable request/SDK automatic retries and redirect following. Never release from deadline `result`; retain existing release-from-`settled` semantics.
 
 - [ ] Step 4: Add pausing-reader and deferred cancellation fixtures. Fill two slots, abort both transports, keep underlying provider cancellation unresolved, and prove a third request remains BUSY until actual settlement. Pause read demand and assert producer pulls/queued bytes stop at the declared bound; abort during drain and verify cleanup. Exercise oversize body, malformed media/history, provider rate limit, deadline before headers, deadline after accepted SSE, PCM EOF/error and once-only terminal.
-- [ ] Step 5: Run `npx vitest run tests/contracts/orchestrator-http.test.ts tests/contracts/leases.test.ts tests/contracts/deepgram.test.ts tests/contracts/search-budget.test.ts tests/slow/disconnect.test.ts tests/slow/deadlines.test.ts`. Use the temporary compatibility seam defined below at this checkpoint; preserve every behavioral assertion. Task 3 retargets legacy fixtures to the real core and removes the seam. Commit focused core ownership/transport deliverable.
+- [ ] Step 5: Run `npx vitest run tests/contracts/orchestrator-http.test.ts tests/contracts/provider-sdk-migration.test.ts tests/contracts/config.test.ts tests/contracts/leases.test.ts tests/contracts/admission.test.ts tests/contracts/deepgram.test.ts tests/contracts/search-budget.test.ts tests/slow/disconnect.test.ts tests/slow/deadlines.test.ts`. Use the temporary compatibility seam defined below at this checkpoint; preserve every behavioral assertion. Task 3 retargets legacy fixtures to the real core and removes the seam. Commit focused core ownership/transport deliverable.
+
+### Runtime and pool ownership — Task 2
+
+Move memoized `getRuntime()`, `getLeasePools()` and their process-global defaults into core. Add one process-global default pipeline pool with two permits per kind. Every production app in the process shares those pools and the memoized runtime/config/ordinary adapter cache, including across module reloads; no request constructs a new runtime or pools. New `createRuntime(env, overrides?)` constructs a runtime using default process pools unless an explicit complete resource context is injected. Production uses `getRuntime()` to memoize its result, never hot-reloading config.
+
+In-process fixtures may inject `ResourceContext = {leasePools: LeasePools; pipelines: PipelinePools}`, owning both pools and teardown. Sharing one context must contend at two slots; separate explicit contexts simulate separate processes and are not a production multi-pool claim. Retarget config.test.ts module-reload identity assertions to moved getRuntime/getLeasePools plus default pipelines; retain shared occupied slots after re-import. Retarget leases.test.ts and admission.test.ts to core, adding shared-two-app contention and explicitly isolated contexts. Task 2 compatibility re-exports point to those identical moved singleton modules; Task 3 removes only legacy web globals/injection, retaining core sharing tests.
+
+Ordinary adapters remain cached. Only explicit mock-script mode calls createScriptedDeps per admitted request, with fresh parent/replica context passed as arguments, never stored on cached model/speech objects. Each STT/model-round/TTS method creates a fresh invocation ID. Immutable fixture transport/config may be shared. Interleave two parents/multiple rounds in tests to detect ID/abort leakage. Real lookup remains its cached independent HTTP client.
 
 ## Task 3: Delegate web requests without provider ownership
 
@@ -249,17 +259,36 @@ it('never reports unsettled provider cancellation as drained', async () => {
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-test('production stateless service acceptance', () => {
-  const probe = spawnSync('docker', ['info'], { encoding: 'utf8' });
-  assert.equal(probe.status, 0, 'Docker is required for migration acceptance');
-  const run = spawnSync('npm', ['run', 'test:migration:containers'], {
-    stdio: 'inherit',
+import { randomUUID } from 'node:crypto';
+import { cleanupOwnedMigrationRun } from '../../scripts/test-migration-containers.mjs';
+test('production stateless service acceptance', { timeout: 1860000 }, () => {
+  const probe = spawnSync('docker', ['info'], {
+    timeout: 10000,
+    encoding: 'utf8',
   });
-  assert.equal(run.status, 0, 'Container acceptance must execute and pass');
+  assert.equal(probe.status, 0, 'Docker is required');
+  const runId = randomUUID();
+  const run = spawnSync(
+    process.execPath,
+    ['scripts/test-migration-containers.mjs'],
+    {
+      stdio: 'inherit',
+      timeout: 1800000,
+      killSignal: 'SIGKILL',
+      env: { ...process.env, AIVC_MIGRATION_RUN_ID: runId },
+    },
+  );
+  if (run.error || run.signal || run.status === null) {
+    const cleanup = cleanupOwnedMigrationRun(runId, { timeoutMs: 30000 });
+    assert.equal(cleanup.status, 0, 'Owned fallback teardown must complete');
+  }
+  assert.ifError(run.error);
+  assert.equal(run.signal, null);
+  assert.equal(run.status, 0, 'Acceptance must execute and pass');
 });
 ```
 
-Define `test:migration:containers` here to run the topology-owned integration/browser suite exactly once, not recurse into the entry point. Cross-platform subprocess behavior must match the repository's existing runner conventions.
+Define `test:migration:containers` as the same direct Node runner for operator use; wrapper uses process.execPath so npm/shell dispatch cannot outlive timeout. Runner CLI has an import-main guard: importing cleanupOwnedMigrationRun never starts a stack. This exported helper validates UUID, saved manifest, exact project/run labels and owned container IDs, then performs fixed Compose teardown argv under the 30-second bound. Missing ownership proof refuses. Persist manifest before resources are created. No recursive entry point. Cross-platform subprocess behavior must match the repository's existing runner conventions.
 
 - [ ] Step 2: Run the new acceptance entry point; expect RED for absent implementation, or explicit unavailable tooling. Never treat tool absence as a product defect fix or success.
 - [ ] Step 3: Repeat the forced sequence for multipart text/WAV and JSON text controls. Schedule a turn on A, a speech segment on B, then a next turn with retained history on B; cold-replace A and repeat. Use the deterministic per-request L7 router below for delegated legs and private replica addresses for direct controls. Correlate actual upstream-address observations with independent provider/lease journals. Same-replica and absent/ambiguous-attribution negative controls must fail; no public routing field is added. Compare provider-observed histories and speech inputs with expected payloads. Read-only filesystems and no session volumes remain enforced.
@@ -411,17 +440,37 @@ The fixture has separate runner-only control endpoints to load scripts, release 
 
 Adapter abort has two obligations: stop its current data reader and send an authenticated fixture cancellation request whose acknowledgement may be deliberately gated. The adapter's promise/iterator finalization waits for pending reader cleanup **and that acknowledgement**, so local operation settlement can remain delayed even after the original HTTP fetch rejects on abort. A fixture EOF alone cannot satisfy the cancellation gate. The fixture ledger records cancellation independently. If core dies first, record started-but-unsettled/connection-lost from the surviving fixture; do not invent cancellation acknowledgement or zero provider cost. Surviving cores never receive a replay request. Task 5 reads the ledger from the runner after hard kill to prove provider-call counts and no replay. This mock boundary tests actual app settlement plumbing, without claiming that a real provider settles identically.
 
+### Early-refusal transport contract — Tasks 2–5
+
+For pre-body 401, policy-503, capacity-429 and drain-503, pause application upload consumption, send the bounded existing JSON envelope with Connection: close, and end the response. End the writable socket after response flush and force-destroy it within 1000 ms of refusal, regardless of upload EOF. Never application-drain an endless rejected body. Fixed HTTP/kernel receive buffers may already contain bytes; no body parser/provider/permit may consume them. Measure those separately. A deliberately stalled response reader can receive incomplete transport at the bound, never a fabricated complete envelope.
+
+Core socket tests continuously offer upload bytes and assert healthy-reader status/envelope/retryability, zero body-parser/provider/new-permit activity, bounded close and memory plateau for all refusals. Test keep-alive and new connections while admitted work continues.
+
+Use the owned Node HTTP/HTTPS client for BFF duplex forwarding so its response event can be handled before upload completion; do not depend on half-duplex fetch returning first. Stop pulling browser body on an early response, relay the error immediately, and defer destructive browser-upload cancellation until browser-facing response flush. Stop upstream upload without destroying its incoming response prematurely. The wrapper owns close and joins cleanup within the same 1000 ms policy. Pinned Next tests must prove that reader cancellation does not destroy the error response before flush. No retries or unbounded discarded-body drain.
+
+The private L7 router uses the same duplex early-response/close rule. TLS ingress disables buffering/retries and uses bounded lingering close (lingering_time 1s, lingering_timeout 1s), with actual pinned-behavior tests. Task 5 repeats ongoing-upload refusals through direct core, router, BFF and HTTPS ingress. Healthy response readers must receive unchanged status/envelope/retryability, including 429/503 rather than accidental 502; stalled readers require explicit incomplete transport within the bound.
+
 ### Actual moved SDK paths — Task 2, repeated in Task 5
 
 The scripted fixture proves application orchestration/settlement, but does not replace real adapter coverage. Add local protocol stubs for each moved real STT/model/TTS adapter in `tests/fixtures/provider-protocol-stubs/server.mjs` and tests in `tests/contracts/provider-sdk-migration.test.ts`. Instantiate actual ClaudeAdapter with its existing ClaudeOptions.fetch seam and createDeepgramAdapter(config, fetchImpl), retaining the pinned SDKs and valueless fixture keys. The test-owned fetch transport checks the expected fixed SDK host/path, maps only that destination to the local HTTP stub, preserves the AbortSignal/body/response streaming contract, and refuses every unrecognized destination. This is constructor injection already present in source, not a browser/request-selected endpoint or new production configuration. Production defaults and authentication remain unchanged. Network policy denies external egress throughout.
 
 For each real adapter require: a normal result/stream with existing usage/format; abort before first result; abort after a chunk; delayed reader EOF/rejection; and reader/cancellation cleanup before actual settlement/lease release. Exercise local HTTP/WebSocket protocol as used by that adapter, not a replacement application SSE fixture. Record no provider capability or paid success from this test. Reuse the compiled actual modules in an isolated in-container SDK test selection in Task 5 and include the SDK case counts/outcomes in the existing Vitest selection's run manifest (no third subprocess selection). Missing stub compatibility is a failed required test, not permission for live credentials. Task 2 runs the focused SDK test alongside the existing deepgram/lease/deadline regressions; Task 5 repeats the declared cases with compiled actual adapter/SDK modules in the isolated test driver; the separate scripted real-application tests prove HTTP/process/lifecycle composition. Do not represent an in-driver adapter test as a live-provider or full application-path result.
 
+### Replica binding and lease observations — Tasks 2, 4–5
+
+Host generates a fresh non-secret UUID per new core container, supplied as AIVC_INSTANCE_ID and a run-owned label. Core validates it once and emits it in boot/mock-script invocation metadata; production without supplied ID generates one once per process. It grants no auth/routing privilege or session state. Replacement uses a fresh ID.
+
+Before tests and after acknowledged replace/scale, host inspect verifies run/source/image labels, exact container ID, instance UUID and actual private address against the core boot event. Manifest records a bijection of instance UUID, container ID and address. Missing, duplicate or mismatched bindings fail before dispatch. Router enums resolve through that verified manifest; fixture instance markers must match it independently. Never export raw environment/inspect data or secrets.
+
+In explicit mock-script mode, production core modules emit sanitized structured stdout events for boot, pipeline acquire/release and paid-lease acquire/release: instance UUID, monotonic per-process sequence, parent operation ID when admitted, kind and held count. Release events follow actual settlement only. No prompt/history/audio/token/header values or test-control endpoint. Host captures per-container logs with 1 MiB/10000-event per-instance caps and bounded Docker log storage; overflow/loss/sequence gaps invalidate the run. Collect before container removal. Never compare cross-process monotonic times.
+
+Task 2 tests real route events while cancellation remains gated. Task 5 joins host-tagged events, fixture parent/invocation IDs and router records, also asserting BUSY until settlement. SIGKILL leaves acquired-but-unreleased work unknown; surviving fixture observations and zero replay remain required. Corrupt binding/log negative controls fail; absent observations never imply release.
+
 ### Deterministic replica routing and attribution — Tasks 4–5
 
 Create a small private L7 router in the mapped router files; it is separate test infrastructure, with its own pinned image, limits and non-secret observation ledger. Web's sole upstream is its fixed private origin. The data listener forwards exact application bytes and safe headers with bounded producer demand, and sets upstream Host from the run-owned target manifest. It does not expose a public application routing token, buffer a whole body, follow redirects, retry or substitute another target. Direct controls use explicit private core-a/core-b addresses and their allowed Host values.
 
-Only `POST /api/turn` and `POST /api/speech` consume the ordered per-test script; entries contain a closed method/path pair and target enum core-a/core-b, never a URL. Every matching request consumes one entry exactly once before forwarding; wrong method/path order, exhausted script or unavailable selected target fails explicitly. Health/readiness probes use direct replica addresses and do not consume entries. `GET /api/capabilities` has an explicitly configured fixed eligible target and no script consumption, so page bootstrap cannot shift the A/B/B sequence. Driver gates the real browser dispatch order using provider milestones rather than timing sleeps. Downstream/upstream keep-alive cannot influence selection, which occurs for every HTTP request, not every connection.
+Only `POST /api/turn` and `POST /api/speech` consume the ordered per-test script; entries contain a closed method/path pair and target enum core-a/core-b, never a URL. Every matching request consumes one entry exactly once; wrong method/path order or exhausted script invalidates the scenario. Direct authenticated readiness probes (at most once per second, 500 ms timeout, no retries) and acknowledged host membership updates track eligible targets without consuming scripts. Known draining/ineligible/removed target returns sanitized retryable 503 without substitution, marking contradictory scripts invalid; a stale probe followed by core drain-503 relays 503 unchanged. No eligible core means 503. A still-declared eligible target with unexpected connection refusal/network loss returns sanitized 502, never alternate dispatch. Acknowledged removal means ineligible/503; an unexpected crash with stale membership means network failure/502 until refreshed. Apply to fixed capabilities target too. These probes affect router eligibility only, never application readiness/liveness. Health/readiness probes use direct replica addresses and do not consume entries. `GET /api/capabilities` has an explicitly configured fixed eligible target and no script consumption, so page bootstrap cannot shift the A/B/B sequence. Driver gates the real browser dispatch order using provider milestones rather than timing sleeps. Downstream/upstream keep-alive cannot influence selection, which occurs for every HTTP request, not every connection.
 
 A separate private control listener is accessible only to the driver/control network, authenticated with the run-owned control credential, with 8 KiB closed request caps. Load at most 64 script entries per scenario, reset only between scenarios after requests settle, and bind target enums to exact current container IDs/private addresses from the host manifest. On replacement/scale, require the verified host acknowledgement before updating membership; stale IDs refuse. The control record accepts no shell, code, arbitrary URL, image or service override. Production app containers never possess this control credential or interface.
 
@@ -449,7 +498,40 @@ Root script `test:migration:containers` is exactly `node scripts/test-migration-
 
 The runner owns a unique Compose project name, all images/services/networks/volumes and teardown on success, failure, signals and timeout. Keep the three application services at production mode, with independent configured replicas; the fixture/router are declared test infrastructure. Application images are built from the clean pinned source revision or accepted only when source SHA, build manifest, contract/catalog digests and content labels match that exact revision. A local tag or cached image without this proof refuses. Record the built image content digests before tests. Core death never deletes the fixture ledger before assertions/artifact capture.
 
-Bound the whole runner to 1,200 seconds: builds at most 600 seconds, readiness 90 seconds, Vitest 240 seconds, Playwright 240 seconds, teardown 30 seconds, all also constrained by the remaining global budget. Individual integration/browser tests have at most 60-second deadlines; real 20-second shutdown checks fit that limit. The Node wrapper has a 1,260-second timeout, launches the runner with a 1,200-second subprocess timeout and preserves nonzero exits. On forced runner death it performs bounded fallback teardown using the recorded Compose project; capture incomplete evidence first if possible. Cleanup failure stays a nonzero test outcome. Docker, Compose, image identity or Chromium absence is explicit failure, never skip. Build services from the pinned source before declaring images missing; a required unavailable build/runtime is still nonzero.
+Bound the runner to 1800 seconds: builds 600, initial readiness 90, Vitest 780, Playwright 240 and teardown 30 seconds, leaving 60 seconds global reserve. Every phase also obeys remaining global time; budgets never renew. Wrapper test timeout is 1860 seconds, subprocess timeout 1800 and verified run-owned fallback teardown at most 30 seconds. Individual cases are at most 60 seconds. Missing Docker/Compose/source-image identity/Chromium fails nonzero, never skip; perform required builds before image-availability acceptance. Cleanup/incomplete evidence failures remain nonzero. The closed scenario inventory below cannot be trimmed to hide exhaustion.
+
+Task 4 owns `tests/fixtures/migration-scenarios.json`: closed exact case IDs, suite, required count and maximum duration. Preflight rejects missing/duplicate/extra/skipped cases or sums exceeding 80% of a phase budget. Case maxima include host actions/readiness; remaining global/case time bounds every 30-second action and 40-second acknowledgement wait. Compare inventory with actual suite counts/outcomes.
+
+| Required Vitest case                           | Max seconds |
+| ---------------------------------------------- | ----------- |
+| Multipart text A/B/B plus cold replacement     | 60          |
+| Multipart WAV A/B/B plus cold replacement      | 60          |
+| JSON text A/B/B plus cold replacement          | 60          |
+| Core graceful drain/unknown-settlement bound   | 30          |
+| Core SIGKILL/no replay/replacement             | 60          |
+| Web graceful termination while forwarding      | 30          |
+| Lookup termination/tool failure                | 30          |
+| Core scale up/down with identical peers        | 60          |
+| Timeout/segment policy mismatch                | 20          |
+| Padded-WAV direct/delegated cases              | 30          |
+| Real adapter/SDK stub matrix                   | 45          |
+| Early upload refusal across all hops           | 30          |
+| Attribution/corrupt observation negatives      | 20          |
+| Local readiness during dependency loss         | 30          |
+| Held leases/pipelines and delayed cancellation | 45          |
+| Total                                          | 610         |
+
+610 is below 624 (80% of 780); margin is 170 seconds. All signals, replacements and their readiness are included, not additional uncounted time. If actual required work cannot fit, fail and revise the reviewed budget/inventory.
+
+| Required Playwright case                            | Max seconds |
+| --------------------------------------------------- | ----------- |
+| Typed turn/speech interruption and next generation  | 60          |
+| Voiced turn with old delayed events/cancellation    | 60          |
+| Secure bootstrap/capabilities without script shift  | 20          |
+| Dependency outage with usable static UI/error state | 20          |
+| Total                                               | 160         |
+
+160 is below 192 (80% of 240), leaving 80 seconds. No parallelism or reduced drain window is assumed. Task 4 tests the arithmetic and rejection of over-budget inventory; Task 5 reports actual per-case durations/outcomes without claiming these maxima as measurements.
 
 Task 4's runner tests use a fake spawn interface to assert exact argv/config selection and error/signal/timeout cleanup. The runtime run manifest lists the Node wrapper (when invoked), Vitest selection and Playwright selection with start/end/exit code and expected test counts. Reject missing, duplicate or skipped selections and any legacy launcher selection. The Node wrapper is not re-entered by either child suite. Pair fake dispatch tests with Task 5's real topology manifest so a fake-only runner cannot pass acceptance.
 
@@ -490,7 +572,7 @@ Production application images share exactly the delivered entrypoint/modules and
 
 Fixture STT input serializes WAV as an explicit base64 byte string with byte length and SHA-256; model input serializes the existing typed round input, and TTS input serializes the existing speech input. Decode and validate these forms inside the fixture caps. The encoded data cap is 3 MiB, derived from the raw/base64/envelope bounds below; ledger observations retain STT byte length/digest rather than duplicating audio bytes. History/speech assertions use their exact controlled fixture text. The runner's declared scenario inventory stays below ledger/operation caps; exhaustion is an explicit invalid run, never evidence of success.
 
-The real core request boundary has exactly one lifecycle registration per HTTP request and at most one acquired pipeline permit, created in the first onRequest stage before the auth gate and carried in request context to the raw route. The earlier route pseudocode describes the combined onRequest/route ownership, not a second registration or permit acquisition; an implementer must not register a second entry when the raw route begins. Auth/pre-parser error hooks finish the same request entry after local cleanup. The web wrapper likewise creates exactly one request context and verifies its AsyncLocalStorage binding reaches the actual Next.js Node route in production tests.
+The first onRequest stage creates exactly one lifecycle registration before auth. Acquire at most one pipeline permit only AFTER bearer/Host auth and interface-policy checks pass, before body reads; carry that permit to the raw route. The earlier route pseudocode describes the combined onRequest/route ownership, not a second registration or permit acquisition; an implementer must not register a second entry when the raw route begins. Auth/pre-parser error hooks finish the same request entry after local cleanup. The web wrapper likewise creates exactly one request context and verifies its AsyncLocalStorage binding reaches the actual Next.js Node route in production tests.
 
 ## Final harness corrections from SAR round 2
 
