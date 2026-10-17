@@ -1,4 +1,4 @@
-import type { Capabilities } from '../shared/contracts';
+import type { Capabilities } from '@aivc/contracts';
 import type { ServerConfig } from './config';
 import type { BuildInfo } from './build-info';
 export function createCapabilities(

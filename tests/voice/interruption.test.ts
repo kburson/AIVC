@@ -15,10 +15,7 @@ import type {
   VadCallbacks,
 } from '../../apps/web/client/voice/vad-adapter';
 import type { startTurn } from '../../apps/web/client/turn-stream';
-import type {
-  HistoryMessage,
-  TurnEvent,
-} from '../../apps/web/shared/contracts';
+import type { HistoryMessage, TurnEvent } from '@aivc/contracts';
 import { AudioClock, pcm, settle, speechResponse } from './audio-fixture';
 import { mockCapabilities } from '../helpers/wire-contract-fixtures';
 const boundary = vi.hoisted(() => ({ createVad: vi.fn() }));

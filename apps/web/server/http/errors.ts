@@ -1,6 +1,6 @@
-import { AppError } from '../../shared/contracts';
-import type { AppErrorFields } from '../../shared/contracts';
-export { AppError } from '../../shared/contracts';
+import { AppError } from '@aivc/contracts';
+import type { AppErrorFields } from '@aivc/contracts';
+export { AppError } from '@aivc/contracts';
 const processState = globalThis as typeof globalThis & {
   __aivcAppErrorConstructorsV1?: WeakSet<object>;
 };

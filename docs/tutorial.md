@@ -21,8 +21,8 @@ can restore output while confirmed speech invalidates an obsolete answer.
 
 The [turn Route Handler](../apps/web/app/api/turn/route.ts) admits a request before
 body/provider work. Follow the [client stream](../apps/web/client/turn-stream.ts)
-through the canonical [SSE parser](../apps/web/shared/sse.ts): reads may split UTF-8,
-framing and events. [Contracts](../apps/web/shared/contracts.ts) carry turn IDs and
+through the canonical [SSE parser](../packages/contracts/src/sse.ts): reads may split UTF-8,
+framing and events. [Contracts](../packages/contracts/src/contracts.ts) carry turn IDs and
 sequence numbers; [controller](../apps/web/client/turn-controller.ts) updates cannot
 cross answer generations. Compare the accumulated answer with final text and
 [completed history](../apps/web/client/history.ts), rather than assuming a finished

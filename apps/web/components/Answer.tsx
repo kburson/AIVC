@@ -1,6 +1,6 @@
 import Markdown from 'react-markdown';
 import type { ReactNode } from 'react';
-import type { Source } from '../shared/contracts';
+import type { Source } from '@aivc/contracts';
 export function safeUrl(value: string): string | null {
   try {
     const u = new URL(value);

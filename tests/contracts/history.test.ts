@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { HistoryStore } from '../../apps/web/client/history';
-import { validateHistory } from '../../apps/web/shared/validation';
-import type { TurnStatus } from '../../apps/web/shared/contracts';
+import { validateHistory } from '@aivc/contracts';
+import type { TurnStatus } from '@aivc/contracts';
 const token = { generation: 1, turnId: '11111111-1111-4111-8111-111111111111' };
 describe('completed context', () => {
   it('commits an immutable complete pair once and ignores a stale token', () => {

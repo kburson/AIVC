@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { TurnController } from '../../apps/web/client/turn-controller';
 import { startTurn } from '../../apps/web/client/turn-stream';
 import { HistoryStore } from '../../apps/web/client/history';
-import { encodeSse, assertTurnSequence } from '../../apps/web/shared/sse';
-import { validateTurnEvent } from '../../apps/web/shared/validation';
-import type { TurnEvent } from '../../apps/web/shared/contracts';
+import { encodeSse, assertTurnSequence } from '@aivc/contracts';
+import { validateTurnEvent } from '@aivc/contracts';
+import type { TurnEvent } from '@aivc/contracts';
 import { wireEvents } from '../helpers/wire-contract-fixtures';
 afterEach(() => vi.unstubAllGlobals());
 function mapped(id: string) {

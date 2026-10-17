@@ -1,5 +1,5 @@
-import type { ProjectCatalog } from '../../shared/contracts';
-import { validateProjectCatalog } from '../../shared/validation';
+import type { ProjectCatalog } from '@aivc/contracts';
+import { validateProjectCatalog } from '@aivc/contracts';
 import { AppError } from '../http/errors';
 import { runWithDeadline } from '../turns/deadline';
 export function createRetrievalClient(

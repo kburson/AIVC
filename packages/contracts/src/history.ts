@@ -1,4 +1,4 @@
-import type { HistoryMessage } from './contracts';
+import type { HistoryMessage } from './contracts.js';
 export function retainPairs(
   input: ReadonlyArray<readonly [HistoryMessage, HistoryMessage]>,
 ): { pairs: Array<[HistoryMessage, HistoryMessage]>; omitted: boolean } {

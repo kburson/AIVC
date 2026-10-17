@@ -5,8 +5,8 @@ import { loadConfig } from '../../apps/web/server/config';
 import { createCapabilities } from '../../apps/web/server/capabilities';
 import { LeasePools } from '../../apps/web/server/turns/leases';
 import { runTurn } from '../../apps/web/server/turns/run-turn';
-import { assertTurnSequence } from '../../apps/web/shared/sse';
-import { validateTurnEvent } from '../../apps/web/shared/validation';
+import { assertTurnSequence } from '@aivc/contracts';
+import { validateTurnEvent } from '@aivc/contracts';
 import { collect, round, ScriptedModel } from '../helpers/scripted-providers';
 import { AppError } from '../../apps/web/server/http/errors';
 function runtime(): ServerRuntime {
