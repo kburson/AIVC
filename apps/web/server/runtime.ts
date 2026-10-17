@@ -6,7 +6,7 @@ import type { ModelAdapter, TurnDeps } from './providers/contracts';
 import { createRetrievalClient } from './tools/retrieval-client';
 import { AppError } from './http/errors';
 import { basename, resolve } from 'node:path';
-import type { Capabilities } from '../shared/contracts';
+import type { Capabilities } from '@aivc/contracts';
 import { loadConfig } from './config';
 import type { ServerConfig } from './config';
 import { createCapabilities } from './capabilities';

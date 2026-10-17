@@ -25,3 +25,11 @@ The owned child-worktree command created a clean epic-based checkout, but the na
 ## Execution boundary
 
 No application implementation begins until current refinement, JIT Plan admission, deep dive, detailed estimate/forecast, owner-linked Plan approval and Develop guards pass. Then follow accepted Task 1 with genuine RED→GREEN tests. The pinned Next compatibility proof is a downstream stop gate: failure requires a design revision rather than an implicit upgrade or weaker transport bounds. Normal independent code review, exact-head tests, authorized merge and delivery/Close remain separate.
+
+## Completed Plan admission
+
+Parent #40 completed human Plan approval, immutable forecast and materialized six-child R4P/WBS gates, then its registered Plan→Develop transition. This child merged that published planning/configuration checkpoint without rewriting history. All six children were refined; #64–#68 retain their native predecessor blockers and have not entered Plan or implementation.
+
+Story #63 entered Plan through the registered one-step transition. Its deep dive was posted in canonical comment `6234449554` and mirrored with completion markers. The registered estimator converged forecast `01M550W7JEGEFHPRAA46K7093C`: human Plan 12h/L versus Refine6h/M; separate AI P50 8h/P80 11h, rubric v1/cohort0/confidence10%, no validated comparables. The model's split advice concerns coupled internal WBS checkpoints; the governed selected-task decomposition check admitted the owner-approved Task1 package without a waiver. Human source-bound Plan approval was recorded, fresh diagnostic Explain was ready with zero blockers, and the registered Plan→Develop transition completed with verified entry records and final sentinel. A timing publication was temporarily queued during transition; the transition then reported verified entry records. No timing row was fabricated.
+
+The current application task is started in Develop on `codex/63-draft`, draft PR #69 to `codex/40-draft`. Both accepted source documents, sealed originals/manifests and review links are unchanged. The existing unit baseline is still running before application edits; no passing baseline or completed application AC is claimed here.

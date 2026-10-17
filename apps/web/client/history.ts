@@ -1,5 +1,5 @@
-import type { HistoryMessage, TurnStatus } from '../shared/contracts';
-import { retainPairs } from '../shared/history';
+import type { HistoryMessage, TurnStatus } from '@aivc/contracts';
+import { retainPairs } from '@aivc/contracts';
 import type { TurnToken } from './turn-controller';
 export class HistoryStore {
   private pairs: Array<[HistoryMessage, HistoryMessage]> = [];

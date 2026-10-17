@@ -4,7 +4,7 @@ import type {
   TurnInput,
   TurnEvent,
   Usage,
-} from '../../shared/contracts';
+} from '@aivc/contracts';
 import { AppError, errorFields } from '../http/errors';
 import type { TurnDeps, ModelEvent } from '../providers/contracts';
 import { lookupArguments } from '../tools/lookup-projects';

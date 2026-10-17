@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AppError } from '../../apps/web/shared/contracts';
+import { AppError } from '@aivc/contracts';
 import {
   parseTurn,
   validateHistory,
@@ -7,7 +7,7 @@ import {
   validateProjectCatalog,
   validateCapabilities,
   validateTurnEvent,
-} from '../../apps/web/shared/validation';
+} from '@aivc/contracts';
 const id = '11111111-1111-4111-8111-111111111111';
 const catalog = {
   schemaVersion: 1,

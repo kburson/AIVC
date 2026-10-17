@@ -1,8 +1,8 @@
 import { observe } from './measurements';
-import { AppError } from '../shared/contracts';
-import type { HistoryMessage, TurnEvent } from '../shared/contracts';
-import { parseTurn, validateHistory } from '../shared/validation';
-import { decodeSse, SseDecodeError } from '../shared/sse';
+import { AppError } from '@aivc/contracts';
+import type { HistoryMessage, TurnEvent } from '@aivc/contracts';
+import { parseTurn, validateHistory } from '@aivc/contracts';
+import { decodeSse, SseDecodeError } from '@aivc/contracts';
 import type { TurnToken } from './turn-controller';
 export async function* startTurn(
   token: TurnToken,

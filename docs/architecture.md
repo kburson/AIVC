@@ -26,9 +26,9 @@ enter history. State is in memory and clears on refresh.
 [speech POST](../apps/web/app/api/speech/route.ts), and
 [capabilities GET](../apps/web/app/api/capabilities/route.ts) run in Node. Exact
 [Origin/Host admission](../apps/web/server/http/admission.ts) precedes request body
-or paid work. [Contracts](../apps/web/shared/contracts.ts),
-[validation](../apps/web/shared/validation.ts) and
-[SSE framing](../apps/web/shared/sse.ts) define a versioned boundary across arbitrary
+or paid work. [Contracts](../packages/contracts/src/contracts.ts),
+[validation](../packages/contracts/src/validation.ts) and
+[SSE framing](../packages/contracts/src/sse.ts) define a versioned boundary across arbitrary
 UTF-8/network chunks. The [client stream](../apps/web/client/turn-stream.ts) consumes
 that boundary rather than importing server internals.
 

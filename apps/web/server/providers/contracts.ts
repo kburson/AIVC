@@ -4,7 +4,7 @@ import type {
   ProjectCatalog,
   Source,
   Usage,
-} from '../../shared/contracts';
+} from '@aivc/contracts';
 export type ModelRoundInput = {
   messages: Anthropic.MessageParam[];
   searchRemaining: number;
@@ -39,7 +39,7 @@ export type TurnDeps = {
 export interface SpeechAdapter {
   transcribe(wav: Uint8Array, signal: AbortSignal): Promise<string>;
   synthesize(
-    input: import('../../shared/contracts').SpeechInput,
+    input: import('@aivc/contracts').SpeechInput,
     signal: AbortSignal,
   ): Promise<{
     stream: ReadableStream<Uint8Array>;

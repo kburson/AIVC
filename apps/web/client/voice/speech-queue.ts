@@ -1,6 +1,6 @@
 import { observe } from '../measurements';
 import type { TurnToken } from '../turn-controller';
-import type { SpeechInput } from '../../shared/contracts';
+import type { SpeechInput } from '@aivc/contracts';
 import type { Playback } from './playback';
 import { PcmDecoder } from './pcm';
 import { SpeechText } from './speech-text';

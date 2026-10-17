@@ -4,9 +4,9 @@ import {
   decodeSse,
   assertTurnSequence,
   SseDecodeError,
-} from '../../apps/web/shared/sse';
-import { validateTurnEvent } from '../../apps/web/shared/validation';
-import type { TurnEvent } from '../../apps/web/shared/contracts';
+} from '@aivc/contracts';
+import { validateTurnEvent } from '@aivc/contracts';
+import type { TurnEvent } from '@aivc/contracts';
 import {
   wireEvents,
   wireTurnId,

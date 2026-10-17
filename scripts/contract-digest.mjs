@@ -4,10 +4,13 @@ import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 const root = new URL('../', import.meta.url);
 const paths = [
-  'apps/web/shared/contracts.ts',
-  'apps/web/shared/history.ts',
-  'apps/web/shared/sse.ts',
-  'apps/web/shared/validation.ts',
+  'packages/contracts/src/contracts.ts',
+  'packages/contracts/src/history.ts',
+  'packages/contracts/src/index.ts',
+  'packages/contracts/src/interface-policy.ts',
+  'packages/contracts/src/json.ts',
+  'packages/contracts/src/sse.ts',
+  'packages/contracts/src/validation.ts',
   'tests/helpers/wire-contract-fixtures.ts',
 ];
 export function computeContractDigest(read) {

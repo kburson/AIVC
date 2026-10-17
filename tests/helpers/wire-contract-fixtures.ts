@@ -1,13 +1,6 @@
 // Mock/Contract Simulation: no provider, hosted search or live evidence.
-import type {
-  Capabilities,
-  EventPayloads,
-  TurnEvent,
-} from '../../apps/web/shared/contracts';
-import {
-  validateTurnEvent,
-  validateCapabilities,
-} from '../../apps/web/shared/validation';
+import type { Capabilities, EventPayloads, TurnEvent } from '@aivc/contracts';
+import { validateTurnEvent, validateCapabilities } from '@aivc/contracts';
 export const wireTurnId = '11111111-1111-4111-8111-111111111111';
 function freeze<T>(value: T): T {
   if (value && typeof value === 'object') {

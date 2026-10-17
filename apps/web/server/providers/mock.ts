@@ -1,5 +1,5 @@
 import type Anthropic from '@anthropic-ai/sdk';
-import { validateProjectCatalog } from '../../shared/validation';
+import { validateProjectCatalog } from '@aivc/contracts';
 import type { ModelAdapter, ModelEvent, ModelRoundInput } from './contracts';
 function message(
   content: Anthropic.ContentBlock[],

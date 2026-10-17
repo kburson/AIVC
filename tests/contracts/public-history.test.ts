@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { retainPairs } from '../../apps/web/shared/history';
+import { retainPairs } from '@aivc/contracts';
 describe('public whole-pair history retention', () => {
   it('omits an oversized newest pair and still bounds earlier pairs', () => {
     const pairs = Array.from(

@@ -2,10 +2,13 @@ import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { computeContractDigest } from '../../scripts/contract-digest.mjs';
 const paths = [
-  'apps/web/shared/contracts.ts',
-  'apps/web/shared/history.ts',
-  'apps/web/shared/sse.ts',
-  'apps/web/shared/validation.ts',
+  'packages/contracts/src/contracts.ts',
+  'packages/contracts/src/history.ts',
+  'packages/contracts/src/index.ts',
+  'packages/contracts/src/interface-policy.ts',
+  'packages/contracts/src/json.ts',
+  'packages/contracts/src/sse.ts',
+  'packages/contracts/src/validation.ts',
   'tests/helpers/wire-contract-fixtures.ts',
 ];
 const values = new Map(
@@ -26,7 +29,7 @@ function expected(names = paths) {
     'sha256:' + createHash('sha256').update(Buffer.concat(parts)).digest('hex')
   );
 }
-describe('closed five-file public source digest', () => {
+describe('closed eight-file public source digest', () => {
   it('matches independent raw path/NUL/decimal byteLength framing in ASCII path order', () => {
     const seen: string[] = [];
     const read = (path: string) => {

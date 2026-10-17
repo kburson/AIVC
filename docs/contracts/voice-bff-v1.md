@@ -6,7 +6,7 @@ This is Mock/Contract Simulation conformance. It does not establish provider suc
 
 ## Public modules and data
 
-Production imports are restricted to standard web APIs and the four sibling shared modules; server/config/provider/native SDK/runtime/credential dependencies are excluded. The sole AppError is exported from contracts.ts with readonly httpStatus, code, turnId and retryable plus inherited message. Server errors later re-export this class.
+Production imports from `@aivc/contracts` are restricted to standard web APIs and the extracted contract package; server/config/provider/native SDK/runtime/credential dependencies are excluded. The sole AppError is exported from contracts.ts with readonly httpStatus, code, turnId and retryable plus inherited message. Server errors later re-export this class.
 
 All validators clone validated data and reject additional fields, missing required fields, wrong types, literals, enum values, malformed UUID strings, nonfinite/fractional/negative or unsafe integer counters. UUIDs use the hexadecimal 8-4-4-4-12 form, case-insensitively. Sequence values and usage counters are nonnegative safe integers. No raw provider blocks or model thinking appear in public payloads.
 
@@ -74,10 +74,27 @@ The frozen fixture uses UUID11111111-1111-4111-8111-111111111111 and mock mode. 
 
 Independent positive traces include repeated/interleaved stage/source events, zero-tool answers, audio transcription, no-speech, truncation and rejected-native-attempt continuation; negative traces include dispatched retrieval failure followed by impossible completion/answer. #5 must prove actual producer equality against this fixture while retaining native tool IDs and real Fastify HTTP work. #6 proves actual UI consumer behavior; #11 later joins HTTP boundaries and repeats conformance.
 
-## Frozen source digest
+## Source digest and migration
 
-Run node scripts/contract-digest.mjs. Aggregate SHA-256 covers exactly these five paths in ascending ASCII order: apps/web/shared/contracts.ts, apps/web/shared/history.ts, apps/web/shared/sse.ts, apps/web/shared/validation.ts, tests/helpers/wire-contract-fixtures.ts. For each: UTF-8 path, NUL, ASCII decimal raw byteLength, NUL, raw bytes, NUL. There is no newline/BOM normalization. Output is sha256: plus64 lowercase hexadecimal digits and stdout newline; missing inputs fail. Doc/script/tests/probe/starter/review assets are excluded, and recipe changes require compatibility review.
+The original #13 five-file digest remains historical evidence: `sha256:ef4409385e545e82b91fcd44caaab02e457e8af9404d5abba3f07b8956a1d58c`. Its original `apps/web/shared` layout and all sealed artifacts remain pinned at their published revisions.
 
-Current digest: sha256:ef4409385e545e82b91fcd44caaab02e457e8af9404d5abba3f07b8956a1d58c.
+Story #63 follows #40's accepted migration plan Task 1 and its digest correction. Run `node scripts/contract-digest.mjs` for the current digest. The closed inputs, in ascending ASCII path order, are:
 
-Consumers use the delivered command and reviewed source/fixture bytes. Incompatible changes stop impacted work, require compatibility review and regenerated fixtures/tests, refreshed scope/digests and producer/consumer/joined revalidation before renewed fanout. Foundation delivery still requires exact-head Test, independent review, integration and Close before consumer implementation.
+- `packages/contracts/src/contracts.ts`
+- `packages/contracts/src/history.ts`
+- `packages/contracts/src/index.ts`
+- `packages/contracts/src/interface-policy.ts`
+- `packages/contracts/src/json.ts`
+- `packages/contracts/src/sse.ts`
+- `packages/contracts/src/validation.ts`
+- `tests/helpers/wire-contract-fixtures.ts`
+
+For each input, hash UTF-8 path, NUL, ASCII decimal raw byteLength, NUL, raw bytes, NUL. There is no newline/BOM normalization. Output is `sha256:` plus 64 lowercase hexadecimal digits and a stdout newline; missing inputs fail. Documentation, probes, generated output and review assets are excluded. Frozen wire fixtures independently establish semantic parity; path migration changes the source digest.
+
+## Added migration interfaces
+
+Multipart, UUID, history, SSE and PCM grammar remain unchanged. `parseTurn` additionally accepts `application/json` with only optional UTF-8 charset: exactly `turnId`, `history`, `text`. It rejects malformed UTF-8, decoded duplicate keys at any depth, depth over 16, audio/base64, extra fields and existing body/text/history limit violations. The 2 MiB bound includes whitespace and the whole encoding.
+
+`validateInterfacePolicy(value, expectedSegmentChars)` accepts only the closed non-secret policy. `encodeInterfacePolicy` emits canonical UTF-8 JSON in fixed field order: contractVersion, turnTimeoutMs, speechTimeoutMs, transportGraceMs, turnBodyLimitBytes, speechBodyLimitBytes, textLimitChars, historyMessageLimit, historyLimitChars, segmentChars. Deadlines and grace are positive safe integers, their sums remain safe, version is 1 and fixed limits are 2097152/8192 bytes, 2000 text units and 8/16000 history limits. The required expected segment cap comes from the service's independently validated `min(120, floor(6 * SPEECH_CHARS_PER_SECOND))` configuration and must match. Node SHA-256 hashing and deployment admission belong to the later service owners, outside browser exports.
+
+Consumers use compiled ESM and declarations. Incompatible changes require compatibility review, refreshed scope/digests and producer/consumer/joined revalidation before renewed fanout. Foundation delivery still requires exact-head Test, independent review, integration and Close before consumer implementation.

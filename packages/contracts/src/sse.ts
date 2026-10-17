@@ -1,5 +1,5 @@
-import type { TurnEvent } from './contracts';
-import { validateTurnEvent } from './validation';
+import type { TurnEvent } from './contracts.js';
+import { validateTurnEvent } from './validation.js';
 export type SseDecodeCode = 'STREAM_DISCONNECTED' | 'INVALID_STREAM';
 export class SseDecodeError extends Error {
   constructor(
