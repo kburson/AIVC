@@ -8,7 +8,7 @@
 
 **Tech Stack:** Existing Node 26.8.1/npm 12.0.2, TypeScript/ESM, Next.js 16.4.0, Fastify 5.12.5, existing pinned provider SDKs, Vitest, node:test, Playwright, Docker Compose. No dependency/runtime upgrade is included.
 
-**Spec:** [Migration-specific design](../specs/2026-10-16-40-stateless-service-migration-design.md). Initial design checkpoint `07a92dd97ca7d8819e235ebe97b17f08608d8671`; exact accepted spec revision/digest must be recorded before this plan is accepted. Read both artifacts and #39's governing sections; #39 review lineage does not approve this migration.
+**Spec:** [XPR-accepted migration design](../specs/2026-10-16-40-stateless-service-migration-design.md), published at `e6e96c9`, SHA-256 `f50590006c4f5d22e94ed3e8539ed1d50f0af14755dd6720b175b7f9ea951e28`. Sealed review `review-0009efb5ca6886291ad48628afa78120` finalized accepted-uncommitted after two reviewer rounds and one revision; ordinary Git publication separately pins those bytes. Read both artifacts and governing #39 sections. Historical SAR and #39 acceptance do not approve this revised artifact.
 
 **Issue:** [#40](https://github.com/kburson/AIVC/issues/40). Date: October 16, 2026 (America/Chicago). Draft for independent review. Future code/test steps below are requirements, not claims that they were performed.
 
@@ -16,14 +16,15 @@
 
 - Preparation/review only until owner approval; no product implementation, paid calls, deployment, cluster or research campaign.
 - Independent production web, orchestrator and lookup containers; scale orchestrator without copying peers.
-- Keep multipart text/WAV turn input and JSON speech; preserve version-1 SSE/PCM/error/usage schemas. No JSON turn extension without explicit design amendment.
-- Core auth before body/provider lease; web Host/Origin protection; no wildcard/forwarded-header trust, retries, credential leakage or browser core token.
-- Two turn/two speech slots per core process until actual settlement; never release on client timeout alone.
+- Preserve multipart text/WAV and JSON speech; add the accepted design's bounded JSON text-turn representation. Preserve version-1 SSE/PCM/error/usage schemas.
+- Core auth, interface-policy consistency and two-per-kind pre-body pipeline admission precede parsing/provider leases; web Host/Origin protection; no wildcard/forwarded-header trust, retries, credential leakage or browser core token.
+- Two turn/two speech pipeline permits cover ingestion through actual settlement, separately from the existing two-per-kind paid leases acquired after validation. No waiting queue or timeout-based early release.
 - No history/session storage or affinity; explicit client generation fencing and per-stream cancellation. No global idempotency or remote cancellation claim.
 - Streaming application queues at most 64 KiB plus one chunk of at most 16 KiB per hop; socket buffers declared separately.
 - Core deadlines include upload. BFF deadline includes upload/connect/headers/full stream without chunk resets; no cross-process monotonic subtraction.
 - SIGTERM withdraws readiness, refuses new work, drains 15 seconds, aborts then waits 5 seconds; container stop grace at least 25 seconds; unsettled hard exit remains unknown.
-- Mock providers only for migration acceptance, external provider egress denied and paid credentials absent. Preserve historical sealed evidence.
+- Mock providers and local real-adapter/SDK protocol stubs only; external provider egress denied, paid credentials absent and stub credentials valueless. Preserve historical sealed evidence.
+- Health/readiness are local only; dependency diagnostics never gate either. Shared non-secret interface-policy digests gate accepted topology and delegated API admission, not static UI availability.
 
 ## Review Focus
 
@@ -31,21 +32,21 @@
 2. A slow reader stops consuming while producer keeps generating: bound both bridges and producer demand, including abort while waiting for drain (Task 2, repeated via Task 3).
 3. Turn A followed by speech/history B and cold A replacement: no server-local state/affinity; stale generation output remains fenced by the real client (Task 5).
 4. Drain with keepalive, late provider cancellation and hard kill: refuse new work, preserve unknown outcomes and never replay (Tasks 4–5).
-5. Runtime/config/catalog mismatch or missing container tooling: fail acceptance explicitly instead of skipping tests or inventing an integrated baseline (Tasks 4–6).
+5. Mismatched interface policy or early core refusal while an upload is open: reject before paid work and preserve delegated status/retryability; dependency loss must leave static UI ready (Tasks 2–5). Missing tooling or identity evidence fails acceptance explicitly (Tasks 4–6).
 
 ## Delivery graph and effort
 
-These are proposed implementation work packages, not already created or approved issues. Estimate is preliminary joint human effort revised after native SAR to include concrete production fixtures and settlement handoff, not AI elapsed time.
+These are proposed implementation work packages, not created or approved issues. Preliminary joint effort is reassessed from 52 to 64 hours/XL for JSON parsing, pre-body admission, pinned Next compatibility, policy consistency, real SDK stubs and deterministic attribution. This is a review input, not an approved forecast or AI elapsed time.
 
-| Task  | Deliverable                                             | Depends on                                   | Joint hours |
-| ----- | ------------------------------------------------------- | -------------------------------------------- | ----------- |
-| 1     | Neutral contract workspace and consumer migration       | Accepted spec/plan and normal AITM admission | 4           |
-| 2     | Portable authenticated core with bounded transport      | 1                                            | 12          |
-| 3     | Thin web streaming delegation                           | 2                                            | 6           |
-| 4     | Independent production containers, lifecycle and runner | 3                                            | 14          |
-| 5     | Cross-replica, interruption and shutdown acceptance     | 4                                            | 12          |
-| 6     | Integrated regression evidence and Task 0 handoff       | 5                                            | 4           |
-| Total | Dependency-ordered migration                            |                                              | 52          |
+| Task  | Deliverable                                          | Depends on                                   | Joint hours |
+| ----- | ---------------------------------------------------- | -------------------------------------------- | ----------- |
+| 1     | Neutral contracts, JSON and Next compatibility proof | Accepted spec/plan and normal AITM admission | 6           |
+| 2     | Portable core, pre-body admission and SDK stub proof | 1                                            | 16          |
+| 3     | Thin forwarding, policy and owned Next listener      | 2                                            | 8           |
+| 4     | Production containers, lifecycle and bounded runner  | 3                                            | 16          |
+| 5     | Attributed cross-replica and shutdown acceptance     | 4                                            | 14          |
+| 6     | Integrated regression evidence and Task 0 handoff    | 5                                            | 4           |
+| Total | Dependency-ordered migration                         |                                              | 64          |
 
 Before coding, run governed decomposition/admission against the accepted plan. #40 is XL and must not silently execute as an atomic story. The next preparation action is governed decomposition/conversion and child hydration as required by AITM; no issue numbers are invented here. Each implementation owner gets a bound worktree, current source, pushed branch and draft PR targeting its recorded integration base. Preserve review and source provenance across the resulting issues. Do not start parallel implementation before contract freeze and ownership admission; this sequence is serial by default.
 
@@ -77,9 +78,16 @@ Before coding, run governed decomposition/admission against the accepted plan. #
 
 Existing server implementations move into core. Task 2 retains temporary single-source compatibility re-exports so web route checkpoints remain buildable; Task 3 removes them when forwarding replaces the routes. The final web graph contains contracts and web admission/forwarding only. Preserve assertions while retargeting fixtures as detailed below.
 
+### Additional owned files for accepted XPR requirements
+
+- Task 1: `packages/contracts/src/{json,interface-policy}.ts`, `tests/contracts/{json-turn,interface-policy,next-server-compat}.test.ts`, `tests/helpers/next-server-compat.ts`.
+- Task 2: `apps/orchestrator/src/http/{pipeline,interface-policy}.ts`, `tests/contracts/provider-sdk-migration.test.ts`, `tests/fixtures/provider-protocol-stubs/server.mjs`.
+- Task 3: `tests/contracts/next-server-lifecycle.test.ts`, plus the already mapped production `apps/web/server/start.mjs`.
+- Tasks 4–5: `deploy/migration-router.Dockerfile`, `tests/fixtures/migration-router/{server,schema}.mjs`, `tests/contracts/migration-router.test.ts`, `deploy/interface-policy.json` and bounded policy/routing observations in the existing operations manifest. JSON/SDK source additions are application work only after approval, not work performed in this planning stage.
+
 ## Task 1: Extract browser-safe contracts
 
-**Files:** Create the contract workspace in the file map; modify root workspaces/build order, consumer package manifests/lockfile, browser/server and existing contract-test imports. Existing source set is exactly `apps/web/shared/{contracts,validation,history,sse}.ts`.
+**Files:** Create the contract workspace plus `packages/contracts/src/{json,interface-policy}.ts`, `tests/contracts/{json-turn,interface-policy,next-server-compat}.test.ts` and `tests/helpers/next-server-compat.ts`, and a pinned minimal Next app under `tests/fixtures/next-server-compat/{package.json,app/layout.tsx,app/page.tsx,app/api/stream/route.ts}`; modify root build order, manifests/lockfile and imports. Move exactly `apps/web/shared/{contracts,validation,history,sse}.ts`; additions implement accepted representation/policy requirements.
 
 **Interfaces:** `@aivc/contracts` re-exports existing types/functions without changing signatures: `TurnInput`, `SpeechInput`, `TurnEvent`, `Capabilities`, `parseTurn`, validators, `encodeSse`, `assertTurnSequence`, and history helpers. ESM exports point to compiled `dist/index.js`; types point to `dist/index.d.ts`.
 
@@ -97,7 +105,7 @@ it('retains the frozen wire grammar after extraction', () => {
 ```
 
 - [ ] Step 2: Run `npx vitest run tests/contracts/workspace-boundaries.test.ts tests/contracts/wire-contracts.test.ts`; expect the new package import to fail before extraction. Record genuine RED.
-- [ ] Step 3: Move the four source files into the package; define explicit exports and compile before consumers. Import/re-export only the current public symbols; preserve parser and history limits. Migrate the boundary walker so it examines the new package transitively rather than an empty old directory.
+- [ ] Step 3: Move the four source files into the package; define explicit exports and compile before consumers. Import/re-export only the current public symbols; preserve multipart/history limits. Add JSON text-turn selection for `application/json` with optional `charset=utf-8`; reject other parameters/media types. Require strict UTF-8, exact turnId/history/text members, existing UUID/history/text validation and the 2 MiB whole-body cap. A pure browser-safe lexical preflight rejects duplicate object keys at every depth, decoding escaped key spellings before comparison, and depth above 16; JSON.parse remains the syntax authority. Test escaped duplicates, malformed encoding/syntax, extra keys, types, audio/base64 rejection, all limits and identical normalized multipart/JSON text input. Interface-policy code owns the closed non-secret schema and canonical encoding; Node hashing stays in service config outside browser exports. Migrate the boundary walker so it examines the new package transitively rather than an empty old directory.
 
 ```json
 {
@@ -114,16 +122,16 @@ it('retains the frozen wire grammar after extraction', () => {
 }
 ```
 
-- [ ] Step 4: Build workspace then run focused existing validation/history/SSE/wire tests, `npm run typecheck`, and browser bundling. Assert the package closure rejects Node/server/provider/env imports; no handwritten copy remains in web.
+- [ ] Step 4: Build workspace then run focused validation/history/SSE/wire, json-turn and interface-policy tests, `npm run typecheck`, and browser bundling. Run `npx vitest run tests/contracts/next-server-compat.test.ts`: its fixture uses a real pinned production Next build/prepare/getRequestHandler, streamed fixture route, disconnect, AsyncLocalStorage context and new keep-alive refusal/drain. It owns teardown and invokes no providers. If pinned compatibility or bounded observable stream demand fails, stop for design revision before downstream tasks. Assert the package closure rejects Node/server/provider/env imports; no handwritten copy remains in web.
 - [ ] Step 5: Commit exact owning paths using the actual delivery issue attribution; keep its draft PR current.
 
 ## Task 2: Extract and serve the real Fastify orchestrator
 
-**Files:** Core workspace, moved server modules and `tests/contracts/orchestrator-http.test.ts`. Root discovery/build config and moved tests belong to this step.
+**Files:** Core workspace, moved server modules, `apps/orchestrator/src/http/{pipeline,interface-policy}.ts`, `tests/contracts/{orchestrator-http,provider-sdk-migration}.test.ts` and `tests/fixtures/provider-protocol-stubs/server.mjs`. Root discovery/build config and moved tests belong to this step.
 
 **Interfaces:** `createOrchestratorApp({runtime, lifecycle}): FastifyInstance`; `createRuntime(env, overrides?): ServerRuntime` retains existing adapter injection for scripted providers. `requestFromIncoming(raw, signal): Request` preserves streaming bytes/content type without eagerly consuming the body. `pumpResponse(response, rawReply, signal): Promise<void>` awaits downstream demand and actual reader cancellation. `Lifecycle` is defined in Task 4; initially its non-draining implementation supplies request registration/abort handles with the same interface.
 
-- [ ] Step 1: Write socket-based authentication ordering tests using a request body that never finishes and a scripted provider counter. Missing/wrong token must return 401 with zero body-consumer, adapter and lease calls. Add valid direct multipart text/audio, JSON speech and capabilities tests against the real core.
+- [ ] Step 1: Write socket-based authentication ordering tests using a request body that never finishes and a scripted provider counter. Missing/wrong token must return 401 with zero body-consumer, adapter and lease calls. Add valid multipart text/audio, JSON text/speech and capabilities tests. Gate two slow uploads per kind: a third must receive retryable 429 before another body read/provider call. Assert memory plateau, retained permits through reader/work settlement and unaffected admitted work. A policy mismatch returns retryable 503 before body/lease work.
 
 ```ts
 it('rejects unauthenticated work before body and paid admission', async () => {
@@ -149,7 +157,7 @@ it('rejects unauthenticated work before body and paid admission', async () => {
 `startCoreFixture` is created here in `tests/helpers/migration-topology.ts`; it starts real Node/Fastify sockets with injected adapters. `rawRequest` resolves on response headers and closes its still-open upload in cleanup. `counts()` returns sanitized in-memory test counters, never a public production endpoint.
 
 - [ ] Step 2: Run the focused test; RED must be missing core entry point/auth behavior, not a provider/network credential failure.
-- [ ] Step 3: Move runtime/providers/tools/deadline/lease and HTTP handling into core, remove Next-specific assumptions, preserve caller-independent validation, and add an onRequest auth gate before Fastify body parsing. Use raw streamed routes/custom parsing for capped request handling; default JSON parsing must not precede authentication. Node request construction uses `duplex: 'half'` where required by the pinned runtime.
+- [ ] Step 3: Move runtime/providers/tools/deadline/lease and HTTP handling into core, remove Next-specific assumptions, preserve caller-independent validation, and add ordered onRequest lifecycle registration, Host/bearer auth, policy consistency and nonqueued two-per-kind pipeline admission before Fastify body parsing. Use raw streamed routes/custom parsing for capped request handling; default JSON parsing must not precede authentication. Node request construction uses `duplex: 'half'` where required by the pinned runtime.
 
 ```ts
 export type PumpLimits = { highWaterBytes: 65536; maxChunkBytes: 16384 };
@@ -164,16 +172,16 @@ export type Lifecycle = {
 };
 ```
 
-`finish` removes the registry entry only after settlement, while recording terminal or unknown outcome. A lease belongs to core work, not the response pump. Handle Node response close independently of request upload completion. Disable request/SDK automatic retries and redirect following. Never release from deadline `result`; retain existing release-from-`settled` semantics.
+`pipelines.acquire(kind)` returns an idempotent `{release(): void}` permit or immediately throws a sanitized retryable 429; no request body is read on refusal. `assertInterfacePolicy` validates a present consistency digest against server config and throws sanitized retryable 503 before ingestion. These helpers live in the mapped http modules, with positive/negative tests. `kind` is derived only from the fixed route, never caller identity. `finish` removes the registry entry only after settlement, while recording terminal or unknown outcome. A lease belongs to core work, not the response pump. Handle Node response close independently of request upload completion. Disable request/SDK automatic retries and redirect following. Never release from deadline `result`; retain existing release-from-`settled` semantics.
 
 - [ ] Step 4: Add pausing-reader and deferred cancellation fixtures. Fill two slots, abort both transports, keep underlying provider cancellation unresolved, and prove a third request remains BUSY until actual settlement. Pause read demand and assert producer pulls/queued bytes stop at the declared bound; abort during drain and verify cleanup. Exercise oversize body, malformed media/history, provider rate limit, deadline before headers, deadline after accepted SSE, PCM EOF/error and once-only terminal.
 - [ ] Step 5: Run `npx vitest run tests/contracts/orchestrator-http.test.ts tests/contracts/leases.test.ts tests/contracts/deepgram.test.ts tests/contracts/search-budget.test.ts tests/slow/disconnect.test.ts tests/slow/deadlines.test.ts`. Use the temporary compatibility seam defined below at this checkpoint; preserve every behavioral assertion. Task 3 retargets legacy fixtures to the real core and removes the seam. Commit focused core ownership/transport deliverable.
 
 ## Task 3: Delegate web requests without provider ownership
 
-**Files:** Web forwarding modules, three API routes, web-only config/capabilities adapter, package dependencies, and `tests/contracts/web-forwarding.test.ts`.
+**Files:** Web forwarding modules, `apps/web/server/start.mjs`, three API routes, config/capabilities adapter, dependencies and `tests/contracts/{web-forwarding,next-server-lifecycle}.test.ts`. Task 3 owns the production wrapper extending Task 1's compatibility fixture; Task 4 packages and repeats it in containers.
 
-**Interfaces:** `forwardRequest(req: Request, path: '/api/turn' | '/api/speech', config: ForwardingConfig): Promise<Response>`; `ForwardingConfig` holds fixed `coreOrigin`, private `coreToken`, allowed web Host/Origin sets, turn/speech timeout and transport-grace milliseconds. `forwardCapabilities(req, config, webBuild): Promise<Response>` preserves validated capability shape while replacing only web build metadata. `forwardRequest` never parses or regenerates multipart/SSE/PCM.
+**Interfaces:** `forwardRequest(req: Request, path: '/api/turn' | '/api/speech', config: ForwardingConfig): Promise<Response>`; `ForwardingConfig` holds fixed `coreOrigin`, private `coreToken`, allowed web Host/Origin sets, a validated shared interface-policy manifest and digest deriving turn/speech timeout and transport-grace milliseconds. `forwardCapabilities(req, config, webBuild): Promise<Response>` preserves validated capability shape while replacing only web build metadata. `forwardRequest` never parses or regenerates multipart/SSE/PCM.
 
 - [ ] Step 1: Write direct-versus-delegated fixture comparison using one scripted request per independent fixture. Compare validated event sequence/usage and exact PCM bytes/headers, normalizing only explicitly path-specific build metadata. Include response-socket disconnect after complete upload and cancellation while a write awaits demand.
 
@@ -197,8 +205,8 @@ it('overwrites browser authorization and never forwards identity headers', async
 `startWebFixture` extends the real topology helper with a production-compatible web handler and a capture core; browser/web admission is configured explicitly. The known fixture token is test-only and never reads real secrets.
 
 - [ ] Step 2: Run `npx vitest run tests/contracts/web-forwarding.test.ts`; expect RED because routes still own provider execution.
-- [ ] Step 3: Replace routes with Host/Origin admission plus fixed forwarding. Sanitize request/response headers, preserve status/content types/audio fields, retain no-cache semantics, disable redirects/retries, bound full-stream deadline and combine abort sources. Add core-unreachable 502, deadline 504 and after-header incomplete behavior. Remove executable orchestration imports and provider SDK dependencies from web.
-- [ ] Step 4: Test bad Host/Origin, invalid browser-supplied auth/forwarded headers, slow upload, early core errors, delayed SSE/audio, downstream abort and upstream failure without duplicate terminal or appended PCM. Build web and inspect runtime dependency closure for provider/core imports and secret leakage.
+- [ ] Step 3: Implement the owned Node/Next listener proven in Task 1, then replace routes with Host/Origin admission plus fixed forwarding. Sanitize request/response headers, preserve status/content types/audio fields, retain no-cache semantics, disable redirects/retries, bound full-stream deadline and combine abort sources. Overwrite X-AIVC-Interface-Digest from server config and strip private digest response headers from browser output. Add core-unreachable 502, no-eligible/draining/policy-mismatch 503, deadline 504 and after-header incomplete behavior. Derive deadlines from paired policy; web remains locally ready during dependency outages. Remove executable orchestration imports and provider SDK dependencies from web.
+- [ ] Step 4: Test bad Host/Origin, forged auth/forwarded/policy headers, slow upload, delayed SSE/audio, downstream abort and upstream failure without duplicate terminal or appended PCM. During a still-open multi-chunk upload, force each early 401/429/policy-503 core refusal and require browser status/envelope/retryability parity, not accidental 502. Prove upload reader/cancellation cleanup with pinned Node half-duplex semantics. Mismatched timeout/segment policy refuses API work before providers but preserves static UI/local readiness. Distinguish core Node write/drain from web pull-driven Web Streams and measured framework/socket buffers. Build web and inspect runtime dependency closure for provider/core imports and secret leakage.
 - [ ] Step 5: Run focused web tests, existing typed/audio integration and UI/client tests. Commit thin-BFF deliverable with docs/config example updates; examples contain no real token/key.
 
 ## Task 4: Package independent production services and implement drain
@@ -225,7 +233,7 @@ it('never reports unsettled provider cancellation as drained', async () => {
 `createLifecycleFixture` supplies fake timers and injected deferred work; the socket/production-container tests later independently validate real signal handling and elapsed bounds.
 
 - [ ] Step 2: Run `npx vitest run tests/contracts/service-lifecycle.test.ts`; expect RED before lifecycle implementation.
-- [ ] Step 3: Implement registry/readiness/drain using request-scoped controllers and settle promises. Avoid `server.close()` indefinitely waiting before abort triggers. Reject new work on keepalive after withdrawal. Hard exit bounds cleanup and labels unresolved work unknown. Web participates through an owned production server wrapper or equivalent verified pinned Next.js lifecycle hook; a health route flag alone cannot prove upstream stream drain. The implementation must show the chosen pinned Next.js mechanism in this task's review.
+- [ ] Step 3: Implement registry/readiness/drain using request-scoped controllers and settle promises. Avoid `server.close()` indefinitely waiting before abort triggers. Reject new work on keepalive after withdrawal. Hard exit bounds cleanup and labels unresolved work unknown. Web uses Task 3's explicit Node/Next listener, compatibility-proven in Task 1; no next start or health-flag-only alternative is allowed. Mark draining and intercept new/keep-alive requests synchronously before any awaited close; join real framework/socket and forwarding cleanup.
 - [ ] Step 4: Add independent multistage production builds, nonroot/read-only roots, baked contracts/assets/catalog, explicit bounded ephemeral mounts where necessary, private network, limits and stop grace. Build images with existing lockfile/toolchain pins; pin base image digests in delivered manifest. Token/key supplied only at runtime, never image build args.
 - [ ] Step 5: Extend `scripts/dev.mjs` and clean-build to own all three processes and ports with deterministic shutdown. Test missing core build, startup failure, cleanup after second/third child failure and exit-code preservation. Run lifecycle/launcher/cleanup tests and three production builds; commit deployable topology.
 
@@ -254,22 +262,22 @@ test('production stateless service acceptance', () => {
 Define `test:migration:containers` here to run the topology-owned integration/browser suite exactly once, not recurse into the entry point. Cross-platform subprocess behavior must match the repository's existing runner conventions.
 
 - [ ] Step 2: Run the new acceptance entry point; expect RED for absent implementation, or explicit unavailable tooling. Never treat tool absence as a product defect fix or success.
-- [ ] Step 3: Schedule a multipart turn on A, a speech segment on B, then a next turn with retained history on B; cold-replace A and repeat. Observe actual replica identity via test harness connection target, not public API/header additions. Compare provider-observed histories and speech inputs with expected payloads. Read-only filesystems and no session volumes remain enforced.
+- [ ] Step 3: Repeat the forced sequence for multipart text/WAV and JSON text controls. Schedule a turn on A, a speech segment on B, then a next turn with retained history on B; cold-replace A and repeat. Use the deterministic per-request L7 router below for delegated legs and private replica addresses for direct controls. Correlate actual upstream-address observations with independent provider/lease journals. Same-replica and absent/ambiguous-attribution negative controls must fail; no public routing field is added. Compare provider-observed histories and speech inputs with expected payloads. Read-only filesystems and no session volumes remain enforced.
 - [ ] Step 4: Through the real browser controller/queue, interrupt A turn/B speech, delay old events and cancellation settlement, then begin next generation on another replica. Assert stale output cannot play/enter history and old work settles without replay. Verify duplicate submitted IDs are independent requests, not claimed deduplicated; clients/proxy never retry on lost response. Probe nonexistent cancellation-by-ID endpoint and require 404/zero work.
-- [ ] Step 5: Scale 1→2 orchestrators and verify web/lookup count/image/limits unchanged; mismatch catalog/config/contract digest must fail topology eligibility. Run graceful SIGTERM and hard SIGKILL while streaming; measure readiness/new work, stream outcome and provider count. Core failure does not cause replay. Add web and lookup termination/outage cases with bounded failure/cleanup.
+- [ ] Step 5: Scale 1→2 orchestrators and verify web/lookup count/image/limits unchanged; mismatch catalog/config/contract/interface-policy digest must fail topology eligibility; timeout/segment-policy mismatch also refuses delegated work before body/provider calls. Run graceful SIGTERM and hard SIGKILL while streaming; measure readiness/new work, stream outcome and provider count. Core failure does not cause replay. Add web and lookup termination/outage cases with bounded failure/cleanup.
 - [ ] Step 6: Execute required entry point, focused existing interruption/disconnect/rapid-interruption regressions and browser suite. Commit acceptance suite plus actual sanitized evidence; failed/incomplete results remain visible.
 
 ## Task 6: Integrate, verify and hand off the accepted application
 
 **Files:** Migration implementation guide and evidence manifest; final test/build/doc runner updates; issue/PR references via sanctioned commands.
 
-**Interfaces:** Research Task 0 receives an accepted integrated SHA/PR, source-to-image mapping, exact contract/catalog/config digests, independent replicas/resources/mounts, state/coordination declaration, per-instance/aggregate lease meaning, local ingress cost, actual verifier outputs and limitations. No benchmark/capacity or paid calibration result is implied.
+**Interfaces:** Research Task 0 receives an accepted integrated SHA/PR, source-to-image mapping, both turn representations, exact contract/catalog/config/interface-policy digests, independent replicas/resources/mounts, state/coordination declaration, per-instance/aggregate lease meaning, local ingress cost, actual verifier outputs and limitations. No benchmark/capacity or paid calibration result is implied.
 
 - [ ] Step 1: Freeze integrated source, confirm clean tree and expected dependency graph, build images and write immutable source/image/fixture identity manifest. Source changes invalidate affected receipts; do not label stale reports as current.
 - [ ] Step 2: Run `npm run typecheck`, `npm run build`, `npm test`, `npm run test:contracts`, `npm run test:integration`, `npm run test:voice`, `npm run test:slow`, `npm run test:browser`, `npm run lint`, `npm run format:check`, `npm run verify:docs`, `npm run verify:sealed-evidence` and `node --test tests/contracts/stateless-services.test.mjs` at the accepted integrated revision. Use stage-owned canonical verifiers; document commands requiring container/browser infrastructure and fail/stop when prerequisites are unavailable. No paid `verify:live` run is authorized.
 - [ ] Step 3: Check each issue AC/DoD separately with actual declared verifier evidence; preserve Test/Review and final approval gates. Get independent whole-change code review on the exact integrated SHA; do not reuse planning consensus as code review.
 - [ ] Step 4: Keep every delivery branch fetchable/draft PR current and integrate only with owner-authorized exact-head sanctioned merge. Verify accepted source reachable from recorded target before Done. Record actual merge dates/provenance, no invented provider-action receipt.
-- [ ] Step 5: Publish the Task 0 handoff with explicit no-store semantics, per-stream abort, no global dedup/failover claim, shutdown unknown outcomes, catalog version, independent topology and ingress footprint. Unblock research only through normal dependency authority after #40 delivery is accepted, not while this plan is merely reviewed.
+- [ ] Step 5: Publish the Task 0 handoff with declared JSON media type, coordinated policy/key change limitation, measured slow-upload lockout under the fixed two-per-kind pipeline cap, explicit no-store semantics, per-stream abort, no global dedup/failover claim, shutdown unknown outcomes, catalog version, independent topology and ingress footprint. Unblock research only through normal dependency authority after #40 delivery is accepted, not while this plan is merely reviewed.
 
 ## Spec coverage and self-review
 
@@ -289,9 +297,9 @@ Self-review checks: every interface above is assigned an owning task; snippets a
 
 ## Specification SAR and concrete planning decisions
 
-The migration specification at `07a92dd97ca7d8819e235ebe97b17f08608d8671`, SHA-256 `fecb93bdc40e6f2636f04bb243d7f5cbf74cbb8041f8c16891f38db4c643d1d4`, received native SAR acceptance with no required changes. [Complete SAR report](../../peer-reviews/spec/stateless-service-migration-design-review-40-native/sar/astra-sar-report-round-1.md). Its accepted bytes are unchanged. This records the exact specification pin required by the header. Sealed XPR is pending the owner-selected tooling recovery; native SAR is not two-party consensus or implementation approval.
+Historical spec `07a92dd97ca7d8819e235ebe97b17f08608d8671`, SHA-256 `fecb93bdc40e6f2636f04bb243d7f5cbf74cbb8041f8c16891f38db4c643d1d4`, received [native SAR acceptance](../../peer-reviews/spec/stateless-service-migration-design-review-40-native/sar/astra-sar-report-round-1.md). This historical pin is preserved. The current separately XPR-accepted spec has the header's f5059000 digest/publication e6e96c9 and [round 2 acceptance](../../peer-reviews/spec/stateless-service-migration-design-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-design-review-0009efb5ca6886291ad48628afa78120-reviewer-response-2.md), with adjacent manifest. The earlier uncertain attempt remains preserved and unsettled. No review grants application implementation approval.
 
-The following decisions make the three optional SAR planning suggestions concrete. They are part of this plan's review input and govern their owning tasks above.
+The following decisions preserve the three historical optional SAR planning suggestions, reconciled with the accepted spec's later XPR requirements. They are part of this plan's review input and govern their owning tasks above.
 
 ### Service networking — Tasks 2–4
 
@@ -304,15 +312,21 @@ The following decisions make the three optional SAR planning suggestions concret
 
 Modify `scripts/contract-digest.mjs`, its declaration, `tests/contracts/contract-digest.test.ts` and build-info consumers with the moved contracts. The digest currently frames closed path-labelled inputs under `apps/web/shared`; moving those paths changes the digest even with identical behavior. Record the new framed digest; retain frozen wire fixtures as semantic parity proof. Preserve historical sealed artifacts and hashes rather than rewriting them to the new layout. Extend Task 1's transitive boundary tests to all new package exports and include the owning digest test in its focused verification.
 
-### Credential/readiness matrix — Tasks 2 and 4
+### Interface policy, credentials and readiness — Tasks 1–4
+
+Task 1 defines a closed InterfacePolicy schema with finite positive safe-integer turn/speech/grace deadlines, whole-body limits 2097152/8192, text limit 2000, history limits 8/16000, configured segmentChars and the frozen contract version. Canonical encoding has fixed field order and explicit values; reject missing/unknown members, invalid numbers and inconsistent segment cap. Service config uses Node SHA-256 over those canonical UTF-8 bytes. `deploy/interface-policy.json` is the shared non-secret deployment input; all eligible web/core images or runtime config refer to its exact digest. It is not a shared mutable store or a secret-bearing env snapshot.
+
+Core validates any present X-AIVC-Interface-Digest after auth and before body/pipeline/paid work, refusing a mismatch with sanitized retryable 503. Web always overwrites it from its own validated manifest. Direct authenticated clients may supply it for consistency but it grants no identity or privileges. Core exposes actual policy digest on its private capabilities header; web strips that header before browser output. Test missing/forged browser headers, exact match, deliberate timeout/segment mismatch, invalid policy and mixed eligible replicas. Topology eligibility independently checks all digests, not only one probe through the router.
+
+Policy updates and the single bearer credential require coordinated changes; mismatched deployment windows can refuse delegated calls. Record that availability limitation rather than promise zero-downtime independent policy/key rotation. Task 4 tests missing core, lookup outage and all-core drain leave web local readiness/static UI intact while API calls produce the declared failures.
 
 Core caller token and valid service Host/origin/config values are mandatory in every mode. Mock readiness succeeds with paid-provider keys absent. In live mode retain existing unavailable capability states for optional missing provider configuration; readiness/capability reads make no paid call, and unavailable-function requests retain sanitized failures.
 
-Dependency readiness checks run at most once per five seconds, timeout at 500 ms, use no retries, coalesce concurrent probes and cache at most ten seconds. Failed/stale probes return not-ready, affect readiness only, and never cause autonomous restarts or paid probes. Drain always overrides cached health. Task 4 tests missing caller token, mock success without paid keys, unavailable live capabilities and stale/failed probe behavior; Task 2 retains provider-availability request errors.
+Readiness/liveness are strictly local per accepted spec section 8. Optional dependency diagnostics cache for five seconds, time out after one second, coalesce checks, have no retries/paid probes and never gate readiness/liveness or trigger restarts. Lookup failure affects its bounded tool call only. Core outage/drain gives API 502/503 while static UI stays locally ready. Task 4 tests this graph, missing caller token, mock readiness without paid keys and unavailable live capability states. Drain always withdraws local readiness.
 
-### Concrete web lifecycle mechanism — Task 4
+### Concrete web lifecycle mechanism — Task 3, packaged in Task 4
 
-Create `apps/web/server/start.mjs`, update the web start script and add its socket lifecycle tests. Use an owned Node HTTP server around pinned Next.js `next({dev:false})` and `getRequestHandler()`. Its request/socket registry and signal handling withdraw readiness and gate new/keepalive work before invoking the framework handler; close/abort at the declared bounds. Merely toggling a health route cannot prove upstream drain.
+Task 3 creates `apps/web/server/start.mjs`, updates the web start script and adds its socket lifecycle tests. Task 1's fixture proves the pinned mechanism first; Task 4 packages the delivered wrapper and repeats its signal/keep-alive tests in containers. Use an owned Node HTTP server around pinned Next.js `next({dev:false})` and `getRequestHandler()`. Its request/socket registry and signal handling withdraw readiness and gate new/keepalive work before invoking the framework handler; close/abort at the declared bounds. Merely toggling a health route cannot prove upstream drain.
 
 The local pinned guide `node_modules/next/dist/docs/01-app/02-guides/custom-server.md` supports this API and states that custom servers and standalone output cannot be combined. Package required production dependencies and `.next` output, not unsupported standalone tracing. Production tests validate background/framework close and active forwarding streams. This selects the wrapper option previously described in Task 4; no unresolved alternative remains.
 
@@ -340,17 +354,20 @@ export function beginSpeech(
 ): OperationHandle;
 ```
 
-Create the handle synchronously before asynchronous body ingestion. Its `response` resolves to headers/body readiness or rejects with the pre-header error; its `settled` resolves only when body work, producer, pending reads and provider/reader cancellation actually settle. Validation or unavailable-provider failures resolve `settled` after their own cleanup; missing adapter work is not an unresolved promise. Provider failures retain response/error semantics while `settled` observes every rejection. `abort` is idempotent and signals all admitted work. Existing deadline `task.settled` must feed this handle directly, rather than being hidden behind `Promise<Response>`.
+Create the handle synchronously before asynchronous body ingestion, after the request's pipeline permit has been acquired. The one-per-request permit is carried from the onRequest context into the route; raw route code never acquires it twice. Its `response` resolves to headers/body readiness or rejects with the pre-header error; its `settled` resolves only when body work, producer, pending reads and provider/reader cancellation actually settle. Validation or unavailable-provider failures resolve `settled` after their own cleanup; missing adapter work is not an unresolved promise. Provider failures retain response/error semantics while `settled` observes every rejection. `abort` is idempotent and signals all admitted work. Existing deadline `task.settled` must feed this handle directly, rather than being hidden behind `Promise<Response>`.
 
-The route registers an `ActiveRequest` before auth/body work, and passes its signal into the handle. Core onRequest bearer/Host rejection never reads the body or acquires a lease; that rejected request finishes its registry entry with a resolved cleanup promise. Authentication is not deferred into a body parser. A factory throw before the handle exists also finishes the entry after local cleanup. For accepted work, the response pump has its own settled promise including reader cancellation. Route ownership is:
+The route registers an `ActiveRequest` before auth/body work, and passes its signal into the handle. Core onRequest bearer/Host, policy or pipeline rejection never reads the body or acquires a paid lease; that rejected request finishes its registry entry with a resolved cleanup promise. Authentication is not deferred into a body parser. A factory throw before the handle exists also finishes the entry after local cleanup. For accepted work, the response pump has its own settled promise including reader cancellation. Route ownership is:
 
 ```ts
 const active = lifecycle.enter(); // rejects new application work during drain
 let operation: OperationHandle | undefined;
 let pumpSettled: Promise<void> = Promise.resolve();
 let cleanEnd = false;
+let pipelinePermit: { release(): void } | undefined;
 try {
   assertCoreCaller(rawRequest, config); // before parser/body/lease
+  assertInterfacePolicy(rawRequest, config);
+  pipelinePermit = pipelines.acquire(kind); // immediate 429, no body or queue
   operation = beginTurn(
     requestFromIncoming(rawRequest, active.signal),
     runtime,
@@ -368,7 +385,7 @@ try {
     operation?.settled ?? Promise.resolve(),
     pumpSettled,
   ]).then(() => undefined);
-  active.finish(settled); // finish arranges removal only after this promise
+  active.finish(settled.finally(() => pipelinePermit?.release())); // once, after settlement
 }
 ```
 
@@ -394,6 +411,24 @@ The fixture has separate runner-only control endpoints to load scripts, release 
 
 Adapter abort has two obligations: stop its current data reader and send an authenticated fixture cancellation request whose acknowledgement may be deliberately gated. The adapter's promise/iterator finalization waits for pending reader cleanup **and that acknowledgement**, so local operation settlement can remain delayed even after the original HTTP fetch rejects on abort. A fixture EOF alone cannot satisfy the cancellation gate. The fixture ledger records cancellation independently. If core dies first, record started-but-unsettled/connection-lost from the surviving fixture; do not invent cancellation acknowledgement or zero provider cost. Surviving cores never receive a replay request. Task 5 reads the ledger from the runner after hard kill to prove provider-call counts and no replay. This mock boundary tests actual app settlement plumbing, without claiming that a real provider settles identically.
 
+### Actual moved SDK paths — Task 2, repeated in Task 5
+
+The scripted fixture proves application orchestration/settlement, but does not replace real adapter coverage. Add local protocol stubs for each moved real STT/model/TTS adapter in `tests/fixtures/provider-protocol-stubs/server.mjs` and tests in `tests/contracts/provider-sdk-migration.test.ts`. Instantiate actual ClaudeAdapter with its existing ClaudeOptions.fetch seam and createDeepgramAdapter(config, fetchImpl), retaining the pinned SDKs and valueless fixture keys. The test-owned fetch transport checks the expected fixed SDK host/path, maps only that destination to the local HTTP stub, preserves the AbortSignal/body/response streaming contract, and refuses every unrecognized destination. This is constructor injection already present in source, not a browser/request-selected endpoint or new production configuration. Production defaults and authentication remain unchanged. Network policy denies external egress throughout.
+
+For each real adapter require: a normal result/stream with existing usage/format; abort before first result; abort after a chunk; delayed reader EOF/rejection; and reader/cancellation cleanup before actual settlement/lease release. Exercise local HTTP/WebSocket protocol as used by that adapter, not a replacement application SSE fixture. Record no provider capability or paid success from this test. Reuse the compiled actual modules in an isolated in-container SDK test selection in Task 5 and include the SDK case counts/outcomes in the existing Vitest selection's run manifest (no third subprocess selection). Missing stub compatibility is a failed required test, not permission for live credentials. Task 2 runs the focused SDK test alongside the existing deepgram/lease/deadline regressions; Task 5 repeats the declared cases with compiled actual adapter/SDK modules in the isolated test driver; the separate scripted real-application tests prove HTTP/process/lifecycle composition. Do not represent an in-driver adapter test as a live-provider or full application-path result.
+
+### Deterministic replica routing and attribution — Tasks 4–5
+
+Create a small private L7 router in the mapped router files; it is separate test infrastructure, with its own pinned image, limits and non-secret observation ledger. Web's sole upstream is its fixed private origin. The data listener forwards exact application bytes and safe headers with bounded producer demand, and sets upstream Host from the run-owned target manifest. It does not expose a public application routing token, buffer a whole body, follow redirects, retry or substitute another target. Direct controls use explicit private core-a/core-b addresses and their allowed Host values.
+
+Only `POST /api/turn` and `POST /api/speech` consume the ordered per-test script; entries contain a closed method/path pair and target enum core-a/core-b, never a URL. Every matching request consumes one entry exactly once before forwarding; wrong method/path order, exhausted script or unavailable selected target fails explicitly. Health/readiness probes use direct replica addresses and do not consume entries. `GET /api/capabilities` has an explicitly configured fixed eligible target and no script consumption, so page bootstrap cannot shift the A/B/B sequence. Driver gates the real browser dispatch order using provider milestones rather than timing sleeps. Downstream/upstream keep-alive cannot influence selection, which occurs for every HTTP request, not every connection.
+
+A separate private control listener is accessible only to the driver/control network, authenticated with the run-owned control credential, with 8 KiB closed request caps. Load at most 64 script entries per scenario, reset only between scenarios after requests settle, and bind target enums to exact current container IDs/private addresses from the host manifest. On replacement/scale, require the verified host acknowledgement before updating membership; stale IDs refuse. The control record accepts no shell, code, arbitrary URL, image or service override. Production app containers never possess this control credential or interface.
+
+For every routed request record monotonic router sequence, method/path, actual selected upstream/container ID and sanitized outcome in a bounded 256-entry/1 MiB per-scenario ledger; overflow fails, never truncates. Correlate it with the independent fixture parent/invocation ledger and per-core lease observations. Assert script fully consumed and forced-distinct legs actually reached distinct replicas. Negative controls intentionally route both legs to A or omit an attribution record; each must make the acceptance oracle fail. A negative control is successful only when the oracle detects the planted defect; it cannot replace the positive A/B/B run.
+
+Task 4's router tests use two real local HTTP targets and a keep-alive client: prove per-request selection, unaffected capabilities/probes, exact ordering, no failed-target retry, pressure/abort cleanup and closed control schema. Task 5 performs attributed delegated A/B/B and direct controls in production containers, with fixture gates determining browser ordering. Router/fixture/ingress costs and buffers are recorded separately. None is application history/affinity storage.
+
 ### Exact runner and browser configuration
 
 Add the following owning files to Task 4's file map: `scripts/test-migration-containers.mjs`, `tests/scripts/migration-runner.test.ts`, `vitest.migration.config.ts`, `playwright.migration.config.ts`, the fixture files/Dockerfile above, `deploy/compose.migration-test.yaml`, and `apps/web/server/start.mjs`. Task 5 supplies the acceptance cases/config includes; Task 4 supplies independently tested runner startup/cleanup and production service packaging.
@@ -410,7 +445,7 @@ node --test tests/contracts/stateless-services.test.mjs
         -> collect sanitized ledger/manifests; docker compose down
 ```
 
-Root script `test:migration:containers` is exactly `node scripts/test-migration-containers.mjs`. Vitest's migration config includes only `tests/integration/stateless-services.test.ts`, runs serially against the runner's ready topology, and excludes the Node wrapper. Playwright's migration config includes only `tests/browser/stateless-interruption.spec.ts`, uses `baseURL` from validated `AIVC_MIGRATION_WEB_URL`, sets one worker, `retries: 0`, `forbidOnly: true`, and defines **no `webServer`**. It refuses an absent URL/topology manifest; it cannot import the legacy system-server launcher. The runner passes only bounded fixture/control connection information, never paid credentials. No suite uses an implicit localhost/development fallback.
+Root script `test:migration:containers` is exactly `node scripts/test-migration-containers.mjs`. Vitest's migration config includes exactly `tests/integration/stateless-services.test.ts` and `tests/contracts/provider-sdk-migration.test.ts`, runs serially against the runner's ready topology, and excludes the Node wrapper. Playwright's migration config includes only `tests/browser/stateless-interruption.spec.ts`, uses `baseURL` from validated `AIVC_MIGRATION_WEB_URL`, sets one worker, `retries: 0`, `forbidOnly: true`, and defines **no `webServer`**. It refuses an absent URL/topology manifest; it cannot import the legacy system-server launcher. The runner passes only bounded fixture/control connection information, never paid credentials. No suite uses an implicit localhost/development fallback.
 
 The runner owns a unique Compose project name, all images/services/networks/volumes and teardown on success, failure, signals and timeout. Keep the three application services at production mode, with independent configured replicas; the fixture/router are declared test infrastructure. Application images are built from the clean pinned source revision or accepted only when source SHA, build manifest, contract/catalog digests and content labels match that exact revision. A local tag or cached image without this proof refuses. Record the built image content digests before tests. Core death never deletes the fixture ledger before assertions/artifact capture.
 
@@ -455,11 +490,11 @@ Production application images share exactly the delivered entrypoint/modules and
 
 Fixture STT input serializes WAV as an explicit base64 byte string with byte length and SHA-256; model input serializes the existing typed round input, and TTS input serializes the existing speech input. Decode and validate these forms inside the fixture caps. The encoded data cap is 3 MiB, derived from the raw/base64/envelope bounds below; ledger observations retain STT byte length/digest rather than duplicating audio bytes. History/speech assertions use their exact controlled fixture text. The runner's declared scenario inventory stays below ledger/operation caps; exhaustion is an explicit invalid run, never evidence of success.
 
-The real core request boundary has exactly one lifecycle registration per HTTP request, created in the first onRequest stage before the auth gate and carried in request context to the raw route. The earlier route pseudocode describes that combined boundary; an implementer must not register a second entry when the raw route begins. Auth/pre-parser error hooks finish the same request entry after local cleanup. The web wrapper likewise creates exactly one request context and verifies its AsyncLocalStorage binding reaches the actual Next.js Node route in production tests.
+The real core request boundary has exactly one lifecycle registration per HTTP request and at most one acquired pipeline permit, created in the first onRequest stage before the auth gate and carried in request context to the raw route. The earlier route pseudocode describes the combined onRequest/route ownership, not a second registration or permit acquisition; an implementer must not register a second entry when the raw route begins. Auth/pre-parser error hooks finish the same request entry after local cleanup. The web wrapper likewise creates exactly one request context and verifies its AsyncLocalStorage binding reaches the actual Next.js Node route in production tests.
 
 ## Final harness corrections from SAR round 2
 
-These decisions replace the earlier plain-HTTP browser origin, one-ID provider protocol and 2 MiB encoded-fixture cap. They also define the host-owned lifecycle action channel. All four are part of the plan's next full review input, not an acceptance claim.
+These decisions replace the earlier plain-HTTP browser origin, one-ID provider protocol and 2 MiB encoded-fixture cap. They also define the host-owned lifecycle action channel. These historical SAR corrections remain requirements of this next full review input, not an application test-result claim. The current spec's later XPR requirements above supersede earlier conflicting readiness/representation wording.
 
 ### Trustworthy production browser origin — Tasks 4–5
 
