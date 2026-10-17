@@ -132,6 +132,88 @@ function hasAmendmentReview(root) {
   }
 }
 
+/** Exact immutable #40 publications; never a caller-supplied ignore list. */
+const migrationFiles = [
+  {
+    path: 'docs/superpowers/specs/2026-10-16-40-stateless-service-migration-design.md',
+    commit: 'e6e96c9a4f07bb78faa73dc56368a0503d912982',
+    length: 24964,
+    digest: 'f50590006c4f5d22e94ed3e8539ed1d50f0af14755dd6720b175b7f9ea951e28',
+  },
+  {
+    path: 'docs/peer-reviews/spec/stateless-service-migration-design-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-design-review-0009efb5ca6886291ad48628afa78120-review-manifest.md',
+    commit: 'e6e96c9a4f07bb78faa73dc56368a0503d912982',
+    length: 8589,
+    digest: '12d9c871ceb8e2dcc1c56c3aada872792dde4b814deab601eb77b1c4fb2bc825',
+  },
+  {
+    path: 'docs/peer-reviews/plan/stateless-service-migration-review-40-native/xpr/posix-763538f/2026-10-17-2026-10-16-40-stateless-service-migration-review-3f99142a6b19c9dcbe0e6e53c7b1354a-review-manifest.md',
+    commit: '80efe1a150dbd8605aab69678c2a7a87f8553072',
+    length: 8462,
+    digest: '6fac12382121ec1bdf0b652269c24f565e1e3ed16b8dc3dfb530484a5fec079a',
+  },
+];
+function hasMigrationEvidence(root) {
+  if (root === workspace) return true;
+  try {
+    if (
+      reviewGit(root, ['rev-parse', '--show-toplevel']).toString().trim() !==
+      resolve(root)
+    )
+      return false;
+    reviewGit(root, [
+      'merge-base',
+      '--is-ancestor',
+      '80efe1a150dbd8605aab69678c2a7a87f8553072',
+      'HEAD',
+    ]);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function verifyMigrationEvidence(root) {
+  for (const { path, commit, length, digest } of migrationFiles) {
+    reviewGit(root, ['merge-base', '--is-ancestor', commit, 'HEAD']);
+    let current = root;
+    const parts = path.split('/');
+    for (const [index, part] of parts.entries()) {
+      current = join(current, part);
+      const stat = lstatSync(current);
+      if (
+        stat.isSymbolicLink() ||
+        (index === parts.length - 1
+          ? !stat.isFile() || (stat.mode & 0o111) !== 0
+          : !stat.isDirectory())
+      ) {
+        throw Error(
+          'Migration evidence requires regular 100644 files and parents: ' +
+            path,
+        );
+      }
+    }
+    const bytes = readFileSync(current);
+    const tree = reviewGit(root, ['ls-tree', commit, '--', path]).toString();
+    const index = reviewGit(root, [
+      'ls-files',
+      '--stage',
+      '--',
+      path,
+    ]).toString();
+    const blob = tree.match(/^100644 blob ([a-f0-9]{40})\t/)?.[1];
+    if (
+      !blob ||
+      index !== '100644 ' + blob + ' 0\t' + path + '\n' ||
+      bytes.length !== length ||
+      createHash('sha256').update(bytes).digest('hex') !== digest ||
+      !bytes.equals(reviewGit(root, ['show', commit + ':' + path]))
+    ) {
+      throw Error('Migration evidence integrity differs: ' + path);
+    }
+  }
+  return migrationFiles.map(({ path }) => path);
+}
+
 const excludedDirectories = new Set([
   '.git',
   'node_modules',
@@ -143,12 +225,15 @@ const excludedDirectories = new Set([
   'dist',
   'build',
   'coverage',
+  'test-results',
+  'playwright-report',
   '.cache',
   '.turbo',
 ]);
 const supported = /\.(?:[cm]?[jt]sx?|jsonc?|css|scss|ya?ml|md|markdown|mdx)$/i;
 export function enumerateOwnedFiles(root = workspace) {
   if (hasAmendmentReview(root)) verifyAmendmentReview(root);
+  if (hasMigrationEvidence(root)) verifyMigrationEvidence(root);
   const files = [];
   const visit = (directory) => {
     for (const entry of readdirSync(join(root, directory), {
@@ -222,6 +307,8 @@ export async function checkFormatting({
   const immutable = hasAmendmentReview(root)
     ? new Set(verifyAmendmentReview(root))
     : new Set();
+  if (hasMigrationEvidence(root))
+    for (const path of verifyMigrationEvidence(root)) immutable.add(path);
   let failures = 0;
   for (const path of selected) {
     if (immutable.has(path)) {
