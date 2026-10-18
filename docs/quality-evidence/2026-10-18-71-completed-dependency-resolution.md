@@ -1,6 +1,6 @@
 # Story #71 completed prerequisite resolution
 
-#63 is CLOSED and governed Done, closed 2026-10-18T01:41:42Z. Its PR #69 was merged at 2026-10-18T01:37:55Z into codex/40-draft with merge commit 1e1bf3549e378d7f973b3d1c52be5c39e93c3dcc. Accepted implementation source remains f921eaa9f005042a5df5db3f7d2c22968d69dcb5. These facts were re-read from GitHub before this resolution.
+Story #63 is CLOSED and governed Done, closed 2026-10-18T01:41:42Z. Its PR #69 was merged at 2026-10-18T01:37:55Z into codex/40-draft with merge commit 1e1bf3549e378d7f973b3d1c52be5c39e93c3dcc. Accepted implementation source remains f921eaa9f005042a5df5db3f7d2c22968d69dcb5. These facts were re-read from GitHub before this resolution.
 
 Resolve only #71's already-completed native blocker #63 with the registered unblock command. #64's package dependency on #63 and the accepted source's requirement for #63 governed Done remain preserved. The prior #63→#71 prerequisite and its satisfaction are retained in this record; this is no waiver of an unfinished dependency. #72→#71 and every later unfinished serial blocker remain unchanged. #71 still waits for #64 Develop and its own required Plan, forecast, approval and implementation gates.
 
