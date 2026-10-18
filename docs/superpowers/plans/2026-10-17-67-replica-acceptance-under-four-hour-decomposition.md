@@ -297,7 +297,7 @@ Run: `npm run build`
 
 #### Scope and acceptance boundary
 
-Accepted migration Task 5, bounded slice 7. Joint estimate **3.5h**, including normal verification/review/delivery; upper admission ceiling is strictly below 4h. Budget allocation: 2.25h implementation/authoring,0.5h focused plus standard verification,0.5h review/CI/delivery,0.25h contingency. Gate failures or unexpected scope require reassessment, not silent overrun.
+Accepted migration Task 5, bounded slice 7. Joint estimate **3.5h**, including normal verification/review/delivery; upper admission ceiling is strictly below 4h. Budget allocation: 1.5h implementation/authoring,1.25h full acceptance and standard verification,0.5h review/CI/delivery,0.25h contingency. Gate failures or unexpected scope require reassessment, not silent overrun.
 
 - Gate a real stream then acknowledgedSIGKILL of exact owner, inspect surviving fixture started-but-unsettled evidence, replace and continue with zero surviving-core replay.
 - Perform real1→2→1, retain identical core-a/web/lookup and modify only core-b; validate before/after membership/idempotence and stale/corrupt negatives.

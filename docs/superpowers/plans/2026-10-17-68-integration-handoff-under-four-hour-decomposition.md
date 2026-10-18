@@ -61,7 +61,7 @@ Every original SAR/XPR, #39 predecessor and later unreviewed-amendment reference
 
 #### Scope and acceptance boundary
 
-Accepted migration Task 6, bounded slice 1. Joint estimate **3.5h**, including normal verification/review/delivery; upper admission ceiling is strictly below 4h. Budget allocation: 2.25h implementation/authoring,0.5h focused plus standard verification,0.5h review/CI/delivery,0.25h contingency. Gate failures or unexpected scope require reassessment, not silent overrun.
+Accepted migration Task 6, bounded slice 1. Joint estimate **3.5h**, including normal verification/review/delivery; upper admission ceiling is strictly below 4h. Budget allocation: 0.5h evidence authoring,2.25h complete verification,0.5h review/CI/delivery,0.25h contingency. Gate failures or unexpected scope require reassessment, not silent overrun.
 
 - Freeze clean integrated source, exact image/topology/fixture/contract/catalog/config/interface-policy identity and dependency graph; changes invalidate affected evidence.
 - Run every accepted unit/contracts/integration/voice/slow/browser/typecheck/build/lint/format/docs/sealed and full production-container verifier at the source freeze.
@@ -124,7 +124,7 @@ Run: `npm run build`
 
 #### Scope and acceptance boundary
 
-Accepted migration Task 6, bounded slice 2. Joint estimate **3.5h**, including normal verification/review/delivery; upper admission ceiling is strictly below 4h. Budget allocation: 2.25h implementation/authoring,0.5h focused plus standard verification,0.5h review/CI/delivery,0.25h contingency. Gate failures or unexpected scope require reassessment, not silent overrun.
+Accepted migration Task 6, bounded slice 2. Joint estimate **3.5h**, including normal verification/review/delivery; upper admission ceiling is strictly below 4h. Budget allocation: 0.25h evidence reconciliation,0.5h verification,2.5h independent review/CI/delivery,0.25h contingency. Gate failures or unexpected scope require reassessment, not silent overrun.
 
 - Obtain independent whole-change code review at frozen integrated SHA; preserve distinct author/reviewer identity and all earlier accepted/unsettled review lineage.
 - Check each aggregate AC/DoD individually from genuine evidence, retain native Test/Review/approval/Close and exact-head CI/merge authority; fixes return to owning story and fresh verification.
