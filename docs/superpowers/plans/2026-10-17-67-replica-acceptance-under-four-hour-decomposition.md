@@ -122,7 +122,7 @@ Accepted migration Task 5, bounded slice 2. Joint estimate **3.5h**, including n
 
 #### Verification obligations
 
-Run: `npx vitest run --config vitest.migration.config.ts -t 'replica state|attribution'`
+Run: `npx vitest run --config vitest.migration.config.ts -t 'replica-state-'`
 
 Run: `npm run typecheck`
 
@@ -161,7 +161,7 @@ Accepted migration Task 5, bounded slice 3. Joint estimate **3.5h**, including n
 
 #### Verification obligations
 
-Run: `npx vitest run --config vitest.migration.config.ts -t 'SDK|invocation|padded|duplicate|cancellation by ID'`
+Run: `npx vitest run --config vitest.migration.config.ts -t 'provider-parity-'`
 
 Run: `npm run typecheck`
 
@@ -200,7 +200,7 @@ Accepted migration Task 5, bounded slice 4. Joint estimate **3.5h**, including n
 
 #### Verification obligations
 
-Run: `npx playwright test --config playwright.migration.config.ts -g 'interruption|generation|bootstrap'`
+Run: `npx playwright test --config playwright.migration.config.ts -g 'generation-'`
 
 Run: `npm run typecheck`
 
@@ -239,7 +239,7 @@ Accepted migration Task 5, bounded slice 5. Joint estimate **3.5h**, including n
 
 #### Verification obligations
 
-Run: `npx vitest run --config vitest.migration.config.ts -t 'early upload|held leases|policy|readiness'`
+Run: `npx vitest run --config vitest.migration.config.ts -t 'resource-boundary-'`
 
 Run: `npx playwright test --config playwright.migration.config.ts -g 'outage'`
 
@@ -280,7 +280,7 @@ Accepted migration Task 5, bounded slice 6. Joint estimate **3.5h**, including n
 
 #### Verification obligations
 
-Run: `npx vitest run --config vitest.migration.config.ts -t 'graceful|termination|drain'`
+Run: `npx vitest run --config vitest.migration.config.ts -t 'graceful-lifecycle-'`
 
 Run: `npm run typecheck`
 
@@ -324,6 +324,10 @@ Run: `node --test tests/contracts/stateless-services.test.mjs`
 Run: `npm run typecheck`
 
 Run: `npm run build`
+
+## Focused scenario names
+
+Future acceptance case names use the explicit prefixes in each focused command: replica-state-, provider-parity-, generation-, resource-boundary- and graceful-lifecycle-. Include every positive and negative assertion assigned to that slice under its prefix. These focused selections do not replace the final runner’s complete closed inventory.
 
 ## Coverage and semantic self-review
 
