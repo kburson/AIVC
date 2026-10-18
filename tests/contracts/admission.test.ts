@@ -2,7 +2,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { loadConfig } from '../../apps/web/server/config';
 import { assertAdmission } from '../../apps/web/server/http/admission';
 import { runAdmittedTurn } from '../../apps/web/server/http/body';
-import { AppError } from '../../apps/web/shared/contracts';
+import { AppError } from '@aivc/contracts';
 import {
   errorResponse,
   errorFields,

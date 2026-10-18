@@ -16,10 +16,7 @@ import type {
   CaptureToken,
 } from '../../apps/web/client/voice/vad-adapter';
 import type { startTurn } from '../../apps/web/client/turn-stream';
-import type {
-  TurnEvent,
-  HistoryMessage,
-} from '../../apps/web/shared/contracts';
+import type { TurnEvent, HistoryMessage } from '@aivc/contracts';
 import { AudioClock, settle, pcm, speechResponse } from './audio-fixture';
 import {
   mockCapabilities,

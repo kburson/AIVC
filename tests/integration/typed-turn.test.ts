@@ -2,12 +2,8 @@ import { afterEach, expect, it } from 'vitest';
 import { createRetrievalApp } from '../../apps/retrieval/src/http/app';
 import { runTurn } from '../../apps/web/server/turns/run-turn';
 import { createRetrievalClient } from '../../apps/web/server/tools/retrieval-client';
-import {
-  assertTurnSequence,
-  decodeSse,
-  encodeSse,
-} from '../../apps/web/shared/sse';
-import type { TurnEvent } from '../../apps/web/shared/contracts';
+import { assertTurnSequence, decodeSse, encodeSse } from '@aivc/contracts';
+import type { TurnEvent } from '@aivc/contracts';
 import {
   wireEvents,
   wireTurnId,

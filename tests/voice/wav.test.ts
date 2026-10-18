@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { encodeWav } from '../../apps/web/client/voice/wav';
-import { parseTurn } from '../../apps/web/shared/validation';
+import { parseTurn } from '@aivc/contracts';
 
 async function multipart(wav: Blob) {
   const form = new FormData();

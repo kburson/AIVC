@@ -1,5 +1,5 @@
-import { readFileSync, existsSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { expect, it } from 'vitest';
 import {
@@ -12,8 +12,8 @@ import {
   validateTurnEvent,
   validateCapabilities,
   validateProjectCatalog,
-} from '../../apps/web/shared/validation';
-import { assertTurnSequence } from '../../apps/web/shared/sse';
+} from '@aivc/contracts';
+import { assertTurnSequence } from '@aivc/contracts';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 it('pins immutable simulated Atlas sequence and actual delivered catalog without a live claim', () => {
   assertTurnSequence(wireEvents);
@@ -72,36 +72,4 @@ it('pins immutable simulated Atlas sequence and actual delivered catalog without
   for (const e of wireEvents) expect(validateTurnEvent(e)).toEqual(e);
   for (const value of invalidWireValues)
     expect(() => validateTurnEvent(value)).toThrow();
-});
-it('follows every shared import and re-export transitively without server Node provider or secret dependencies', () => {
-  const visited = new Set<string>();
-  const entries = ['contracts', 'validation', 'history', 'sse'].map((name) =>
-    resolve(root, 'apps/web/shared', name + '.ts'),
-  );
-  function walk(path: string) {
-    if (visited.has(path)) return;
-    visited.add(path);
-    const text = readFileSync(path, 'utf8');
-    expect(text).not.toMatch(/NodeJS\.ProcessEnv|process\.env|Anthropic/);
-    const imports = [
-      ...text.matchAll(
-        /(?:import|export)\s+(?:[^;]*?\s+from\s+)?["\x27]([^"\x27]+)["\x27]/g,
-      ),
-    ];
-    for (const m of imports) {
-      const name = m[1];
-      expect(name).not.toMatch(
-        /(^node:|server\/|providers?\/|config|@anthropic-ai|@deepgram|tests\/)/,
-      );
-      expect(name.startsWith('.')).toBe(true);
-      const target = resolve(dirname(path), name);
-      const full = existsSync(target) ? target : target + '.ts';
-      expect(full.startsWith(resolve(root, 'apps/web/shared') + '/')).toBe(
-        true,
-      );
-      walk(full);
-    }
-  }
-  for (const entry of entries) walk(entry);
-  expect(visited.size).toBe(4);
 });

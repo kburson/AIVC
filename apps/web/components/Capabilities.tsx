@@ -1,4 +1,4 @@
-import type { Capabilities as CapabilityContract } from '../shared/contracts';
+import type { Capabilities as CapabilityContract } from '@aivc/contracts';
 export function Capabilities({
   value,
   error,

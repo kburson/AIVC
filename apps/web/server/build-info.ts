@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { Capabilities } from '../shared/contracts';
+import type { Capabilities } from '@aivc/contracts';
 export type BuildInfo = Capabilities['build'];
 export async function readBuildInfo(webRoot: string): Promise<BuildInfo> {
   if (process.env.NODE_ENV !== 'production')

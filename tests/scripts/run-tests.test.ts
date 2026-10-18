@@ -1,5 +1,7 @@
 import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { afterEach, expect, it, vi } from 'vitest';
 import { runTests } from '../../scripts/run-tests.mjs';
 
@@ -51,3 +53,49 @@ it.each(['toString', 'constructor', '__proto__'])(
     expect(diagnostic).toHaveBeenCalledTimes(1);
   },
 );
+
+it('honors serial options in the real unit runner without hiding or filtering either unit directory', () => {
+  const root = mkdtempSync(join(process.cwd(), '.scratch/serial-unit-'));
+  try {
+    for (const directory of ['ui', 'scripts']) {
+      mkdirSync(join(root, 'tests', directory), { recursive: true });
+      writeFileSync(
+        join(root, 'tests', directory, 'exclusive.test.ts'),
+        `
+import { it } from 'vitest';
+import { mkdirSync, rmSync } from 'node:fs';
+import { setTimeout } from 'node:timers/promises';
+it('owns the single serial execution slot', async () => {
+  const lock = new URL('../../exclusive', import.meta.url);
+  mkdirSync(lock);
+  try { await setTimeout(100); } finally { rmSync(lock, { recursive: true }); }
+});
+`,
+      );
+    }
+    const report = join(root, 'report.json');
+    expect(
+      runTests('unit', {
+        root,
+        vitestArgs: [
+          '--no-file-parallelism',
+          '--maxWorkers=1',
+          '--reporter=json',
+          '--outputFile=' + report,
+        ],
+        spawnChild: (command, args, options) =>
+          spawnSync(command, args, { ...options, timeout: 15000 }),
+      }),
+    ).toBe(0);
+    expect(
+      existsSync(report),
+      'the real Vitest process must receive forwarded CLI options',
+    ).toBe(true);
+    const result = JSON.parse(readFileSync(report, 'utf8'));
+    expect(result.numTotalTests).toBe(2);
+    expect(result.numPassedTests).toBe(2);
+    expect(result.success).toBe(true);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}, 25000);

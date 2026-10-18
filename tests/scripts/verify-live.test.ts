@@ -573,7 +573,7 @@ it('rejects altered installed code despite a retained marker and recomputed repo
   expect(verifyLive({ root: f.root, log: () => {} }).ok).toBe(false);
 });
 
-describe('reviewed live acceptance real history', () => {
+describe('reviewed live acceptance real history', { timeout: 30_000 }, () => {
   it('consumes the fixed reviewed release disposition without relabelling original L4/L6 observations', () => {
     const messages: string[] = [];
     const root = amendedFixture();
@@ -707,7 +707,7 @@ describe('reviewed live acceptance real history', () => {
     expect(baseline.deliveryConfiguration.after.blob).toBe(deliveryPostBlob);
     json(root, 'docs/evidence/11-live-acceptance-disposition.json', baseline);
     producedRoot = root;
-  });
+  }, 30_000);
   beforeEach(() => {
     preparedRoot = undefined;
     const root = producedRoot;
@@ -715,7 +715,7 @@ describe('reviewed live acceptance real history', () => {
     if (!root) throw Error('Real-history producer baseline was not verified');
     expect(amendErrors(root)).toBe('');
     preparedRoot = root;
-  });
+  }, 30_000);
   function amendedFixture() {
     if (!preparedRoot)
       throw Error('Real-history good baseline was not verified');

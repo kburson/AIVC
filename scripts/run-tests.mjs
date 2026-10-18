@@ -21,10 +21,10 @@ function containsTests(dir) {
   );
 }
 /** @param {string} group
- * @param {{root?: string, spawnChild?: (command: string, args: string[], options: {cwd: string, stdio: 'inherit'}) => {status: number | null}}} [options] */
+ * @param {{root?: string, vitestArgs?: string[], spawnChild?: (command: string, args: string[], options: {cwd: string, stdio: 'inherit'}) => {status: number | null}}} [options] */
 export function runTests(
   group,
-  { root = workspace, spawnChild = spawnSync } = {},
+  { root = workspace, spawnChild = spawnSync, vitestArgs = [] } = {},
 ) {
   const paths = Object.hasOwn(groups, group) ? groups[group] : undefined;
   if (!paths) {
@@ -38,7 +38,12 @@ export function runTests(
   }
   const result = spawnChild(
     process.execPath,
-    [join(workspace, 'node_modules/vitest/vitest.mjs'), 'run', ...delivered],
+    [
+      join(workspace, 'node_modules/vitest/vitest.mjs'),
+      'run',
+      ...delivered,
+      ...vitestArgs,
+    ],
     { cwd: root, stdio: 'inherit' },
   );
   return result.status ?? 1;
@@ -47,4 +52,6 @@ if (
   process.argv[1] &&
   resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 )
-  process.exitCode = runTests(process.argv[2]);
+  process.exitCode = runTests(process.argv[2], {
+    vitestArgs: process.argv.slice(3),
+  });

@@ -9,13 +9,10 @@ import {
   waitFor,
 } from '@testing-library/react';
 import Conversation from '../../apps/web/components/Conversation';
-import type {
-  TurnEvent,
-  HistoryMessage,
-} from '../../apps/web/shared/contracts';
-import { AppError } from '../../apps/web/shared/contracts';
-import { SseDecodeError } from '../../apps/web/shared/sse';
-import { validateTurnEvent } from '../../apps/web/shared/validation';
+import type { TurnEvent, HistoryMessage } from '@aivc/contracts';
+import { AppError } from '@aivc/contracts';
+import { SseDecodeError } from '@aivc/contracts';
+import { validateTurnEvent } from '@aivc/contracts';
 import type { startTurn } from '../../apps/web/client/turn-stream';
 import {
   mockCapabilities,

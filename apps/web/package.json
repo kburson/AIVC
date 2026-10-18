@@ -19,6 +19,7 @@
     "@anthropic-ai/sdk": "0.133.0",
     "@deepgram/sdk": "5.15.0",
     "@ricky0123/vad-web": "0.0.31",
-    "onnxruntime-web": "1.30.0"
+    "onnxruntime-web": "1.30.0",
+    "@aivc/contracts": "1.0.0"
   }
 }

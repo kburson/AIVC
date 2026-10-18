@@ -1,0 +1,42 @@
+# Story #63 fresh code review
+
+Reviewed source: `9cd5981f5c283ad5bab1bc3b5026fd98d78afd18..50b28194f96f264079f0932b9efe3ed124e258ec`. Fresh read-only reviewer: `/root/contracts_code_review`, requested model `gpt-6-astra`, through the native subagent tool. This is a local source review; it carries no sealed XPR acceptance, lifecycle approval, suite execution or merge authorization. The reviewer's [verbatim report](63-contracts-review-round-1.original.txt) is preserved separately. This presentation changes section labels to Markdown headings only.
+
+## Strengths
+
+- The four shared modules are actually relocated, and consumers use the compiled `@aivc/contracts` public export. Existing signatures and wire fixtures remain intact.
+- JSON parsing enforces the whole-body cap before decoding, uses fatal UTF-8 decoding, detects escaped duplicate keys within each object, limits structural depth, and delegates syntax validity to `JSON.parse`.
+- Interface-policy validation is closed and canonical, checks safe deadline arithmetic, and requires agreement with a separately supplied segment cap. Node hashing stays outside the browser package.
+- Digest migration retains raw path/length/byte framing and independent framing assertions. The lockfile adds the workspace without upgrading existing dependencies.
+- The Next fixture exercises actual pinned production routing, AsyncLocalStorage, real socket backpressure, byte order, disconnect cancellation and framework shutdown. Its pressure assertions establish observable producer-demand cessation rather than merely checking a configured high-water mark.
+- Scope remains Task 1. Historical accepted evidence is preserved, and incomplete verification is disclosed.
+
+## Issues
+
+- Critical: none found.
+- Important: none found in the reviewed implementation.
+- Minor: none sufficiently substantiated to report as a defect.
+
+## Recommendations
+
+Complete and record the authoritative full-unit result and resolve the protected-format gate through the governing evidence process. Preserve accepted bytes; neither silent reformatting nor an unapproved exemption is justified. Update the checkpoint with final exact-head results before advancing lifecycle gates.
+
+When downstream work starts, retain the distinction between the fixture’s measured local transport envelope and the production application’s queue, lease and settlement guarantees.
+
+## Declined to judge
+
+- Actual paid-provider cancellation, lease retention after upload completion, both forwarding bridges, and abort-aware Node drain: Tasks 2–3, not implemented here.
+- Cross-replica history/speech behavior, cold replacement and real-client stale-generation fencing: Task 5.
+- Production SIGTERM/SIGKILL, 15-second/5-second shutdown policy, unresolved-provider outcomes and replay prevention: Tasks 4–5. The shortened test fixture establishes mechanism compatibility, not those production guarantees.
+- Early core refusal during an unfinished upload, policy-mismatch admission and preservation of the browser error response: Tasks 2–5. Current policy tests establish schema/encoding only.
+- Static UI readiness during dependency loss, container isolation, identity attribution and research handoff: downstream work.
+- Arbitrary future declaration syntaxes bypassing the regex boundary walker: current emitted JavaScript/declaration closure contains no identified unsafe dependency; speculative future cases are not present-branch defects.
+- Unobserved child-process/kernel failure modes: no concrete cleanup failure was established. Current normal teardown is bounded and the acknowledgement/exit race has explicit coverage.
+- Historical baseline timeout and protected formatting failures as newly introduced application defects: the scoped timeout change preserves assertions, and the protected bytes predate this branch. They remain relevant verification limits.
+- Independent reproduction of reported suite results: this was a read-only source review; I did not run suites or paid providers.
+
+## Assessment
+
+Ready to merge: No, pending verification and governance gates.
+
+The reviewed range `9cd5981f5c283ad5bab1bc3b5026fd98d78afd18..50b28194f96f264079f0932b9efe3ed124e258ec` has no identified code defect requiring revision. Nevertheless, the full unit result was pending, the required format gate remained blocked, and #63 remained in Develop with Test/Review/approval/merge gates outstanding. This local review does not supply sealed XPR acceptance, authorize a merge, or unblock #64–#68 before predecessor governed Done.

@@ -6,7 +6,7 @@ import type { ServerRuntime } from '../../apps/web/server/runtime';
 import { loadConfig } from '../../apps/web/server/config';
 import { createCapabilities } from '../../apps/web/server/capabilities';
 import { LeasePools } from '../../apps/web/server/turns/leases';
-import { decodeSse, assertTurnSequence } from '../../apps/web/shared/sse';
+import { decodeSse, assertTurnSequence } from '@aivc/contracts';
 import {
   collect,
   deferred,
