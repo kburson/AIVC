@@ -11,12 +11,12 @@ export function createRetrievalClient(
     !['http:', 'https:'].includes(origin.protocol) ||
     origin.username ||
     origin.password ||
-    !['localhost', '127.0.0.1', '[::1]'].includes(origin.hostname)
+    baseUrl.includes('*')
   )
     throw new AppError(
       400,
       'INVALID_REQUEST',
-      'Retrieval origin must be loopback.',
+      'Retrieval must use one configured canonical origin.',
       null,
       false,
     );

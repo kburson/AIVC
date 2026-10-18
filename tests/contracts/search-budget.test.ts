@@ -1038,3 +1038,94 @@ it('uses integer SDK timeouts inside a fractional monotonic deadline without rep
     clock.mockRestore();
   }
 });
+
+it('accepts only canonical configured lookup origins, including private service DNS', async () => {
+  const { createRetrievalClient } =
+    await import('../../apps/web/server/tools/retrieval-client');
+  for (const origin of ['http://lookup:3001', 'https://lookup.internal:3443'])
+    expect(() => createRetrievalClient(origin), origin).not.toThrow();
+  for (const origin of [
+    'http://*.internal:3001',
+    'http://user:pass@lookup:3001',
+    'http://lookup:3001/',
+    'http://lookup:3001/base',
+    'http://lookup:3001?target=other',
+    'http://lookup:3001#other',
+    'ftp://lookup:3001',
+  ])
+    expect(() => createRetrievalClient(origin), origin).toThrow();
+});
+
+it('uses only the configured lookup server and refuses redirects to another real origin', async () => {
+  const { createServer } = await import('node:http');
+  const { createRetrievalClient } =
+    await import('../../apps/web/server/tools/retrieval-client');
+  const firstRequests: string[] = [],
+    secondRequests: string[] = [];
+  const catalog = {
+    schemaVersion: 1,
+    source: 'synthetic-project-catalog',
+    records: [],
+  };
+  let redirect = false,
+    secondOrigin = '';
+  const first = createServer((request, response) => {
+    firstRequests.push(request.url ?? '');
+    if (redirect) {
+      response.writeHead(302, { location: secondOrigin + '/v1/projects' });
+      response.end();
+      return;
+    }
+    response.writeHead(200, { 'content-type': 'application/json' });
+    response.end(JSON.stringify(catalog));
+  });
+  const second = createServer((request, response) => {
+    secondRequests.push(request.url ?? '');
+    response.writeHead(200, { 'content-type': 'application/json' });
+    response.end(JSON.stringify(catalog));
+  });
+  const listen = async (server: typeof first) => {
+    await new Promise<void>((resolve, reject) => {
+      server.once('error', reject);
+      server.listen(0, '127.0.0.1', resolve);
+    });
+    const address = server.address();
+    if (!address || typeof address === 'string')
+      throw Error('Missing local lookup address');
+    return 'http://127.0.0.1:' + address.port;
+  };
+  try {
+    const firstOrigin = await listen(first);
+    secondOrigin = await listen(second);
+    const signal = AbortSignal.timeout(3000);
+    const callerUrl = secondOrigin + '/caller-selected?other=1';
+    const lookup = createRetrievalClient(firstOrigin);
+    expect(await lookup(callerUrl, signal)).toEqual(catalog);
+    expect(firstRequests).toHaveLength(1);
+    const received = new URL(firstRequests[0], firstOrigin);
+    expect(received.pathname).toBe('/v1/projects');
+    expect(received.searchParams.get('name')).toBe(callerUrl);
+    expect(secondRequests).toEqual([]);
+    expect(await createRetrievalClient(secondOrigin)('Beacon', signal)).toEqual(
+      catalog,
+    );
+    expect(secondRequests).toEqual(['/v1/projects?name=Beacon']);
+    redirect = true;
+    await expect(lookup(undefined, signal)).rejects.toMatchObject({
+      code: 'RETRIEVAL_UNAVAILABLE',
+      httpStatus: 502,
+    });
+    expect(firstRequests).toHaveLength(2);
+    expect(secondRequests).toEqual(['/v1/projects?name=Beacon']);
+  } finally {
+    for (const server of [first, second]) server.closeAllConnections();
+    await Promise.all(
+      [first, second].map(
+        (server) =>
+          new Promise<void>((resolve, reject) => {
+            server.close((error) => (error ? reject(error) : resolve()));
+          }),
+      ),
+    );
+  }
+});
