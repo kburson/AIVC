@@ -6,7 +6,7 @@ Reviewer: fresh-context Codex subagent `/root/runtime_extraction_review`,
 `gpt-6-astra`, high reasoning. Read-only whole-branch review of
 `a95ce4f5597c29d7fc11250f2149c6314cf1d3fe` through
 `eed804dad6efc81477edb92bfcaf3f24ecf1c41e`. The reviewer received the selected
-#64 Task 1, accepted #40 specification/plan, review focus, execution rulings and
+Story #64 Task 1, accepted #40 specification/plan, review focus, execution rulings and
 actual verifier results. It neither authored code nor dispatched reviewers.
 This is implementation review, not renewed sealed SAR/XPR artifact acceptance.
 
