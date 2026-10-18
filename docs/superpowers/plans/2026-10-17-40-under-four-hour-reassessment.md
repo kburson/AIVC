@@ -80,3 +80,9 @@ At future pickup each nested coordination epic uses its recorded branch from `co
 ## Self-review and stop boundary
 
 Reviewed each slice for stakeholder, capability, need, avoided failure, source grounding, sibling distinctness and standalone readability. Coverage map retains every original package AC and correction family. Every leaf has owned files, explicit interfaces inherited from accepted source, demonstrable ACs, future verifier declarations and a budget below four hours. No implementation, verifier execution claim, stage approval, final-task approval or research readiness is created by this planning work.
+
+## Created stories and verified intake
+
+The reassessment is hydrated as **#71–#99**, all OPEN / Backlog with native parent and serial blocker edges. Each Estimate is 2.5–3.5h, maximum3.5h; total97 joint hours. #64–#68 are coordination epics and retain their original Scope/ACs and review references. #63 remains Done.
+
+See the [complete 29-story map and live audit](../../quality-evidence/2026-10-17-40-under-four-hour-intake.md) for each title, estimate, parent, predecessor, source preservation and native reconciliation provenance. Application implementation remains stopped pending review of this revised decomposition and normal gates.
