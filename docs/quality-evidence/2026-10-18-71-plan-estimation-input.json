@@ -1,0 +1,38 @@
+{
+  "schema": "aitm.plan-estimation-input/v1",
+  "wbs": [
+    {
+      "id": "portable-runtime-ownership",
+      "description": "Move shared runtime resources and private lookup policy with compatibility re-exports",
+      "baseHumanHours": 1.25,
+      "independentlyReviewable": true,
+      "signals": {
+        "modules": [
+          "apps/orchestrator/src/runtime.ts",
+          "apps/orchestrator/src/providers",
+          "apps/orchestrator/src/tools"
+        ],
+        "dependencies": ["compiled @aivc/contracts from governed Done #63"]
+      }
+    }
+  ],
+  "testImpact": {
+    "lanes": [
+      "unit",
+      "slow",
+      "focused contracts",
+      "typecheck and build",
+      "lint and format",
+      "native exact-head Test"
+    ],
+    "isolation": "Serial local verification with valueless fixtures; preserve existing route tests and run no paid providers.",
+    "expectedMinutes": 30
+  },
+  "risks": [
+    "Preserve process-global identity across core/web modules and reloads; require complete isolated ResourceContext.",
+    "Move the existing executable closure without provider algorithm changes or dependency upgrades.",
+    "Retain fixed private origin/path validation and redirect refusal with real local HTTP coverage.",
+    "Stop and split if the converged total or complete scope cannot remain strictly below four hours; never reduce inputs merely to pass."
+  ],
+  "comparableIssueIds": [63]
+}
