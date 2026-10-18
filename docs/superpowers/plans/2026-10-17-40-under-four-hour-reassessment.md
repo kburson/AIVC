@@ -58,7 +58,7 @@ All full accepted tasks and appended corrections remain mandatory. The map ident
 
 ## Dependency and delivery order
 
-#63 Done → #64 leaves1–7 → #64 governed Done → #65 leaves1–4 → #65 Done → #66 leaves1–8 → #66 Done → #67 leaves1–7 → #67 Done → #68 leaves1–3 → #68 Done → remaining aggregate #40 Test/Review/trunk delivery gates. Each arrow requires governed Done. Keep all existing native package dependency edges and add serial native leaf blockers. No parallel execution, automatic Plan approval, paid work or research unblocking.
+Sequence: #63 Done → #64 leaves1–7 → #64 governed Done → #65 leaves1–4 → #65 Done → #66 leaves1–8 → #66 Done → #67 leaves1–7 → #67 Done → #68 leaves1–3 → #68 Done → remaining aggregate #40 Test/Review/trunk delivery gates. Each arrow requires governed Done. Keep all existing native package dependency edges and add serial native leaf blockers. No parallel execution, automatic Plan approval, paid work or research unblocking.
 
 At future pickup each nested coordination epic uses its recorded branch from `codex/40-draft`, and each leaf PR targets that coordination branch. No new implementation worktree or branch is created by backlog intake. Every accepted source must be reachable on its actual target before Done. #40 PR61 remains the aggregate draft to trunk; final root delivery remains separate from child integration.
 
