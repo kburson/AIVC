@@ -1,3 +1,4 @@
+import { PipelinePools } from '../../apps/orchestrator/src/resources.js';
 import { expect, it } from 'vitest';
 import { getTurnDeps, getSpeechAdapter } from '../../apps/web/server/runtime';
 import type { ServerRuntime } from '../../apps/web/server/runtime';
@@ -29,6 +30,7 @@ function runtime(): ServerRuntime {
     }),
     adapters: {},
     leasePools: new LeasePools(),
+    pipelines: new PipelinePools(),
     buildInfo: Promise.resolve({ mode: 'development', buildId: null }),
   };
 }

@@ -5,7 +5,11 @@ import { fileURLToPath } from 'node:url';
 const workspace = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 /** @param {{root?: string, spawnChild?: (command: string, args: string[], options: {cwd: string, stdio: 'inherit'}) => {status: number | null}}} [options] */
 export function cleanBuild({ root = workspace, spawnChild = spawnSync } = {}) {
-  for (const path of ['apps/web/.next', 'apps/retrieval/dist'])
+  for (const path of [
+    'apps/web/.next',
+    'apps/retrieval/dist',
+    'apps/orchestrator/dist',
+  ])
     rmSync(join(root, path), { recursive: true, force: true });
   const npmCli =
     process.env.npm_execpath ??

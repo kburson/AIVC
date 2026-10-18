@@ -1,3 +1,4 @@
+import { PipelinePools } from '../../apps/orchestrator/src/resources.js';
 // Actual route admission and abort signals; scripted upstream intentionally ignores cancellation.
 import { afterEach, expect, it } from 'vitest';
 import { POST } from '../../apps/web/app/api/turn/route';
@@ -51,6 +52,7 @@ function setup(adapters: Record<string, unknown>) {
     },
     adapters,
     leasePools: new LeasePools(),
+    pipelines: new PipelinePools(),
     buildInfo: Promise.resolve(build),
   };
 }

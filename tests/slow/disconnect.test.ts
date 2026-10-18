@@ -1,3 +1,4 @@
+import { PipelinePools } from '../../apps/orchestrator/src/resources.js';
 import { afterEach, expect, it } from 'vitest';
 import { POST } from '../../apps/web/app/api/turn/route';
 import { createRetrievalApp } from '../../apps/retrieval/src/http/app';
@@ -55,6 +56,7 @@ function setup(
         }
       : {},
     leasePools: new LeasePools(),
+    pipelines: new PipelinePools(),
     buildInfo: Promise.resolve(build),
   };
   state.__aivcRuntimeV1 = runtime;
