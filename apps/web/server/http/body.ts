@@ -1,6 +1,6 @@
-import type { TurnInput } from '../../shared/contracts';
+import type { TurnInput } from '@aivc/contracts';
 import { AppError } from './errors';
-import { parseTurn } from '../../shared/validation';
+import { parseTurn } from '@aivc/contracts';
 import type { ServerConfig } from '../config';
 import { assertAdmission } from './admission';
 import { runWithDeadline } from '../turns/deadline';

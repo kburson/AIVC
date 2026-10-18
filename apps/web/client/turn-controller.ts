@@ -1,14 +1,14 @@
 import { observe } from './measurements';
-import { AppError } from '../shared/contracts';
+import { AppError } from '@aivc/contracts';
 import type {
   ProjectRecord,
   Source,
   TurnEvent,
   TurnStatus,
   Usage,
-} from '../shared/contracts';
-import { validateTurnEvent } from '../shared/validation';
-import { assertTurnSequence, SseDecodeError } from '../shared/sse';
+} from '@aivc/contracts';
+import { validateTurnEvent } from '@aivc/contracts';
+import { assertTurnSequence, SseDecodeError } from '@aivc/contracts';
 export type TurnToken = { generation: number; turnId: string };
 export type SpeechStatus =
   'unavailable' | 'muted' | 'failed' | 'interrupted' | 'ready' | 'speaking';

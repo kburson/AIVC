@@ -4,9 +4,9 @@ import {
   type Page,
   type APIRequestContext,
 } from '@playwright/test';
-import { parseTurn } from '../../apps/web/shared/validation';
-import { assertTurnSequence, decodeSse } from '../../apps/web/shared/sse';
-import type { TurnEvent } from '../../apps/web/shared/contracts';
+import { parseTurn } from '@aivc/contracts';
+import { assertTurnSequence, decodeSse } from '@aivc/contracts';
+import type { TurnEvent } from '@aivc/contracts';
 const control = 'http://127.0.0.1:3001/__test';
 async function configure(
   request: APIRequestContext,

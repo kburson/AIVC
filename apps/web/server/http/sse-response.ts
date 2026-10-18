@@ -1,5 +1,5 @@
-import type { TurnEvent } from '../../shared/contracts';
-import { encodeSse } from '../../shared/sse';
+import type { TurnEvent } from '@aivc/contracts';
+import { encodeSse } from '@aivc/contracts';
 import { AppError, errorFields, errorResponse } from './errors';
 import { assertAdmission } from './admission';
 import { runAdmittedTurn } from './body';

@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import type { Capabilities, Source } from '../../shared/contracts';
+import type { Capabilities, Source } from '@aivc/contracts';
 import { AppError } from '../http/errors';
 import { deadlineRemainingMs } from '../turns/deadline';
 import { lookupTool } from '../tools/lookup-projects';

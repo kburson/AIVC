@@ -1,6 +1,6 @@
 // Test-only Mock/Contract Simulation transport. Never imported by production.
 import type { Page } from '@playwright/test';
-import type { HistoryMessage } from '../../apps/web/shared/contracts';
+import type { HistoryMessage } from '@aivc/contracts';
 import {
   mockCapabilities,
   wireEvents,

@@ -1,4 +1,5 @@
-import { AppError } from './contracts';
+import { parseStrictJson } from './json.js';
+import { AppError } from './contracts.js';
 import type {
   TurnInput,
   HistoryMessage,
@@ -8,7 +9,7 @@ import type {
   TurnEvent,
   Usage,
   Source,
-} from './contracts';
+} from './contracts.js';
 function invalid(): never {
   throw new AppError(400, 'INVALID_REQUEST', 'Invalid request.', null, false);
 }
@@ -349,6 +350,22 @@ export async function parseTurn(
     );
   let turnId: string | null = null;
   try {
+    if (
+      /^application\/json\s*(?:;\s*charset\s*=\s*(?:"utf-8"|utf-8)\s*)?$/i.test(
+        contentType,
+      )
+    ) {
+      const value = object(parseStrictJson(bytes), [
+        'turnId',
+        'history',
+        'text',
+      ]);
+      turnId = uuid(value.turnId);
+      const history = validateHistory(value.history);
+      const text = str(value.text);
+      if (!text.trim() || text.length > 2000) invalid();
+      return { turnId, history, kind: 'text', text };
+    }
     const type =
       /^multipart\/form-data\s*;\s*boundary=(?:"([^"\r\n]{1,70})"|([A-Za-z0-9()+_,.\/:=?\x27-]{1,70}))\s*$/i.exec(
         contentType,

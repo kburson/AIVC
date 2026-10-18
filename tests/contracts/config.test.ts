@@ -2,8 +2,8 @@ import { readFile } from 'node:fs/promises';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { loadConfig } from '../../apps/web/server/config';
 import { createCapabilities } from '../../apps/web/server/capabilities';
-import { AppError } from '../../apps/web/shared/contracts';
-import { validateCapabilities } from '../../apps/web/shared/validation';
+import { AppError } from '@aivc/contracts';
+import { validateCapabilities } from '@aivc/contracts';
 
 const env = () => ({
   NODE_ENV: 'test' as const,

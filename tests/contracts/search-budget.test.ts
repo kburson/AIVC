@@ -7,7 +7,7 @@ import {
   accountSearch,
 } from '../../apps/web/server/providers/claude';
 import { runTurn } from '../../apps/web/server/turns/run-turn';
-import { AppError } from '../../apps/web/shared/contracts';
+import { AppError } from '@aivc/contracts';
 import { mockCapabilities } from '../helpers/wire-contract-fixtures';
 import {
   collect,

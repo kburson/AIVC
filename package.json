@@ -37,7 +37,7 @@
     "verify:toolchain": "node scripts/verify-toolchain.mjs",
     "preinstall": "node scripts/verify-toolchain.mjs",
     "test:unit": "node scripts/run-tests.mjs unit",
-    "postinstall": "patch-package --error-on-fail",
+    "postinstall": "patch-package --error-on-fail && npm run build --workspace @aivc/contracts",
     "lint:markdown": "node scripts/lint-markdown.mjs",
     "lint:typescript": "npm run lint:code",
     "format:write": "node scripts/format-check.mjs --write",
@@ -69,6 +69,7 @@
   },
   "private": true,
   "workspaces": [
+    "packages/contracts",
     "apps/web",
     "apps/retrieval"
   ],

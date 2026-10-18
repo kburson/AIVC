@@ -3,7 +3,7 @@ import type { ServerRuntime } from '../runtime';
 import { assertAdmission } from './admission';
 import { readBoundedBody } from './body';
 import { AppError, errorResponse } from './errors';
-import { validateSpeech } from '../../shared/validation';
+import { validateSpeech } from '@aivc/contracts';
 import { runWithDeadline } from '../turns/deadline';
 import type { Lease } from '../turns/leases';
 export async function speechResponse(

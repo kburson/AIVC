@@ -15,6 +15,16 @@ it('checks all first-party files including sealed evidence and excludes generate
   const root = mkdtempSync(join(process.cwd(), '.scratch/format-'));
   try {
     mkdirSync(join(root, 'apps/web/app'), { recursive: true });
+    mkdirSync(join(root, 'test-results'), { recursive: true });
+    writeFileSync(
+      join(root, 'test-results/.last-run.json'),
+      '{ malformed generated result',
+    );
+    mkdirSync(join(root, 'playwright-report/data'), { recursive: true });
+    writeFileSync(
+      join(root, 'playwright-report/data/report.json'),
+      '{ malformed generated report',
+    );
     writeFileSync(join(root, 'apps/web/next-env.d.ts'), 'generated');
     writeFileSync(
       join(root, 'apps/web/app/page.tsx'),

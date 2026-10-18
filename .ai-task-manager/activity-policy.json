@@ -29,6 +29,7 @@
   "buildCommands": ["npm run build", "tsc", "cargo build", "go build"],
   "configGlobsExtra": [
     ".scratch/gh/2-successor-wave-prepare.json",
-    ".scratch/gh/2-successor-wave-record.json"
+    ".scratch/gh/2-successor-wave-record.json",
+    ".scratch/gh/63-current-plan-metadata.json"
   ]
 }

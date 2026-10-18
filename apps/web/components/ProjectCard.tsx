@@ -1,4 +1,4 @@
-import type { ProjectRecord } from '../shared/contracts';
+import type { ProjectRecord } from '@aivc/contracts';
 export function ProjectCard({ project }: { project: ProjectRecord }) {
   return (
     <section className="project-card" aria-label={project.name + ' project'}>

@@ -1,7 +1,7 @@
 import { getRuntime } from '../../../server/runtime';
 import { assertAdmission } from '../../../server/http/admission';
 import { errorResponse } from '../../../server/http/errors';
-import { validateCapabilities } from '../../../shared/validation';
+import { validateCapabilities } from '@aivc/contracts';
 export const runtime = 'nodejs';
 export async function GET(request: Request): Promise<Response> {
   try {
