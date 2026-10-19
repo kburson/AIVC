@@ -2,11 +2,11 @@ import { afterEach, expect, it, vi } from 'vitest';
 import {
   acquireLease,
   getLeasePools,
-} from '../../apps/web/server/turns/leases';
+} from '../../apps/orchestrator/src/turns/leases.js';
 import {
   runWithDeadline,
   deadlineRemainingMs,
-} from '../../apps/web/server/turns/deadline';
+} from '../../apps/orchestrator/src/turns/deadline.js';
 afterEach(() => vi.useRealTimers());
 function deferred<T>() {
   let resolve!: (value: T) => void, reject!: (reason: unknown) => void;
@@ -36,7 +36,9 @@ it('preserves pools through module reload', async () => {
   const pools = getLeasePools();
   vi.resetModules();
   expect(
-    (await import('../../apps/web/server/turns/leases')).getLeasePools(),
+    (
+      await import('../../apps/orchestrator/src/turns/leases.js')
+    ).getLeasePools(),
   ).toBe(pools);
 });
 it.each(['deadline', 'caller'] as const)(

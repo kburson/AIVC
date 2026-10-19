@@ -260,7 +260,9 @@ it('tool names cannot select a different origin or inject extra query fields', a
   );
   expect(seen).toEqual(['/v1/projects?name=Atlas%26name%3DBoreal']);
   expect(catalog.records).toEqual([]);
-  expect(() => createRetrievalClient('https://evil.test')).toThrow('loopback');
+  expect(() => createRetrievalClient('https://evil.test/path')).toThrow(
+    'configured',
+  );
 });
 it('refuses ambiguous duplicate native tool IDs before any retrieval dispatch', async () => {
   const model = new ScriptedModel([
