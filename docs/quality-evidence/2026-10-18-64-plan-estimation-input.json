@@ -1,0 +1,122 @@
+{
+  "schema": "aitm.plan-estimation-input/v1",
+  "wbs": [
+    {
+      "id": "runtime-ownership",
+      "description": "Move runtime ownership and private lookup policy",
+      "baseHumanHours": 3,
+      "independentlyReviewable": true,
+      "signals": {
+        "modules": [
+          "apps/orchestrator/src/runtime.ts",
+          "apps/orchestrator/src/config.ts",
+          "apps/orchestrator/src/tools"
+        ],
+        "dependencies": ["#63 governed Done"]
+      }
+    },
+    {
+      "id": "core-admission",
+      "description": "Enforce core authentication and pre-body pipeline admission",
+      "baseHumanHours": 3.5,
+      "independentlyReviewable": true,
+      "signals": {
+        "modules": [
+          "apps/orchestrator/src/http/app.ts",
+          "apps/orchestrator/src/http/auth.ts",
+          "apps/orchestrator/src/http/pipeline.ts"
+        ],
+        "dependencies": ["#71 governed Done"]
+      }
+    },
+    {
+      "id": "turn-operations",
+      "description": "Deliver pull-driven turn operations and SSE settlement",
+      "baseHumanHours": 3.5,
+      "independentlyReviewable": true,
+      "signals": {
+        "modules": [
+          "apps/orchestrator/src/http/request.ts",
+          "apps/orchestrator/src/http/response.ts",
+          "apps/orchestrator/src/http/pump.ts",
+          "apps/orchestrator/src/turns/run-turn.ts"
+        ],
+        "dependencies": ["#72 governed Done"]
+      }
+    },
+    {
+      "id": "speech-operations",
+      "description": "Deliver speech operations and exact PCM cleanup",
+      "baseHumanHours": 3,
+      "independentlyReviewable": true,
+      "signals": {
+        "modules": [
+          "apps/orchestrator/src/http/speech-response.ts",
+          "apps/orchestrator/src/providers"
+        ],
+        "dependencies": ["#73 governed Done"]
+      }
+    },
+    {
+      "id": "scripted-adapters",
+      "description": "Add request-scoped scripted adapters and invocation identity",
+      "baseHumanHours": 3.5,
+      "independentlyReviewable": true,
+      "signals": {
+        "modules": [
+          "apps/orchestrator/src/providers/scripted.ts",
+          "tests/fixtures/migration-provider/schema.mjs"
+        ],
+        "dependencies": ["#74 governed Done"]
+      }
+    },
+    {
+      "id": "sdk-protocol-proof",
+      "description": "Verify moved SDK abort and reader behavior against local protocols",
+      "baseHumanHours": 3.5,
+      "independentlyReviewable": true,
+      "signals": {
+        "modules": [
+          "tests/contracts/provider-sdk-migration.test.ts",
+          "tests/fixtures/provider-protocol-stubs/server.mjs"
+        ],
+        "dependencies": ["#75 governed Done"]
+      }
+    },
+    {
+      "id": "socket-lifecycle-proof",
+      "description": "Verify core refusal bounds and lifecycle ownership on real sockets",
+      "baseHumanHours": 3.5,
+      "independentlyReviewable": true,
+      "signals": {
+        "modules": [
+          "apps/orchestrator/src/http/app.ts",
+          "apps/orchestrator/src/lifecycle.ts",
+          "tests/contracts/orchestrator-http.test.ts"
+        ],
+        "dependencies": ["#76 governed Done"]
+      }
+    }
+  ],
+  "testImpact": {
+    "lanes": [
+      "focused contract and SDK tests",
+      "serial unit suite",
+      "slow lifecycle tests",
+      "typecheck",
+      "build",
+      "lint",
+      "format",
+      "native exact-head Test"
+    ],
+    "isolation": "Serial leaves with local protocol stubs, valueless credentials and no paid calls; each owns its native Test receipt.",
+    "expectedMinutes": 210
+  },
+  "risks": [
+    "Retain complete aggregate accepted Task 2 scope and assigned corrections across serial leaves.",
+    "Split any executable leaf that cannot fit strictly below four hours at JIT Plan.",
+    "Do not duplicate executable providers or fragment process-global runtime and resource identity.",
+    "Preserve Unknown timing and unsettled predecessor review evidence."
+  ],
+  "comparableIssueIds": [63]
+}

@@ -70,6 +70,7 @@
   "private": true,
   "workspaces": [
     "packages/contracts",
+    "apps/orchestrator",
     "apps/web",
     "apps/retrieval"
   ],

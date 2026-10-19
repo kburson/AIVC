@@ -52,7 +52,7 @@ function fixture() {
     'apps/web/package.json',
     'apps/retrieval/package.json',
     'apps/web/.env.example',
-    'apps/web/server/build-info.ts',
+    'apps/orchestrator/src/build-info.ts',
     'apps/retrieval/src/index.ts',
     '.nvmrc',
     'scripts/dev.mjs',
@@ -181,7 +181,7 @@ it('rejects documented runtime ports and production build source that no longer 
     value.replace('--port 3000', '--port 4000'),
   );
   expect(errors(root)).toMatch(/port|3000/);
-  unlinkSync(join(root, 'apps/web/server/build-info.ts'));
+  unlinkSync(join(root, 'apps/orchestrator/src/build-info.ts'));
   expect(errors(root)).toMatch(/build-info|build.*source/i);
 });
 it('rejects a provider-key literal assignment while permitting names and blank examples', () => {

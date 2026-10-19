@@ -265,7 +265,7 @@ export function verifyDocs({ root = workspace, log = console.log } = {}) {
     read('scripts/dev.mjs').includes(
       "['web', 'retrieval']",
     ), 'Production start/build:clean must preserve two application runtimes');
-  require(read('apps/web/server/build-info.ts').includes('BUILD_ID') &&
+  require(read('apps/orchestrator/src/build-info.ts').includes('BUILD_ID') &&
     content['docs/live-validation.md'].includes('production') &&
     content['docs/live-validation.md'].includes(
       'buildId',

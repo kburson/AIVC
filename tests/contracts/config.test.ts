@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { loadConfig } from '../../apps/web/server/config';
-import { createCapabilities } from '../../apps/web/server/capabilities';
+import { loadConfig } from '../../apps/orchestrator/src/config.js';
+import { createCapabilities } from '../../apps/orchestrator/src/capabilities.js';
 import { AppError } from '@aivc/contracts';
 import { validateCapabilities } from '@aivc/contracts';
 
@@ -298,4 +298,120 @@ it('does not advertise usable audio models when the Deepgram credential is absen
   expect(caps.speechAvailable).toBe(false);
   expect(caps.sttModel).toBe(null);
   expect(caps.ttsModel).toBe(null);
+});
+
+it('shares occupied default paid and pipeline pools across factories, compatibility exports and reloads', async () => {
+  for (const [key, value] of Object.entries(env())) vi.stubEnv(key, value);
+  const firstModule = await import('../../apps/web/server/runtime');
+  const first = firstModule.getRuntime();
+  expect(first.pipelines).toBeDefined();
+  const core = await import('../../apps/orchestrator/src/runtime.js');
+  const resources = await import('../../apps/orchestrator/src/resources.js');
+  expect(core.getRuntime()).toBe(first);
+  const other = core.createRuntime({ ...env(), AIVC_MODE: 'mock' });
+  expect(other.leasePools).toBe(first.leasePools);
+  expect(other.pipelines).toBe(first.pipelines);
+  const held = [first.leasePools, first.pipelines].flatMap((pool) =>
+    (['turn', 'speech'] as const).flatMap((kind) => [
+      pool.acquire(kind),
+      pool.acquire(kind),
+    ]),
+  );
+  try {
+    vi.resetModules();
+    const reloaded = await import('../../apps/orchestrator/src/runtime.js');
+    const reloadedResources =
+      await import('../../apps/orchestrator/src/resources.js');
+    expect(reloaded.getRuntime()).toBe(first);
+    expect(reloadedResources.getPipelinePools()).toBe(
+      resources.getPipelinePools(),
+    );
+    const fresh = reloaded.createRuntime(env());
+    for (const pool of [fresh.leasePools, fresh.pipelines])
+      for (const kind of ['turn', 'speech'] as const)
+        expect(() => pool.acquire(kind)).toThrowError(/busy/i);
+    expect(fresh.config.mode).toBe('live');
+    expect(other.config.mode).toBe('mock');
+    expect(first.adapters).toEqual({});
+  } finally {
+    held.forEach((lease) => lease.release());
+  }
+});
+
+it('requires a complete explicit resource context and keeps isolated contexts independent', async () => {
+  const runtime = await import('../../apps/web/server/runtime');
+  expect(runtime.createRuntime).toBeTypeOf('function');
+  const { LeasePools } =
+    await import('../../apps/orchestrator/src/turns/leases.js');
+  const { PipelinePools } =
+    await import('../../apps/orchestrator/src/resources.js');
+  const context = {
+    leasePools: new LeasePools(),
+    pipelines: new PipelinePools(),
+  };
+  const first = runtime.createRuntime(env(), { resources: context });
+  const shared = runtime.createRuntime(env(), { resources: context });
+  const isolated = runtime.createRuntime(env(), {
+    resources: { leasePools: new LeasePools(), pipelines: new PipelinePools() },
+  });
+  const held = [first.leasePools, first.pipelines].flatMap((pool) => [
+    pool.acquire('turn'),
+    pool.acquire('turn'),
+  ]);
+  try {
+    for (const pool of [shared.leasePools, shared.pipelines])
+      expect(() => pool.acquire('turn')).toThrowError(/busy/i);
+    for (const pool of [isolated.leasePools, isolated.pipelines]) {
+      const lease = pool.acquire('turn');
+      lease.release();
+    }
+  } finally {
+    held.forEach((lease) => lease.release());
+  }
+  for (const resources of [
+    null,
+    {},
+    { leasePools: context.leasePools },
+    { pipelines: context.pipelines },
+    { leasePools: {}, pipelines: {} },
+  ])
+    expect(() =>
+      runtime.createRuntime(env(), { resources: resources as never }),
+    ).toThrowError(/complete resource context/i);
+});
+
+it('caches ordinary adapters per runtime while preserving explicit adapter injection', async () => {
+  const module = await import('../../apps/web/server/runtime');
+  expect(module.createRuntime).toBeTypeOf('function');
+  const runtime = module.createRuntime({ ...env(), AIVC_MODE: 'mock' });
+  const first = module.getTurnDeps(runtime);
+  expect(module.getTurnDeps(runtime).model).toBe(first.model);
+  expect(module.getTurnDeps(runtime).lookup).toBe(first.lookup);
+  expect(module.getSpeechAdapter(runtime)).toBe(
+    module.getSpeechAdapter(runtime),
+  );
+  const transcribe = async () => 'injected text';
+  const injected = module.createRuntime(
+    { ...env(), AIVC_MODE: 'mock' },
+    { adapters: { transcribe } },
+  );
+  expect(
+    await module
+      .getTurnDeps(injected)
+      .transcribe(new Uint8Array(), new AbortController().signal),
+  ).toBe('injected text');
+});
+
+it('keeps factory build metadata bound to its supplied environment after ambient changes', async () => {
+  vi.stubEnv('NODE_ENV', 'development');
+  const { createRuntime } = await import('../../apps/web/server/runtime');
+  const production = createRuntime({ ...env(), NODE_ENV: 'production' });
+  expect(production.capabilities.build.mode).toBe('production');
+  expect((await production.buildInfo).mode).toBe('production');
+  const development = createRuntime({ ...env(), NODE_ENV: 'development' });
+  vi.stubEnv('NODE_ENV', 'production');
+  expect(await development.buildInfo).toEqual({
+    mode: 'development',
+    buildId: null,
+  });
 });

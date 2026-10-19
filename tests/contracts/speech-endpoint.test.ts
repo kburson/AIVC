@@ -1,3 +1,4 @@
+import { PipelinePools } from '../../apps/orchestrator/src/resources.js';
 import { expect, it } from 'vitest';
 import { speechResponse } from '../../apps/web/server/http/speech-response';
 import { loadConfig } from '../../apps/web/server/config';
@@ -26,6 +27,7 @@ function runtime(speech?: SpeechAdapter): ServerRuntime {
     }),
     adapters: speech ? { speech } : {},
     leasePools: new LeasePools(),
+    pipelines: new PipelinePools(),
     buildInfo: Promise.resolve({ mode: 'development', buildId: null }),
   };
 }
